@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #facc15;
+  border-radius: 4px;
+}
+
+/* Selection */
+::selection {
+  background: #facc15;
+  color: #0a0a0a;
+}
+
+/* VFX Classes */
+.vfx-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.vfx-flash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  animation: flash 0.4s ease-out forwards;
+  z-index: 100;
+}
+
+/* Scanlines effect */
+.scanlines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.1) 2px,
+    rgba(0, 0, 0, 0.1) 4px
+  );
+  pointer-events: none;
+}
+
+/* Glow effect for buttons */
+.glow-hover {
+  transition: all 0.3s ease;
+}
+
+.glow-hover:hover {
+  box-shadow: 0 0 20px rgba(250, 204, 21, 0.4),
+              0 0 40px rgba(250, 204, 21, 0.2);
+}
