@@ -3,13 +3,18 @@ import { Story } from 'inkjs'
 import Player from './components/Player'
 import StorySelector from './components/StorySelector'
 import VFXLayer from './components/VFXLayer'
+import StatsPanel from './components/StatsPanel'
+import InventoryPanel from './components/InventoryPanel'
 import { useVFX } from './hooks/useVFX'
 import { useSaveSystem } from './hooks/useSaveSystem'
+import { useGameSystems } from './hooks/useGameSystems'
 
-// Import the compiled story
+// Import the compiled stories
 import partuzaStory from './stories/partuza.json'
+import serruchinStory from './stories/serruchin.json'
 
 const AVAILABLE_STORIES = [
+    { id: 'serruchin', title: '🪚 SERRUCHÍN', data: serruchinStory },
     { id: 'partuza', title: 'Tu nombre en clave es Partuza', data: partuzaStory }
 ]
 
@@ -24,8 +29,11 @@ function App() {
     const { vfxState, triggerVFX, clearVFX } = useVFX()
     const { saveGame, loadGame, clearSave, hasSave } = useSaveSystem()
 
+    // Game systems (stats + inventory)
+    const gameSystems = useGameSystems(storyId)
+
     // Initialize story
-    const initStory = useCallback((storyData, id, savedState = null, savedText = '') => {
+    const initStory = useCallback((storyData, id, savedState = null, savedText = '', savedGameSystems = null) => {
         const newStory = new Story(storyData)
 
         if (savedState) {
@@ -34,6 +42,11 @@ function App() {
 
         setStory(newStory)
         setStoryId(id)
+
+        // Load saved game systems (stats/inventory)
+        if (savedGameSystems) {
+            gameSystems.loadGameSystems(savedGameSystems)
+        }
 
         // If we have saved text, restore it along with choices
         // (the useEffect won't run since text won't be empty)
@@ -46,7 +59,19 @@ function App() {
         } else {
             setIsEnded(false)
         }
-    }, [])
+    }, [gameSystems])
+
+    // Process tags (VFX + Game Systems)
+    const processTags = useCallback((tags) => {
+        tags.forEach(tag => {
+            // Try game systems first (stats/inventory)
+            const handled = gameSystems.processGameTag(tag)
+            // If not handled by game systems, try VFX
+            if (!handled) {
+                triggerVFX(tag)
+            }
+        })
+    }, [gameSystems, triggerVFX])
 
     // Continue story
     const continueStory = useCallback(() => {
@@ -65,14 +90,14 @@ function App() {
         setCanContinue(story.canContinue)
         setIsEnded(!story.canContinue && story.currentChoices.length === 0)
 
-        // Trigger VFX from tags
-        allTags.forEach(tag => triggerVFX(tag))
+        // Process all tags (VFX + Game Systems)
+        processTags(allTags)
 
-        // Auto-save with current text
+        // Auto-save with current text and game systems
         if (storyId) {
-            saveGame(storyId, story.state.toJson(), fullText.trim())
+            saveGame(storyId, story.state.toJson(), fullText.trim(), gameSystems.exportGameSystems())
         }
-    }, [story, storyId, triggerVFX, saveGame])
+    }, [story, storyId, processTags, saveGame, gameSystems])
 
     // Make choice
     const makeChoice = useCallback((index) => {
@@ -86,7 +111,7 @@ function App() {
     const startGame = useCallback((storyInfo) => {
         const saveData = loadGame(storyInfo.id)
         if (saveData) {
-            initStory(storyInfo.data, storyInfo.id, saveData.state, saveData.text)
+            initStory(storyInfo.data, storyInfo.id, saveData.state, saveData.text, saveData.gameSystems)
         } else {
             initStory(storyInfo.data, storyInfo.id)
         }
@@ -97,6 +122,7 @@ function App() {
         if (storyId) {
             clearSave(storyId)
             clearVFX()
+            gameSystems.resetGameSystems()
             setText('') // Clear text so useEffect triggers continueStory
             setChoices([])
             setIsEnded(false)
@@ -105,7 +131,7 @@ function App() {
                 initStory(storyInfo.data, storyInfo.id)
             }
         }
-    }, [storyId, clearSave, clearVFX, initStory])
+    }, [storyId, clearSave, clearVFX, gameSystems, initStory])
 
     // Back to menu
     const backToMenu = useCallback(() => {
@@ -114,7 +140,8 @@ function App() {
         setText('')
         setChoices([])
         clearVFX()
-    }, [clearVFX])
+        gameSystems.resetGameSystems()
+    }, [clearVFX, gameSystems])
 
     // Continue story when initialized or after restart
     useEffect(() => {
@@ -142,19 +169,37 @@ function App() {
             setCanContinue(story.canContinue)
             setIsEnded(!story.canContinue && story.currentChoices.length === 0)
 
-            // Trigger VFX from tags
-            allTags.forEach(tag => triggerVFX(tag))
+            // Process all tags (VFX + Game Systems)
+            processTags(allTags)
 
-            // Auto-save with current text
+            // Auto-save with current text and game systems
             if (storyId) {
-                saveGame(storyId, story.state.toJson(), fullText.trim())
+                saveGame(storyId, story.state.toJson(), fullText.trim(), gameSystems.exportGameSystems())
             }
         }
-    }, [story, text, storyId, triggerVFX, saveGame])
+    }, [story, text, storyId, processTags, saveGame, gameSystems])
 
     return (
         <div className="min-h-screen bg-bardo-bg relative overflow-hidden">
             <VFXLayer vfxState={vfxState} />
+
+            {/* Stats Panel - only shows when story is active and stats are enabled */}
+            {story && (
+                <StatsPanel
+                    stats={gameSystems.stats}
+                    statsConfig={gameSystems.statsConfig}
+                    getAllStatsInfo={gameSystems.getAllStatsInfo}
+                />
+            )}
+
+            {/* Inventory Panel - only shows when story is active and inventory is enabled */}
+            {story && (
+                <InventoryPanel
+                    items={gameSystems.items}
+                    inventoryConfig={gameSystems.inventoryConfig}
+                    getItemsWithInfo={gameSystems.getItemsWithInfo}
+                />
+            )}
 
             {!story ? (
                 <StorySelector

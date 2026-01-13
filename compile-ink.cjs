@@ -2,8 +2,10 @@
 const { Compiler } = require('inkjs/compiler/Compiler');
 const fs = require('fs');
 
-const inkFile = 'partuza.ink';
-const outputFile = 'src/stories/partuza.json';
+// Accept command line arguments or use defaults
+const args = process.argv.slice(2);
+const inkFile = args[0] || 'partuza.ink';
+const outputFile = args[1] || 'src/stories/partuza.json';
 
 try {
     const inkSource = fs.readFileSync(inkFile, 'utf8');
