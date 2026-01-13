@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ink: Interactive Narrative Scripting Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Styling & Chart Containers */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* Slate 900 - Dark Mode Base */
+            color: #f8fafc; /* Slate 50 */
+        }
+        
+        .font-mono {
+            font-family: 'Space Mono', monospace;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        /* Flowchart connector lines using CSS borders */
+        .flow-line-vertical {
+            width: 2px;
+            height: 20px;
+            background-color: #64748b; /* Slate 500 */
+            margin: 0 auto;
+        }
+        
+        .flow-arrow-down {
+            width: 0; 
+            height: 0; 
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid #64748b;
+            margin: 0 auto;
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(to right, #22d3ee, #e879f9); /* Cyan to Pink */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+    <!-- Palette Selection: Vibrant/Neon (Cyan, Magenta, Yellow on Dark) -->
+    <!-- Plan: 
+         1. Introduction: Hook & Definition.
+         2. Foundations (Flowchart): Visualizing Knots/Diverts structure using HTML blocks.
+         3. Choices (Comparison): Chart.js Bar Chart comparing persistence of * vs +.
+         4. Text Variations (Attributes): Chart.js Radar Chart analyzing variation types.
+         5. Logic & Weave (Diagrams): HTML/CSS code block visualizations.
+         6. Pro Tips (List): Footer summary.
+    -->
+    <!-- NO SVG CONFIRMATION: No SVG tags are used in the body. Charts render to Canvas. Icons use Unicode or CSS shapes. -->
+    <!-- NO MERMAID CONFIRMATION: No Mermaid JS libraries or syntax used. -->
+</head>
+<body class="antialiased selection:bg-pink-500 selection:text-white">
+
+    <!-- Header Section -->
+    <header class="w-full py-16 px-4 text-center bg-slate-900 border-b border-slate-800 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-purple-900/20 to-slate-900/90 z-0"></div>
+        <div class="relative z-10 max-w-4xl mx-auto">
+            <span class="inline-block py-1 px-3 rounded-full bg-cyan-900/50 text-cyan-400 text-xs font-bold tracking-widest uppercase mb-4 border border-cyan-700">Beginner's Guide</span>
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6"><span class="text-gradient">Writing with Ink</span></h1>
+            <p class="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+                Master the scripting language of interactive fiction. From branching narratives to complex logic, learn how to weave stories that react to your players.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+
+        <!-- SECTION 1: FOUNDATIONS -->
+        <section class="col-span-1 md:col-span-2 bg-slate-800 rounded-2xl p-8 shadow-xl border border-slate-700">
+            <div class="flex flex-col md:flex-row gap-8 items-center">
+                <div class="flex-1">
+                    <h2 class="text-3xl font-bold mb-4 text-cyan-400 flex items-center">
+                        <span class="bg-cyan-500/10 p-2 rounded-lg mr-3 text-2xl">⚓</span> 
+                        The Structure
+                    </h2>
+                    <p class="text-slate-300 mb-6 leading-relaxed">
+                        Ink stories are built like a chain. The basic units are <strong>Knots</strong> (scenes) and <strong>Diverts</strong> (links). Think of it as a screenplay where you direct the camera to the next location explicitly.
+                    </p>
+                    <ul class="space-y-3 text-slate-400">
+                        <li class="flex items-start"><span class="text-cyan-500 mr-2">➤</span> <strong>Knots (===):</strong> The containers for your text.</li>
+                        <li class="flex items-start"><span class="text-cyan-500 mr-2">➤</span> <strong>Diverts (->):</strong> The arrows pointing to where the story goes next.</li>
+                        <li class="flex items-start"><span class="text-cyan-500 mr-2">➤</span> <strong>Glue (<>):</strong> Merges lines together seamlessly.</li>
+                    </ul>
+                </div>
+                
+                <!-- Visual Flowchart (HTML/CSS) -->
+                <div class="flex-1 w-full max-w-md bg-slate-900 p-6 rounded-xl border border-dashed border-slate-600">
+                    <h3 class="text-center text-xs font-mono text-slate-500 mb-4 uppercase tracking-widest">Story Flow Visualization</h3>
+                    <div class="flex flex-col items-center">
+                        <!-- Knot 1 -->
+                        <div class="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-lg font-mono text-sm w-48 text-center border-l-4 border-indigo-400">
+                            === start ===
+                        </div>
+                        <div class="flow-line-vertical"></div>
+                        <div class="flow-arrow-down"></div>
+                        
+                        <!-- Content -->
+                        <div class="my-2 text-slate-500 text-xs italic">"You wake up..."</div>
+                        
+                        <!-- Divert -->
+                        <div class="bg-slate-700 text-cyan-400 px-4 py-2 rounded shadow font-mono text-xs w-32 text-center">
+                            -> hallway
+                        </div>
+                        <div class="flow-line-vertical"></div>
+                        <div class="flow-arrow-down"></div>
+                        
+                        <!-- Knot 2 -->
+                        <div class="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-lg font-mono text-sm w-48 text-center border-l-4 border-indigo-400">
+                            === hallway ===
+                        </div>
+                        
+                        <!-- End -->
+                        <div class="flow-line-vertical"></div>
+                        <div class="flow-arrow-down"></div>
+                        <div class="bg-red-900/50 text-red-400 px-4 py-1 rounded mt-2 font-mono text-xs border border-red-800">
+                            -> END
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: CHOICES -->
+        <section class="bg-slate-800 rounded-2xl p-8 shadow-xl border border-slate-700 flex flex-col">
+            <h2 class="text-2xl font-bold mb-4 text-pink-500 flex items-center">
+                <span class="bg-pink-500/10 p-2 rounded-lg mr-3 text-xl">⚡</span>
+                Choice Types
+            </h2>
+            <p class="text-slate-300 mb-6 text-sm">
+                Interactivity comes in two flavors. <strong>Standard Choices (*)</strong> are one-time use, perfect for moving the plot forward. <strong>Sticky Choices (+)</strong> remain available, ideal for investigation loops or menus.
+            </p>
+            
+            <div class="chart-container flex-grow">
+                <canvas id="choicesChart"></canvas>
+            </div>
+            <p class="text-center text-xs text-slate-500 mt-4 italic">Comparing Persistence: How many times can a player click?</p>
+        </section>
+
+        <!-- SECTION 3: TEXT VARIATIONS -->
+        <section class="bg-slate-800 rounded-2xl p-8 shadow-xl border border-slate-700 flex flex-col">
+            <h2 class="text-2xl font-bold mb-4 text-yellow-400 flex items-center">
+                <span class="bg-yellow-500/10 p-2 rounded-lg mr-3 text-xl">🎲</span>
+                Dynamic Text
+            </h2>
+            <p class="text-slate-300 mb-6 text-sm">
+                Don't bore your players with repetitive text. Use <strong>Variations {...}</strong> to change output based on how many times a knot is visited. We analyze them by three traits: Is it sequential? Does it loop? Is it random?
+            </p>
+            
+            <div class="chart-container flex-grow">
+                <canvas id="variationsChart"></canvas>
+            </div>
+             <p class="text-center text-xs text-slate-500 mt-4 italic">Attribute Profile of Variation Types</p>
+        </section>
+
+        <!-- SECTION 4: LOGIC & VARIABLES -->
+        <section class="col-span-1 md:col-span-2 bg-slate-800 rounded-2xl p-8 shadow-xl border border-slate-700">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h2 class="text-3xl font-bold mb-4 text-green-400 flex items-center">
+                        <span class="bg-green-500/10 p-2 rounded-lg mr-3 text-2xl">🧮</span>
+                        Logic & State
+                    </h2>
+                    <p class="text-slate-300 mb-6 leading-relaxed">
+                        Ink remembers. Use <strong>Variables</strong> to track money, health, or relationship status. Logic starts with a tilde <code>~</code>.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Card 1 -->
+                        <div class="bg-slate-900 p-4 rounded-lg border-l-4 border-green-500">
+                            <h4 class="text-green-400 font-bold mb-2 text-sm uppercase">Global Variable</h4>
+                            <code class="block font-mono text-xs text-slate-300 bg-black/30 p-2 rounded mb-2">VAR gold = 100</code>
+                            <p class="text-xs text-slate-500">Persists through the whole game.</p>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="bg-slate-900 p-4 rounded-lg border-l-4 border-blue-500">
+                            <h4 class="text-blue-400 font-bold mb-2 text-sm uppercase">Temp Variable</h4>
+                            <code class="block font-mono text-xs text-slate-300 bg-black/30 p-2 rounded mb-2">temp mood = 5</code>
+                            <p class="text-xs text-slate-500">Dies when the knot ends.</p>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="bg-slate-900 p-4 rounded-lg border-l-4 border-purple-500">
+                            <h4 class="text-purple-400 font-bold mb-2 text-sm uppercase">Logic Line</h4>
+                            <code class="block font-mono text-xs text-slate-300 bg-black/30 p-2 rounded mb-2">~ gold -= 20</code>
+                            <p class="text-xs text-slate-500">Modifies values (starts with ~).</p>
+                        </div>
+                        <!-- Card 4 -->
+                        <div class="bg-slate-900 p-4 rounded-lg border-l-4 border-yellow-500">
+                            <h4 class="text-yellow-400 font-bold mb-2 text-sm uppercase">Conditional</h4>
+                            <code class="block font-mono text-xs text-slate-300 bg-black/30 p-2 rounded mb-2">{gold > 50}</code>
+                            <p class="text-xs text-slate-500">Checks if true before showing.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- The Weave Visualization -->
+                <div class="relative">
+                    <h3 class="text-xl font-bold mb-4 text-slate-200">The Weave: Gathering Flow</h3>
+                    <p class="text-slate-400 text-sm mb-6">Using the <strong>Gather (-)</strong> operator to collapse complex branches back into a single narrative line.</p>
+                    
+                    <div class="bg-slate-900 p-6 rounded-xl border border-slate-700 relative overflow-hidden">
+                        <div class="flex justify-between mb-8 relative z-10">
+                            <div class="text-center w-1/3">
+                                <div class="bg-pink-600 text-white text-xs py-2 px-1 rounded mb-2">Option A</div>
+                                <div class="text-[10px] text-slate-500">"I choose Money"</div>
+                            </div>
+                            <div class="text-center w-1/3 mt-4">
+                                <div class="bg-pink-600 text-white text-xs py-2 px-1 rounded mb-2">Option B</div>
+                                <div class="text-[10px] text-slate-500">"I choose Peace"</div>
+                            </div>
+                            <div class="text-center w-1/3">
+                                <div class="bg-pink-600 text-white text-xs py-2 px-1 rounded mb-2">Option C</div>
+                                <div class="text-[10px] text-slate-500">"I choose Info"</div>
+                            </div>
+                        </div>
+
+                        <!-- Convergence Arrows (CSS) -->
+                        <div class="relative h-16 w-full mb-2">
+                            <div class="absolute left-[16%] top-0 h-16 w-0.5 bg-slate-600 transform rotate-12 origin-bottom"></div>
+                            <div class="absolute left-[50%] top-0 h-16 w-0.5 bg-slate-600"></div>
+                            <div class="absolute right-[16%] top-0 h-16 w-0.5 bg-slate-600 transform -rotate-12 origin-bottom"></div>
+                        </div>
+                        
+                        <!-- The Gather Point -->
+                        <div class="text-center relative z-10">
+                            <div class="inline-block bg-yellow-500 text-slate-900 font-bold px-6 py-2 rounded-full shadow-lg shadow-yellow-500/20">
+                                - (Gather Point)
+                            </div>
+                            <p class="mt-3 text-xs text-slate-400">"The stranger sighs..."<br>(Story continues here regardless of choice)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: TAGS & METADATA -->
+        <section class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 shadow-xl border border-slate-700 flex flex-col items-center text-center">
+            <h2 class="text-2xl font-bold mb-4 text-cyan-300"># Tags & Effects</h2>
+            <p class="text-slate-400 mb-6 max-w-lg">Tags are invisible to the player but visible to the engine. Use them to trigger external events like audio or screen shake.</p>
+            <div class="font-mono bg-black/50 p-4 rounded-lg border border-slate-600 text-sm">
+                <span class="text-slate-500">=== explosion ===</span><br>
+                <span class="text-white">BOOM!</span> 
+                <span class="text-pink-500"># shake</span> 
+                <span class="text-yellow-500"># flash_red</span> 
+                <span class="text-cyan-500"># play_sfx:bomb</span>
+            </div>
+        </section>
+
+        <!-- SECTION 6: PRO TIPS FOOTER -->
+        <section class="bg-slate-800 rounded-2xl p-8 shadow-xl border border-slate-700">
+            <h2 class="text-xl font-bold mb-6 text-white border-b border-slate-700 pb-2">Pro Tips for Writers</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="flex items-start gap-3">
+                    <span class="text-yellow-500 font-bold text-lg">01</span>
+                    <p class="text-sm text-slate-400">Use <code>//</code> for private comments the player won't see.</p>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="text-yellow-500 font-bold text-lg">02</span>
+                    <p class="text-sm text-slate-400">Write <code>TODO:</code> notes; the compiler will remind you.</p>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="text-yellow-500 font-bold text-lg">03</span>
+                    <p class="text-sm text-slate-400">Use the <strong>Inky</strong> editor to test as you write.</p>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="text-yellow-500 font-bold text-lg">04</span>
+                    <p class="text-sm text-slate-400">Use lowercase knot names (<code>my_knot</code>) to avoid typos.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-8 text-slate-600 text-sm">
+        Generated for BardoEngine Development • Based on Inkle Documentation
+    </footer>
+
+    <!-- CHART.JS LOGIC -->
+    <script>
+        // --- UTILITY: Label Wrapping (16 Char Logic) ---
+        function wrapLabel(str, maxChars) {
+            const words = str.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if (currentLine.length + 1 + words[i].length <= maxChars) {
+                    currentLine += ' ' + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // --- UTILITY: Tooltip Callback Configuration ---
+        const commonTooltipConfig = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) {
+                        return label.join(' ');
+                    } else {
+                        return label;
+                    }
+                }
+            }
+        };
+
+        // --- CHART 1: Choice Persistence (Bar Chart) ---
+        const ctxChoices = document.getElementById('choicesChart').getContext('2d');
+        const choicesChart = new Chart(ctxChoices, {
+            type: 'bar',
+            data: {
+                labels: wrapLabel('Standard Choice (*) vs Sticky Choice (+)', 16), // Example wrapping usage
+                labels: ['Standard (*)', 'Sticky (+)'],
+                datasets: [{
+                    label: 'Reusability Factor',
+                    data: [1, 10], // 1 use vs "Infinite" (represented as 10 for visual scale)
+                    backgroundColor: [
+                        'rgba(236, 72, 153, 0.7)', // Pink-500
+                        'rgba(34, 211, 238, 0.7)'  // Cyan-400
+                    ],
+                    borderColor: [
+                        'rgba(236, 72, 153, 1)',
+                        'rgba(34, 211, 238, 1)'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: commonTooltipConfig,
+                    title: {
+                        display: true,
+                        text: 'Availability After Selection',
+                        color: '#94a3b8',
+                        font: { family: 'Space Mono', size: 14 }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#334155' },
+                        ticks: { color: '#94a3b8', callback: function(value) { return value === 1 ? 'Once' : value === 10 ? 'Forever' : '' } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#f8fafc', font: { family: 'Space Mono' } }
+                    }
+                }
+            }
+        });
+
+        // --- CHART 2: Variations Analysis (Radar Chart) ---
+        // Visualizing the attributes of Sequence, Cycle, Once-only, Shuffle
+        const ctxVariations = document.getElementById('variationsChart').getContext('2d');
+        const variationsChart = new Chart(ctxVariations, {
+            type: 'radar',
+            data: {
+                labels: ['Sequential', 'Looping', 'Random', 'Finite'], // Attributes
+                datasets: [
+                    {
+                        label: 'Sequence {A|B|C}',
+                        data: [10, 0, 0, 8], // Highly sequential, finite end (sticks to last)
+                        borderColor: '#facc15', // Yellow
+                        backgroundColor: 'rgba(250, 204, 21, 0.2)',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Cycle {&A|B|C}',
+                        data: [10, 10, 0, 0], // Sequential and Looping
+                        borderColor: '#22d3ee', // Cyan
+                        backgroundColor: 'rgba(34, 211, 238, 0.2)',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Shuffle {~A|B|C}',
+                        data: [0, 10, 10, 0], // Random, Loops (can pick again)
+                        borderColor: '#e879f9', // Pinkish
+                        backgroundColor: 'rgba(232, 121, 249, 0.2)',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { 
+                        display: true,
+                        labels: { color: '#cbd5e1', font: { size: 10, family: 'Inter' } } 
+                    },
+                    tooltip: commonTooltipConfig
+                },
+                scales: {
+                    r: {
+                        angleLines: { color: '#475569' },
+                        grid: { color: '#334155' },
+                        pointLabels: { color: '#f8fafc', font: { family: 'Space Mono', size: 11 } },
+                        ticks: { display: false }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

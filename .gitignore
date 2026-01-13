@@ -24,8 +24,5 @@ Thumbs.db
 *.log
 npm-debug.log*
 
-# Project context (internal)
-context.md
-
 # Tauri (Phase 2)
 src-tauri/target/

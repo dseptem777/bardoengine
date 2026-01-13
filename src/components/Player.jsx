@@ -3,11 +3,18 @@ import TextDisplay from './TextDisplay'
 import ChoiceButton from './ChoiceButton'
 
 export default function Player({ text, choices, isEnded, onChoice, onRestart, onBack }) {
-    const [isTyping, setIsTyping] = useState(true)
+    // If no text but has interactive content, skip typewriter
+    const hasInteractiveContent = choices.length > 0 || isEnded
+    const [isTyping, setIsTyping] = useState(text ? true : !hasInteractiveContent)
 
     useEffect(() => {
-        setIsTyping(true)
-    }, [text])
+        // If no text but has interactive content, skip typewriter immediately
+        if (!text && (choices.length > 0 || isEnded)) {
+            setIsTyping(false)
+        } else if (text) {
+            setIsTyping(true)
+        }
+    }, [text, choices.length, isEnded])
 
     const handleSkip = useCallback(() => {
         setIsTyping(false)
