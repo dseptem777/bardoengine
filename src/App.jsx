@@ -104,6 +104,16 @@ function App() {
     // Continue story when initialized or after restart
     useEffect(() => {
         if (story && !text) {
+            // If we can't continue, we're at a decision point - just load the current choices
+            if (!story.canContinue && story.currentChoices.length > 0) {
+                setChoices(story.currentChoices)
+                setCanContinue(false)
+                setIsEnded(false)
+                // Set a placeholder so the typewriter completes immediately and shows choices
+                setText('...')
+                return
+            }
+
             // Directly continue story here to avoid closure issues
             let fullText = ''
             let allTags = []
