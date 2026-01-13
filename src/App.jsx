@@ -25,7 +25,7 @@ function App() {
     const { saveGame, loadGame, clearSave, hasSave } = useSaveSystem()
 
     // Initialize story
-    const initStory = useCallback((storyData, id, savedState = null) => {
+    const initStory = useCallback((storyData, id, savedState = null, savedText = '') => {
         const newStory = new Story(storyData)
 
         if (savedState) {
@@ -34,7 +34,18 @@ function App() {
 
         setStory(newStory)
         setStoryId(id)
-        setIsEnded(false)
+
+        // If we have saved text, restore it along with choices
+        // (the useEffect won't run since text won't be empty)
+        if (savedText) {
+            setText(savedText)
+            setChoices(newStory.currentChoices)
+            setCanContinue(newStory.canContinue)
+            // Detect if we're at an ending (no choices and can't continue)
+            setIsEnded(!newStory.canContinue && newStory.currentChoices.length === 0)
+        } else {
+            setIsEnded(false)
+        }
     }, [])
 
     // Continue story
@@ -57,9 +68,9 @@ function App() {
         // Trigger VFX from tags
         allTags.forEach(tag => triggerVFX(tag))
 
-        // Auto-save
+        // Auto-save with current text
         if (storyId) {
-            saveGame(storyId, story.state.toJson())
+            saveGame(storyId, story.state.toJson(), fullText.trim())
         }
     }, [story, storyId, triggerVFX, saveGame])
 
@@ -73,8 +84,12 @@ function App() {
 
     // Start new game
     const startGame = useCallback((storyInfo) => {
-        const savedState = loadGame(storyInfo.id)
-        initStory(storyInfo.data, storyInfo.id, savedState)
+        const saveData = loadGame(storyInfo.id)
+        if (saveData) {
+            initStory(storyInfo.data, storyInfo.id, saveData.state, saveData.text)
+        } else {
+            initStory(storyInfo.data, storyInfo.id)
+        }
     }, [initStory, loadGame])
 
     // Restart
@@ -105,12 +120,11 @@ function App() {
     useEffect(() => {
         if (story && !text) {
             // If we can't continue, we're at a decision point - just load the current choices
+            // The text was already restored from saved data in initStory
             if (!story.canContinue && story.currentChoices.length > 0) {
                 setChoices(story.currentChoices)
                 setCanContinue(false)
                 setIsEnded(false)
-                // Set a placeholder so the typewriter completes immediately and shows choices
-                setText('...')
                 return
             }
 
@@ -131,9 +145,9 @@ function App() {
             // Trigger VFX from tags
             allTags.forEach(tag => triggerVFX(tag))
 
-            // Auto-save
+            // Auto-save with current text
             if (storyId) {
-                saveGame(storyId, story.state.toJson())
+                saveGame(storyId, story.state.toJson(), fullText.trim())
             }
         }
     }, [story, text, storyId, triggerVFX, saveGame])

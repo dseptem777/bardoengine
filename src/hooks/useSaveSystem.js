@@ -3,10 +3,11 @@ import { useCallback } from 'react'
 const STORAGE_PREFIX = 'bardo_'
 
 export function useSaveSystem() {
-    const saveGame = useCallback((storyId, stateJson) => {
+    const saveGame = useCallback((storyId, stateJson, currentText = '') => {
         try {
             const saveData = {
                 state: stateJson,
+                text: currentText,
                 timestamp: Date.now()
             }
             localStorage.setItem(`${STORAGE_PREFIX}${storyId}`, JSON.stringify(saveData))
@@ -20,7 +21,10 @@ export function useSaveSystem() {
             const saveData = localStorage.getItem(`${STORAGE_PREFIX}${storyId}`)
             if (saveData) {
                 const parsed = JSON.parse(saveData)
-                return parsed.state
+                return {
+                    state: parsed.state,
+                    text: parsed.text || ''
+                }
             }
         } catch (e) {
             console.error('Failed to load game:', e)
