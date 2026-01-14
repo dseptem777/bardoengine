@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import TextDisplay from './TextDisplay'
 import ChoiceButton from './ChoiceButton'
 
-export default function Player({ text, choices, isEnded, onChoice, onRestart, onBack }) {
+export default function Player({ text, choices, isEnded, onChoice, onRestart, onFinish, onBack }) {
     // If no text but has interactive content, skip typewriter
     const hasInteractiveContent = choices.length > 0 || isEnded
     const [isTyping, setIsTyping] = useState(text ? true : !hasInteractiveContent)
@@ -74,13 +74,20 @@ export default function Player({ text, choices, isEnded, onChoice, onRestart, on
                                     <p className="font-mono text-bardo-muted text-sm">
                                         ─── FIN ───
                                     </p>
-                                    <div className="flex gap-4 justify-center">
+                                    <div className="flex gap-4 justify-center flex-wrap">
                                         <button
                                             onClick={onRestart}
                                             className="px-6 py-3 bg-bardo-accent text-bardo-bg font-mono 
                                  hover:bg-yellow-400 transition-colors rounded"
                                         >
                                             REINICIAR
+                                        </button>
+                                        <button
+                                            onClick={onFinish}
+                                            className="px-6 py-3 bg-green-600 text-white font-mono 
+                                 hover:bg-green-500 transition-colors rounded"
+                                        >
+                                            ✓ FINALIZAR
                                         </button>
                                         <button
                                             onClick={onBack}
