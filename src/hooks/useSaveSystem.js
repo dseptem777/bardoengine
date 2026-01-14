@@ -3,12 +3,20 @@ import { useCallback } from 'react'
 const STORAGE_PREFIX = 'bardo_'
 
 export function useSaveSystem() {
-    const saveGame = useCallback((storyId, stateJson, currentText = '') => {
+    /**
+     * Save game state including Ink state, text, and game systems (stats/inventory)
+     */
+    const saveGame = useCallback((storyId, stateJson, currentText = '', gameSystems = null) => {
         try {
             const saveData = {
                 state: stateJson,
                 text: currentText,
-                timestamp: Date.now()
+                timestamp: Date.now(),
+                // Game systems (stats and inventory)
+                ...(gameSystems && {
+                    stats: gameSystems.stats,
+                    inventory: gameSystems.inventory
+                })
             }
             localStorage.setItem(`${STORAGE_PREFIX}${storyId}`, JSON.stringify(saveData))
         } catch (e) {
@@ -16,6 +24,9 @@ export function useSaveSystem() {
         }
     }, [])
 
+    /**
+     * Load game state including game systems
+     */
     const loadGame = useCallback((storyId) => {
         try {
             const saveData = localStorage.getItem(`${STORAGE_PREFIX}${storyId}`)
@@ -23,7 +34,12 @@ export function useSaveSystem() {
                 const parsed = JSON.parse(saveData)
                 return {
                     state: parsed.state,
-                    text: parsed.text || ''
+                    text: parsed.text || '',
+                    // Game systems
+                    gameSystems: {
+                        stats: parsed.stats || null,
+                        inventory: parsed.inventory || null
+                    }
                 }
             }
         } catch (e) {
@@ -42,3 +58,4 @@ export function useSaveSystem() {
 
     return { saveGame, loadGame, clearSave, hasSave }
 }
+
