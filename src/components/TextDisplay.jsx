@@ -48,7 +48,7 @@ export default function TextDisplay({ text, isTyping, onComplete }) {
     }, [isTyping, text])
 
     return (
-        <div className="relative">
+        <div className="relative select-none cursor-pointer">
             <p className="font-narrative text-xl md:text-2xl leading-relaxed text-bardo-text">
                 {displayedText}
                 {isTyping && displayedText.length < text.length && (
