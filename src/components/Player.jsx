@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import TextDisplay from './TextDisplay'
 import ChoiceButton from './ChoiceButton'
+import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation'
 
 export default function Player({ text, choices, isEnded, onChoice, onRestart, onFinish, onBack }) {
     // If no text but has interactive content, skip typewriter
@@ -19,6 +20,16 @@ export default function Player({ text, choices, isEnded, onChoice, onRestart, on
     const handleSkip = useCallback(() => {
         setIsTyping(false)
     }, [])
+
+    // Keyboard navigation
+    useKeyboardNavigation({
+        choices,
+        isTyping,
+        isEnded,
+        onChoice,
+        onSkip: handleSkip,
+        onBack
+    })
 
     const handleTypingComplete = useCallback(() => {
         setIsTyping(false)
@@ -105,7 +116,7 @@ export default function Player({ text, choices, isEnded, onChoice, onRestart, on
                     {/* Typing indicator */}
                     {isTyping && (
                         <p className="text-bardo-muted font-mono text-sm animate-pulse">
-                            Click para continuar...
+                            Presiona cualquier tecla o click para continuar...
                         </p>
                     )}
                 </div>
