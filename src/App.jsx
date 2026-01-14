@@ -143,6 +143,14 @@ function App() {
         gameSystems.resetGameSystems()
     }, [clearVFX, gameSystems])
 
+    // Finish game (clear save and back to menu)
+    const finishGame = useCallback(() => {
+        if (storyId) {
+            clearSave(storyId)
+        }
+        backToMenu()
+    }, [storyId, clearSave, backToMenu])
+
     // Continue story when initialized or after restart
     useEffect(() => {
         if (story && !text) {
@@ -214,6 +222,7 @@ function App() {
                     isEnded={isEnded}
                     onChoice={makeChoice}
                     onRestart={restart}
+                    onFinish={finishGame}
                     onBack={backToMenu}
                 />
             )}
