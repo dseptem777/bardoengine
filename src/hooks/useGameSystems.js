@@ -1,0 +1,141 @@
+import { useCallback } from 'react'
+import { useStats } from './useStats'
+import { useInventory } from './useInventory'
+
+/**
+ * useGameSystems - Orchestrator hook that combines Stats + Inventory
+ * and provides a unified interface for processing game tags
+ * 
+ * Supported tags:
+ * - #stat:statId:+/-value  (e.g., #stat:hp:-10, #stat:karma:+5)
+ * - #inv:add:itemId[:qty]  (e.g., #inv:add:llave_dorada, #inv:add:balas:5)
+ * - #inv:remove:itemId[:qty]
+ * - #inv:clear
+ */
+export function useGameSystems(storyId) {
+    const statsHook = useStats(storyId)
+    const inventoryHook = useInventory(storyId)
+
+    /**
+     * Parse and process a single game system tag
+     * Returns true if tag was handled, false otherwise
+     */
+    const processGameTag = useCallback((tag) => {
+        const trimmedTag = tag.trim()
+
+        // Handle stat tags: #stat:statId:value
+        if (trimmedTag.startsWith('stat:')) {
+            const parts = trimmedTag.split(':')
+            if (parts.length >= 3) {
+                const statId = parts[1]
+                const valueStr = parts[2]
+                const value = parseInt(valueStr, 10)
+
+                if (!isNaN(value)) {
+                    // If starts with + or -, it's a delta
+                    if (valueStr.startsWith('+') || valueStr.startsWith('-')) {
+                        statsHook.modifyStat(statId, value)
+                    } else {
+                        // Absolute value
+                        statsHook.setStat(statId, value)
+                    }
+                    return true
+                }
+            }
+        }
+
+        // Handle inventory tags: #inv:action:itemId[:qty]
+        if (trimmedTag.startsWith('inv:')) {
+            const parts = trimmedTag.split(':')
+            if (parts.length >= 3) {
+                const action = parts[1]
+                const itemId = parts[2]
+                const qty = parts[3] ? parseInt(parts[3], 10) : 1
+
+                switch (action) {
+                    case 'add':
+                        inventoryHook.addItem(itemId, isNaN(qty) ? 1 : qty)
+                        return true
+                    case 'remove':
+                        inventoryHook.removeItem(itemId, isNaN(qty) ? null : qty)
+                        return true
+                    case 'clear':
+                        inventoryHook.clearInventory()
+                        return true
+                    default:
+                        console.warn(`Unknown inventory action: ${action}`)
+                }
+            }
+        }
+
+        return false
+    }, [statsHook, inventoryHook])
+
+    /**
+     * Process multiple tags at once
+     */
+    const processGameTags = useCallback((tags) => {
+        const tagArray = Array.isArray(tags) ? tags : [tags]
+        tagArray.forEach(tag => processGameTag(tag))
+    }, [processGameTag])
+
+    /**
+     * Reset all game systems to initial state
+     */
+    const resetGameSystems = useCallback(() => {
+        statsHook.resetStats()
+        inventoryHook.clearInventory()
+    }, [statsHook, inventoryHook])
+
+    /**
+     * Load game systems from saved data
+     */
+    const loadGameSystems = useCallback((savedData) => {
+        if (savedData?.stats) {
+            statsHook.loadStats(savedData.stats)
+        }
+        if (savedData?.inventory) {
+            inventoryHook.loadInventory(savedData.inventory)
+        }
+    }, [statsHook, inventoryHook])
+
+    /**
+     * Export game systems for saving
+     */
+    const exportGameSystems = useCallback(() => {
+        return {
+            stats: statsHook.exportStats(),
+            inventory: inventoryHook.exportInventory()
+        }
+    }, [statsHook, inventoryHook])
+
+    return {
+        // Stats
+        stats: statsHook.stats,
+        statsConfig: statsHook.statsConfig,
+        statsEnabled: statsHook.isEnabled,
+        modifyStat: statsHook.modifyStat,
+        setStat: statsHook.setStat,
+        getStatInfo: statsHook.getStatInfo,
+        getAllStatsInfo: statsHook.getAllStatsInfo,
+        checkZeroStats: statsHook.checkZeroStats,
+
+        // Inventory
+        items: inventoryHook.items,
+        inventoryConfig: inventoryHook.inventoryConfig,
+        inventoryEnabled: inventoryHook.isEnabled,
+        addItem: inventoryHook.addItem,
+        removeItem: inventoryHook.removeItem,
+        hasItem: inventoryHook.hasItem,
+        getItemCount: inventoryHook.getItemCount,
+        getItemsWithInfo: inventoryHook.getItemsWithInfo,
+        getItemsByCategory: inventoryHook.getItemsByCategory,
+
+        // Combined operations
+        processGameTag,
+        processGameTags,
+        resetGameSystems,
+        loadGameSystems,
+        exportGameSystems
+    }
+}

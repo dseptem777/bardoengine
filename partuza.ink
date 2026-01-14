@@ -8,7 +8,7 @@ VAR clave_c = 0
 -> p1
 
 === p1 ===
-Despiertas en un sillón del living, abrazado a una botella de whisky vacía. Tienes una mancha blancuzca en tu remera... En la planta de tu pie dice con marcador indeleble: 'puto el que lee'. Te miras al espejo: Eres Marley. # shake # play_sfx:resaca # bg:living_sucio
+Despiertas en un sillón del living, abrazado a una botella de whisky vacía. Tienes una mancha blancuzca en tu remera... En la planta de tu pie dice con marcador indeleble: 'puto el que lee'. Te miras al espejo: Eres Marley. # shake # play_sfx:resaca # bg:living_sucio # stat:hp:-10 # stat:cordura:-5
 
 * [¿Sos Bob Marley?] -> p102
 * [¿Sos Marley de Teleshow?] -> p32
@@ -18,13 +18,13 @@ Despiertas en un sillón del living, abrazado a una botella de whisky vacía. Ti
 -> END
 
 === p32 ===
-Te acomodas tus rubias mechas lacias... Un paparazzi de la revista Escándalo te saca una foto en el baño. Lo obligas a punta de Magnum 44 a limpiar todo. Al salir, encuentras un catálogo de Coto y un sobre misterioso y llamativo. # play_sfx:paparazzi # bg:banio
+Te acomodas tus rubias mechas lacias... Un paparazzi de la revista Escándalo te saca una foto en el baño. Lo obligas a punta de Magnum 44 a limpiar todo. Al salir, encuentras un catálogo de Coto y un sobre misterioso y llamativo. # play_sfx:paparazzi # bg:banio # stat:karma:+5
 
 * [Tomar el catálogo de Coto] -> p4
 * [Agarrar el sobre misterioso] -> p115
 
 === p4 ===
-¡Qué divertido, un catálogo de supermercado! Lees las ofertas de acelga y pepitas. Te pones de buen humor para ir al súper. # bg:catalogo
+¡Qué divertido, un catálogo de supermercado! Lees las ofertas de acelga y pepitas. Te pones de buen humor para ir al súper. # bg:catalogo # inv:add:catalogo_coto
 
 * [Ir al Supermercado] -> p6
 * [Hacer el pedido por internet] -> p16
@@ -48,7 +48,7 @@ Jacinto te lleva a un depósito secreto detrás de las fiambreras. 'El helio est
 * [Usar un abrelatas profesional] -> p51
 
 === p50 ===
-Te rompes un premolar tratando de morder el metal. El dolor es tan intenso que empiezas a hablar en arameo. Jacinto se asusta, piensa que estás poseído y huye. Te desangras lentamente entre lácteos. FIN. # flash_red
+Te rompes un premolar tratando de morder el metal. El dolor es tan intenso que empiezas a hablar en arameo. Jacinto se asusta, piensa que estás poseído y huye. Te desangras lentamente entre lácteos. FIN. # flash_red # stat:hp:-100 # stat:cordura:-50
 -> END
 
 === p51 ===
@@ -60,7 +60,7 @@ El gas sale con un silbido. Tu voz se vuelve finita, como si hubieras tragado un
 === p60 ===
 Le haces RCP al ritmo de 'Stayin' Alive'. Jacinto revive y te regala un frasco con 'polvo de estrellas'.
 ~ clave_c = 20
-# play_sfx:disco
+# play_sfx:disco # stat:karma:+10 # inv:add:polvo_estrellas
 -> p120
 
 === p61 ===
@@ -88,7 +88,7 @@ El aparatito explota por el exceso de vapores etílicos. El oficial te mira con 
 -> END
 
 === p115 ===
-El sobre es una invitación VIP para una fiesta en el Planetario con los Chemical Brothers. Dice que debes llevar 'sustancias' y un colador. # bg:sobre # play_sfx:invitacion
+El sobre es una invitación VIP para una fiesta en el Planetario con los Chemical Brothers. Dice que debes llevar 'sustancias' y un colador. # bg:sobre # play_sfx:invitacion # inv:add:sobre_misterioso
 
 * [Ir a la fiesta de una] -> p120
 * [Llamar a tu tía para ver si tiene un colador] -> p119
@@ -105,7 +105,7 @@ En el Planetario el ambiente está pesadísimo. Los Chemical Brothers están mez
 * [Preguntar si tienen una Sprite] -> p130
 
 === p125 ===
-El trago sabe a detergente y gloria. De repente, tus brazos se convierten en parlantes de 15 pulgadas. Te conviertes en el alma de la fiesta y los Chemical te contratan como equipo de sonido humano. FIN. # play_sfx:victory
+El trago sabe a detergente y gloria. De repente, tus brazos se convierten en parlantes de 15 pulgadas. Te conviertes en el alma de la fiesta y los Chemical te contratan como equipo de sonido humano. FIN. # play_sfx:victory # stat:hp:+20 # stat:cordura:-20 # stat:karma:+15
 -> END
 
 === p130 ===
