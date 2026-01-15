@@ -8,7 +8,7 @@ VAR clave_c = 0
 -> p1
 
 === p1 ===
-Despiertas en un sillón del living, abrazado a una botella de whisky vacía. Tienes una mancha blancuzca en tu remera... En la planta de tu pie dice con marcador indeleble: 'puto el que lee'. Te miras al espejo: Eres Marley. # shake # play_sfx:resaca # bg:living_sucio # stat:hp:-10 # stat:cordura:-5
+Despiertas en un sillón del living, abrazado a una botella de whisky vacía. Tienes una mancha blancuzca en tu remera... En la planta de tu pie dice con marcador indeleble: 'puto el que lee'. Te miras al espejo: Eres Marley. # shake # play_sfx:resaca # bg:living_sucio # music:morning_hangover # stat:hp:-10 # stat:cordura:-5
 
 * [¿Sos Bob Marley?] -> p102
 * [¿Sos Marley de Teleshow?] -> p32
@@ -30,7 +30,7 @@ Te acomodas tus rubias mechas lacias... Un paparazzi de la revista Escándalo te
 * [Hacer el pedido por internet] -> p16
 
 === p6 ===
-Llegas al súper. En la góndola de lácteos te encuentras con Jacinto 'Probeta' Rattin, un viejo conocido que insiste en que lo ayudes a conseguir helio para un experimento 'revolucionario'. # bg:supermercado # play_sfx:super_ambience
+Llegas al súper. En la góndola de lácteos te encuentras con Jacinto 'Probeta' Rattin, un viejo conocido que insiste en que lo ayudes a conseguir helio para un experimento 'revolucionario'. # bg:supermercado # music:supermarket_muzak # play_sfx:super_ambience
 
 * [Ayudar a Jacinto a buscar helio] -> p45
 * [Ignorarlo y comprar una Quilmes] -> p8
@@ -99,7 +99,7 @@ Tu tía te atiende y te dice que los Chemical Brothers son 'unos chicos muy educ
 -> p120
 
 === p120 ===
-En el Planetario el ambiente está pesadísimo. Los Chemical Brothers están mezclando música con una licuadora llena de tuercas. # flash_multi # shake # bg:planetario
+En el Planetario el ambiente está pesadísimo. Los Chemical Brothers están mezclando música con una licuadora llena de tuercas. # flash_multi # shake # bg:planetario # music:rave_electronic
 
 * [Tomar el trago de color verde flúor] -> p125
 * [Preguntar si tienen una Sprite] -> p130

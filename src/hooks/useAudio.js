@@ -1,28 +1,181 @@
 import { useCallback, useRef } from 'react'
-// import { Howl } from 'howler'
+import { Howl, Howler } from 'howler'
 
-// Sound registry - add sounds here when available
+// ============================================
+// SFX REGISTRY - Short one-shot sound effects
+// ============================================
 const SOUNDS = {
-    // resaca: '/sounds/resaca.mp3',
-    // paparazzi: '/sounds/paparazzi.mp3',
+    // Serruchín SFX
+    serrucho: '/sounds/serrucho.mp3',
+    serrucho_hueso: '/sounds/serrucho_hueso.mp3',
+    grito: '/sounds/grito.mp3',
+    carne: '/sounds/carne.mp3',
+
+    // Shared SFX
+    victory: '/sounds/victory.mp3',
+
+    // Partuza SFX
+    resaca: '/sounds/resaca.mp3',
+    paparazzi: '/sounds/paparazzi.mp3',
+    super_ambience: '/sounds/super_ambience.mp3',
+    disco: '/sounds/disco.mp3',
+    sirena_poli: '/sounds/sirena_poli.mp3',
+    invitacion: '/sounds/invitacion.mp3',
 }
+
+// ============================================
+// MUSIC REGISTRY - Looping background tracks
+// ============================================
+const MUSIC = {
+    // Serruchín tracks
+    horror_ambient: '/music/horror_ambient.mp3',
+    tension_drone: '/music/tension_drone.mp3',
+
+    // Partuza tracks
+    morning_hangover: '/music/morning_hangover.mp3',
+    supermarket_muzak: '/music/supermarket_muzak.mp3',
+    rave_electronic: '/music/rave_electronic.mp3',
+
+    // Shared/Generic
+    victory_fanfare: '/music/victory_fanfare.mp3',
+    game_over: '/music/game_over.mp3',
+}
+
+// Default volumes
+const SFX_VOLUME = 0.7
+const MUSIC_VOLUME = 0.4
+const FADE_DURATION = 1000 // ms
 
 export function useAudio() {
     const soundsRef = useRef({})
+    const musicRef = useRef(null)
+    const currentTrackRef = useRef(null)
 
+    // ==================
+    // SFX Functions
+    // ==================
     const playSfx = useCallback((id) => {
         console.log(`[Audio] Play SFX: ${id}`)
 
-        // Uncomment when sounds are available:
-        // if (SOUNDS[id] && !soundsRef.current[id]) {
-        //   soundsRef.current[id] = new Howl({ src: [SOUNDS[id]] })
-        // }
-        // soundsRef.current[id]?.play()
+        if (!SOUNDS[id]) {
+            console.warn(`[Audio] Unknown SFX ID: ${id}`)
+            return
+        }
+
+        // Lazy-load: create Howl instance on first play
+        if (!soundsRef.current[id]) {
+            soundsRef.current[id] = new Howl({
+                src: [SOUNDS[id]],
+                volume: SFX_VOLUME,
+                onloaderror: (soundId, error) => {
+                    console.error(`[Audio] Failed to load SFX ${id}:`, error)
+                },
+                onplayerror: (soundId, error) => {
+                    console.error(`[Audio] Failed to play SFX ${id}:`, error)
+                }
+            })
+        }
+
+        soundsRef.current[id].play()
     }, [])
 
-    const stopAll = useCallback(() => {
+    const stopAllSfx = useCallback(() => {
         Object.values(soundsRef.current).forEach(sound => sound.stop())
     }, [])
 
-    return { playSfx, stopAll }
+    // ==================
+    // Music Functions
+    // ==================
+    const playMusic = useCallback((id, fadeIn = true) => {
+        console.log(`[Audio] Play Music: ${id}`)
+
+        // If same track is already playing, do nothing
+        if (currentTrackRef.current === id && musicRef.current?.playing()) {
+            return
+        }
+
+        // Stop current music with fade
+        if (musicRef.current) {
+            const oldMusic = musicRef.current
+            oldMusic.fade(oldMusic.volume(), 0, FADE_DURATION)
+            setTimeout(() => oldMusic.unload(), FADE_DURATION)
+        }
+
+        if (!MUSIC[id]) {
+            console.warn(`[Audio] Unknown Music ID: ${id}`)
+            return
+        }
+
+        // Create new music instance
+        musicRef.current = new Howl({
+            src: [MUSIC[id]],
+            volume: fadeIn ? 0 : MUSIC_VOLUME,
+            loop: true,
+            onloaderror: (soundId, error) => {
+                console.error(`[Audio] Failed to load music ${id}:`, error)
+            },
+            onplayerror: (soundId, error) => {
+                console.error(`[Audio] Failed to play music ${id}:`, error)
+            }
+        })
+
+        currentTrackRef.current = id
+        musicRef.current.play()
+
+        if (fadeIn) {
+            musicRef.current.fade(0, MUSIC_VOLUME, FADE_DURATION)
+        }
+    }, [])
+
+    const stopMusic = useCallback((fadeOut = true) => {
+        console.log('[Audio] Stop Music')
+
+        if (!musicRef.current) return
+
+        if (fadeOut) {
+            musicRef.current.fade(musicRef.current.volume(), 0, FADE_DURATION)
+            setTimeout(() => {
+                musicRef.current?.stop()
+                musicRef.current?.unload()
+                musicRef.current = null
+                currentTrackRef.current = null
+            }, FADE_DURATION)
+        } else {
+            musicRef.current.stop()
+            musicRef.current.unload()
+            musicRef.current = null
+            currentTrackRef.current = null
+        }
+    }, [])
+
+    const setMusicVolume = useCallback((volume) => {
+        if (musicRef.current) {
+            musicRef.current.volume(volume)
+        }
+    }, [])
+
+    // ==================
+    // Global Controls
+    // ==================
+    const stopAll = useCallback(() => {
+        stopAllSfx()
+        stopMusic(false)
+    }, [stopAllSfx, stopMusic])
+
+    const setMasterVolume = useCallback((volume) => {
+        Howler.volume(volume)
+    }, [])
+
+    return {
+        // SFX
+        playSfx,
+        stopAllSfx,
+        // Music
+        playMusic,
+        stopMusic,
+        setMusicVolume,
+        // Global
+        stopAll,
+        setMasterVolume
+    }
 }
