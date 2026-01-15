@@ -1,0 +1,3 @@
+# Placeholder for encrypted story files
+This directory contains encrypted .enc files for production builds.
+Run `npm run encrypt-story -- --story <story-id>` to generate them.

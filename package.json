@@ -9,9 +9,11 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
-    "tauri:build": "tauri build"
+    "tauri:build": "tauri build",
+    "encrypt-story": "node scripts/encrypt-story.cjs"
   },
   "dependencies": {
+    "@tauri-apps/api": "^2.9.1",
     "framer-motion": "^11.0.0",
     "howler": "^2.2.4",
     "inkjs": "^2.2.0",

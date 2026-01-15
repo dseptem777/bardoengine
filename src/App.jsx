@@ -9,11 +9,19 @@ import { useVFX } from './hooks/useVFX'
 import { useAudio } from './hooks/useAudio'
 import { useSaveSystem } from './hooks/useSaveSystem'
 import { useGameSystems } from './hooks/useGameSystems'
+import { useStoryLoader } from './hooks/useStoryLoader'
 
-// Import the compiled stories
+// Import the compiled stories (used in development mode)
 import partuzaStory from './stories/partuza.json'
 import serruchinStory from './stories/serruchin.json'
 
+// Dev mode stories
+const DEV_STORIES = {
+    serruchin: serruchinStory,
+    partuza: partuzaStory
+}
+
+// Format for story selector
 const AVAILABLE_STORIES = [
     { id: 'serruchin', title: '🪚 SERRUCHÍN', data: serruchinStory },
     { id: 'partuza', title: 'Tu nombre en clave es Partuza', data: partuzaStory }
@@ -26,10 +34,16 @@ function App() {
     const [choices, setChoices] = useState([])
     const [canContinue, setCanContinue] = useState(false)
     const [isEnded, setIsEnded] = useState(false)
+    const [productionAutoStarted, setProductionAutoStarted] = useState(false)
 
     const { playSfx, playMusic, stopMusic, stopAll: stopAllAudio } = useAudio()
     const { vfxState, triggerVFX, clearVFX } = useVFX({ playSfx, playMusic, stopMusic })
     const { saveGame, loadGame, clearSave, hasSave } = useSaveSystem()
+
+    // Story loader with environment detection
+    const { stories, isLoading: storyLoading, error: storyError, isProductionMode } = useStoryLoader({
+        devStories: DEV_STORIES
+    })
 
     // Game systems (stats + inventory)
     const gameSystems = useGameSystems(storyId)
@@ -131,15 +145,19 @@ function App() {
             setText('') // Clear text so useEffect triggers continueStory
             setChoices([])
             setIsEnded(false)
-            const storyInfo = AVAILABLE_STORIES.find(s => s.id === storyId)
+            // Find story in available stories (works for both dev and production)
+            const storyInfo = isProductionMode
+                ? stories[0]
+                : AVAILABLE_STORIES.find(s => s.id === storyId)
             if (storyInfo) {
                 initStory(storyInfo.data, storyInfo.id)
             }
         }
     }, [storyId, clearSave, clearVFX, stopMusic, gameSystems, initStory])
 
-    // Back to menu
+    // Back to menu (only available in dev mode)
     const backToMenu = useCallback(() => {
+        if (isProductionMode) return // No menu in production
         setStory(null)
         setStoryId(null)
         setText('')
@@ -147,7 +165,7 @@ function App() {
         clearVFX()
         stopMusic() // Fade out music when going to menu
         gameSystems.resetGameSystems()
-    }, [clearVFX, stopMusic, gameSystems])
+    }, [clearVFX, stopMusic, gameSystems, isProductionMode])
 
     // Finish game (clear save and back to menu)
     const finishGame = useCallback(() => {
@@ -193,6 +211,14 @@ function App() {
         }
     }, [story, text, storyId, processTags, saveGame, gameSystems])
 
+    // Auto-start in production mode
+    useEffect(() => {
+        if (isProductionMode && !productionAutoStarted && stories.length > 0 && !storyLoading) {
+            setProductionAutoStarted(true)
+            startGame(stories[0])
+        }
+    }, [isProductionMode, productionAutoStarted, stories, storyLoading, startGame])
+
     return (
         <div className="min-h-screen bg-bardo-bg relative overflow-hidden">
             <VFXLayer vfxState={vfxState} />
@@ -215,13 +241,28 @@ function App() {
                 />
             )}
 
-            {!story ? (
+            {/* Loading state for production mode */}
+            {storyLoading && (
+                <div className="flex items-center justify-center min-h-screen">
+                    <div className="text-bardo-accent text-2xl animate-pulse">Cargando...</div>
+                </div>
+            )}
+
+            {/* Error state */}
+            {storyError && (
+                <div className="flex items-center justify-center min-h-screen">
+                    <div className="text-red-500 text-xl">Error: {storyError}</div>
+                </div>
+            )}
+
+            {/* Story selector (dev mode only) or Player */}
+            {!storyLoading && !storyError && !story && !isProductionMode ? (
                 <StorySelector
                     stories={AVAILABLE_STORIES}
                     onSelect={startGame}
                     hasSave={hasSave}
                 />
-            ) : (
+            ) : !storyLoading && !storyError && story ? (
                 <Player
                     text={text}
                     choices={choices}
@@ -229,9 +270,9 @@ function App() {
                     onChoice={makeChoice}
                     onRestart={restart}
                     onFinish={finishGame}
-                    onBack={backToMenu}
+                    onBack={isProductionMode ? null : backToMenu}
                 />
-            )}
+            ) : null}
         </div>
     )
 }
