@@ -1,16 +1,24 @@
 import { useState, useCallback, useMemo } from 'react'
-import { getGameConfig, getItemDefinition } from '../config/gameConfig'
+import { getItemDefinition } from '../config/loadGameConfig'
 
 /**
  * useInventory - Hook for managing game inventory
  * Supports stackable and non-stackable items with categories
+ * 
+ * @param {Object} config - Game configuration object (from loadGameConfig)
  */
-export function useInventory(storyId) {
-    const config = useMemo(() => getGameConfig(storyId), [storyId])
-    const inventoryConfig = config?.inventory || { enabled: false, maxSlots: 10 }
+export function useInventory(config) {
+    const inventoryConfig = useMemo(() => {
+        return config?.inventory || { enabled: false, maxSlots: 10, categories: ['items'] }
+    }, [config])
 
     // Items stored as array of { id, qty }
     const [items, setItems] = useState([])
+
+    // Helper to get item definition from this game's config
+    const getItemDef = useCallback((itemId) => {
+        return getItemDefinition(config, itemId)
+    }, [config])
 
     /**
      * Add an item to inventory
@@ -18,7 +26,7 @@ export function useInventory(storyId) {
      * @param {number} qty - Quantity to add (default 1)
      */
     const addItem = useCallback((itemId, qty = 1) => {
-        const itemDef = getItemDefinition(itemId)
+        const itemDef = getItemDef(itemId)
 
         setItems(prev => {
             // Check if item already exists and is stackable
@@ -43,7 +51,7 @@ export function useInventory(storyId) {
             // Add new item
             return [...prev, { id: itemId, qty }]
         })
-    }, [inventoryConfig])
+    }, [inventoryConfig, getItemDef])
 
     /**
      * Remove an item from inventory
@@ -92,9 +100,9 @@ export function useInventory(storyId) {
     const getItemsWithInfo = useCallback(() => {
         return items.map(item => ({
             ...item,
-            ...getItemDefinition(item.id)
+            ...getItemDef(item.id)
         }))
-    }, [items])
+    }, [items, getItemDef])
 
     /**
      * Get items by category
@@ -141,3 +149,4 @@ export function useInventory(storyId) {
         exportInventory
     }
 }
+

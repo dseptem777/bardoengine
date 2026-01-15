@@ -1,0 +1,61 @@
+{
+    "title": "Serruchín",
+    "version": "1.0.0",
+    "stats": {
+        "enabled": true,
+        "definitions": [
+            {
+                "id": "hp",
+                "label": "Vida",
+                "icon": "❤️",
+                "displayType": "bar",
+                "min": 0,
+                "max": 100,
+                "initial": 100,
+                "color": "#ef4444"
+            }
+        ],
+        "onZero": {
+            "hp": {
+                "action": "end",
+                "message": "El dolor fue demasiado. Tu cuerpo no aguantó..."
+            }
+        }
+    },
+    "inventory": {
+        "enabled": true,
+        "maxSlots": 5,
+        "categories": [
+            "herramientas",
+            "trofeos"
+        ]
+    },
+    "items": {
+        "serruchin": {
+            "id": "serruchin",
+            "name": "Serrucho Oxidado",
+            "icon": "🪚",
+            "iconType": "emoji",
+            "description": "Un serrucho viejo y oxidado. Manchas sospechosas cubren los dientes.",
+            "category": "herramientas",
+            "stackable": false
+        },
+        "brazo_podrido": {
+            "id": "brazo_podrido",
+            "name": "Tu Brazo Gangrenado",
+            "icon": "🦴",
+            "iconType": "emoji",
+            "description": "Lo que queda de tu brazo izquierdo. Negro, podrido, pero ya no es tu problema.",
+            "category": "trofeos",
+            "stackable": false
+        },
+        "whisky": {
+            "id": "whisky",
+            "name": "Whisky",
+            "icon": "🥃",
+            "description": "Una botella de whisky.",
+            "category": "items",
+            "stackable": true
+        }
+    }
+}

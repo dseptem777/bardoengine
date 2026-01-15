@@ -1,0 +1,92 @@
+{
+    "title": "Tu nombre en clave es Partuza",
+    "version": "0.1.0",
+    "stats": {
+        "enabled": true,
+        "definitions": [
+            {
+                "id": "hp",
+                "label": "Vida",
+                "icon": "❤️",
+                "displayType": "bar",
+                "min": 0,
+                "max": 100,
+                "initial": 100,
+                "color": "#ef4444"
+            },
+            {
+                "id": "cordura",
+                "label": "Cordura",
+                "icon": "🧠",
+                "displayType": "bar",
+                "min": 0,
+                "max": 100,
+                "initial": 80,
+                "color": "#8b5cf6"
+            },
+            {
+                "id": "karma",
+                "label": "Karma",
+                "icon": "⚖️",
+                "displayType": "value",
+                "min": -100,
+                "max": 100,
+                "initial": 0
+            }
+        ],
+        "onZero": {
+            "hp": {
+                "action": "end",
+                "message": "La parca vino por vos..."
+            },
+            "cordura": {
+                "action": "end",
+                "message": "Te volviste completamente loco."
+            }
+        }
+    },
+    "inventory": {
+        "enabled": true,
+        "maxSlots": 10,
+        "categories": [
+            "items",
+            "claves",
+            "documentos"
+        ]
+    },
+    "items": {
+        "llave_dorada": {
+            "id": "llave_dorada",
+            "name": "Llave Dorada",
+            "icon": "🔑",
+            "iconType": "emoji",
+            "description": "Una llave misteriosa que brilla con luz propia.",
+            "category": "claves",
+            "stackable": false
+        },
+        "sobre_misterioso": {
+            "id": "sobre_misterioso",
+            "name": "Sobre Misterioso",
+            "icon": "📧",
+            "description": "Un sobre sellado con cera roja.",
+            "category": "documentos",
+            "stackable": false
+        },
+        "catalogo_coto": {
+            "id": "catalogo_coto",
+            "name": "Catálogo de Coto",
+            "icon": "📄",
+            "description": "Ofertas de acelga y pepitas.",
+            "category": "documentos",
+            "stackable": false
+        },
+        "polvo_estrellas": {
+            "id": "polvo_estrellas",
+            "name": "Polvo de Estrellas",
+            "icon": "✨",
+            "description": "Un frasco con polvo brillante de origen dudoso.",
+            "category": "items",
+            "stackable": false
+        }
+    }
+}

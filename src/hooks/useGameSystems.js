@@ -1,10 +1,13 @@
-import { useCallback } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import { useStats } from './useStats'
 import { useInventory } from './useInventory'
+import { loadGameConfig, DEFAULT_CONFIG } from '../config/loadGameConfig'
 
 /**
  * useGameSystems - Orchestrator hook that combines Stats + Inventory
  * and provides a unified interface for processing game tags
+ * 
+ * Loads config asynchronously from {storyId}.config.json
  * 
  * Supported tags:
  * - #stat:statId:+/-value  (e.g., #stat:hp:-10, #stat:karma:+5)
@@ -13,8 +16,36 @@ import { useInventory } from './useInventory'
  * - #inv:clear
  */
 export function useGameSystems(storyId) {
-    const statsHook = useStats(storyId)
-    const inventoryHook = useInventory(storyId)
+    const [config, setConfig] = useState(DEFAULT_CONFIG)
+    const [configLoaded, setConfigLoaded] = useState(false)
+
+    // Load config when storyId changes
+    useEffect(() => {
+        let cancelled = false
+
+        async function loadConfig() {
+            if (!storyId) {
+                setConfig(DEFAULT_CONFIG)
+                setConfigLoaded(true)
+                return
+            }
+
+            const loaded = await loadGameConfig(storyId)
+            if (!cancelled) {
+                setConfig(loaded)
+                setConfigLoaded(true)
+            }
+        }
+
+        setConfigLoaded(false)
+        loadConfig()
+
+        return () => { cancelled = true }
+    }, [storyId])
+
+    // Pass config to child hooks
+    const statsHook = useStats(config)
+    const inventoryHook = useInventory(config)
 
     /**
      * Parse and process a single game system tag
@@ -110,6 +141,10 @@ export function useGameSystems(storyId) {
     }, [statsHook, inventoryHook])
 
     return {
+        // Config
+        config,
+        configLoaded,
+
         // Stats
         stats: statsHook.stats,
         statsConfig: statsHook.statsConfig,
@@ -139,3 +174,4 @@ export function useGameSystems(storyId) {
         exportGameSystems
     }
 }
+

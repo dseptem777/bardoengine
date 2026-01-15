@@ -1,13 +1,15 @@
 import { useState, useCallback, useMemo } from 'react'
-import { getGameConfig } from '../config/gameConfig'
 
 /**
  * useStats - Hook for managing game stats (HP, MP, Cordura, Karma, etc.)
  * Supports both 'bar' type (resources) and 'value' type (attributes)
+ * 
+ * @param {Object} config - Game configuration object (from loadGameConfig)
  */
-export function useStats(storyId) {
-    const config = useMemo(() => getGameConfig(storyId), [storyId])
-    const statsConfig = config?.stats || { enabled: false, definitions: [] }
+export function useStats(config) {
+    const statsConfig = useMemo(() => {
+        return config?.stats || { enabled: false, definitions: [], onZero: {} }
+    }, [config])
 
     // Initialize stats from config
     const getInitialStats = useCallback(() => {
@@ -21,6 +23,11 @@ export function useStats(storyId) {
     }, [statsConfig])
 
     const [stats, setStats] = useState(getInitialStats)
+
+    // Reset stats when config changes
+    useMemo(() => {
+        setStats(getInitialStats())
+    }, [getInitialStats])
 
     /**
      * Modify a stat by delta (add or subtract)
@@ -138,3 +145,4 @@ export function useStats(storyId) {
         exportStats
     }
 }
+
