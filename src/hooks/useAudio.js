@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useEffect } from 'react'
 import { Howl, Howler } from 'howler'
 
 // ============================================
@@ -50,6 +50,41 @@ export function useAudio() {
     const soundsRef = useRef({})
     const musicRef = useRef(null)
     const currentTrackRef = useRef(null)
+    const audioUnlockedRef = useRef(false)
+
+    // Unlock audio context on first user interaction (fixes autoplay policy)
+    const unlockAudio = useCallback(() => {
+        if (audioUnlockedRef.current) return
+
+        // Create and play a silent sound to unlock the audio context
+        const silentSound = new Howl({
+            src: ['data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAABhgC7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAAAAAAAAAAAAYYoRwmHAAAAAAD/+9DEAAAIAANIAAAAQAAAaQAAAAEMAAAANIAAAARMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7UMQbg8AAAGkAAAAIAAANIAAAARVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/+1DEJIPAAABpAAAACAAADSAAAAEVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV'],
+            volume: 0,
+            onend: () => silentSound.unload()
+        })
+        silentSound.play()
+
+        audioUnlockedRef.current = true
+        console.log('[Audio] Audio context unlocked')
+
+        // Remove the event listeners after unlocking
+        document.removeEventListener('click', unlockAudio)
+        document.removeEventListener('touchstart', unlockAudio)
+        document.removeEventListener('keydown', unlockAudio)
+    }, [])
+
+    // Set up unlock listeners on mount
+    useEffect(() => {
+        document.addEventListener('click', unlockAudio, { once: true })
+        document.addEventListener('touchstart', unlockAudio, { once: true })
+        document.addEventListener('keydown', unlockAudio, { once: true })
+
+        return () => {
+            document.removeEventListener('click', unlockAudio)
+            document.removeEventListener('touchstart', unlockAudio)
+            document.removeEventListener('keydown', unlockAudio)
+        }
+    }, [unlockAudio])
 
     // ==================
     // SFX Functions
