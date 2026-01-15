@@ -1,6 +1,6 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "Serruchin",
+  "productName": "Serruchín",
   "version": "0.1.0",
   "identifier": "com.bardoengine.serruchin",
   "build": {
