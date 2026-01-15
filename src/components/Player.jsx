@@ -3,7 +3,7 @@ import TextDisplay from './TextDisplay'
 import ChoiceButton from './ChoiceButton'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation'
 
-export default function Player({ text, choices, isEnded, onChoice, onRestart, onFinish, onBack }) {
+export default function Player({ text, choices, isEnded, onChoice, onRestart, onFinish, onBack, onSave }) {
     // If no text but has interactive content, skip typewriter
     const hasInteractiveContent = choices.length > 0 || isEnded
     const [isTyping, setIsTyping] = useState(text ? true : !hasInteractiveContent)
@@ -43,12 +43,22 @@ export default function Player({ text, choices, isEnded, onChoice, onRestart, on
                     <h1 className="font-mono text-bardo-accent text-sm tracking-wider">
                         BARDOENGINE v1.0
                     </h1>
-                    <button
-                        onClick={onBack}
-                        className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
-                    >
-                        ← MENÚ
-                    </button>
+                    <div className="flex items-center gap-4">
+                        {onSave && (
+                            <button
+                                onClick={onSave}
+                                className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
+                            >
+                                💾 GUARDAR
+                            </button>
+                        )}
+                        <button
+                            onClick={onBack}
+                            className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
+                        >
+                            ← MENÚ
+                        </button>
+                    </div>
                 </div>
             </header>
 
