@@ -6,6 +6,7 @@ import VFXLayer from './components/VFXLayer'
 import StatsPanel from './components/StatsPanel'
 import InventoryPanel from './components/InventoryPanel'
 import { useVFX } from './hooks/useVFX'
+import { useAudio } from './hooks/useAudio'
 import { useSaveSystem } from './hooks/useSaveSystem'
 import { useGameSystems } from './hooks/useGameSystems'
 
@@ -26,7 +27,8 @@ function App() {
     const [canContinue, setCanContinue] = useState(false)
     const [isEnded, setIsEnded] = useState(false)
 
-    const { vfxState, triggerVFX, clearVFX } = useVFX()
+    const { playSfx, playMusic, stopMusic, stopAll: stopAllAudio } = useAudio()
+    const { vfxState, triggerVFX, clearVFX } = useVFX({ playSfx, playMusic, stopMusic })
     const { saveGame, loadGame, clearSave, hasSave } = useSaveSystem()
 
     // Game systems (stats + inventory)
@@ -63,7 +65,9 @@ function App() {
 
     // Process tags (VFX + Game Systems)
     const processTags = useCallback((tags) => {
-        tags.forEach(tag => {
+        tags.forEach(rawTag => {
+            const tag = rawTag.trim()
+            if (!tag) return
             // Try game systems first (stats/inventory)
             const handled = gameSystems.processGameTag(tag)
             // If not handled by game systems, try VFX
@@ -122,6 +126,7 @@ function App() {
         if (storyId) {
             clearSave(storyId)
             clearVFX()
+            stopMusic(false) // Stop music immediately on restart
             gameSystems.resetGameSystems()
             setText('') // Clear text so useEffect triggers continueStory
             setChoices([])
@@ -131,7 +136,7 @@ function App() {
                 initStory(storyInfo.data, storyInfo.id)
             }
         }
-    }, [storyId, clearSave, clearVFX, gameSystems, initStory])
+    }, [storyId, clearSave, clearVFX, stopMusic, gameSystems, initStory])
 
     // Back to menu
     const backToMenu = useCallback(() => {
@@ -140,8 +145,9 @@ function App() {
         setText('')
         setChoices([])
         clearVFX()
+        stopMusic() // Fade out music when going to menu
         gameSystems.resetGameSystems()
-    }, [clearVFX, gameSystems])
+    }, [clearVFX, stopMusic, gameSystems])
 
     // Finish game (clear save and back to menu)
     const finishGame = useCallback(() => {
