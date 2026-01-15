@@ -91,32 +91,31 @@ export default function Player({ text, choices, isEnded, onChoice, onRestart, on
 
                             {/* End state */}
                             {isEnded && (
-                                <div className="text-center pt-8 space-y-4">
-                                    <p className="font-mono text-bardo-muted text-sm">
+                                <div className="pt-8 space-y-4 w-full">
+                                    <p className="font-mono text-bardo-muted text-sm text-center">
                                         ─── FIN ───
                                     </p>
-                                    <div className="flex gap-4 justify-center flex-wrap">
-                                        <button
-                                            onClick={onRestart}
-                                            className="px-6 py-3 bg-bardo-accent text-bardo-bg font-mono 
-                                 hover:bg-yellow-400 transition-colors rounded"
-                                        >
-                                            REINICIAR
-                                        </button>
-                                        <button
-                                            onClick={onFinish}
-                                            className="px-6 py-3 bg-green-600 text-white font-mono 
-                                 hover:bg-green-500 transition-colors rounded"
-                                        >
-                                            ✓ FINALIZAR
-                                        </button>
-                                        <button
-                                            onClick={onBack}
-                                            className="px-6 py-3 border border-bardo-accent text-bardo-accent font-mono 
-                                 hover:bg-bardo-accent hover:text-bardo-bg transition-colors rounded"
-                                        >
-                                            MENÚ
-                                        </button>
+                                    <div className="w-full flex justify-center">
+                                        <div className="inline-flex gap-4 items-center flex-wrap justify-center">
+                                            <button
+                                                onClick={onRestart}
+                                                className="min-w-[140px] px-6 py-3 bg-bardo-accent text-bardo-bg font-mono hover:bg-yellow-400 transition-colors rounded text-center"
+                                            >
+                                                REINICIAR
+                                            </button>
+                                            <button
+                                                onClick={onFinish}
+                                                className="min-w-[140px] px-6 py-3 bg-green-600 text-white font-mono hover:bg-green-500 transition-colors rounded text-center"
+                                            >
+                                                ✓ FINALIZAR
+                                            </button>
+                                            <button
+                                                onClick={onBack}
+                                                className="min-w-[140px] px-6 py-3 border border-bardo-accent text-bardo-accent font-mono hover:bg-bardo-accent hover:text-bardo-bg transition-colors rounded text-center"
+                                            >
+                                                MENÚ
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             )}
