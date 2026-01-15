@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "Serruchin",
-  "version": "0.1.0",
+  "productName": "Serruchín",
+  "version": "1.0.0",
   "identifier": "com.bardoengine.serruchin",
   "build": {
     "frontendDist": "../dist",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Serruchin",
+        "title": "Serruchín",
         "width": 1024,
         "height": 768,
         "resizable": true,
