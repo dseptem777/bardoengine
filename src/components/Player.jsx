@@ -1,12 +1,29 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import TextDisplay from './TextDisplay'
 import ChoiceButton from './ChoiceButton'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation'
 
-export default function Player({ text, choices, isEnded, onChoice, onRestart, onFinish, onBack, onSave }) {
+export default function Player({
+    text,
+    choices,
+    isEnded,
+    onChoice,
+    onRestart,
+    onFinish,
+    onBack,
+    onSave,
+    onContinue,
+    onOptions,
+    // Settings props
+    typewriterDelay = 30,
+    fontSize = 'normal',
+    autoAdvance = false,
+    autoAdvanceDelay = 4,
+}) {
     // If no text but has interactive content, skip typewriter
     const hasInteractiveContent = choices.length > 0 || isEnded
     const [isTyping, setIsTyping] = useState(text ? true : !hasInteractiveContent)
+    const autoAdvanceTimerRef = useRef(null)
 
     useEffect(() => {
         // If no text but has interactive content, skip typewriter immediately
@@ -16,6 +33,15 @@ export default function Player({ text, choices, isEnded, onChoice, onRestart, on
             setIsTyping(true)
         }
     }, [text, choices.length, isEnded])
+
+    // Cleanup auto-advance timer on unmount or text change
+    useEffect(() => {
+        return () => {
+            if (autoAdvanceTimerRef.current) {
+                clearTimeout(autoAdvanceTimerRef.current)
+            }
+        }
+    }, [text])
 
     const handleSkip = useCallback(() => {
         setIsTyping(false)
@@ -33,7 +59,27 @@ export default function Player({ text, choices, isEnded, onChoice, onRestart, on
 
     const handleTypingComplete = useCallback(() => {
         setIsTyping(false)
+
+        // Auto-advance: only if enabled, no choices, not ended, and onContinue exists
+        if (autoAdvance && choices.length === 0 && !isEnded && onContinue) {
+            autoAdvanceTimerRef.current = setTimeout(() => {
+                onContinue()
+            }, autoAdvanceDelay * 1000)
+        }
+    }, [autoAdvance, autoAdvanceDelay, choices.length, isEnded, onContinue])
+
+    // Cancel auto-advance if user interacts
+    const cancelAutoAdvance = useCallback(() => {
+        if (autoAdvanceTimerRef.current) {
+            clearTimeout(autoAdvanceTimerRef.current)
+            autoAdvanceTimerRef.current = null
+        }
     }, [])
+
+    const handleChoice = useCallback((index) => {
+        cancelAutoAdvance()
+        onChoice(index)
+    }, [onChoice, cancelAutoAdvance])
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -44,6 +90,15 @@ export default function Player({ text, choices, isEnded, onChoice, onRestart, on
                         BARDOENGINE v1.0
                     </h1>
                     <div className="flex items-center gap-4">
+                        {onOptions && (
+                            <button
+                                onClick={onOptions}
+                                className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
+                                title="Opciones"
+                            >
+                                ⚙️
+                            </button>
+                        )}
                         {onSave && (
                             <button
                                 onClick={onSave}
@@ -74,6 +129,8 @@ export default function Player({ text, choices, isEnded, onChoice, onRestart, on
                             text={text}
                             isTyping={isTyping}
                             onComplete={handleTypingComplete}
+                            typewriterDelay={typewriterDelay}
+                            fontSize={fontSize}
                         />
                     </div>
 
@@ -85,7 +142,7 @@ export default function Player({ text, choices, isEnded, onChoice, onRestart, on
                                     key={index}
                                     text={choice.text}
                                     index={index}
-                                    onClick={() => onChoice(index)}
+                                    onClick={() => handleChoice(index)}
                                 />
                             ))}
 
@@ -123,9 +180,16 @@ export default function Player({ text, choices, isEnded, onChoice, onRestart, on
                     )}
 
                     {/* Typing indicator */}
-                    {isTyping && (
+                    {isTyping && typewriterDelay > 0 && (
                         <p className="text-bardo-muted font-mono text-sm animate-pulse">
                             Presiona cualquier tecla o click para continuar...
+                        </p>
+                    )}
+
+                    {/* Auto-advance indicator */}
+                    {!isTyping && autoAdvance && choices.length === 0 && !isEnded && (
+                        <p className="text-bardo-muted font-mono text-xs animate-pulse mt-4">
+                            ⏩ Auto-avance en {autoAdvanceDelay}s...
                         </p>
                     )}
                 </div>
@@ -140,3 +204,4 @@ export default function Player({ text, choices, isEnded, onChoice, onRestart, on
         </div>
     )
 }
+

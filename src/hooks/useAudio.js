@@ -41,16 +41,37 @@ const MUSIC = {
     game_over: '/music/game_over.mp3',
 }
 
-// Default volumes
-const SFX_VOLUME = 0.7
-const MUSIC_VOLUME = 0.4
+// Default volumes (used as fallback)
+const DEFAULT_SFX_VOLUME = 0.7
+const DEFAULT_MUSIC_VOLUME = 0.4
 const FADE_DURATION = 1000 // ms
 
-export function useAudio() {
+export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT_MUSIC_VOLUME } = {}) {
     const soundsRef = useRef({})
     const musicRef = useRef(null)
     const currentTrackRef = useRef(null)
     const audioUnlockedRef = useRef(false)
+
+    // Store current volumes in refs for real-time updates
+    const sfxVolumeRef = useRef(sfxVolume)
+    const musicVolumeRef = useRef(musicVolume)
+
+    // Update volume refs when props change
+    useEffect(() => {
+        sfxVolumeRef.current = sfxVolume
+        // Update existing sound instances
+        Object.values(soundsRef.current).forEach(sound => {
+            sound.volume(sfxVolume)
+        })
+    }, [sfxVolume])
+
+    useEffect(() => {
+        musicVolumeRef.current = musicVolume
+        // Update current music if playing
+        if (musicRef.current && musicRef.current.playing()) {
+            musicRef.current.volume(musicVolume)
+        }
+    }, [musicVolume])
 
     // Unlock audio context on first user interaction (fixes autoplay policy)
     const unlockAudio = useCallback(() => {
@@ -101,7 +122,7 @@ export function useAudio() {
         if (!soundsRef.current[id]) {
             soundsRef.current[id] = new Howl({
                 src: [SOUNDS[id]],
-                volume: SFX_VOLUME,
+                volume: sfxVolumeRef.current,
                 onloaderror: (soundId, error) => {
                     console.error(`[Audio] Failed to load SFX ${id}:`, error)
                 },
@@ -109,6 +130,9 @@ export function useAudio() {
                     console.error(`[Audio] Failed to play SFX ${id}:`, error)
                 }
             })
+        } else {
+            // Update volume before playing
+            soundsRef.current[id].volume(sfxVolumeRef.current)
         }
 
         soundsRef.current[id].play()
@@ -144,7 +168,7 @@ export function useAudio() {
         // Create new music instance
         musicRef.current = new Howl({
             src: [MUSIC[id]],
-            volume: fadeIn ? 0 : MUSIC_VOLUME,
+            volume: fadeIn ? 0 : musicVolumeRef.current,
             loop: true,
             onloaderror: (soundId, error) => {
                 console.error(`[Audio] Failed to load music ${id}:`, error)
@@ -158,7 +182,7 @@ export function useAudio() {
         musicRef.current.play()
 
         if (fadeIn) {
-            musicRef.current.fade(0, MUSIC_VOLUME, FADE_DURATION)
+            musicRef.current.fade(0, musicVolumeRef.current, FADE_DURATION)
         }
     }, [])
 

@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 
 /**
  * StartScreen - Main menu for standalone games
- * Shows: New Game, Continue (always visible but disabled if no save), Load Game
+ * Shows: New Game, Continue (always visible but disabled if no save), Load Game, Options
  */
 export default function StartScreen({
     gameTitle = 'BardoEngine',
@@ -11,6 +11,7 @@ export default function StartScreen({
     onNewGame,
     onContinue,
     onLoadGame,
+    onOptions,
     onBack = null // For dev mode: back to story selector
 }) {
     return (
@@ -65,6 +66,13 @@ export default function StartScreen({
                     {hasAnySave && (
                         <MenuButton onClick={onLoadGame} secondary>
                             CARGAR PARTIDA
+                        </MenuButton>
+                    )}
+
+                    {/* Options */}
+                    {onOptions && (
+                        <MenuButton onClick={onOptions} secondary>
+                            ⚙️ OPCIONES
                         </MenuButton>
                     )}
                 </div>

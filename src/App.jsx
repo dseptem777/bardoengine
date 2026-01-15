@@ -4,6 +4,7 @@ import Player from './components/Player'
 import StorySelector from './components/StorySelector'
 import StartScreen from './components/StartScreen'
 import SaveLoadModal from './components/SaveLoadModal'
+import OptionsModal from './components/OptionsModal'
 import VFXLayer from './components/VFXLayer'
 import StatsPanel from './components/StatsPanel'
 import InventoryPanel from './components/InventoryPanel'
@@ -12,6 +13,7 @@ import { useAudio } from './hooks/useAudio'
 import { useSaveSystem } from './hooks/useSaveSystem'
 import { useGameSystems } from './hooks/useGameSystems'
 import { useStoryLoader } from './hooks/useStoryLoader'
+import { SettingsProvider, useSettings } from './hooks/useSettings'
 
 // Import the compiled stories (used in development mode)
 import partuzaStory from './stories/partuza.json'
@@ -29,7 +31,11 @@ const AVAILABLE_STORIES = [
     { id: 'partuza', title: 'Tu nombre en clave es Partuza', data: partuzaStory }
 ]
 
-function App() {
+// Inner App component that uses settings context
+function AppContent({ onStorySelect }) {
+    // Settings
+    const { settings, getTypewriterDelay, getMusicVolume, getSfxVolume } = useSettings()
+
     // Game state
     const [story, setStory] = useState(null)
     const [storyId, setStoryId] = useState(null)
@@ -42,10 +48,17 @@ function App() {
     // Screen state
     const [selectedStory, setSelectedStory] = useState(null) // Story selected but not started (dev mode)
     const [saveModalMode, setSaveModalMode] = useState(null) // 'save' | 'load' | null
+    const [optionsOpen, setOptionsOpen] = useState(false)
 
-    // Hooks
-    const { playSfx, playMusic, stopMusic, stopAll: stopAllAudio } = useAudio()
-    const { vfxState, triggerVFX, clearVFX } = useVFX({ playSfx, playMusic, stopMusic })
+    // Hooks with settings integration
+    const { playSfx, playMusic, stopMusic, stopAll: stopAllAudio } = useAudio({
+        sfxVolume: getSfxVolume(),
+        musicVolume: getMusicVolume(),
+    })
+    const { vfxState, triggerVFX, clearVFX } = useVFX(
+        { playSfx, playMusic, stopMusic },
+        settings.vfxEnabled
+    )
 
     // Story loader with environment detection
     const { stories, isLoading: storyLoading, error: storyError, isProductionMode } = useStoryLoader({
@@ -225,7 +238,11 @@ function App() {
     const backToStorySelector = useCallback(() => {
         backToStartScreen()
         setSelectedStory(null) // Clear selection to show story selector
-    }, [backToStartScreen])
+        // Notify parent so SettingsProvider knows no story is selected
+        if (onStorySelect) {
+            onStorySelect(null)
+        }
+    }, [backToStartScreen, onStorySelect])
 
     // Finish game (ending reached) - just go back to start, keeps saves
     const finishGame = useCallback(() => {
@@ -235,7 +252,11 @@ function App() {
     // Dev mode: select story (goes to start screen, not directly to game)
     const selectStoryDev = useCallback((storyInfo) => {
         setSelectedStory(storyInfo)
-    }, [])
+        // Notify parent so SettingsProvider gets the correct storyId
+        if (onStorySelect) {
+            onStorySelect(storyInfo.id)
+        }
+    }, [onStorySelect])
 
     // Continue story when initialized
     useEffect(() => {
@@ -288,6 +309,12 @@ function App() {
                 onClose={() => setSaveModalMode(null)}
             />
 
+            {/* Options Modal */}
+            <OptionsModal
+                isOpen={optionsOpen}
+                onClose={() => setOptionsOpen(false)}
+            />
+
             {/* Stats Panel */}
             {story && (
                 <StatsPanel
@@ -338,6 +365,7 @@ function App() {
                     onNewGame={handleNewGame}
                     onContinue={handleContinue}
                     onLoadGame={() => setSaveModalMode('load')}
+                    onOptions={() => setOptionsOpen(true)}
                     onBack={!isProductionMode ? backToStorySelector : null}
                 />
             )}
@@ -353,10 +381,45 @@ function App() {
                     onFinish={finishGame}
                     onBack={backToStartScreen}
                     onSave={() => setSaveModalMode('save')}
+                    onContinue={continueStory}
+                    onOptions={() => setOptionsOpen(true)}
+                    // Settings
+                    typewriterDelay={getTypewriterDelay()}
+                    fontSize={settings.fontSize}
+                    autoAdvance={settings.autoAdvance}
+                    autoAdvanceDelay={settings.autoAdvanceDelay}
                 />
             )}
         </div>
     )
 }
 
+// Wrapper component that manages story selection and provides settings per-game
+function App() {
+    // We need to track selectedStory at this level to pass storyId to SettingsProvider
+    const [selectedStoryId, setSelectedStoryId] = useState(null)
+
+    // Story loader to detect production mode
+    const { stories, isLoading, isProductionMode } = useStoryLoader({
+        devStories: DEV_STORIES
+    })
+
+    // Determine current story ID
+    // In production: always the first (and only) story
+    // In dev mode: the selected story, or null if none selected
+    const currentStoryId = isProductionMode && stories.length > 0
+        ? stories[0].id
+        : selectedStoryId
+
+    return (
+        <SettingsProvider storyId={currentStoryId}>
+            <AppContent
+                onStorySelect={setSelectedStoryId}
+                selectedStoryId={selectedStoryId}
+            />
+        </SettingsProvider>
+    )
+}
+
 export default App
+
