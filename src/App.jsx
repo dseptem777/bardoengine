@@ -2,6 +2,8 @@ import { useState, useCallback, useEffect } from 'react'
 import { Story } from 'inkjs'
 import Player from './components/Player'
 import StorySelector from './components/StorySelector'
+import StartScreen from './components/StartScreen'
+import SaveLoadModal from './components/SaveLoadModal'
 import VFXLayer from './components/VFXLayer'
 import StatsPanel from './components/StatsPanel'
 import InventoryPanel from './components/InventoryPanel'
@@ -28,29 +30,55 @@ const AVAILABLE_STORIES = [
 ]
 
 function App() {
+    // Game state
     const [story, setStory] = useState(null)
     const [storyId, setStoryId] = useState(null)
+    const [storyData, setStoryData] = useState(null)
     const [text, setText] = useState('')
     const [choices, setChoices] = useState([])
     const [canContinue, setCanContinue] = useState(false)
     const [isEnded, setIsEnded] = useState(false)
-    const [productionAutoStarted, setProductionAutoStarted] = useState(false)
 
+    // Screen state
+    const [selectedStory, setSelectedStory] = useState(null) // Story selected but not started (dev mode)
+    const [saveModalMode, setSaveModalMode] = useState(null) // 'save' | 'load' | null
+
+    // Hooks
     const { playSfx, playMusic, stopMusic, stopAll: stopAllAudio } = useAudio()
     const { vfxState, triggerVFX, clearVFX } = useVFX({ playSfx, playMusic, stopMusic })
-    const { saveGame, loadGame, clearSave, hasSave } = useSaveSystem()
 
     // Story loader with environment detection
     const { stories, isLoading: storyLoading, error: storyError, isProductionMode } = useStoryLoader({
         devStories: DEV_STORIES
     })
 
+    // Get current story ID for save system
+    const currentStoryId = isProductionMode && stories.length > 0
+        ? stories[0].id
+        : (storyId || selectedStory?.id)
+
+    // Save system (needs storyId)
+    const saveSystem = useSaveSystem(currentStoryId)
+
     // Game systems (stats + inventory)
-    const gameSystems = useGameSystems(storyId)
+    const gameSystems = useGameSystems(currentStoryId)
+
+    // Get game title for start screen
+    const getGameTitle = () => {
+        if (isProductionMode && stories.length > 0) return stories[0].title
+        if (selectedStory) return selectedStory.title
+        return 'BardoEngine'
+    }
+
+    // Get current story data (for starting games)
+    const getCurrentStoryData = () => {
+        if (isProductionMode && stories.length > 0) return stories[0]
+        return selectedStory
+    }
 
     // Initialize story
-    const initStory = useCallback((storyData, id, savedState = null, savedText = '', savedGameSystems = null) => {
-        const newStory = new Story(storyData)
+    const initStory = useCallback((data, id, savedState = null, savedText = '', savedGameSystems = null) => {
+        const newStory = new Story(data)
 
         if (savedState) {
             newStory.state.LoadJson(savedState)
@@ -58,6 +86,7 @@ function App() {
 
         setStory(newStory)
         setStoryId(id)
+        setStoryData(data)
 
         // Load saved game systems (stats/inventory)
         if (savedGameSystems) {
@@ -65,12 +94,10 @@ function App() {
         }
 
         // If we have saved text, restore it along with choices
-        // (the useEffect won't run since text won't be empty)
         if (savedText) {
             setText(savedText)
             setChoices(newStory.currentChoices)
             setCanContinue(newStory.canContinue)
-            // Detect if we're at an ending (no choices and can't continue)
             setIsEnded(!newStory.canContinue && newStory.currentChoices.length === 0)
         } else {
             setIsEnded(false)
@@ -82,9 +109,7 @@ function App() {
         tags.forEach(rawTag => {
             const tag = rawTag.trim()
             if (!tag) return
-            // Try game systems first (stats/inventory)
             const handled = gameSystems.processGameTag(tag)
-            // If not handled by game systems, try VFX
             if (!handled) {
                 triggerVFX(tag)
             }
@@ -108,14 +133,12 @@ function App() {
         setCanContinue(story.canContinue)
         setIsEnded(!story.canContinue && story.currentChoices.length === 0)
 
-        // Process all tags (VFX + Game Systems)
         processTags(allTags)
 
-        // Auto-save with current text and game systems
         if (storyId) {
-            saveGame(storyId, story.state.toJson(), fullText.trim(), gameSystems.exportGameSystems())
+            saveSystem.autoSave(story.state.toJson(), fullText.trim(), gameSystems.exportGameSystems())
         }
-    }, [story, storyId, processTags, saveGame, gameSystems])
+    }, [story, storyId, processTags, saveSystem, gameSystems])
 
     // Make choice
     const makeChoice = useCallback((index) => {
@@ -125,61 +148,98 @@ function App() {
         continueStory()
     }, [story, continueStory, clearVFX])
 
-    // Start new game
-    const startGame = useCallback((storyInfo) => {
-        const saveData = loadGame(storyInfo.id)
-        if (saveData) {
-            initStory(storyInfo.data, storyInfo.id, saveData.state, saveData.text, saveData.gameSystems)
-        } else {
+    // ==================
+    // Start Screen Actions
+    // ==================
+
+    // New Game - start fresh
+    const handleNewGame = useCallback(() => {
+        const storyInfo = getCurrentStoryData()
+        if (storyInfo) {
+            gameSystems.resetGameSystems()
             initStory(storyInfo.data, storyInfo.id)
         }
-    }, [initStory, loadGame])
+    }, [getCurrentStoryData, initStory, gameSystems])
 
-    // Restart
-    const restart = useCallback(() => {
-        if (storyId) {
-            clearSave(storyId)
-            clearVFX()
-            stopMusic(false) // Stop music immediately on restart
-            gameSystems.resetGameSystems()
-            setText('') // Clear text so useEffect triggers continueStory
-            setChoices([])
-            setIsEnded(false)
-            // Find story in available stories (works for both dev and production)
-            const storyInfo = isProductionMode
-                ? stories[0]
-                : AVAILABLE_STORIES.find(s => s.id === storyId)
+    // Continue - load last save
+    const handleContinue = useCallback(() => {
+        if (!saveSystem.hasContinue) return
+        const saveData = saveSystem.loadLastSave()
+        if (saveData) {
+            const storyInfo = getCurrentStoryData()
             if (storyInfo) {
-                initStory(storyInfo.data, storyInfo.id)
+                initStory(storyInfo.data, storyInfo.id, saveData.state, saveData.text, saveData.gameSystems)
             }
         }
-    }, [storyId, clearSave, clearVFX, stopMusic, gameSystems, initStory])
+    }, [saveSystem, getCurrentStoryData, initStory])
 
-    // Back to menu (only available in dev mode)
-    const backToMenu = useCallback(() => {
-        if (isProductionMode) return // No menu in production
+    // Load specific save
+    const handleLoadSave = useCallback((saveId) => {
+        const saveData = saveSystem.loadSave(saveId)
+        if (saveData) {
+            const storyInfo = getCurrentStoryData()
+            if (storyInfo) {
+                initStory(storyInfo.data, storyInfo.id, saveData.state, saveData.text, saveData.gameSystems)
+            }
+        }
+    }, [saveSystem, getCurrentStoryData, initStory])
+
+    // Manual save (from game)
+    const handleManualSave = useCallback((name, overwriteId = null) => {
+        if (!story || !storyId) return
+        saveSystem.saveGame(name, story.state.toJson(), text, gameSystems.exportGameSystems(), overwriteId)
+    }, [story, storyId, text, saveSystem, gameSystems])
+
+    // ==================
+    // In-Game Actions  
+    // ==================
+
+    // Restart - clear and start fresh
+    const restart = useCallback(() => {
+        if (storyData && storyId) {
+            clearVFX()
+            stopMusic(false)
+            gameSystems.resetGameSystems()
+            setText('')
+            setChoices([])
+            setIsEnded(false)
+            initStory(storyData, storyId)
+        }
+    }, [storyData, storyId, clearVFX, stopMusic, gameSystems, initStory])
+
+    // Back to start screen (keeps selected story in dev mode)
+    const backToStartScreen = useCallback(() => {
         setStory(null)
         setStoryId(null)
+        setStoryData(null)
         setText('')
         setChoices([])
         clearVFX()
-        stopMusic() // Fade out music when going to menu
+        stopMusic()
         gameSystems.resetGameSystems()
-    }, [clearVFX, stopMusic, gameSystems, isProductionMode])
+        // In production, selectedStory stays null (uses stories[0])
+        // In dev mode, keep selectedStory so we go back to its start screen
+    }, [clearVFX, stopMusic, gameSystems])
 
-    // Finish game (clear save and back to menu)
+    // Back to story selector (dev mode only)
+    const backToStorySelector = useCallback(() => {
+        backToStartScreen()
+        setSelectedStory(null) // Clear selection to show story selector
+    }, [backToStartScreen])
+
+    // Finish game (ending reached) - just go back to start, keeps saves
     const finishGame = useCallback(() => {
-        if (storyId) {
-            clearSave(storyId)
-        }
-        backToMenu()
-    }, [storyId, clearSave, backToMenu])
+        backToStartScreen()
+    }, [backToStartScreen])
 
-    // Continue story when initialized or after restart
+    // Dev mode: select story (goes to start screen, not directly to game)
+    const selectStoryDev = useCallback((storyInfo) => {
+        setSelectedStory(storyInfo)
+    }, [])
+
+    // Continue story when initialized
     useEffect(() => {
         if (story && !text) {
-            // If we can't continue, we're at a decision point - just load the current choices
-            // The text was already restored from saved data in initStory
             if (!story.canContinue && story.currentChoices.length > 0) {
                 setChoices(story.currentChoices)
                 setCanContinue(false)
@@ -187,7 +247,6 @@ function App() {
                 return
             }
 
-            // Directly continue story here to avoid closure issues
             let fullText = ''
             let allTags = []
 
@@ -201,29 +260,35 @@ function App() {
             setCanContinue(story.canContinue)
             setIsEnded(!story.canContinue && story.currentChoices.length === 0)
 
-            // Process all tags (VFX + Game Systems)
             processTags(allTags)
 
-            // Auto-save with current text and game systems
             if (storyId) {
-                saveGame(storyId, story.state.toJson(), fullText.trim(), gameSystems.exportGameSystems())
+                saveSystem.autoSave(story.state.toJson(), fullText.trim(), gameSystems.exportGameSystems())
             }
         }
-    }, [story, text, storyId, processTags, saveGame, gameSystems])
+    }, [story, text, storyId, processTags, saveSystem, gameSystems])
 
-    // Auto-start in production mode
-    useEffect(() => {
-        if (isProductionMode && !productionAutoStarted && stories.length > 0 && !storyLoading) {
-            setProductionAutoStarted(true)
-            startGame(stories[0])
-        }
-    }, [isProductionMode, productionAutoStarted, stories, storyLoading, startGame])
+    // Determine current screen
+    const showStorySelector = !isProductionMode && !selectedStory && !story
+    const showStartScreen = (isProductionMode && !story) || (!isProductionMode && selectedStory && !story)
+    const showPlayer = story !== null
 
     return (
         <div className="min-h-screen bg-bardo-bg relative overflow-hidden">
             <VFXLayer vfxState={vfxState} />
 
-            {/* Stats Panel - only shows when story is active and stats are enabled */}
+            {/* Save/Load Modal */}
+            <SaveLoadModal
+                isOpen={saveModalMode !== null}
+                mode={saveModalMode || 'load'}
+                saves={saveSystem.saves.filter(s => !s.isAutosave)}
+                onSave={handleManualSave}
+                onLoad={handleLoadSave}
+                onDelete={saveSystem.deleteSave}
+                onClose={() => setSaveModalMode(null)}
+            />
+
+            {/* Stats Panel */}
             {story && (
                 <StatsPanel
                     stats={gameSystems.stats}
@@ -232,7 +297,7 @@ function App() {
                 />
             )}
 
-            {/* Inventory Panel - only shows when story is active and inventory is enabled */}
+            {/* Inventory Panel */}
             {story && (
                 <InventoryPanel
                     items={gameSystems.items}
@@ -241,7 +306,7 @@ function App() {
                 />
             )}
 
-            {/* Loading state for production mode */}
+            {/* Loading state */}
             {storyLoading && (
                 <div className="flex items-center justify-center min-h-screen">
                     <div className="text-bardo-accent text-2xl animate-pulse">Cargando...</div>
@@ -255,14 +320,30 @@ function App() {
                 </div>
             )}
 
-            {/* Story selector (dev mode only) or Player */}
-            {!storyLoading && !storyError && !story && !isProductionMode ? (
+            {/* Story Selector (dev mode only) */}
+            {!storyLoading && !storyError && showStorySelector && (
                 <StorySelector
                     stories={AVAILABLE_STORIES}
-                    onSelect={startGame}
-                    hasSave={hasSave}
+                    onSelect={selectStoryDev}
+                    hasSave={() => false}
                 />
-            ) : !storyLoading && !storyError && story ? (
+            )}
+
+            {/* Start Screen (both modes) */}
+            {!storyLoading && !storyError && showStartScreen && (
+                <StartScreen
+                    gameTitle={getGameTitle()}
+                    hasAnySave={saveSystem.hasAnySave}
+                    hasContinue={saveSystem.hasContinue}
+                    onNewGame={handleNewGame}
+                    onContinue={handleContinue}
+                    onLoadGame={() => setSaveModalMode('load')}
+                    onBack={!isProductionMode ? backToStorySelector : null}
+                />
+            )}
+
+            {/* Player (both modes) */}
+            {!storyLoading && !storyError && showPlayer && (
                 <Player
                     text={text}
                     choices={choices}
@@ -270,9 +351,10 @@ function App() {
                     onChoice={makeChoice}
                     onRestart={restart}
                     onFinish={finishGame}
-                    onBack={isProductionMode ? null : backToMenu}
+                    onBack={backToStartScreen}
+                    onSave={() => setSaveModalMode('save')}
                 />
-            ) : null}
+            )}
         </div>
     )
 }
