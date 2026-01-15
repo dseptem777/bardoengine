@@ -10,7 +10,8 @@
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build",
-    "encrypt-story": "node scripts/encrypt-story.cjs"
+    "encrypt-story": "node scripts/encrypt-story.cjs",
+    "build-game": "node scripts/build-game.cjs"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.9.1",
