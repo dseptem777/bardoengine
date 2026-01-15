@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "BardoEngine",
+  "productName": "Serruchin",
   "version": "0.1.0",
-  "identifier": "com.bardoengine.app",
+  "identifier": "com.bardoengine.serruchin",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "BardoEngine",
+        "title": "Serruchín",
         "width": 1024,
         "height": 768,
         "resizable": true,
@@ -26,7 +26,12 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": [
+      "nsis"
+    ],
+    "resources": {
+      "resources/*": "./"
+    },
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

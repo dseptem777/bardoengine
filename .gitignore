@@ -26,3 +26,7 @@ npm-debug.log*
 
 # Tauri (Phase 2)
 src-tauri/target/
+
+# Story encryption (generated files - not for version control)
+src/story-config.json
+src-tauri/resources/*.enc
