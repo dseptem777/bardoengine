@@ -17,7 +17,7 @@ export default function InventoryPanel({ items, inventoryConfig, getItemsWithInf
         <>
             {/* Toggle Button */}
             <motion.button
-                className="fixed top-4 right-4 z-50 bg-black/80 border border-bardo-accent/30 rounded-lg p-3 
+                className="fixed top-14 right-4 z-50 bg-black/80 border border-bardo-accent/30 rounded-lg p-3 
                            hover:border-bardo-accent/60 transition-colors backdrop-blur-sm pointer-events-auto"
                 onClick={() => setIsOpen(!isOpen)}
                 whileHover={{ scale: 1.05 }}
@@ -37,7 +37,7 @@ export default function InventoryPanel({ items, inventoryConfig, getItemsWithInf
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        className="fixed top-16 right-4 z-40 bg-black/90 border border-bardo-accent/30 
+                        className="fixed top-24 right-4 z-40 bg-black/90 border border-bardo-accent/30 
                                    rounded-lg backdrop-blur-sm w-72 max-h-[60vh] overflow-hidden pointer-events-auto"
                         initial={{ opacity: 0, x: 50, scale: 0.9 }}
                         animate={{ opacity: 1, x: 0, scale: 1 }}

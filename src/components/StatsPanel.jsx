@@ -15,7 +15,7 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo }) {
 
     return (
         <motion.div
-            className="fixed top-4 left-4 z-40 pointer-events-none"
+            className="fixed top-14 left-4 z-40 pointer-events-none"
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
