@@ -7,7 +7,7 @@
 -> intro
 
 === intro ===
-# bg:quirofano_abandonado
+# bg:quirofano_abandonado # music:horror_ambient
 Tu brazo izquierdo está negro. La gangrena subió hasta el codo en las últimas horas. El olor a carne podrida te da arcadas.
 
 En el piso hay un serrucho oxidado. No hay anestesia. No hay doctor. No hay otra salida.
@@ -104,7 +104,7 @@ Agarrás un trapo sucio y te hacés un torniquete de emergencia. El dolor sigue 
 
 Sobreviviste.
 
-# flash_yellow # play_sfx:victory
+# music:stop # flash_yellow # play_sfx:victory # music:victory_fanfare
 
 Con un brazo menos, pero vivo.
 

@@ -1,6 +1,8 @@
 import { useState, useCallback } from 'react'
 
-export function useVFX() {
+export function useVFX(audioCallbacks = {}) {
+    const { playSfx = null, playMusic = null, stopMusic = null } = audioCallbacks
+
     const [vfxState, setVfxState] = useState({
         shake: false,
         flash: null,
@@ -42,16 +44,36 @@ export function useVFX() {
             setVfxState(prev => ({ ...prev, background: bg }))
         }
 
+        // SFX: play_sfx:sound_id
         if (tag.startsWith('play_sfx:')) {
             const sfxId = tag.replace('play_sfx:', '')
-            console.log(`[SFX] Would play: ${sfxId}`)
-            // TODO: Integrate Howler.js
+            if (playSfx) {
+                playSfx(sfxId)
+            } else {
+                console.log(`[SFX] Would play: ${sfxId}`)
+            }
+        }
+
+        // MUSIC: music:track_id (starts looping track with fade-in)
+        if (tag.startsWith('music:')) {
+            const musicId = tag.replace('music:', '')
+            if (musicId === 'stop') {
+                if (stopMusic) {
+                    stopMusic()
+                } else {
+                    console.log('[Music] Would stop')
+                }
+            } else if (playMusic) {
+                playMusic(musicId)
+            } else {
+                console.log(`[Music] Would play: ${musicId}`)
+            }
         }
 
         if (tag === 'pitch_high') {
             console.log('[VFX] Pitch high effect triggered')
         }
-    }, [])
+    }, [playSfx, playMusic, stopMusic])
 
     const clearVFX = useCallback(() => {
         setVfxState(prev => ({ ...prev, shake: false, flash: null }))
