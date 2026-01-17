@@ -59,3 +59,119 @@
   box-shadow: 0 0 20px rgba(250, 204, 21, 0.4),
               0 0 40px rgba(250, 204, 21, 0.2);
 }
+
+/* ============================================
+   ERROR BOUNDARY STYLES
+   ============================================ */
+.error-boundary {
+  min-height: 100vh;
+  background: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.error-content {
+  max-width: 500px;
+  text-align: center;
+  color: #facc15;
+}
+
+.error-icon {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.error-boundary h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.error-message {
+  color: #a0a0a0;
+  margin-bottom: 2rem;
+}
+
+.error-details {
+  text-align: left;
+  margin-bottom: 2rem;
+  background: #1a1a1a;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
+.error-details summary {
+  cursor: pointer;
+  color: #facc15;
+  margin-bottom: 0.5rem;
+}
+
+.error-details pre {
+  overflow-x: auto;
+  font-size: 0.75rem;
+  color: #ff6b6b;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.error-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.error-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.error-btn.primary {
+  background: #facc15;
+  color: #0a0a0a;
+}
+
+.error-btn.primary:hover {
+  background: #fbbf24;
+  box-shadow: 0 0 20px rgba(250, 204, 21, 0.4);
+}
+
+.error-btn.secondary {
+  background: transparent;
+  border-color: #facc15;
+  color: #facc15;
+}
+
+.error-btn.secondary:hover {
+  background: rgba(250, 204, 21, 0.1);
+}
+
+.error-btn.tertiary {
+  background: transparent;
+  border-color: #666;
+  color: #666;
+}
+
+.error-btn.tertiary:hover {
+  border-color: #888;
+  color: #888;
+}
+
+.error-hint {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
