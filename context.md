@@ -52,4 +52,20 @@ UI: Fondo #0a0a0a, acentos #facc15 (Amarillo Flúor).
 
 Código: Documentación clara de componentes, tipado estricto y modularización de la lógica de efectos.
 
+6. Sincronización con GitHub
+
+El proyecto mantiene un roadmap estructurado en GitHub Issues y Milestones. Después de completar cambios significativos, la IA DEBE:
+
+Actualizar Issues: Cerrar issues completados con `gh issue close #N` y comentar qué se implementó.
+
+Actualizar Checklists: Si un issue de roadmap tiene un checklist, marcar los items completados editando el body del issue.
+
+Crear Issues Nuevos: Si durante el desarrollo se descubren bugs o features necesarios, crear issues correspondientes con los labels apropiados (phase:X, priority:X, bug/enhancement).
+
+Milestones Activos:
+- Fase 1: Core & Desktop (milestone/1)
+- Fase 2: Minijuegos & Achievements (milestone/2)
+- Fase 3: BardoEditor (milestone/3)
+- Fase 4: Mobile & Ecosystem (milestone/4)
+
 Este contexto es la base de toda interacción. Ante la duda, prioriza siempre la estabilidad del sistema y la autorización del usuario.
