@@ -49,34 +49,10 @@ fn list_available_stories(app_handle: tauri::AppHandle) -> Result<Vec<String>, S
     Ok(stories)
 }
 
-/// Close the splash screen and show the main window
-/// Called from frontend when React is fully loaded
-#[tauri::command]
-fn close_splashscreen(app_handle: tauri::AppHandle) -> Result<(), String> {
-    // Close splashscreen window
-    if let Some(splash) = app_handle.get_webview_window("splashscreen") {
-        splash.close().map_err(|e| format!("Failed to close splash: {}", e))?;
-        println!("Splashscreen closed");
-    }
-    
-    // Show main window
-    if let Some(main) = app_handle.get_webview_window("main") {
-        main.show().map_err(|e| format!("Failed to show main: {}", e))?;
-        main.set_focus().map_err(|e| format!("Failed to focus main: {}", e))?;
-        println!("Main window shown");
-    }
-    
-    Ok(())
-}
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![
-            decrypt_story, 
-            list_available_stories,
-            close_splashscreen
-        ])
+        .invoke_handler(tauri::generate_handler![decrypt_story, list_available_stories])
         .setup(|app| {
             if cfg!(debug_assertions) {
                 app.handle().plugin(
@@ -90,4 +66,3 @@ pub fn run() {
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
-
