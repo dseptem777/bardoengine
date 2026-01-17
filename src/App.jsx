@@ -404,6 +404,27 @@ function App() {
         devStories: DEV_STORIES
     })
 
+    // Close splash screen when app is ready (Tauri production only)
+    useEffect(() => {
+        const closeSplash = async () => {
+            // Only in Tauri production builds
+            if (typeof window !== 'undefined' && window.__TAURI_INTERNALS__) {
+                try {
+                    const { invoke } = await import('@tauri-apps/api/core')
+                    await invoke('close_splashscreen')
+                    console.log('[App] Splash screen closed')
+                } catch (e) {
+                    console.warn('[App] Failed to close splash:', e)
+                }
+            }
+        }
+
+        // Wait a bit for the UI to render before closing splash
+        if (!isLoading) {
+            setTimeout(closeSplash, 100)
+        }
+    }, [isLoading])
+
     // Determine current story ID
     // In production: always the first (and only) story
     // In dev mode: the selected story, or null if none selected
@@ -422,4 +443,5 @@ function App() {
 }
 
 export default App
+
 
