@@ -3,6 +3,11 @@
  * Interactive builder for BardoEngine games
  * 
  * Usage: npm run build-game
+ * 
+ * Supports:
+ * - Windows: NSIS installer (.exe)
+ * - macOS: DMG + App bundle
+ * - Linux: AppImage + Deb
  */
 
 const fs = require('fs');
@@ -12,6 +17,14 @@ const { execSync, spawn } = require('child_process');
 
 const STORIES_DIR = path.join(__dirname, '..', 'src', 'stories');
 const TAURI_CONF = path.join(__dirname, '..', 'src-tauri', 'tauri.conf.json');
+
+// Platform targets mapping
+const PLATFORM_TARGETS = {
+    windows: 'nsis',
+    mac: 'dmg,app',
+    linux: 'appimage,deb',
+    all: 'all'
+};
 
 function getAvailableStories() {
     const files = fs.readdirSync(STORIES_DIR);
@@ -87,6 +100,15 @@ function runCommand(cmd, description) {
     }
 }
 
+function detectCurrentPlatform() {
+    switch (process.platform) {
+        case 'win32': return 'windows';
+        case 'darwin': return 'mac';
+        case 'linux': return 'linux';
+        default: return 'windows';
+    }
+}
+
 async function main() {
     console.log('\n╔══════════════════════════════════════╗');
     console.log('║     🎮 BARDOENGINE GAME BUILDER 🎮    ║');
@@ -106,7 +128,7 @@ async function main() {
         console.log(`  [${i + 1}] ${s} (v${config.version}) - "${config.title}"`);
     });
 
-    // Get user selection
+    // Get user selection for story
     const selection = await prompt('\n¿Qué historia querés empaquetar? (número): ');
     const index = parseInt(selection) - 1;
 
@@ -118,10 +140,48 @@ async function main() {
     const storyId = stories[index];
     const gameConfig = getGameConfig(storyId);
 
+    // Platform selection
+    const currentPlatform = detectCurrentPlatform();
+    console.log('\nPlataformas disponibles:\n');
+    console.log(`  [1] Windows (NSIS installer)`);
+    console.log(`  [2] macOS (DMG + App bundle)`);
+    console.log(`  [3] Linux (AppImage + Deb)`);
+    console.log(`  [4] Todas (requiere cross-compilation)`);
+    console.log(`\n  ℹ️  Plataforma actual: ${currentPlatform}`);
+
+    const platformSelection = await prompt('\n¿Para qué plataforma? (número, default=actual): ');
+
+    let targetPlatform;
+    let bundleFlag = '';
+
+    switch (platformSelection) {
+        case '1':
+            targetPlatform = 'Windows';
+            bundleFlag = '--bundles nsis';
+            break;
+        case '2':
+            targetPlatform = 'macOS';
+            bundleFlag = '--bundles dmg,app';
+            break;
+        case '3':
+            targetPlatform = 'Linux';
+            bundleFlag = '--bundles appimage,deb';
+            break;
+        case '4':
+            targetPlatform = 'Todas';
+            bundleFlag = '';  // Uses "all" from config
+            break;
+        default:
+            // Default to current platform
+            targetPlatform = currentPlatform.charAt(0).toUpperCase() + currentPlatform.slice(1);
+            bundleFlag = `--bundles ${PLATFORM_TARGETS[currentPlatform]}`;
+    }
+
     console.log(`\n═══════════════════════════════════════`);
     console.log(`  Empaquetando: ${storyId}`);
     console.log(`  Título: ${gameConfig.title}`);
     console.log(`  Versión: ${gameConfig.version}`);
+    console.log(`  Plataforma: ${targetPlatform}`);
     console.log(`═══════════════════════════════════════\n`);
 
     // Step 1: Update Tauri config
@@ -132,9 +192,10 @@ async function main() {
         process.exit(1);
     }
 
-    // Step 3: Build Tauri
+    // Step 3: Build Tauri with selected target
     console.log('\n▶ Compilando aplicación Tauri (esto puede tardar unos minutos)...\n');
-    if (!runCommand('npm run tauri:build', 'Build de Tauri')) {
+    const buildCmd = bundleFlag ? `npm run tauri:build -- ${bundleFlag}` : 'npm run tauri:build';
+    if (!runCommand(buildCmd, `Build de Tauri para ${targetPlatform}`)) {
         process.exit(1);
     }
 
@@ -143,15 +204,25 @@ async function main() {
     console.log('║          ✅ BUILD EXITOSO ✅          ║');
     console.log('╚══════════════════════════════════════╝\n');
 
-    const installerPath = path.join(__dirname, '..', 'src-tauri', 'target', 'release', 'bundle', 'nsis');
-    console.log(`📦 Instalador en:\n   ${installerPath}\n`);
+    const bundleDir = path.join(__dirname, '..', 'src-tauri', 'target', 'release', 'bundle');
+    console.log(`📦 Bundles en:\n   ${bundleDir}\n`);
 
-    // Try to open the folder
-    try {
-        execSync(`explorer "${installerPath}"`, { stdio: 'ignore' });
-    } catch (e) {
-        // Ignore if explorer fails
+    // List what was generated
+    if (fs.existsSync(bundleDir)) {
+        const bundles = fs.readdirSync(bundleDir);
+        console.log('Formatos generados:');
+        bundles.forEach(b => console.log(`   - ${b}/`));
+    }
+
+    // Try to open the folder (Windows only)
+    if (process.platform === 'win32') {
+        try {
+            execSync(`explorer "${bundleDir}"`, { stdio: 'ignore' });
+        } catch (e) {
+            // Ignore if explorer fails
+        }
     }
 }
 
 main().catch(console.error);
+

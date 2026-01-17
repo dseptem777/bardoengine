@@ -80,18 +80,81 @@ npm run build-game
 
 1. **Lista historias disponibles** con su versión y título
 2. **Te pide elegir** cuál empaquetar
-3. **Actualiza `tauri.conf.json`** con el title/version del gameConfig
-4. **Encripta la historia** (protección del contenido)
-5. **Compila Tauri** → genera instalador NSIS
+3. **Te pide elegir plataforma** (Windows/Mac/Linux/Todas)
+4. **Actualiza `tauri.conf.json`** con el title/version del gameConfig
+5. **Encripta la historia** (protección del contenido)
+6. **Compila Tauri** → genera instalador para la plataforma elegida
+
+### Plataformas soportadas
+
+| Plataforma | Target | Output |
+|------------|--------|--------|
+| Windows | `nsis` | `{GameTitle}_{version}_x64-setup.exe` |
+| macOS | `dmg`, `app` | `{GameTitle}_{version}_x64.dmg` |
+| Linux | `appimage`, `deb` | `{GameTitle}_{version}_amd64.AppImage`, `.deb` |
 
 ### Output
 
-El instalador queda en:
+Los bundles quedan en:
 ```
-src-tauri/target/release/bundle/nsis/
+src-tauri/target/release/bundle/
+├── nsis/      # Windows
+├── dmg/       # macOS
+├── macos/     # macOS App bundle
+├── appimage/  # Linux AppImage
+└── deb/       # Linux .deb
 ```
 
-Archivo: `{GameTitle}_{version}_x64-setup.exe`
+---
+
+## 🖥️ Builds Multiplataforma
+
+### Requisitos por Plataforma
+
+**Windows (build nativo):**
+```powershell
+# Ya incluido en Rust toolchain
+winget install Rustlang.Rust.MSVC
+```
+
+**macOS (requiere Mac o CI):**
+```bash
+# En macOS
+xcode-select --install
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+**Linux (requiere Linux o CI):**
+```bash
+# Ubuntu/Debian
+sudo apt-get install libwebkit2gtk-4.1-dev build-essential curl wget file \
+  libssl-dev libayatana-appindicator3-dev librsvg2-dev
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+### Cross-Compilation (Avanzado)
+
+Para generar builds de otras plataformas desde Windows, necesitás GitHub Actions o similar:
+
+```yaml
+# .github/workflows/release.yml (ejemplo)
+jobs:
+  build:
+    strategy:
+      matrix:
+        platform: [macos-latest, ubuntu-22.04, windows-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v4
+      - uses: dtolnay/rust-action@stable
+      - run: npm install
+      - run: npm run tauri:build
+```
+
+> **Nota:** Las builds de Mac solo pueden generarse en macOS (requisito de Apple).
+
 
 ---
 
