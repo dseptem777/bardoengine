@@ -12,12 +12,26 @@
   "app": {
     "windows": [
       {
+        "label": "main",
         "title": "Serruchín",
         "width": 1024,
         "height": 768,
         "resizable": true,
         "fullscreen": false,
-        "decorations": true
+        "decorations": true,
+        "visible": false
+      },
+      {
+        "label": "splashscreen",
+        "title": "Cargando...",
+        "url": "splashscreen.html",
+        "width": 400,
+        "height": 300,
+        "resizable": false,
+        "decorations": false,
+        "transparent": false,
+        "center": true,
+        "alwaysOnTop": true
       }
     ],
     "security": {
