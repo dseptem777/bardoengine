@@ -3,6 +3,7 @@ import { Story } from 'inkjs'
 import Player from './components/Player'
 import StorySelector from './components/StorySelector'
 import StartScreen from './components/StartScreen'
+import IntroSequence from './components/IntroSequence'
 import SaveLoadModal from './components/SaveLoadModal'
 import OptionsModal from './components/OptionsModal'
 import VFXLayer from './components/VFXLayer'
@@ -47,6 +48,7 @@ function AppContent({ onStorySelect }) {
 
     // Screen state
     const [selectedStory, setSelectedStory] = useState(null) // Story selected but not started (dev mode)
+    const [introComplete, setIntroComplete] = useState(false) // Track if intro sequence has been shown
     const [saveModalMode, setSaveModalMode] = useState(null) // 'save' | 'load' | null
     const [optionsOpen, setOptionsOpen] = useState(false)
 
@@ -87,6 +89,11 @@ function AppContent({ onStorySelect }) {
     const getCurrentStoryData = () => {
         if (isProductionMode && stories.length > 0) return stories[0]
         return selectedStory
+    }
+
+    // Get intro config for current game
+    const getIntroConfig = () => {
+        return gameSystems.config?.intro || {}
     }
 
     // Initialize story
@@ -238,6 +245,7 @@ function AppContent({ onStorySelect }) {
     const backToStorySelector = useCallback(() => {
         backToStartScreen()
         setSelectedStory(null) // Clear selection to show story selector
+        setIntroComplete(false) // Reset intro for next game selection
         // Notify parent so SettingsProvider knows no story is selected
         if (onStorySelect) {
             onStorySelect(null)
@@ -291,7 +299,8 @@ function AppContent({ onStorySelect }) {
 
     // Determine current screen
     const showStorySelector = !isProductionMode && !selectedStory && !story
-    const showStartScreen = (isProductionMode && !story) || (!isProductionMode && selectedStory && !story)
+    const showIntro = ((isProductionMode && !story) || (!isProductionMode && selectedStory && !story)) && !introComplete
+    const showStartScreen = ((isProductionMode && !story) || (!isProductionMode && selectedStory && !story)) && introComplete
     const showPlayer = story !== null
 
     return (
@@ -353,6 +362,16 @@ function AppContent({ onStorySelect }) {
                     stories={AVAILABLE_STORIES}
                     onSelect={selectStoryDev}
                     hasSave={() => false}
+                />
+            )}
+
+            {/* Intro Sequence (before start screen) */}
+            {!storyLoading && !storyError && showIntro && (
+                <IntroSequence
+                    gameTitle={getGameTitle()}
+                    introConfig={getIntroConfig()}
+                    audioHooks={{ playMusic, stopMusic, playSfx }}
+                    onComplete={() => setIntroComplete(true)}
                 />
             )}
 

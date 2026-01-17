@@ -1,6 +1,15 @@
 {
     "title": "Serruchín",
     "version": "1.0.0",
+    "intro": {
+        "showEngineLogo": true,
+        "engineLogoDuration": 3000,
+        "titleBackground": "/games/serruchin/intro.png",
+        "titleMusic": "horror_ambient",
+        "hideTitle": true,
+        "skipEnabled": true,
+        "startGameSfx": "serrucho"
+    },
     "stats": {
         "enabled": true,
         "definitions": [

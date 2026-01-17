@@ -7,6 +7,21 @@
 export const DEFAULT_CONFIG = {
     title: 'BardoEngine Game',
     version: '0.1.0',
+    // Intro screen configuration
+    intro: {
+        showEngineLogo: true,
+        engineLogoDuration: 3000,
+        introVideo: null,
+        titleBackground: null,
+        titleBackgroundVideo: null,
+        titleSubtitle: null,
+        titleMusic: null,
+        hideTitle: false,
+        skipEnabled: true,
+        // SFX for transitions (null = no sound, configure per-game)
+        transitionSfx: null,
+        startGameSfx: null
+    },
     stats: {
         enabled: false,
         definitions: [],
