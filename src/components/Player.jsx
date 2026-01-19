@@ -13,6 +13,7 @@ export default function Player({
     onBack,
     onSave,
     onContinue,
+    canContinue,
     onOptions,
     // Settings props
     typewriterDelay = 30,
@@ -146,6 +147,21 @@ export default function Player({
                                 />
                             ))}
 
+                            {/* Pagination: Continue button if no choices and story can continue */}
+                            {choices.length === 0 && canContinue && !isEnded && (
+                                <div className="pt-4 flex justify-center">
+                                    <button
+                                        onClick={onContinue}
+                                        className="group relative flex items-center justify-center gap-3 px-8 py-4 bg-bardo-accent/10 border border-bardo-accent text-bardo-accent font-mono text-lg hover:bg-bardo-accent hover:text-bardo-bg transition-all duration-300 rounded overflow-hidden"
+                                    >
+                                        <span className="relative z-10 tracking-widest uppercase">Siguiente</span>
+                                        <span className="relative z-10 text-xl group-hover:translate-x-1 transition-transform duration-300">❱</span>
+                                        {/* Retro pulse effect */}
+                                        <div className="absolute inset-0 bg-bardo-accent/20 animate-pulse" />
+                                    </button>
+                                </div>
+                            )}
+
                             {/* End state */}
                             {isEnded && (
                                 <div className="pt-8 space-y-4 w-full">
@@ -204,4 +220,3 @@ export default function Player({
         </div>
     )
 }
-

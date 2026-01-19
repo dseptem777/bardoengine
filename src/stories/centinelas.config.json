@@ -1,0 +1,56 @@
+{
+    "title": "Centinelas del Sur",
+    "version": "0.1.0",
+    "stats": {
+        "enabled": true,
+        "definitions": [
+            {
+                "id": "hp",
+                "label": "Vida",
+                "icon": "❤️",
+                "displayType": "bar",
+                "min": 0,
+                "max": 100,
+                "initial": 100,
+                "color": "#ef4444"
+            },
+            {
+                "id": "magia",
+                "label": "Magia",
+                "icon": "✨",
+                "displayType": "value",
+                "min": 0,
+                "max": 100,
+                "initial": 0
+            },
+            {
+                "id": "fuerza",
+                "label": "Fuerza",
+                "icon": "💪",
+                "displayType": "value",
+                "min": 0,
+                "max": 100,
+                "initial": 0
+            },
+            {
+                "id": "conocimiento",
+                "label": "Conocimiento",
+                "icon": "📚",
+                "displayType": "value",
+                "min": 0,
+                "max": 100,
+                "initial": 0
+            }
+        ]
+    },
+    "inventory": {
+        "enabled": true,
+        "maxSlots": 12,
+        "categories": [
+            "items",
+            "documentos",
+            "claves"
+        ]
+    },
+    "items": {}
+}

@@ -19,15 +19,18 @@ import { SettingsProvider, useSettings } from './hooks/useSettings'
 // Import the compiled stories (used in development mode)
 import partuzaStory from './stories/partuza.json'
 import serruchinStory from './stories/serruchin.json'
+import centinelasStory from './stories/centinelas.json'
 
 // Dev mode stories
 const DEV_STORIES = {
     serruchin: serruchinStory,
-    partuza: partuzaStory
+    partuza: partuzaStory,
+    centinelas: centinelasStory
 }
 
 // Format for story selector
 const AVAILABLE_STORIES = [
+    { id: 'centinelas', title: '🛡️ CENTINELAS DEL SUR', data: centinelasStory },
     { id: 'serruchin', title: '🪚 SERRUCHÍN', data: serruchinStory },
     { id: 'partuza', title: 'Tu nombre en clave es Partuza', data: partuzaStory }
 ]
@@ -144,8 +147,14 @@ function AppContent({ onStorySelect }) {
         let allTags = []
 
         while (story.canContinue) {
-            fullText += story.Continue()
+            const nextBatch = story.Continue()
+            fullText += nextBatch
             allTags = [...allTags, ...story.currentTags]
+
+            // Pagination support: Break the loop if we find a 'next' or 'page' tag
+            if (story.currentTags.some(t => t.trim().toLowerCase() === 'next' || t.trim().toLowerCase() === 'page')) {
+                break
+            }
         }
 
         setText(fullText.trim())
@@ -280,8 +289,14 @@ function AppContent({ onStorySelect }) {
             let allTags = []
 
             while (story.canContinue) {
-                fullText += story.Continue()
+                const nextBatch = story.Continue()
+                fullText += nextBatch
                 allTags = [...allTags, ...story.currentTags]
+
+                // Pagination support: Break the loop if we find a 'next' or 'page' tag
+                if (story.currentTags.some(t => t.trim().toLowerCase() === 'next' || t.trim().toLowerCase() === 'page')) {
+                    break
+                }
             }
 
             setText(fullText.trim())
@@ -401,6 +416,7 @@ function AppContent({ onStorySelect }) {
                     onBack={backToStartScreen}
                     onSave={() => setSaveModalMode('save')}
                     onContinue={continueStory}
+                    canContinue={canContinue}
                     onOptions={() => setOptionsOpen(true)}
                     // Settings
                     typewriterDelay={getTypewriterDelay()}

@@ -1,0 +1,24 @@
+INTERMISIÓN
+Costa Alegre es una importante ciudad  con costas al Atlantico Sur. Durante el verano es un centro vacacional importante pero, durante el resto del año, la industria pesquera y la presencia de una Universidad garantiza que se mantenga poblada.
+En  esta ciudad, haciéndose pasar por un olvidado edificio administrativo en el fondo del campus universitario (ahí donde el pasto bien cortado deja espacio a la maleza) se encuentra uno de los cuarteles de “El Faro”.
+SIGUIENTE PÁGINA
+“Marcando un camino seguro para la humanidad”, ese es su lema. En igual parte estudiosos y milicia, “El Faro” se encarga de monitorear todas las amenazas sobrenaturales que se ciernas sobre la humanidad y, cuando se vuelven muy peligrosas, asegurar que lleguen a un final.
+Sus agentes son de los más variopintos, desde intelectuales que son la personificación de “la  curiosidad mató al gato” hasta víctimas de seres sobrenaturales que están cobrando su venganza. Algunos son verdaderos monstruos buscando la redención.
+Y, claro, también estas vos.
+SIGUIENTE PÁGINA
+Abrís la venta de tu departamento y  entra un poco de aire  acompañado por el olor de sal del agua salada. El viento atrae unos gritos de diversión y alegría.
+Te queda un poco de tiempo para tu próxima reunión en el Ministerio. Tal vez podes hacer algo antes de ir a la sede de “El Faro”.
+¿Qué quieres hacer?
+1 . Bajar a la playa. Me merezco descansar un poco y  disfrutar un poco de la vida normal que estoy protegiendo
+Bajas a la playa y disfrutas un poco del sol golpeando tu cuerpo. Cuando el calor se vuelve insoportable podes ir al mar a refrescarte un poco. 
+Te sumas con un par de desconocidos a jugar un partido de  volley en la arena y terminas la jornada tomando un trago en la  barra de un bar costero viendo el horizonte.
+La vida es buena. Pero no podes dejar que a lo lejos se ven, amenazante, un frente de nubes de tormentas.
+2. Recorrer el filo entre lo normal y lo sobrenatural. Con un poco de suerte voy a conseguir información sobre mi próxima misión.
+Esta opción no está disponible en este momento.
+3. Podría ver que están haciendo los otros agentes de “El Faro”. Tal vez necesiten que los ayude un poco.
+Esta opción no está disponible en este momento.
+4. ¿Estas jodiendo? Necesito ver a un buen médico. O al menos descansar, no voy a ayudar a nadie con estas heridas. 
+Esta opción no está disponible en este momento.
+5. No hay razón para dar vueltas. Voy directo a la sede de “El Faro” a tomar mi siguiente misión.
+VA AL SIGUIENTE ACTO.
+
