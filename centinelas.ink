@@ -24,32 +24,32 @@ El reloj nunca se movió tan rápido. Y eso que estaba en clase de matemática c
 
 Jorge había prometido que me iba a esperar después de clase para matarme a golpes, desde principio de año venía haciéndome la vida imposible pero esta vez sus palabras habían tenido una entonación especial. Filosas.
 # next
--¿Qué pensás hacer? – Me susurró Julieta desde el pupitre de al lado.
+\-¿Qué pensás hacer? – Me susurró Julieta desde el pupitre de al lado.
 
 La pregunta era una idiotez. Jorge medía un metro noventa y pesaba más de cien kilos. Yo no llegaba a la mitad mojado. Simplemente no se podía hacer nada, era como una fuerza de la naturaleza. Como querer pelear contra un tsunami o un terremoto.
 
 - Salir y dejar que me mate a golpes. Con un poco de suerte vuelvo como fantasma y lo puedo acosar.
-- No me estás tomando en serio – Julieta arrugó la nariz, como hacía cada vez que se enojaba, haciendo que sus gruesos anteojos negros enmarquen sus ojos.
+\- No me estás tomando en serio – Julieta arrugó la nariz, como hacía cada vez que se enojaba, haciendo que sus gruesos anteojos negros enmarquen sus ojos.
 
-- No hay nada que pueda hacer. Ni hay nadie que le interese ayudarme. El psicópata prendió fuego mi mochila hace un mes en la cafetería y los profesores se limitaron a regañarlo. Con un poco de suerte me rompo algo y puedo demandar a la escuela.
+\- No hay nada que pueda hacer. Ni hay nadie que le interese ayudarme. El psicópata prendió fuego mi mochila hace un mes en la cafetería y los profesores se limitaron a regañarlo. Con un poco de suerte me rompo algo y puedo demandar a la escuela.
 
-- Es una escuela pública, la provincia está quebrada.
+\- Es una escuela pública, la provincia está quebrada.
 
-- Ves. La opción de morir y volver como fantasma para acosarlo no es tan mala entonces.
+\- Ves. La opción de morir y volver como fantasma para acosarlo no es tan mala entonces.
 
-- Tengo una idea – Julieta se inclinó para susurrarme algo.
+\- Tengo una idea – Julieta se inclinó para susurrarme algo.
 
 Sus labios rozaron mi oreja y durante un momento sentí un rayo de energía que recorría mi cuerpo. Lamentaba ser tan cobarde, en todos los aspectos. En otra realidad salía al patio, dejaba KO a Jorge de un golpe y me besaba con Julieta sobre el cuerpo flácido del bully.
 
-- Escapate. No se lo espera. Es viernes, de acá al lunes se le va a bajar los humos y todo va a volver a la normalidad.
+\- Escapate. No se lo espera. Es viernes, de acá al lunes se le va a bajar los humos y todo va a volver a la normalidad.
 
 * [La idea es buena. Cualquier castigo por escaparme va a ser menor que lo que me quiere hacer Jorge.] -> magia_escapar
 * [No, si no me enfrento a esto ahora la semana próxima va a ser peor.] -> magia_enfrentar
 
 === magia_escapar ===
-- Oka, ¿y qué hago? ¿Tenés un mapa secreto del colegio? ¿Hay que arrastrarse por ductos de aire?
+\- Oka, ¿y qué hago? ¿Tenés un mapa secreto del colegio? ¿Hay que arrastrarse por ductos de aire?
 
-- Vos seguime la corriente – dijo Julieta mientras se ponía una pastilla en el ojo y me guiñaba.
+\- Vos seguime la corriente – dijo Julieta mientras se ponía una pastilla en el ojo y me guiñaba.
 
 En menos de cinco minutos estaba tirada en el piso, temblando, mientras espuma le salía por la boca.
 
@@ -70,7 +70,7 @@ No le presté atención. Crucé la puerta, libre. Indemne.
 Y ahí estaba, como mi plaga bíblica personal… Jorge.
 
 # play_sfx:tension
-- ¿Vos también saliste temprano, rarito?
+\- ¿Vos también saliste temprano, rarito?
 
 -> magia_confrontacion
 
@@ -218,19 +218,19 @@ Me levanté con una misión. Yo sería quien llegaría siempre una hora antes.
 
 === origen_conocimiento ===
 # music:misterio_ambient
-- No sé si me siento cómodo robando un libro.
+\- No sé si me siento cómodo robando un libro.
 
-- No lo pienses tanto como que lo estamos robando, prefiero decir que lo estamos liberando – dijo Julieta mientras su sonrisa dejaba ver los hoyuelos que me metieron en tantos problemas.
+\- No lo pienses tanto como que lo estamos robando, prefiero decir que lo estamos liberando – dijo Julieta mientras su sonrisa dejaba ver los hoyuelos que me metieron en tantos problemas.
 
 Estábamos en la terraza del edificio, desde nuestra posición la ciudad de noche era un mar de luz, ruido y velocidad. En el edificio de al lado estaba la Mansión de los Ayacucho Olavarría quienes tenían la suficiente fortuna como para tener la mayor colección de obras sobrenaturales de este lado del Ecuador.
 
 En su biblioteca estaba "La Última Colección", donde se recopilaban las profecías nunca publicadas de Solari Parravicini.
 
-- Pensalo así, antes que amanezca vamos a estar en nuestra habitación leyendo profecías secretas. Preferentemente desnudos. – Me animó Julieta.
+\- Pensalo así, antes que amanezca vamos a estar en nuestra habitación leyendo profecías secretas. Preferentemente desnudos. – Me animó Julieta.
 
-- Espero que tenga información sobre los números de la lotería. O al menos dónde invertir en bolsa. O tal vez solo son un montón de dibujos raros y palabras crípticas que sirven para que cada lector le dé el significado que quiere.
+\- Espero que tenga información sobre los números de la lotería. O al menos dónde invertir en bolsa. O tal vez solo son un montón de dibujos raros y palabras crípticas que sirven para que cada lector le dé el significado que quiere.
 
-- Ahhh – escuché a Julieta quejarse atrás mío – Siempre con lo mismo. Ya sé cuál es tu postura respecto a las profecías.
+\- Ahhh – escuché a Julieta quejarse atrás mío – Siempre con lo mismo. Ya sé cuál es tu postura respecto a las profecías.
 
 * [Están escritas en piedra. Solo queda aceptarlas y ver cómo usar el conocimiento para surfear lo que vendrá.] -> conocimiento_accion
 * [El futuro es siempre cambiante. La mera idea de observarlo lo cambia. Sirven más como curiosidad histórica.] -> conocimiento_accion
@@ -245,19 +245,19 @@ Caí haciendo un escándalo sobre el techo. Julieta a mi lado lo hizo con un may
 
 Al fin del techo estaba la puerta que daba a la escalera de servicio, y la cual contaba con el mejor sistema de seguridad que el dinero podía comprar.
 
-- Por suerte hace semanas vengo estudiando un Hex en el libro negro exacto para esta situación – dijo Julieta mientras sacaba un pequeño cristal de su morral y empezaba a recitar algo en un idioma desconocido, con cierto aire a Asia Central.
+\- Por suerte hace semanas vengo estudiando un Hex en el libro negro exacto para esta situación – dijo Julieta mientras sacaba un pequeño cristal de su morral y empezaba a recitar algo en un idioma desconocido, con cierto aire a Asia Central.
 
 # play_sfx:magia_hex
 Julieta terminó de hablar e inmediatamente lo sentimos. El atronador silencio que se da cuando el ruido de fondo de cientos de maquinarias, que uno está acostumbrado a tolerar, de repente se detiene.
 
-- Un simple Hex – dijo mientras me volvió a mostrar la sonrisa y los hoyuelos problemáticos.
+\- Un simple Hex – dijo mientras me volvió a mostrar la sonrisa y los hoyuelos problemáticos.
 
 # flash_dark
 Segundos después, ese silencio se fue expandiendo y a nuestro alrededor vimos como la oscuridad se iba comiendo a toda la ciudad. Dejándola silenciosa y sin energía eléctrica.
 
 Como es común en estos casos, el silencio duró unos segundos para dar paso a una cacofonía de insultos y golpes de cacerolas.
 
-- Tal vez pronuncié mal alguna palabra – dijo Julieta poniendo cara de una nena atrapada en una travesura.
+\- Tal vez pronuncié mal alguna palabra – dijo Julieta poniendo cara de una nena atrapada en una travesura.
 
 * [Viendo los mapas noto que una habitación de este piso tiene una caja fuerte. Sería interesante hacerle una visita.] -> conocimiento_caja
 * [Mantengamos todo fácil. Directo a la biblioteca.] -> conocimiento_biblioteca
@@ -277,11 +277,11 @@ Abrís lentamente la puerta de la habitación a la par que una ráfaga de viento
 
 Esta habitación denota dinero. Dinero viejo, el que viene con estilo y reglas de etiqueta. Llegás a notar en una esquina una cama con dosel, una pared decorada con una sucesión de cuadros que tranquilamente podrían tener su propia ala en el Museo de Bellas Artes, y una estatua de mármol de Venus naciendo (¿Quién diantres tiene una estatua en su pieza?).
 
-- Antes de irme quiero probar esa cama – susurra Julieta atrás tuyo, mientras en su voz se denota la mezcla de emoción y temor que caracteriza una buena aventura.
+\- Antes de irme quiero probar esa cama – susurra Julieta atrás tuyo, mientras en su voz se denota la mezcla de emoción y temor que caracteriza una buena aventura.
 
-- Debemos ser rápidos e ir al punto.
+\- Debemos ser rápidos e ir al punto.
 
-- Siempre decís lo mismo – su risa rebota por el lugar y te da temor que alguien la escuche.
+\- Siempre decís lo mismo – su risa rebota por el lugar y te da temor que alguien la escuche.
 
 Mientras la parte racional de tu cerebro intenta forzar la caja fuerte, el resto empieza a pensar cómo gastar el dinero que todavía no conseguiste. Te imaginás tomando un daiquiri en algún lugar con arena blanca y aguas cristalinas mientras Julieta, por puro hábito, intenta estafar a algún turista gringo gordo y tonto.
 
@@ -298,15 +298,15 @@ Después de abrir la puerta de la biblioteca y esperar unos segundos para escuch
 
 Te basta un recorrido de los estantes con la linterna para darte cuenta que no tenés la más mínima idea de cómo vas a hacer para encontrar el libro que estás buscando.
 
-- Mi abuela tenía razón. Tendrías que haber hecho el curso de bibliotecaria – susurra Julieta atrás tuyo.
+\- Mi abuela tenía razón. Tendrías que haber hecho el curso de bibliotecaria – susurra Julieta atrás tuyo.
 # next
-- Nunca hubieses aprobado, no te podés quedar callada más de cinco minutos.
+\- Nunca hubieses aprobado, no te podés quedar callada más de cinco minutos.
 
-- Nunca te escuché quejarte antes – su risa rebota por el lugar y te da temor que alguien la escuche.
+\- Nunca te escuché quejarte antes – su risa rebota por el lugar y te da temor que alguien la escuche.
 
 Julieta camina hacia uno de los estantes del fondo con una seguridad sorprendente mientras va contando los pasos.
 
-- Es curioso – dice Julieta – en los planos esta habitación es unos metros más larga. No soy tan idiota como para no saber detectar una pared falsa.
+\- Es curioso – dice Julieta – en los planos esta habitación es unos metros más larga. No soy tan idiota como para no saber detectar una pared falsa.
 
 Acto seguido empieza a sacar todos los libros de ese estante hasta que, a la par que una pequeña pila de libros descansa a sus pies como cadáveres de pequeños entes del conocimiento, se escucha un click.
 
@@ -331,7 +331,7 @@ Antes que te des cuenta su mano recorre un patrón extraño en el aire mientras 
 # shake
 De repente estás completamente inmovilizado. Tu cuerpo se encuentra duro y se niega a responder cualquier orden. Hasta respirar, algo tan mecánico y natural, se vuelve complicado. Como si un gran peso estuviera oprimiendo tu pecho.
 
-- ¿Qué tenemos acá? ¿Ratoncitos que salieron de su cueva para mordisquear mis pertenencias?
+\- ¿Qué tenemos acá? ¿Ratoncitos que salieron de su cueva para mordisquear mis pertenencias?
 
 * [Intentás moverte. No vas a ser vencido por una persona con bata y pantuflas.] -> conocimiento_resistir
 * [No hacés nada. Veamos qué pasa.] -> conocimiento_esperar
@@ -356,13 +356,13 @@ Lo escuchás caminar, canturrear algo, un poco de ruido de vidrio. La incertidum
 === conocimiento_final ===
 Ayacucho Olavarría vuelve a aparecer en tu campo de visión, con una copa de Brandy en la mano.
 
-- A ver qué tenemos acá, y qué provecho le podemos sacar a esta situación.
+\- A ver qué tenemos acá, y qué provecho le podemos sacar a esta situación.
 
 Da una vuelta alrededor de Julieta, apreciándola como quien analiza comprar un mueble caro o un departamento de lujo.
 
 Luego se da vuelta y te mira con el mismo desprecio que se guarda para algo que se tira a la basura.
 
-- Para ella se me ocurren un par de usos, pero vos no me aportás nada realmente…
+\- Para ella se me ocurren un par de usos, pero vos no me aportás nada realmente…
 
 # play_sfx:magia_oscura
 De nuevo, sus manos hacen un firulete en el aire mientras sus labios se mueven. Las palabras no son procesadas por tu cerebro consciente, pero generan su efecto.

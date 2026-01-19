@@ -18,6 +18,9 @@ export default function TextDisplay({
     const indexRef = useRef(0)
     const intervalRef = useRef(null)
 
+    // Split text into paragraphs for rendering
+    const paragraphs = displayedText.split('\n').filter(p => p.trim().length > 0 || p.length > 0)
+
     useEffect(() => {
         // Reset on new text
         setDisplayedText('')
@@ -63,13 +66,27 @@ export default function TextDisplay({
     const fontSizeClass = FONT_SIZE_CLASSES[fontSize] || FONT_SIZE_CLASSES.normal
 
     return (
-        <div className="relative select-none cursor-pointer">
-            <p className={`font-narrative ${fontSizeClass} leading-relaxed text-bardo-text`}>
-                {displayedText}
-                {isTyping && typewriterDelay > 0 && displayedText.length < text.length && (
-                    <span className="inline-block w-2 h-6 bg-bardo-accent ml-1 animate-pulse" />
-                )}
-            </p>
+        <div className="relative select-none cursor-pointer space-y-6">
+            {paragraphs.length > 0 ? (
+                paragraphs.map((para, i) => (
+                    <p
+                        key={i}
+                        className={`font-narrative ${fontSizeClass} leading-relaxed text-bardo-text animate-fade-in`}
+                    >
+                        {para}
+                        {/* Show cursor only on the last paragraph being typed */}
+                        {isTyping &&
+                            typewriterDelay > 0 &&
+                            i === paragraphs.length - 1 &&
+                            displayedText.length < text.length && (
+                                <span className="inline-block w-2 h-6 bg-bardo-accent ml-1 animate-pulse" />
+                            )}
+                    </p>
+                ))
+            ) : (
+                // Fallback for empty/initial state to maintain layout
+                <p className={`font-narrative ${fontSizeClass} leading-relaxed opacity-0`}>&nbsp;</p>
+            )}
         </div>
     )
 }

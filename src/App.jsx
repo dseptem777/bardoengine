@@ -148,7 +148,7 @@ function AppContent({ onStorySelect }) {
 
         while (story.canContinue) {
             const nextBatch = story.Continue()
-            fullText += nextBatch
+            fullText += nextBatch + '\n\n'
             allTags = [...allTags, ...story.currentTags]
 
             // Pagination support: Break the loop if we find a 'next' or 'page' tag
