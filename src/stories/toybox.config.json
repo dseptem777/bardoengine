@@ -1,9 +1,109 @@
 {
     "title": "📦 BARDO TOYBOX",
     "version": "1.0.0",
-    "stats": [],
-    "inventory": [],
+    "stats": {
+        "enabled": false
+    },
+    "inventory": {
+        "enabled": false
+    },
     "intro": {
         "enabled": false
+    },
+    "achievements": [
+        {
+            "id": "first_win",
+            "title": "Primera Victoria",
+            "description": "Completaste tu primer minijuego exitosamente",
+            "icon": "🏆",
+            "hidden": false
+        },
+        {
+            "id": "qte_master",
+            "title": "Reflejos de Acero",
+            "description": "Maestría total en Quick Time Events",
+            "icon": "⚡",
+            "hidden": true
+        },
+        {
+            "id": "lockpick_pro",
+            "title": "Cerrajero Experto",
+            "description": "Abriste una cerradura en el primer intento",
+            "icon": "🔓",
+            "hidden": false
+        },
+        {
+            "id": "secret_test",
+            "title": "Explorador Secreto",
+            "description": "Encontraste el logro secreto del Toybox",
+            "icon": "🌟",
+            "hidden": true
+        }
+    ],
+    "extras": {
+        "gallery": [
+            {
+                "id": "art_bardo_logo",
+                "title": "Logo BardoEngine",
+                "image": "/bardo_logo.svg",
+                "unlockedBy": null
+            },
+            {
+                "id": "art_minigames",
+                "title": "Minigames Concept",
+                "image": "/assets/gallery/minigames.png",
+                "unlockedBy": "first_win"
+            },
+            {
+                "id": "art_secret",
+                "title": "Arte Secreto",
+                "image": "/assets/gallery/secret.png",
+                "unlockedBy": "secret_test"
+            }
+        ],
+        "jukebox": [
+            {
+                "id": "horror_ambient",
+                "title": "Horror Ambient",
+                "file": "/music/horror_ambient.mp3",
+                "unlockedBy": null
+            },
+            {
+                "id": "tension_drone",
+                "title": "Tension Drone",
+                "file": "/music/tension_drone.mp3",
+                "unlockedBy": null
+            },
+            {
+                "id": "morning_hangover",
+                "title": "Morning Hangover",
+                "file": "/music/morning_hangover.mp3",
+                "unlockedBy": null
+            },
+            {
+                "id": "supermarket_muzak",
+                "title": "Supermarket Muzak",
+                "file": "/music/supermarket_muzak.mp3",
+                "unlockedBy": null
+            },
+            {
+                "id": "rave_electronic",
+                "title": "Rave Electronic",
+                "file": "/music/rave_electronic.mp3",
+                "unlockedBy": "first_win"
+            },
+            {
+                "id": "victory_fanfare",
+                "title": "Victory Fanfare",
+                "file": "/music/victory_fanfare.mp3",
+                "unlockedBy": "first_win"
+            },
+            {
+                "id": "game_over",
+                "title": "Game Over",
+                "file": "/music/game_over.mp3",
+                "unlockedBy": "secret_test"
+            }
+        ]
     }
 }

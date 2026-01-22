@@ -37,12 +37,20 @@ Prepárate para reaccionar...
 [DEBUG: minigame_result = {minigame_result}]
 { minigame_result == 1:
     ¡ÉXITO! Reflejos de acero.
+    # achievement:unlock:first_win
+    [LOGRO DESBLOQUEADO: Primera Victoria]
 - else:
     FALLASTE. El golpe te alcanza.
     # stat:hp:-15
     [-15 HP]
 }
 [HP actual: {hp}]
++ [Volver al menú] -> main
++ [🌟 Desbloquear logro secreto] -> unlock_secret
+
+=== unlock_secret ===
+# achievement:unlock:secret_test
+¡Encontraste el logro secreto del Toybox!
 + [Volver al menú] -> main
 
 === test_lockpick ===
@@ -60,6 +68,8 @@ Prepárate para reaccionar...
 [DEBUG: minigame_result = {minigame_result}]
 { minigame_result == 1:
     ¡CLICK! La cerradura se abre sin problemas.
+    # achievement:unlock:first_win
+    # achievement:unlock:lockpick_pro
 - else:
     CRACK. La ganzúa se rompe en tus manos.
     ~ tiene_ganzua = false

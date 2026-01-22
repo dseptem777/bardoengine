@@ -9,11 +9,14 @@ import OptionsModal from './components/OptionsModal'
 import VFXLayer from './components/VFXLayer'
 import StatsPanel from './components/StatsPanel'
 import InventoryPanel from './components/InventoryPanel'
+import ExtrasMenu from './components/ExtrasMenu'
+import AchievementToast from './components/AchievementToast'
 import { useVFX } from './hooks/useVFX'
 import { useAudio } from './hooks/useAudio'
 import { useSaveSystem } from './hooks/useSaveSystem'
 import { useGameSystems } from './hooks/useGameSystems'
 import { useStoryLoader } from './hooks/useStoryLoader'
+import { useAchievements } from './hooks/useAchievements'
 import { useMinigameController, parseMinigameTag } from './hooks/useMinigameController'
 import { SettingsProvider, useSettings } from './hooks/useSettings'
 import MinigameOverlay from './components/MinigameOverlay'
@@ -62,6 +65,7 @@ function AppContent({ onStorySelect }) {
     const [introComplete, setIntroComplete] = useState(false) // Track if intro sequence has been shown
     const [saveModalMode, setSaveModalMode] = useState(null) // 'save' | 'load' | null
     const [optionsOpen, setOptionsOpen] = useState(false)
+    const [extrasOpen, setExtrasOpen] = useState(false)
     const storyRef = useRef(null)
 
     // Hooks with settings integration
@@ -89,6 +93,16 @@ function AppContent({ onStorySelect }) {
 
     // Game systems (stats + inventory)
     const gameSystems = useGameSystems(currentStoryId)
+
+    // Achievements system (separate persistence)
+    const achievementDefs = gameSystems.config?.achievements || []
+    const achievementsSystem = useAchievements(currentStoryId, achievementDefs)
+
+    // Extras config
+    const extrasConfig = gameSystems.config?.extras || {}
+    const hasExtras = achievementDefs.length > 0 ||
+        (extrasConfig.gallery?.length > 0) ||
+        (extrasConfig.jukebox?.length > 0)
 
     // Get game title for start screen
     const getGameTitle = () => {
@@ -164,7 +178,7 @@ function AppContent({ onStorySelect }) {
     // Initialize minigame controller
     const minigameController = useMinigameController(handleMinigameResult)
 
-    // Process tags (VFX + Game Systems + Minigames)
+    // Process tags (VFX + Game Systems + Minigames + Achievements)
     const processTags = useCallback((tags) => {
         tags.forEach(rawTag => {
             const tag = rawTag.trim()
@@ -178,6 +192,14 @@ function AppContent({ onStorySelect }) {
                 return
             }
 
+            // Check for achievement unlock tag
+            if (tag.toLowerCase().startsWith('achievement:unlock:')) {
+                const achievementId = tag.split(':')[2]
+                console.log('[Tags] Achievement unlock:', achievementId)
+                achievementsSystem.unlockAchievement(achievementId)
+                return
+            }
+
             // Try game systems
             const handled = gameSystems.processGameTag(tag)
 
@@ -186,7 +208,7 @@ function AppContent({ onStorySelect }) {
                 triggerVFX(tag)
             }
         })
-    }, [gameSystems, triggerVFX, minigameController])
+    }, [gameSystems, triggerVFX, minigameController, achievementsSystem])
 
     // Continue story
     const continueStory = useCallback(() => {
@@ -466,10 +488,12 @@ function AppContent({ onStorySelect }) {
                     gameTitle={getGameTitle()}
                     hasAnySave={saveSystem.hasAnySave}
                     hasContinue={saveSystem.hasContinue}
+                    hasExtras={hasExtras}
                     onNewGame={handleNewGame}
                     onContinue={handleContinue}
                     onLoadGame={() => setSaveModalMode('load')}
                     onOptions={() => setOptionsOpen(true)}
+                    onExtras={() => setExtrasOpen(true)}
                     onBack={!isProductionMode ? backToStorySelector : null}
                 />
             )}
@@ -507,6 +531,28 @@ function AppContent({ onStorySelect }) {
                 config={minigameController.config}
                 onFinish={minigameController.finishGame}
                 onCancel={minigameController.cancelGame}
+            />
+
+            {/* Extras Menu */}
+            <ExtrasMenu
+                isOpen={extrasOpen}
+                onClose={() => setExtrasOpen(false)}
+                achievements={achievementsSystem.achievements}
+                achievementStats={achievementsSystem.stats}
+                unlockedAchievementIds={achievementsSystem.achievements.filter(a => a.unlocked).map(a => a.id)}
+                onResetAchievements={achievementsSystem.resetAllAchievements}
+                gallery={extrasConfig.gallery || []}
+                jukebox={extrasConfig.jukebox || []}
+                playMusic={playMusic}
+                stopMusic={stopMusic}
+                currentTrack={null}
+            />
+
+            {/* Achievement Toast */}
+            <AchievementToast
+                achievement={achievementsSystem.pendingToast}
+                onDismiss={achievementsSystem.clearToast}
+                playSound={playSfx}
             />
         </div>
     )

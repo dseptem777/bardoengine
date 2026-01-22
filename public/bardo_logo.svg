@@ -1,0 +1,64 @@
+<svg width="400" height="400" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+      <feMerge>
+        <feMergeNode in="coloredBlur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <rect width="200" height="200" fill="#0a0a0a"/>
+  
+  <g filter="url(#glow)" stroke="#facc15" fill="none">
+    <!-- Center circle -->
+    <circle cx="100" cy="100" r="30" stroke-width="4"/>
+    
+    <!-- Inner dot -->
+    <circle cx="100" cy="100" r="12" fill="#facc15"/>
+    
+    <!-- Main rays (8 chaos star rays with arrow tips) -->
+    <!-- Ray 0 - Up -->
+    <line x1="100" y1="70" x2="100" y2="10" stroke-width="4" stroke-linecap="round"/>
+    <path d="M 85 25 L 100 10 L 115 25" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Ray 1 - Up-Right -->
+    <line x1="121" y1="79" x2="163" y2="37" stroke-width="4" stroke-linecap="round"/>
+    <path d="M 148 50 L 163 37 L 150 52" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Ray 2 - Right -->
+    <line x1="130" y1="100" x2="190" y2="100" stroke-width="4" stroke-linecap="round"/>
+    <path d="M 175 85 L 190 100 L 175 115" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Ray 3 - Down-Right -->
+    <line x1="121" y1="121" x2="163" y2="163" stroke-width="4" stroke-linecap="round"/>
+    <path d="M 150 148 L 163 163 L 148 150" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Ray 4 - Down -->
+    <line x1="100" y1="130" x2="100" y2="190" stroke-width="4" stroke-linecap="round"/>
+    <path d="M 115 175 L 100 190 L 85 175" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Ray 5 - Down-Left -->
+    <line x1="79" y1="121" x2="37" y2="163" stroke-width="4" stroke-linecap="round"/>
+    <path d="M 52 150 L 37 163 L 50 148" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Ray 6 - Left -->
+    <line x1="70" y1="100" x2="10" y2="100" stroke-width="4" stroke-linecap="round"/>
+    <path d="M 25 115 L 10 100 L 25 85" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Ray 7 - Up-Left -->
+    <line x1="79" y1="79" x2="37" y2="37" stroke-width="4" stroke-linecap="round"/>
+    <path d="M 50 52 L 37 37 L 52 50" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Secondary rays (between main rays, shorter) -->
+    <line x1="112" y1="72" x2="135" y2="35" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+    <line x1="128" y1="88" x2="165" y2="65" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+    <line x1="128" y1="112" x2="165" y2="135" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+    <line x1="112" y1="128" x2="135" y2="165" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+    <line x1="88" y1="128" x2="65" y2="165" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+    <line x1="72" y1="112" x2="35" y2="135" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+    <line x1="72" y1="88" x2="35" y2="65" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+    <line x1="88" y1="72" x2="65" y2="35" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+  </g>
+</svg>

@@ -8,10 +8,12 @@ export default function StartScreen({
     gameTitle = 'BardoEngine',
     hasAnySave = false,
     hasContinue = false,
+    hasExtras = false,
     onNewGame,
     onContinue,
     onLoadGame,
     onOptions,
+    onExtras,
     onBack = null // For dev mode: back to story selector
 }) {
     return (
@@ -73,6 +75,13 @@ export default function StartScreen({
                     {onOptions && (
                         <MenuButton onClick={onOptions} secondary>
                             ⚙️ OPCIONES
+                        </MenuButton>
+                    )}
+
+                    {/* Extras */}
+                    {hasExtras && onExtras && (
+                        <MenuButton onClick={onExtras} secondary>
+                            🏆 EXTRAS
                         </MenuButton>
                     )}
                 </div>
