@@ -15,22 +15,26 @@ export function useAchievements(gameId, achievementDefinitions = []) {
     const loadUnlocked = useCallback(() => {
         if (!storageKey) {
             console.log('[Achievements] No gameId, returning empty')
-            return []
+            return { unlockedIds: [], hasCompletedGame: false }
         }
         try {
             const stored = localStorage.getItem(storageKey)
             console.log('[Achievements] Loading from', storageKey, ':', stored)
             if (stored) {
                 const data = JSON.parse(stored)
-                return data.unlockedIds || []
+                return {
+                    unlockedIds: data.unlockedIds || [],
+                    hasCompletedGame: data.hasCompletedGame || false
+                }
             }
         } catch (e) {
             console.warn('[Achievements] Failed to load:', e)
         }
-        return []
+        return { unlockedIds: [], hasCompletedGame: false }
     }, [storageKey])
 
-    const [unlockedIds, setUnlockedIds] = useState(() => loadUnlocked())
+    const [unlockedIds, setUnlockedIds] = useState(() => loadUnlocked().unlockedIds)
+    const [hasCompletedGame, setHasCompletedGame] = useState(() => loadUnlocked().hasCompletedGame)
     const [pendingToast, setPendingToast] = useState(null)
 
     // Reload when storageKey changes (game switch)
@@ -38,7 +42,8 @@ export function useAchievements(gameId, achievementDefinitions = []) {
         if (storageKey && storageKey !== prevStorageKey.current) {
             console.log('[Achievements] Storage key changed, reloading:', storageKey)
             const loaded = loadUnlocked()
-            setUnlockedIds(loaded)
+            setUnlockedIds(loaded.unlockedIds)
+            setHasCompletedGame(loaded.hasCompletedGame)
             prevStorageKey.current = storageKey
         }
     }, [storageKey, loadUnlocked])
@@ -50,14 +55,15 @@ export function useAchievements(gameId, achievementDefinitions = []) {
         try {
             const data = {
                 unlockedIds,
+                hasCompletedGame,
                 lastUpdated: new Date().toISOString()
             }
-            console.log('[Achievements] Saving to', storageKey, ':', unlockedIds)
+            console.log('[Achievements] Saving to', storageKey, ':', { unlockedIds, hasCompletedGame })
             localStorage.setItem(storageKey, JSON.stringify(data))
         } catch (e) {
             console.warn('[Achievements] Failed to save:', e)
         }
-    }, [unlockedIds, storageKey])
+    }, [unlockedIds, hasCompletedGame, storageKey])
 
     /**
      * Check if an achievement is unlocked
@@ -110,8 +116,23 @@ export function useAchievements(gameId, achievementDefinitions = []) {
         if (!storageKey) return
         console.log('[Achievements] Resetting all achievements for:', gameId)
         setUnlockedIds([])
+        setHasCompletedGame(false)
         localStorage.removeItem(storageKey)
     }, [gameId, storageKey])
+
+    /**
+     * Mark game as completed (enables New Game+ flag)
+     * Called when player reaches an ending
+     */
+    const markGameComplete = useCallback(() => {
+        if (hasCompletedGame) {
+            console.log('[NG+] Game already marked as completed')
+            return false
+        }
+        console.log('[NG+] Marking game as completed for:', gameId)
+        setHasCompletedGame(true)
+        return true
+    }, [gameId, hasCompletedGame])
 
     /**
      * Get combined achievements with unlock status
@@ -142,6 +163,9 @@ export function useAchievements(gameId, achievementDefinitions = []) {
         resetAllAchievements,
         clearToast,
         pendingToast,
-        stats
+        stats,
+        // New Game+ support
+        hasCompletedGame,
+        markGameComplete
     }
 }

@@ -130,6 +130,15 @@ function AppContent({ onStorySelect }) {
             newStory.state.LoadJson(savedState)
         }
 
+        // Set New Game+ flag in Ink (available as VAR new_game_plus = false in story)
+        try {
+            newStory.variablesState["new_game_plus"] = achievementsSystem.hasCompletedGame
+            console.log('[NG+] Set new_game_plus =', achievementsSystem.hasCompletedGame)
+        } catch (e) {
+            // Variable doesn't exist in this story, that's fine
+            console.log('[NG+] Story does not have new_game_plus variable')
+        }
+
         setStory(newStory)
         storyRef.current = newStory
         setStoryId(id)
@@ -149,7 +158,7 @@ function AppContent({ onStorySelect }) {
         } else {
             setIsEnded(false)
         }
-    }, [gameSystems])
+    }, [gameSystems, achievementsSystem.hasCompletedGame])
 
     // Ref to hold continueStory for callbacks (avoids stale closure)
     const continueStoryRef = useRef(null)
@@ -353,10 +362,12 @@ function AppContent({ onStorySelect }) {
         }
     }, [backToStartScreen, onStorySelect])
 
-    // Finish game (ending reached) - just go back to start, keeps saves
+    // Finish game (ending reached) - mark as complete for NG+, then go back to start
     const finishGame = useCallback(() => {
+        // Mark game as completed (enables New Game+ flag for next playthrough)
+        achievementsSystem.markGameComplete()
         backToStartScreen()
-    }, [backToStartScreen])
+    }, [backToStartScreen, achievementsSystem])
 
     // Dev mode: select story (goes to start screen, not directly to game)
     const selectStoryDev = useCallback((storyInfo) => {

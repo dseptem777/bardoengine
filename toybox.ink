@@ -5,6 +5,7 @@ VAR minigame_result = -1
 VAR agilidad = 5
 VAR hp = 100
 VAR tiene_ganzua = true
+VAR new_game_plus = false
 
 -> main
 
@@ -14,12 +15,17 @@ VAR tiene_ganzua = true
 --- BARDO TOYBOX ---
 Selecciona un minijuego para testear la integración.
 
+{new_game_plus:
+    [🌟 NEW GAME+ ACTIVO - Contenido exclusivo desbloqueado]
+}
+
 [TUS STATS: Agilidad={agilidad}, HP={hp}]
 
 + [QTE - Reflejos] -> test_qte
 + [Lockpick - Dificultad según Agilidad] -> test_lockpick
 + [Arkanoid - Arcade] -> test_arkanoid
 + [Subir Agilidad (+2)] -> subir_agilidad
++ {new_game_plus} [⭐ Contenido NG+ Exclusivo] -> ng_plus_content
 + [Back to Main Menu] -> END
 
 === subir_agilidad ===
@@ -93,3 +99,14 @@ Prepárate para reaccionar...
     GAME OVER. Mejor suerte la próxima.
 }
 + [Volver al menú] -> main
+
+=== ng_plus_content ===
+¡Bienvenido al contenido exclusivo de New Game+!
+
+Has completado el juego al menos una vez. Como recompensa, tienes acceso a contenido extra:
+
+~ agilidad = agilidad + 10
+[+10 Agilidad bonus de NG+!]
+
+Este contenido solo aparece en tu segundo playthrough o posteriores.
++ [Volver al menú con tu bonus] -> main
