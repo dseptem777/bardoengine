@@ -78,8 +78,16 @@ export function useGameSystems(storyId) {
         // Handle inventory tags: #inv:action:itemId[:qty]
         if (trimmedTag.startsWith('inv:')) {
             const parts = trimmedTag.split(':')
+            const action = parts[1]
+
+            // Handle clear action (only needs 2 parts)
+            if (action === 'clear') {
+                inventoryHook.clearInventory()
+                return true
+            }
+
+            // Other actions require at least 3 parts
             if (parts.length >= 3) {
-                const action = parts[1]
                 const itemId = parts[2]
                 const qty = parts[3] ? parseInt(parts[3], 10) : 1
 
@@ -89,9 +97,6 @@ export function useGameSystems(storyId) {
                         return true
                     case 'remove':
                         inventoryHook.removeItem(itemId, isNaN(qty) ? null : qty)
-                        return true
-                    case 'clear':
-                        inventoryHook.clearInventory()
                         return true
                     default:
                         console.warn(`Unknown inventory action: ${action}`)
