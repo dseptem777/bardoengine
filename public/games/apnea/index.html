@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APNEA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0a0a;
+            --accent: #facc15;
+            --danger: #ef4444;
+            --safe: #22c55e;
+            --text: #e5e5e5;
+            --muted: #525252;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* ===== VIGNETTE OVERLAY ===== */
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.8) 100%);
+            z-index: 5;
+        }
+
+        /* ===== DANGER OVERLAY ===== */
+        .danger-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: radial-gradient(ellipse at center, transparent 20%, rgba(239, 68, 68, 0.6) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 6;
+        }
+
+        .danger-overlay.active {
+            opacity: 1;
+        }
+
+        /* ===== PANIC OVERLAY (low O2) ===== */
+        .panic-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: rgba(139, 0, 0, 0.7);
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 7;
+        }
+
+        /* ===== SHADOW APPROACHING OVERLAY ===== */
+        .shadow-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, transparent 50%, rgba(0, 0, 0, 0.9) 100%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 4;
+        }
+
+        .shadow-overlay.active {
+            opacity: 1;
+        }
+
+        /* ===== GAME CONTAINER ===== */
+        #game {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem;
+            z-index: 10;
+        }
+
+        /* ===== HUD ===== */
+        .hud {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 2rem;
+            z-index: 20;
+        }
+
+        .meter {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meter-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--muted);
+        }
+
+        .meter-bar {
+            width: 150px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .meter-fill {
+            height: 100%;
+            transition: width 0.1s linear;
+            border-radius: 6px;
+        }
+
+        .meter-fill.oxygen {
+            background: linear-gradient(90deg, var(--accent), #fef08a);
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .meter-fill.visibility {
+            background: linear-gradient(90deg, var(--danger), #fca5a5);
+            box-shadow: 0 0 10px var(--danger);
+        }
+
+        /* ===== NARRATIVE TEXT ===== */
+        .narrative {
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .narrative-text {
+            font-size: 1.5rem;
+            line-height: 1.8;
+            transition: all 0.3s;
+        }
+
+        .narrative-text.distorted {
+            filter: blur(2px);
+            letter-spacing: 3px;
+            animation: distort 0.1s infinite;
+        }
+
+        @keyframes distort {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-2px) skewX(-1deg);
+            }
+
+            75% {
+                transform: translateX(2px) skewX(1deg);
+            }
+        }
+
+        /* ===== BREATH INDICATOR ===== */
+        .breath-indicator {
+            position: fixed;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            z-index: 20;
+            transition: all 0.2s;
+        }
+
+        .breath-indicator.holding {
+            color: var(--accent);
+            text-shadow: 0 0 20px var(--accent);
+        }
+
+        .breath-indicator.danger {
+            color: var(--danger);
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* ===== TITLE SCREEN ===== */
+        .screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            z-index: 100;
+            transition: opacity 0.5s;
+        }
+
+        .screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .title {
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: 1rem;
+            color: var(--accent);
+            text-shadow: 0 0 50px var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--muted);
+            letter-spacing: 0.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .start-prompt {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        /* ===== END SCREENS ===== */
+        .end-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .end-title.win {
+            color: var(--safe);
+            text-shadow: 0 0 30px var(--safe);
+        }
+
+        .end-title.lose {
+            color: var(--danger);
+            text-shadow: 0 0 30px var(--danger);
+        }
+
+        .end-message {
+            font-size: 1.25rem;
+            color: var(--muted);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .restart-btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.2s;
+        }
+
+        .restart-btn:hover {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        /* ===== SHAKE ===== */
+        .shake {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            10%,
+            30%,
+            50%,
+            70%,
+            90% {
+                transform: translateX(-5px);
+            }
+
+            20%,
+            40%,
+            60%,
+            80% {
+                transform: translateX(5px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- OVERLAYS -->
+    <div class="vignette"></div>
+    <div class="danger-overlay" id="dangerOverlay"></div>
+    <div class="panic-overlay" id="panicOverlay"></div>
+    <div class="shadow-overlay" id="shadowOverlay"></div>
+
+    <!-- TITLE SCREEN -->
+    <div class="screen" id="titleScreen">
+        <h1 class="title">APNEA</h1>
+        <p class="subtitle">BREATH-HOLDING SURVIVAL</p>
+        <p class="start-prompt">[ PRESIONÁ ESPACIO PARA COMENZAR ]</p>
+    </div>
+
+    <!-- GAME -->
+    <div id="game" style="display: none;">
+        <div class="hud">
+            <div class="meter">
+                <span class="meter-label">Oxígeno</span>
+                <div class="meter-bar">
+                    <div class="meter-fill oxygen" id="oxygenBar" style="width: 100%"></div>
+                </div>
+            </div>
+            <div class="meter">
+                <span class="meter-label">Ruido</span>
+                <div class="meter-bar">
+                    <div class="meter-fill visibility" id="visibilityBar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="narrative">
+            <p class="narrative-text" id="narrativeText"></p>
+        </div>
+
+        <div class="breath-indicator" id="breathIndicator">
+            [ ESPACIO ] AGUANTAR RESPIRACIÓN
+        </div>
+    </div>
+
+    <!-- WIN SCREEN -->
+    <div class="screen hidden" id="winScreen">
+        <h1 class="end-title win">ESCAPASTE</h1>
+        <p class="end-message">La sombra pasó de largo. Tu corazón late a mil, pero seguís vivo. El silencio vuelve a
+            ser seguro.</p>
+        <button class="restart-btn" onclick="restartGame()">REINICIAR</button>
+    </div>
+
+    <!-- LOSE SCREEN (detected) -->
+    <div class="screen hidden" id="loseScreenDetected">
+        <h1 class="end-title lose">TE ENCONTRÓ</h1>
+        <p class="end-message">Un jadeo. Un sonido. Eso fue todo lo que necesitó para encontrarte. La sombra se cierne
+            sobre vos...</p>
+        <button class="restart-btn" onclick="restartGame()">REINICIAR</button>
+    </div>
+
+    <!-- LOSE SCREEN (asphyxia) -->
+    <div class="screen hidden" id="loseScreenAsphyxia">
+        <h1 class="end-title lose">ASFIXIA</h1>
+        <p class="end-message">Aguantaste demasiado. Tu cuerpo traicionó tu voluntad. El sonido gutural de tu
+            respiración desesperada lo atrajo...</p>
+        <button class="restart-btn" onclick="restartGame()">REINICIAR</button>
+    </div>
+
+    <script>
+        // ==========================================
+        // APNEA - Breath-Holding Survival Minigame
+        // ==========================================
+
+        // === GAME STATE ===
+        const state = {
+            phase: 'title', // title, playing, win, lose
+            oxygen: 100,
+            visibility: 0,
+            isHoldingBreath: false,
+            shadowActive: false,
+            currentTextIndex: 0,
+            textTimer: null,
+            gameLoop: null,
+            lastTime: 0
+        };
+
+        // === BALANCE ===
+        const config = {
+            oxygenDrainRate: 14,      // % per second while holding
+            oxygenRecoverRate: 8,     // % per second while not holding
+            visibilityIncreaseRate: 30, // % per second (not holding during shadow)
+            visibilityDecreaseRate: 25, // % per second while holding
+            panicThreshold: 30,        // O2% where panic effects start
+            deathThresholdVisibility: 100
+        };
+
+        // === NARRATIVE SEQUENCE ===
+        const narrative = [
+            { text: "El armario huele a polvo y miedo viejo.", duration: 3000, shadow: false },
+            { text: "Afuera, escuchás pasos.", duration: 2500, shadow: false },
+            { text: "Lentos. Pesados. Deliberados.", duration: 2500, shadow: false },
+            { text: "Se detienen frente a la puerta.", duration: 2000, shadow: false },
+
+            // WAVE 1
+            { text: "💀 LA SOMBRA ESTÁ CERCA", duration: 3500, shadow: true, alert: true },
+            { text: "...", duration: 1500, shadow: false },
+
+            { text: "Los pasos se alejan.", duration: 2500, shadow: false },
+            { text: "Exhalás. Tu corazón late como un tambor de guerra.", duration: 3000, shadow: false },
+            { text: "Pero algo te dice que no terminó.", duration: 2500, shadow: false },
+
+            // WAVE 2
+            { text: "Los pasos vuelven.", duration: 2000, shadow: false },
+            { text: "Más lentos esta vez.", duration: 2000, shadow: false },
+            { text: "💀 ESTÁ JUSTO AFUERA", duration: 5000, shadow: true, alert: true },
+            { text: "...", duration: 1500, shadow: false },
+
+            { text: "Silencio.", duration: 2000, shadow: false },
+            { text: "¿Se fue?", duration: 2000, shadow: false },
+
+            // WAVE 3
+            { text: "La puerta del armario cruje.", duration: 2500, shadow: false },
+            { text: "💀 ESTÁ ABRIENDO LA PUERTA", duration: 8000, shadow: true, alert: true },
+            { text: "...", duration: 2000, shadow: false },
+
+            // ESCAPE
+            { text: "La puerta se cierra.", duration: 2500, shadow: false },
+            { text: "Los pasos se alejan.", duration: 2500, shadow: false },
+            { text: "Cada vez más lejos.", duration: 2500, shadow: false },
+            { text: "Hasta desaparecer.", duration: 3000, shadow: false },
+
+            { text: "FIN", duration: 0, shadow: false, end: 'win' }
+        ];
+
+        // === DOM ELEMENTS ===
+        const elements = {
+            titleScreen: document.getElementById('titleScreen'),
+            game: document.getElementById('game'),
+            winScreen: document.getElementById('winScreen'),
+            loseScreenDetected: document.getElementById('loseScreenDetected'),
+            loseScreenAsphyxia: document.getElementById('loseScreenAsphyxia'),
+            oxygenBar: document.getElementById('oxygenBar'),
+            visibilityBar: document.getElementById('visibilityBar'),
+            narrativeText: document.getElementById('narrativeText'),
+            breathIndicator: document.getElementById('breathIndicator'),
+            dangerOverlay: document.getElementById('dangerOverlay'),
+            panicOverlay: document.getElementById('panicOverlay'),
+            shadowOverlay: document.getElementById('shadowOverlay')
+        };
+
+        // === GAME FUNCTIONS ===
+
+        function startGame() {
+            state.phase = 'playing';
+            state.oxygen = 100;
+            state.visibility = 0;
+            state.isHoldingBreath = false;
+            state.shadowActive = false;
+            state.currentTextIndex = 0;
+
+            elements.titleScreen.classList.add('hidden');
+            elements.game.style.display = 'block';
+
+            updateBars();
+            advanceNarrative();
+            state.lastTime = performance.now();
+            state.gameLoop = requestAnimationFrame(gameLoop);
+        }
+
+        function gameLoop(currentTime) {
+            if (state.phase !== 'playing') return;
+
+            const deltaTime = (currentTime - state.lastTime) / 1000;
+            state.lastTime = currentTime;
+
+            // Update oxygen
+            if (state.isHoldingBreath) {
+                state.oxygen -= config.oxygenDrainRate * deltaTime;
+                state.visibility -= config.visibilityDecreaseRate * deltaTime;
+            } else {
+                state.oxygen += config.oxygenRecoverRate * deltaTime;
+                if (state.shadowActive) {
+                    state.visibility += config.visibilityIncreaseRate * deltaTime;
+                }
+            }
+
+            // Clamp values
+            state.oxygen = Math.max(0, Math.min(100, state.oxygen));
+            state.visibility = Math.max(0, Math.min(100, state.visibility));
+
+            // Check death conditions
+            if (state.oxygen <= 0) {
+                endGame('asphyxia');
+                return;
+            }
+
+            if (state.visibility >= config.deathThresholdVisibility) {
+                endGame('detected');
+                return;
+            }
+
+            // Update visuals
+            updateBars();
+            updateEffects();
+
+            state.gameLoop = requestAnimationFrame(gameLoop);
+        }
+
+        function updateBars() {
+            elements.oxygenBar.style.width = `${state.oxygen}%`;
+            elements.visibilityBar.style.width = `${state.visibility}%`;
+        }
+
+        function updateEffects() {
+            // Panic overlay based on low oxygen
+            const panicIntensity = state.oxygen < config.panicThreshold
+                ? (config.panicThreshold - state.oxygen) / config.panicThreshold
+                : 0;
+            elements.panicOverlay.style.opacity = panicIntensity * 0.7;
+
+            // Text distortion
+            if (panicIntensity > 0.3) {
+                elements.narrativeText.classList.add('distorted');
+            } else {
+                elements.narrativeText.classList.remove('distorted');
+            }
+
+            // Breath indicator state
+            if (state.isHoldingBreath) {
+                elements.breathIndicator.classList.add('holding');
+                elements.breathIndicator.textContent = '[ AGUANTANDO... ]';
+                if (state.oxygen < config.panicThreshold) {
+                    elements.breathIndicator.classList.add('danger');
+                } else {
+                    elements.breathIndicator.classList.remove('danger');
+                }
+            } else {
+                elements.breathIndicator.classList.remove('holding', 'danger');
+                elements.breathIndicator.textContent = '[ ESPACIO ] AGUANTAR RESPIRACIÓN';
+            }
+
+            // Shadow overlay
+            if (state.shadowActive) {
+                elements.shadowOverlay.classList.add('active');
+                elements.dangerOverlay.classList.add('active');
+            } else {
+                elements.shadowOverlay.classList.remove('active');
+                elements.dangerOverlay.classList.remove('active');
+            }
+        }
+
+        function advanceNarrative() {
+            if (state.currentTextIndex >= narrative.length) return;
+            if (state.phase !== 'playing') return;
+
+            const current = narrative[state.currentTextIndex];
+
+            // Check for end
+            if (current.end) {
+                endGame(current.end);
+                return;
+            }
+
+            // Show text
+            elements.narrativeText.textContent = current.text;
+
+            // Shake on alert
+            if (current.alert) {
+                elements.game.classList.add('shake');
+                setTimeout(() => elements.game.classList.remove('shake'), 500);
+            }
+
+            // Set shadow state
+            state.shadowActive = current.shadow;
+
+            // When shadow phase ends, reset visibility toward 0
+            if (!current.shadow) {
+                // Gradual visibility decay will happen naturally when not in shadow
+            }
+
+            // Schedule next text
+            state.currentTextIndex++;
+            if (current.duration > 0) {
+                state.textTimer = setTimeout(advanceNarrative, current.duration);
+            }
+        }
+
+        function endGame(type) {
+            state.phase = type === 'win' ? 'win' : 'lose';
+            cancelAnimationFrame(state.gameLoop);
+            clearTimeout(state.textTimer);
+
+            elements.game.style.display = 'none';
+            elements.shadowOverlay.classList.remove('active');
+            elements.dangerOverlay.classList.remove('active');
+            elements.panicOverlay.style.opacity = 0;
+
+            if (type === 'win') {
+                elements.winScreen.classList.remove('hidden');
+            } else if (type === 'detected') {
+                elements.loseScreenDetected.classList.remove('hidden');
+            } else if (type === 'asphyxia') {
+                elements.loseScreenAsphyxia.classList.remove('hidden');
+            }
+        }
+
+        function restartGame() {
+            // Hide all screens
+            elements.winScreen.classList.add('hidden');
+            elements.loseScreenDetected.classList.add('hidden');
+            elements.loseScreenAsphyxia.classList.add('hidden');
+
+            // Reset state
+            state.phase = 'title';
+            elements.titleScreen.classList.remove('hidden');
+        }
+
+        // === INPUT HANDLING ===
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+
+                if (state.phase === 'title') {
+                    startGame();
+                } else if (state.phase === 'playing' && !state.isHoldingBreath) {
+                    state.isHoldingBreath = true;
+                }
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (state.phase === 'playing') {
+                    state.isHoldingBreath = false;
+                }
+            }
+        });
+
+        // Mobile touch support
+        document.addEventListener('touchstart', (e) => {
+            if (state.phase === 'title') {
+                startGame();
+            } else if (state.phase === 'playing') {
+                state.isHoldingBreath = true;
+            }
+        });
+
+        document.addEventListener('touchend', (e) => {
+            if (state.phase === 'playing') {
+                state.isHoldingBreath = false;
+            }
+        });
+    </script>
+</body>
+
+</html>

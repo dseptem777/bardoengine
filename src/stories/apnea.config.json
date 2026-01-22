@@ -1,0 +1,20 @@
+{
+    "title": "Apnea",
+    "version": "1.0.0",
+    "intro": {
+        "showEngineLogo": true,
+        "engineLogoDuration": 3000,
+        "titleBackground": null,
+        "titleMusic": "tension_ambient",
+        "hideTitle": false,
+        "skipEnabled": true,
+        "startGameSfx": null
+    },
+    "stats": {
+        "enabled": false
+    },
+    "inventory": {
+        "enabled": false
+    },
+    "items": {}
+}

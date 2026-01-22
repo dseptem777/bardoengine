@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { Story } from 'inkjs'
 import Player from './components/Player'
 import StorySelector from './components/StorySelector'
@@ -14,23 +14,31 @@ import { useAudio } from './hooks/useAudio'
 import { useSaveSystem } from './hooks/useSaveSystem'
 import { useGameSystems } from './hooks/useGameSystems'
 import { useStoryLoader } from './hooks/useStoryLoader'
+import { useMinigameController, parseMinigameTag } from './hooks/useMinigameController'
 import { SettingsProvider, useSettings } from './hooks/useSettings'
+import MinigameOverlay from './components/MinigameOverlay'
 
 // Import the compiled stories (used in development mode)
 import partuzaStory from './stories/partuza.json'
 import serruchinStory from './stories/serruchin.json'
 import centinelasStory from './stories/centinelas.json'
+import toyboxStory from './stories/toybox.json'
+import apneaStory from './stories/apnea.json'
 
 // Dev mode stories
 const DEV_STORIES = {
     serruchin: serruchinStory,
     partuza: partuzaStory,
-    centinelas: centinelasStory
+    centinelas: centinelasStory,
+    toybox: toyboxStory,
+    apnea: apneaStory
 }
 
 // Format for story selector
 const AVAILABLE_STORIES = [
     { id: 'centinelas', title: '🛡️ CENTINELAS DEL SUR', data: centinelasStory },
+    { id: 'toybox', title: '📦 BARDO TOYBOX (Minigames)', data: toyboxStory },
+    { id: 'apnea', title: '🫁 APNEA', data: apneaStory },
     { id: 'serruchin', title: '🪚 SERRUCHÍN', data: serruchinStory },
     { id: 'partuza', title: 'Tu nombre en clave es Partuza', data: partuzaStory }
 ]
@@ -54,6 +62,7 @@ function AppContent({ onStorySelect }) {
     const [introComplete, setIntroComplete] = useState(false) // Track if intro sequence has been shown
     const [saveModalMode, setSaveModalMode] = useState(null) // 'save' | 'load' | null
     const [optionsOpen, setOptionsOpen] = useState(false)
+    const storyRef = useRef(null)
 
     // Hooks with settings integration
     const { playSfx, playMusic, stopMusic, stopAll: stopAllAudio } = useAudio({
@@ -108,6 +117,7 @@ function AppContent({ onStorySelect }) {
         }
 
         setStory(newStory)
+        storyRef.current = newStory
         setStoryId(id)
         setStoryData(data)
 
@@ -127,55 +137,115 @@ function AppContent({ onStorySelect }) {
         }
     }, [gameSystems])
 
-    // Process tags (VFX + Game Systems)
+    // Ref to hold continueStory for callbacks (avoids stale closure)
+    const continueStoryRef = useRef(null)
+
+    // Minigame result commit handler (passed to controller)
+    const handleMinigameResult = useCallback((result) => {
+        const currentStory = storyRef.current
+        if (!currentStory) return
+
+        // Force numeric result
+        const numericResult = (result === true || result === 1) ? 1 : 0
+
+        console.log(`[Ink Bridge] Committing result: ${numericResult}`)
+        currentStory.variablesState["minigame_result"] = numericResult
+
+        // Verify the write was successful
+        const verified = currentStory.variablesState["minigame_result"]
+        console.log(`[Ink Bridge] Verified value in Ink: ${verified}`)
+
+        // Continue story immediately (synchronous, no setTimeout)
+        if (continueStoryRef.current) {
+            continueStoryRef.current()
+        }
+    }, [])
+
+    // Initialize minigame controller
+    const minigameController = useMinigameController(handleMinigameResult)
+
+    // Process tags (VFX + Game Systems + Minigames)
     const processTags = useCallback((tags) => {
         tags.forEach(rawTag => {
             const tag = rawTag.trim()
             if (!tag) return
+
+            // Check for minigame tag first (pass storyRef for variable resolution)
+            const minigameConfig = parseMinigameTag(tag, storyRef)
+            if (minigameConfig) {
+                console.log('[Tags] Minigame detected:', minigameConfig)
+                minigameController.queueGame(minigameConfig)
+                return
+            }
+
+            // Try game systems
             const handled = gameSystems.processGameTag(tag)
+
+            // Fall back to VFX
             if (!handled) {
                 triggerVFX(tag)
             }
         })
-    }, [gameSystems, triggerVFX])
+    }, [gameSystems, triggerVFX, minigameController])
 
     // Continue story
     const continueStory = useCallback(() => {
-        if (!story) return
+        const currentStory = storyRef.current
+        if (!currentStory || minigameController.isPlaying) return
 
         let fullText = ''
         let allTags = []
 
-        while (story.canContinue) {
-            const nextBatch = story.Continue()
-            fullText += nextBatch + '\n\n'
-            allTags = [...allTags, ...story.currentTags]
+        // Story continuation loop
+        while (currentStory.canContinue) {
+            const nextBatch = currentStory.Continue()
+            const tags = currentStory.currentTags
 
-            // Pagination support: Break the loop if we find a 'next' or 'page' tag
-            if (story.currentTags.some(t => t.trim().toLowerCase() === 'next' || t.trim().toLowerCase() === 'page')) {
-                break
-            }
+            fullText += nextBatch + '\n\n'
+            allTags = [...allTags, ...tags]
+
+            // Break for pagination
+            if (tags.some(t => {
+                const tag = t.trim().toLowerCase()
+                return tag === 'next' || tag === 'page'
+            })) break
+
+            // Break for minigame
+            if (tags.some(t => t.trim().toLowerCase().startsWith('minigame:'))) break
         }
 
         setText(fullText.trim())
-        setChoices(story.currentChoices)
-        setCanContinue(story.canContinue)
-        setIsEnded(!story.canContinue && story.currentChoices.length === 0)
+        setChoices(currentStory.currentChoices)
+        setCanContinue(currentStory.canContinue)
+        setIsEnded(!currentStory.canContinue && currentStory.currentChoices.length === 0)
 
         processTags(allTags)
 
         if (storyId) {
-            saveSystem.autoSave(story.state.toJson(), fullText.trim(), gameSystems.exportGameSystems())
+            saveSystem.autoSave(currentStory.state.toJson(), fullText.trim(), gameSystems.exportGameSystems())
         }
-    }, [story, storyId, processTags, saveSystem, gameSystems])
+    }, [storyId, processTags, saveSystem, gameSystems, minigameController.isPlaying])
+
+    // Keep ref updated for callbacks
+    continueStoryRef.current = continueStory
+
+    // Minigame handlers using new controller
+    const handleMinigameStart = useCallback(() => {
+        const currentStory = storyRef.current
+        if (currentStory) {
+            currentStory.variablesState["minigame_result"] = -1
+        }
+        minigameController.startGame()
+    }, [minigameController])
 
     // Make choice
     const makeChoice = useCallback((index) => {
-        if (!story) return
+        const currentStory = storyRef.current
+        if (!currentStory) return
         clearVFX()
-        story.ChooseChoiceIndex(index)
+        currentStory.ChooseChoiceIndex(index)
         continueStory()
-    }, [story, continueStory, clearVFX])
+    }, [continueStory, clearVFX])
 
     // ==================
     // Start Screen Actions
@@ -423,8 +493,21 @@ function AppContent({ onStorySelect }) {
                     fontSize={settings.fontSize}
                     autoAdvance={settings.autoAdvance}
                     autoAdvanceDelay={settings.autoAdvanceDelay}
+                    // Minigame integration
+                    isMinigameActive={minigameController.isPlaying}
+                    hasPendingMinigame={minigameController.isPending}
+                    onMinigameReady={handleMinigameStart}
+                    minigameAutoStart={minigameController.config?.autoStart}
                 />
             )}
+
+            {/* Minigame Overlay */}
+            <MinigameOverlay
+                isPlaying={minigameController.isPlaying}
+                config={minigameController.config}
+                onFinish={minigameController.finishGame}
+                onCancel={minigameController.cancelGame}
+            />
         </div>
     )
 }

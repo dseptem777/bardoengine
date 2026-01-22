@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "Centinelas del Sur",
-  "version": "0.1.0",
-  "identifier": "com.bardoengine.centinelas",
+  "productName": "Apnea",
+  "version": "1.0.0",
+  "identifier": "com.bardoengine.apnea",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Centinelas del Sur",
+        "title": "Apnea",
         "width": 1024,
         "height": 768,
         "resizable": true,

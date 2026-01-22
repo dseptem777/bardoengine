@@ -14,9 +14,12 @@ export function useKeyboardNavigation({
     isEnded,
     onChoice,
     onSkip,
-    onBack
+    onBack,
+    disabled = false
 }) {
     const handleKeyDown = useCallback((event) => {
+        if (disabled) return;
+
         const key = event.key
 
         // Keys to ignore for "any key" skip

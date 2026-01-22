@@ -20,6 +20,10 @@ export default function Player({
     fontSize = 'normal',
     autoAdvance = false,
     autoAdvanceDelay = 4,
+    isMinigameActive = false,
+    hasPendingMinigame = false,
+    onMinigameReady = null,
+    minigameAutoStart = true,
 }) {
     // If no text but has interactive content, skip typewriter
     const hasInteractiveContent = choices.length > 0 || isEnded
@@ -49,17 +53,26 @@ export default function Player({
     }, [])
 
     // Keyboard navigation
+
+    // Keyboard navigation
     useKeyboardNavigation({
         choices,
         isTyping,
         isEnded,
         onChoice,
         onSkip: handleSkip,
-        onBack
+        onBack,
+        disabled: isMinigameActive
     })
 
     const handleTypingComplete = useCallback(() => {
         setIsTyping(false)
+
+        // Auto-start minigame if configured
+        if (hasPendingMinigame && minigameAutoStart && onMinigameReady) {
+            onMinigameReady()
+            return
+        }
 
         // Auto-advance: only if enabled, no choices, not ended, and onContinue exists
         if (autoAdvance && choices.length === 0 && !isEnded && onContinue) {
@@ -67,7 +80,7 @@ export default function Player({
                 onContinue()
             }, autoAdvanceDelay * 1000)
         }
-    }, [autoAdvance, autoAdvanceDelay, choices.length, isEnded, onContinue])
+    }, [autoAdvance, autoAdvanceDelay, choices.length, isEnded, onContinue, hasPendingMinigame, minigameAutoStart, onMinigameReady])
 
     // Cancel auto-advance if user interacts
     const cancelAutoAdvance = useCallback(() => {
@@ -135,8 +148,8 @@ export default function Player({
                         />
                     </div>
 
-                    {/* Choices */}
-                    {!isTyping && (
+                    {/* Choices - Hidden if a minigame is pending */}
+                    {!isTyping && !hasPendingMinigame && (
                         <div className="space-y-3">
                             {choices.map((choice, index) => (
                                 <ChoiceButton
@@ -146,16 +159,26 @@ export default function Player({
                                     onClick={() => handleChoice(index)}
                                 />
                             ))}
+                        </div>
+                    )}
 
-                            {/* Pagination: Continue button if no choices and story can continue */}
-                            {choices.length === 0 && canContinue && !isEnded && (
+                    {/* Controls Footer */}
+                    {!isTyping && (
+                        <div className="space-y-3">
+
+                            {/* Pagination or Minigame Start (only if not auto-starting) */}
+                            {((choices.length === 0 && canContinue) || (hasPendingMinigame && !minigameAutoStart)) && !isEnded && (
                                 <div className="pt-4 flex justify-center">
                                     <button
-                                        onClick={onContinue}
+                                        onClick={hasPendingMinigame ? onMinigameReady : onContinue}
                                         className="group relative flex items-center justify-center gap-3 px-8 py-4 bg-bardo-accent/10 border border-bardo-accent text-bardo-accent font-mono text-lg hover:bg-bardo-accent hover:text-bardo-bg transition-all duration-300 rounded overflow-hidden"
                                     >
-                                        <span className="relative z-10 tracking-widest uppercase">Siguiente</span>
-                                        <span className="relative z-10 text-xl group-hover:translate-x-1 transition-transform duration-300">❱</span>
+                                        <span className="relative z-10 tracking-widest uppercase">
+                                            {hasPendingMinigame ? 'Comenzar Juego' : 'Siguiente'}
+                                        </span>
+                                        <span className="relative z-10 text-xl group-hover:translate-x-1 transition-transform duration-300">
+                                            {hasPendingMinigame ? '◈' : '❱'}
+                                        </span>
                                         {/* Retro pulse effect */}
                                         <div className="absolute inset-0 bg-bardo-accent/20 animate-pulse" />
                                     </button>
