@@ -66,7 +66,13 @@ export default function TextDisplay({
     const fontSizeClass = FONT_SIZE_CLASSES[fontSize] || FONT_SIZE_CLASSES.normal
 
     return (
-        <div className="relative select-none cursor-pointer space-y-6">
+        <div
+            className="relative select-none cursor-pointer space-y-6 transition-all duration-500"
+            style={{
+                textAlign: 'var(--player-text-align, left)',
+                fontFamily: 'var(--bardo-font-main)'
+            }}
+        >
             {paragraphs.length > 0 ? (
                 paragraphs.map((para, i) => (
                     <p

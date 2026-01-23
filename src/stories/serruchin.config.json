@@ -1,6 +1,34 @@
 {
     "title": "Serruchín",
     "version": "1.0.0",
+    "theme": {
+        "primaryColor": "#dc2626",
+        "bgColor": "#050505",
+        "description": "Blood red - horror gore",
+        "typography": {
+            "mainFont": "'Creepster', cursive",
+            "headerFont": "'Creepster', cursive",
+            "googleFonts": [
+                "Creepster",
+                "Inter"
+            ]
+        },
+        "layout": {
+            "statsPosition": {
+                "top": 2,
+                "left": 2
+            },
+            "inventoryPosition": {
+                "top": 2,
+                "right": 2
+            },
+            "playerMaxWidth": "max-w-4xl"
+        },
+        "uiStyle": {
+            "borderRadius": "0px",
+            "borderWidth": "2px"
+        }
+    },
     "intro": {
         "showEngineLogo": true,
         "engineLogoDuration": 3000,

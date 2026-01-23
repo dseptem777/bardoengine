@@ -8,10 +8,10 @@ export default {
         extend: {
             colors: {
                 bardo: {
-                    bg: '#0a0a0a',
-                    accent: '#facc15',
-                    text: '#f5f5f5',
-                    muted: '#737373'
+                    bg: 'var(--bardo-bg)',
+                    accent: 'var(--bardo-accent)',
+                    text: 'var(--bardo-text)',
+                    muted: 'var(--bardo-muted)'
                 }
             },
             fontFamily: {

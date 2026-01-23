@@ -1,6 +1,35 @@
 {
     "title": "Centinelas del Sur",
     "version": "0.1.0",
+    "theme": {
+        "primaryColor": "#a855f7",
+        "bgColor": "#000510",
+        "description": "Royal purple - medieval fantasy",
+        "typography": {
+            "mainFont": "'JetBrains Mono', monospace",
+            "headerFont": "'Orbitron', sans-serif",
+            "googleFonts": [
+                "Orbitron",
+                "JetBrains Mono"
+            ]
+        },
+        "layout": {
+            "statsPosition": {
+                "top": 12,
+                "left": 2
+            },
+            "inventoryPosition": {
+                "top": 12,
+                "right": 2
+            },
+            "playerMaxWidth": "max-w-xl",
+            "textAlignment": "center"
+        },
+        "uiStyle": {
+            "borderRadius": "20px",
+            "borderWidth": "1px"
+        }
+    },
     "stats": {
         "enabled": true,
         "definitions": [

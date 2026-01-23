@@ -124,7 +124,7 @@ export default function BardoEngineLogo({
                 viewBox={`0 0 ${size} ${size}`}
                 className="text-bardo-accent"
                 style={{
-                    filter: 'drop-shadow(0 0 20px rgba(250, 204, 21, 0.5))'
+                    filter: 'drop-shadow(0 0 20px color-mix(in srgb, var(--bardo-accent) 50%, transparent))'
                 }}
                 initial={animated ? { scale: 0.8, opacity: 0 } : {}}
                 animate={animated ? { scale: 1, opacity: 1 } : {}}
@@ -185,7 +185,7 @@ export default function BardoEngineLogo({
                     <h1
                         className="text-3xl md:text-4xl font-bold text-bardo-accent tracking-[0.3em] font-mono"
                         style={{
-                            textShadow: '0 0 20px rgba(250, 204, 21, 0.5)',
+                            textShadow: '0 0 20px color-mix(in srgb, var(--bardo-accent) 50%, transparent)',
                             letterSpacing: '0.3em'
                         }}
                     >

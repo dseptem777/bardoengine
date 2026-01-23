@@ -64,13 +64,13 @@ export default function LockpickGame({ params = [], onFinish }) {
                     style={{
                         left: `${zoneStart}%`,
                         width: `${zoneSize}%`,
-                        boxShadow: '0 0 20px rgba(250, 204, 21, 0.4)'
+                        boxShadow: '0 0 20px color-mix(in srgb, var(--bardo-accent) 40%, transparent)'
                     }}
                 />
 
                 {/* Needle */}
                 <motion.div
-                    className="absolute top-0 bottom-0 w-1 bg-bardo-accent z-20 shadow-[0_0_10px_#facc15]"
+                    className="absolute top-0 bottom-0 w-1 bg-bardo-accent z-20"
                     animate={{ left: `${position}%` }}
                     transition={{ type: 'tween', ease: 'linear', duration: 0 }}
                 />

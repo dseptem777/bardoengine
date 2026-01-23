@@ -15,12 +15,19 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo }) {
 
     return (
         <motion.div
-            className="fixed top-14 left-4 z-40 pointer-events-none"
+            className="fixed z-40 pointer-events-none"
+            style={{
+                top: 'var(--stats-top)',
+                left: 'var(--stats-left)'
+            }}
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
         >
-            <div className="bg-black/80 border border-bardo-accent/30 rounded-lg p-3 backdrop-blur-sm min-w-[200px]">
+            <div
+                className="bg-black/80 border border-bardo-accent/30 p-3 backdrop-blur-sm min-w-[200px]"
+                style={{ borderRadius: 'var(--ui-border-radius)' }}
+            >
                 {/* Bar Stats (Resources) */}
                 {barStats.length > 0 && (
                     <div className="space-y-2">

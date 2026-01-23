@@ -2,24 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   CSS VARIABLES - Dynamic Theming
+   These can be overridden per-game via JS
+   ============================================ */
+:root {
+  --bardo-bg: #0a0a0a;
+  --bardo-accent: #facc15;
+  --bardo-text: #f5f5f5;
+  --bardo-muted: #737373;
+
+  /* Typography Defaults */
+  --bardo-font-main: 'Inter', system-ui, sans-serif;
+  --bardo-font-header: 'Inter', system-ui, sans-serif;
+  --bardo-font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Layout Defaults */
+  --stats-top: 3.5rem;
+  /* top-14 */
+  --stats-left: 1rem;
+  /* left-4 */
+  --inventory-top: 3.5rem;
+  /* top-14 */
+  --inventory-right: 1rem;
+  /* right-4 */
+
+  /* UI Style Defaults */
+  --ui-border-radius: 0.5rem;
+  /* rounded-lg */
+  --ui-border-width: 1px;
+}
+
+body {
+  font-family: var(--bardo-font-main);
+  background-color: var(--bardo-bg);
+  color: var(--bardo-text);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--bardo-font-header);
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: var(--bardo-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #facc15;
+  background: var(--bardo-accent);
   border-radius: 4px;
 }
 
 /* Selection */
 ::selection {
-  background: #facc15;
-  color: #0a0a0a;
+  background: var(--bardo-accent);
+  color: var(--bardo-bg);
 }
 
 /* VFX Classes */
@@ -40,13 +86,11 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.1) 2px,
-    rgba(0, 0, 0, 0.1) 4px
-  );
+  background: repeating-linear-gradient(0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.1) 2px,
+      rgba(0, 0, 0, 0.1) 4px);
   pointer-events: none;
 }
 
@@ -56,8 +100,8 @@
 }
 
 .glow-hover:hover {
-  box-shadow: 0 0 20px rgba(250, 204, 21, 0.4),
-              0 0 40px rgba(250, 204, 21, 0.2);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--bardo-accent) 40%, transparent),
+    0 0 40px color-mix(in srgb, var(--bardo-accent) 20%, transparent);
 }
 
 /* ============================================
@@ -65,7 +109,7 @@
    ============================================ */
 .error-boundary {
   min-height: 100vh;
-  background: #0a0a0a;
+  background: var(--bardo-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -75,7 +119,7 @@
 .error-content {
   max-width: 500px;
   text-align: center;
-  color: #facc15;
+  color: var(--bardo-accent);
 }
 
 .error-icon {
@@ -106,7 +150,7 @@
 
 .error-details summary {
   cursor: pointer;
-  color: #facc15;
+  color: var(--bardo-accent);
   margin-bottom: 0.5rem;
 }
 
@@ -135,8 +179,8 @@
 }
 
 .error-btn.primary {
-  background: #facc15;
-  color: #0a0a0a;
+  background: var(--bardo-accent);
+  color: var(--bardo-bg);
 }
 
 .error-btn.primary:hover {
@@ -146,8 +190,8 @@
 
 .error-btn.secondary {
   background: transparent;
-  border-color: #facc15;
-  color: #facc15;
+  border-color: var(--bardo-accent);
+  color: var(--bardo-accent);
 }
 
 .error-btn.secondary:hover {
@@ -171,7 +215,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
 
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+}

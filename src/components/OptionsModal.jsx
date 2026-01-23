@@ -39,7 +39,7 @@ export default function OptionsModal({ isOpen, onClose }) {
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
                         style={{
-                            boxShadow: '0 0 30px rgba(250, 204, 21, 0.3)',
+                            boxShadow: '0 0 30px color-mix(in srgb, var(--bardo-accent) 30%, transparent)',
                         }}
                     >
                         {/* Header */}

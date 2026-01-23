@@ -117,7 +117,7 @@ export default function TitleScreen({
                         <motion.h1
                             className="text-5xl md:text-7xl lg:text-8xl font-bold text-bardo-accent text-center tracking-wider"
                             style={{
-                                textShadow: '0 0 40px rgba(250, 204, 21, 0.6), 0 0 80px rgba(250, 204, 21, 0.3)'
+                                textShadow: '0 0 40px color-mix(in srgb, var(--bardo-accent) 60%, transparent), 0 0 80px color-mix(in srgb, var(--bardo-accent) 30%, transparent)'
                             }}
                             initial={{ opacity: 0, y: -30, scale: 0.9 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}

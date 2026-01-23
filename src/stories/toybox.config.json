@@ -1,6 +1,10 @@
 {
     "title": "📦 BARDO TOYBOX",
     "version": "1.0.0",
+    "theme": {
+        "primaryColor": "#06b6d4",
+        "description": "Cyan - playground mode"
+    },
     "stats": {
         "enabled": false
     },

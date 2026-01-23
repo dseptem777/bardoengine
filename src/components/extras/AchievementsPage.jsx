@@ -18,20 +18,20 @@ export default function AchievementsPage({
         <div className="flex flex-col h-full">
             {/* Header with Progress */}
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-yellow-400">LOGROS</h2>
+                <h2 className="text-2xl font-bold text-bardo-accent">LOGROS</h2>
                 <div className="flex items-center gap-4">
-                    <span className="text-yellow-200/70">
+                    <span className="text-bardo-accent/70">
                         {stats.unlocked}/{stats.total}
                     </span>
                     <div className="w-32 h-2 bg-neutral-800 rounded-full overflow-hidden">
                         <motion.div
-                            className="h-full bg-gradient-to-r from-yellow-500 to-amber-400"
+                            className="h-full bg-bardo-accent"
                             initial={{ width: 0 }}
                             animate={{ width: `${stats.percentage}%` }}
                             transition={{ duration: 0.5 }}
                         />
                     </div>
-                    <span className="text-yellow-400 font-bold">{stats.percentage}%</span>
+                    <span className="text-bardo-accent font-bold">{stats.percentage}%</span>
                 </div>
             </div>
 
@@ -48,7 +48,7 @@ export default function AchievementsPage({
                                 key={achievement.id}
                                 className={`flex flex-col items-center p-4 rounded-lg border-2 transition-colors
                                     ${achievement.unlocked
-                                        ? 'bg-yellow-900/30 border-yellow-500/50 hover:border-yellow-400'
+                                        ? 'bg-bardo-accent/20 border-bardo-accent/50 hover:border-bardo-accent'
                                         : 'bg-neutral-900/50 border-neutral-700/50 hover:border-neutral-600'
                                     }`}
                                 onClick={() => setSelectedAchievement(achievement)}
@@ -59,7 +59,7 @@ export default function AchievementsPage({
                                     {achievement.icon || '🏆'}
                                 </span>
                                 <span className={`text-xs text-center truncate w-full
-                                    ${achievement.unlocked ? 'text-yellow-200' : 'text-neutral-500'}`}>
+                                    ${achievement.unlocked ? 'text-bardo-accent' : 'text-neutral-500'}`}>
                                     {achievement.displayTitle}
                                 </span>
                             </motion.button>
@@ -100,7 +100,7 @@ export default function AchievementsPage({
                         <motion.div
                             className={`p-6 rounded-lg border-2 max-w-sm mx-4
                                 ${selectedAchievement.unlocked
-                                    ? 'bg-yellow-950/90 border-yellow-500/60'
+                                    ? 'bg-bardo-accent/30 border-bardo-accent/60'
                                     : 'bg-neutral-900/90 border-neutral-700'
                                 }`}
                             initial={{ scale: 0.9, opacity: 0 }}
@@ -114,7 +114,7 @@ export default function AchievementsPage({
                                 </span>
                                 <div>
                                     <h3 className={`text-xl font-bold 
-                                        ${selectedAchievement.unlocked ? 'text-yellow-300' : 'text-neutral-400'}`}>
+                                        ${selectedAchievement.unlocked ? 'text-bardo-accent' : 'text-neutral-400'}`}>
                                         {selectedAchievement.displayTitle}
                                     </h3>
                                     <span className={`text-sm 
@@ -123,7 +123,7 @@ export default function AchievementsPage({
                                     </span>
                                 </div>
                             </div>
-                            <p className={`${selectedAchievement.unlocked ? 'text-yellow-100/80' : 'text-neutral-500'}`}>
+                            <p className={`${selectedAchievement.unlocked ? 'text-bardo-text' : 'text-neutral-500'}`}>
                                 {selectedAchievement.displayDescription}
                             </p>
                         </motion.div>

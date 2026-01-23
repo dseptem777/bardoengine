@@ -24,8 +24,8 @@ export default function GalleryPage({
         <div className="flex flex-col h-full">
             {/* Header */}
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-yellow-400">GALERÍA</h2>
-                <span className="text-yellow-200/70">
+                <h2 className="text-2xl font-bold text-bardo-accent">GALERÍA</h2>
+                <span className="text-bardo-accent/70">
                     {unlockedCount}/{items.length} desbloqueados
                 </span>
             </div>
@@ -43,7 +43,7 @@ export default function GalleryPage({
                                 key={item.id}
                                 className={`aspect-video rounded-lg border-2 overflow-hidden
                                     ${item.unlocked
-                                        ? 'border-yellow-500/50 cursor-pointer hover:border-yellow-400'
+                                        ? 'border-bardo-accent/50 cursor-pointer hover:border-bardo-accent'
                                         : 'border-neutral-700/50 cursor-not-allowed'
                                     }`}
                                 onClick={() => item.unlocked && setSelectedImage(item)}
@@ -71,7 +71,7 @@ export default function GalleryPage({
                                             )}
                                         </div>
                                         <div className="p-2 text-center bg-neutral-900">
-                                            <span className="text-sm text-yellow-200">{item.title}</span>
+                                            <span className="text-sm text-bardo-accent">{item.title}</span>
                                         </div>
                                     </div>
                                 ) : (
@@ -122,7 +122,7 @@ export default function GalleryPage({
                             </button>
 
                             {/* Image */}
-                            <div className="rounded-lg overflow-hidden border-2 border-yellow-500/50 bg-neutral-900">
+                            <div className="rounded-lg overflow-hidden border-2 border-bardo-accent/50 bg-neutral-900">
                                 {selectedImage.image ? (
                                     <img
                                         src={selectedImage.image}
@@ -139,7 +139,7 @@ export default function GalleryPage({
                             </div>
 
                             {/* Title */}
-                            <h3 className="mt-4 text-xl font-bold text-yellow-400">
+                            <h3 className="mt-4 text-xl font-bold text-bardo-accent">
                                 {selectedImage.title}
                             </h3>
                         </motion.div>

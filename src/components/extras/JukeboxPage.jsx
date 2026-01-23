@@ -42,8 +42,8 @@ export default function JukeboxPage({
         <div className="flex flex-col h-full">
             {/* Header */}
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-yellow-400">JUKEBOX</h2>
-                <span className="text-yellow-200/70">
+                <h2 className="text-2xl font-bold text-bardo-accent">JUKEBOX</h2>
+                <span className="text-bardo-accent/70">
                     {unlockedCount}/{tracks.length} desbloqueados
                 </span>
             </div>
@@ -65,8 +65,8 @@ export default function JukeboxPage({
                                     className={`w-full flex items-center gap-4 p-4 rounded-lg border-2 transition-all
                                         ${track.unlocked
                                             ? isPlaying
-                                                ? 'bg-yellow-900/40 border-yellow-400'
-                                                : 'bg-neutral-900/50 border-neutral-700/50 hover:border-yellow-500/50 hover:bg-neutral-800/50'
+                                                ? 'bg-bardo-accent/30 border-bardo-accent'
+                                                : 'bg-neutral-900/50 border-neutral-700/50 hover:border-bardo-accent/50 hover:bg-neutral-800/50'
                                             : 'bg-neutral-900/30 border-neutral-800 cursor-not-allowed opacity-60'
                                         }`}
                                     onClick={() => handlePlayTrack(track)}
@@ -78,7 +78,7 @@ export default function JukeboxPage({
                                         ${track.unlocked
                                             ? isPlaying
                                                 ? 'bg-red-500/30 text-red-400'
-                                                : 'bg-yellow-500/20 text-yellow-400'
+                                                : 'bg-bardo-accent/20 text-bardo-accent'
                                             : 'bg-neutral-800 text-neutral-600'
                                         }`}>
                                         {!track.unlocked ? '🔒' : isPlaying ? '⏹️' : '▶️'}
@@ -87,7 +87,7 @@ export default function JukeboxPage({
                                     {/* Track Info */}
                                     <div className="flex-1 text-left">
                                         <span className={`block font-semibold
-                                            ${track.unlocked ? 'text-yellow-200' : 'text-neutral-500'}`}>
+                                            ${track.unlocked ? 'text-bardo-accent' : 'text-neutral-500'}`}>
                                             {track.unlocked ? track.title : '???'}
                                         </span>
                                     </div>
@@ -104,7 +104,7 @@ export default function JukeboxPage({
                                                 {[0, 1, 2].map((i) => (
                                                     <motion.div
                                                         key={i}
-                                                        className="w-1 bg-yellow-400 rounded-full"
+                                                        className="w-1 bg-bardo-accent rounded-full"
                                                         animate={{ height: [4, 16, 4] }}
                                                         transition={{
                                                             duration: 0.4,

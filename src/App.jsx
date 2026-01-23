@@ -153,18 +153,19 @@ function AppContent({ onStorySelect }) {
     // ==================
     // Screen Logic
     // ==================
+    const isReady = !storyLoading && (!currentStoryId || engine.isThemeReady)
 
-    const showStorySelector = !isProductionMode && !selectedStory && !story
-    const showIntro = ((isProductionMode && !story) || (!isProductionMode && selectedStory && !story)) && !introComplete
-    const showStartScreen = ((isProductionMode && !story) || (!isProductionMode && selectedStory && !story)) && introComplete
-    const showPlayer = story !== null
+    const showStorySelector = isReady && !isProductionMode && !selectedStory && !story
+    const showIntro = isReady && ((isProductionMode && !story) || (!isProductionMode && selectedStory && !story)) && !introComplete
+    const showStartScreen = isReady && ((isProductionMode && !story) || (!isProductionMode && selectedStory && !story)) && introComplete
+    const showPlayer = isReady && story !== null
 
     // ==================
     // Render
     // ==================
 
     return (
-        <div className="min-h-screen bg-bardo-bg relative overflow-hidden">
+        <div className="min-h-screen bg-bardo-bg relative overflow-hidden transition-colors duration-500">
             <VFXLayer vfxState={vfx.vfxState} />
 
             {/* Save/Load Modal */}
@@ -185,7 +186,7 @@ function AppContent({ onStorySelect }) {
             />
 
             {/* Stats Panel */}
-            {story && (
+            {showPlayer && (
                 <StatsPanel
                     stats={gameSystems.stats}
                     statsConfig={gameSystems.statsConfig}
@@ -194,7 +195,7 @@ function AppContent({ onStorySelect }) {
             )}
 
             {/* Inventory Panel */}
-            {story && (
+            {showPlayer && (
                 <InventoryPanel
                     items={gameSystems.items}
                     inventoryConfig={gameSystems.inventoryConfig}
@@ -203,9 +204,9 @@ function AppContent({ onStorySelect }) {
             )}
 
             {/* Loading state */}
-            {storyLoading && (
-                <div className="flex items-center justify-center min-h-screen">
-                    <div className="text-bardo-accent text-2xl animate-pulse">Cargando...</div>
+            {!isReady && (
+                <div className="flex items-center justify-center min-h-screen bg-black">
+                    <div className="text-bardo-accent text-2xl animate-pulse font-mono uppercase tracking-[0.2em]">Cargando...</div>
                 </div>
             )}
 

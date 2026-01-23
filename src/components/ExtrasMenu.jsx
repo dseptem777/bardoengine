@@ -55,7 +55,7 @@ export default function ExtrasMenu({
                 exit={{ opacity: 0 }}
             >
                 <motion.div
-                    className="w-full max-w-2xl h-[80vh] mx-4 p-6 rounded-lg border-2 border-yellow-500/40
+                    className="w-full max-w-2xl h-[80vh] mx-4 p-6 rounded-lg border-2 border-bardo-accent/40
                                bg-gradient-to-b from-neutral-950 to-neutral-900 overflow-hidden"
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
@@ -73,7 +73,7 @@ export default function ExtrasMenu({
                             >
                                 {/* Header */}
                                 <div className="flex justify-between items-center mb-8">
-                                    <h1 className="text-3xl font-bold text-yellow-400">EXTRAS</h1>
+                                    <h1 className="text-3xl font-bold text-bardo-accent">EXTRAS</h1>
                                     <button
                                         className="text-neutral-400 hover:text-neutral-200 text-2xl"
                                         onClick={handleClose}
@@ -94,7 +94,7 @@ export default function ExtrasMenu({
                                                 key={item.id}
                                                 className={`flex items-center gap-4 p-5 rounded-lg border-2 transition-colors
                                                     ${item.enabled
-                                                        ? 'bg-neutral-900/50 border-neutral-700/50 hover:border-yellow-500/60'
+                                                        ? 'bg-neutral-900/50 border-neutral-700/50 hover:border-bardo-accent/60'
                                                         : 'bg-neutral-900/20 border-neutral-800/30 cursor-not-allowed opacity-40'
                                                     }`}
                                                 onClick={() => item.enabled && setCurrentPage(item.id)}
@@ -103,11 +103,11 @@ export default function ExtrasMenu({
                                             >
                                                 <span className="text-3xl">{item.icon}</span>
                                                 <span className={`text-xl font-semibold
-                                                    ${item.enabled ? 'text-yellow-200' : 'text-neutral-600'}`}>
+                                                    ${item.enabled ? 'text-bardo-accent' : 'text-neutral-600'}`}>
                                                     {item.label}
                                                 </span>
                                                 {item.count !== undefined && item.enabled && (
-                                                    <span className="ml-auto text-yellow-400/70">
+                                                    <span className="ml-auto text-bardo-accent/70">
                                                         {item.count}/{achievementStats.total}
                                                     </span>
                                                 )}

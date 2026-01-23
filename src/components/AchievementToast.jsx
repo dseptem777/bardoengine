@@ -70,33 +70,33 @@ export default function AchievementToast({ achievement, onDismiss, playSound }) 
                     transition={{ type: 'spring', damping: 20, stiffness: 300 }}
                 >
                     <div
-                        className="flex items-center gap-4 px-6 py-4 rounded-lg border-2 border-yellow-500/60
-                                   bg-gradient-to-r from-yellow-900/90 to-amber-900/90 backdrop-blur-sm
-                                   shadow-lg shadow-yellow-500/20 cursor-pointer"
+                        className="flex items-center gap-4 px-6 py-4 rounded-lg border-2 border-bardo-accent/60
+                                   bg-bardo-accent/20 backdrop-blur-sm
+                                   shadow-lg cursor-pointer"
                         onClick={() => setIsVisible(false)}
                     >
                         {/* Achievement Icon */}
                         <div className="flex-shrink-0 w-14 h-14 flex items-center justify-center
-                                        bg-yellow-500/20 rounded-full border border-yellow-400/40">
+                                        bg-bardo-accent/20 rounded-full border border-bardo-accent/40">
                             <span className="text-3xl">{displayedAchievement.icon || '🏆'}</span>
                         </div>
 
                         {/* Text Content */}
                         <div className="flex flex-col">
-                            <span className="text-xs text-yellow-400 font-semibold uppercase tracking-wider">
+                            <span className="text-xs text-bardo-accent font-semibold uppercase tracking-wider">
                                 ¡Logro Desbloqueado!
                             </span>
-                            <span className="text-lg text-yellow-100 font-bold">
+                            <span className="text-lg text-bardo-text font-bold">
                                 {displayedAchievement.title}
                             </span>
-                            <span className="text-sm text-yellow-200/70">
+                            <span className="text-sm text-bardo-text/70">
                                 {displayedAchievement.description}
                             </span>
                         </div>
 
                         {/* Glow effect */}
                         <motion.div
-                            className="absolute inset-0 rounded-lg bg-yellow-400/10"
+                            className="absolute inset-0 rounded-lg bg-bardo-accent/10"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: [0, 0.3, 0] }}
                             transition={{ duration: 1.5, repeat: 2 }}

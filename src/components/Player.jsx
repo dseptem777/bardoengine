@@ -99,8 +99,14 @@ export default function Player({
         <div className="min-h-screen flex flex-col">
             {/* Header */}
             <header className="p-4 border-b border-bardo-accent/20">
-                <div className="max-w-3xl mx-auto flex justify-between items-center">
-                    <h1 className="font-mono text-bardo-accent text-sm tracking-wider">
+                <div
+                    className="mx-auto flex justify-between items-center w-full transition-all duration-500"
+                    style={{ maxWidth: 'var(--player-max-width, 48rem)' }}
+                >
+                    <h1
+                        className="text-bardo-accent text-sm tracking-wider"
+                        style={{ fontFamily: 'var(--bardo-font-mono)' }}
+                    >
                         BARDOENGINE v1.0
                     </h1>
                     <div className="flex items-center gap-4">
@@ -133,7 +139,10 @@ export default function Player({
 
             {/* Main content */}
             <main className="flex-1 flex flex-col justify-center p-4 md:p-8">
-                <div className="max-w-3xl mx-auto w-full">
+                <div
+                    className="mx-auto w-full transition-all duration-500"
+                    style={{ maxWidth: 'var(--player-max-width, 48rem)' }}
+                >
                     {/* Text area */}
                     <div
                         className="mb-8 cursor-pointer"
@@ -195,7 +204,7 @@ export default function Player({
                                         <div className="inline-flex gap-4 items-center flex-wrap justify-center">
                                             <button
                                                 onClick={onRestart}
-                                                className="min-w-[140px] px-6 py-3 bg-bardo-accent text-bardo-bg font-mono hover:bg-yellow-400 transition-colors rounded text-center"
+                                                className="min-w-[140px] px-6 py-3 bg-bardo-accent text-bardo-bg font-mono hover:brightness-110 transition-all rounded text-center"
                                             >
                                                 REINICIAR
                                             </button>

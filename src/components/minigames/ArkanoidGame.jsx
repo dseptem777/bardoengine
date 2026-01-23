@@ -51,6 +51,9 @@ export default function ArkanoidGame({ params = [], onFinish }) {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height)
 
+        // Get accent color from CSS variable
+        const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--bardo-accent').trim() || '#facc15'
+
         // Draw Bricks
         let bricksLeft = 0
         for (let c = 0; c < BRICK_COLS; c++) {
@@ -64,7 +67,7 @@ export default function ArkanoidGame({ params = [], onFinish }) {
 
                     ctx.beginPath()
                     ctx.rect(brickX, brickY, brickWidth, brickHeight)
-                    ctx.fillStyle = '#facc15'
+                    ctx.fillStyle = accentColor
                     ctx.fill()
                     ctx.closePath()
                 }
@@ -79,7 +82,7 @@ export default function ArkanoidGame({ params = [], onFinish }) {
         // Draw Paddle
         ctx.beginPath()
         ctx.rect(paddleX.current, canvas.height - PADDLE_HEIGHT - 10, PADDLE_WIDTH, PADDLE_HEIGHT)
-        ctx.fillStyle = '#facc15'
+        ctx.fillStyle = accentColor
         ctx.fill()
         ctx.closePath()
 

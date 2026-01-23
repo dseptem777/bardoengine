@@ -43,7 +43,7 @@ export default function StartScreen({
                 {/* Game Title */}
                 <h1
                     className="text-5xl md:text-7xl font-bold text-bardo-accent tracking-wider text-center"
-                    style={{ textShadow: '0 0 30px rgba(250, 204, 21, 0.5)' }}
+                    style={{ textShadow: '0 0 30px color-mix(in srgb, var(--bardo-accent) 50%, transparent)' }}
                 >
                     {gameTitle}
                 </h1>
