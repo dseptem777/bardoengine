@@ -4,9 +4,28 @@ import { motion, AnimatePresence } from 'framer-motion'
 /**
  * InventoryPanel - Displays player inventory
  * Toggle button in corner, expands to show items
+ * Can be controlled via isOpen/onToggle props or uses internal state
  */
-export default function InventoryPanel({ items, inventoryConfig, getItemsWithInfo }) {
-    const [isOpen, setIsOpen] = useState(false)
+export default function InventoryPanel({
+    items,
+    inventoryConfig,
+    getItemsWithInfo,
+    isOpen: controlledIsOpen,
+    onToggle
+}) {
+    const [internalIsOpen, setInternalIsOpen] = useState(false)
+
+    // Use controlled mode if onToggle is provided
+    const isControlled = onToggle !== undefined
+    const isOpen = isControlled ? controlledIsOpen : internalIsOpen
+
+    const handleToggle = () => {
+        if (isControlled) {
+            onToggle()
+        } else {
+            setInternalIsOpen(prev => !prev)
+        }
+    }
 
     if (!inventoryConfig?.enabled) return null
 
@@ -24,7 +43,7 @@ export default function InventoryPanel({ items, inventoryConfig, getItemsWithInf
                     right: 'var(--inventory-right)',
                     borderRadius: 'var(--ui-border-radius)'
                 }}
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={handleToggle}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
             >
@@ -45,7 +64,7 @@ export default function InventoryPanel({ items, inventoryConfig, getItemsWithInf
                         className="fixed z-40 bg-black/90 border border-bardo-accent/30 
                                    backdrop-blur-sm w-72 max-h-[60vh] overflow-hidden pointer-events-auto"
                         style={{
-                            top: 'calc(var(--inventory-top) + 2.5rem)',
+                            top: 'calc(var(--inventory-top) + 4rem)',
                             right: 'var(--inventory-right)',
                             borderRadius: 'var(--ui-border-radius)'
                         }}

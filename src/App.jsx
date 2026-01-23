@@ -5,6 +5,7 @@ import StartScreen from './components/StartScreen'
 import IntroSequence from './components/IntroSequence'
 import SaveLoadModal from './components/SaveLoadModal'
 import OptionsModal from './components/OptionsModal'
+import HistoryLog from './components/HistoryLog'
 import VFXLayer from './components/VFXLayer'
 import StatsPanel from './components/StatsPanel'
 import InventoryPanel from './components/InventoryPanel'
@@ -50,6 +51,8 @@ function AppContent({ onStorySelect }) {
     const [introComplete, setIntroComplete] = useState(false)
     const [saveModalMode, setSaveModalMode] = useState(null)
     const [optionsOpen, setOptionsOpen] = useState(false)
+    const [historyOpen, setHistoryOpen] = useState(false)
+    const [inventoryOpen, setInventoryOpen] = useState(false)
     const [extrasOpen, setExtrasOpen] = useState(false)
 
     // Story loader with environment detection
@@ -150,6 +153,26 @@ function AppContent({ onStorySelect }) {
         setSaveModalMode(null)
     }, [actions])
 
+    // Keyboard shortcuts
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key.toLowerCase() === 'o') {
+                e.preventDefault()
+                setOptionsOpen(prev => !prev)
+            }
+            if (e.key.toLowerCase() === 'l' && story) {
+                e.preventDefault()
+                setHistoryOpen(prev => !prev)
+            }
+            if (e.key.toLowerCase() === 'i' && story) {
+                e.preventDefault()
+                setInventoryOpen(prev => !prev)
+            }
+        }
+        window.addEventListener('keydown', handleKeyDown)
+        return () => window.removeEventListener('keydown', handleKeyDown)
+    }, [story])
+
     // ==================
     // Screen Logic
     // ==================
@@ -185,6 +208,13 @@ function AppContent({ onStorySelect }) {
                 onClose={() => setOptionsOpen(false)}
             />
 
+            {/* History Log */}
+            <HistoryLog
+                isOpen={historyOpen}
+                history={engine.history}
+                onClose={() => setHistoryOpen(false)}
+            />
+
             {/* Stats Panel */}
             {showPlayer && (
                 <StatsPanel
@@ -200,6 +230,8 @@ function AppContent({ onStorySelect }) {
                     items={gameSystems.items}
                     inventoryConfig={gameSystems.inventoryConfig}
                     getItemsWithInfo={gameSystems.getItemsWithInfo}
+                    isOpen={inventoryOpen}
+                    onToggle={() => setInventoryOpen(prev => !prev)}
                 />
             )}
 
@@ -266,6 +298,7 @@ function AppContent({ onStorySelect }) {
                     onContinue={actions.continueStory}
                     canContinue={canContinue}
                     onOptions={() => setOptionsOpen(true)}
+                    onToggleHistory={() => setHistoryOpen(prev => !prev)}
                     // Settings
                     typewriterDelay={getTypewriterDelay()}
                     fontSize={settings.fontSize}

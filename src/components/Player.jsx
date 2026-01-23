@@ -15,6 +15,7 @@ export default function Player({
     onContinue,
     canContinue,
     onOptions,
+    onToggleHistory,
     // Settings props
     typewriterDelay = 30,
     fontSize = 'normal',
@@ -96,28 +97,37 @@ export default function Player({
     }, [onChoice, cancelAutoAdvance])
 
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="h-screen flex flex-col bg-bardo-bg overflow-hidden transition-colors duration-500">
             {/* Header */}
-            <header className="p-4 border-b border-bardo-accent/20">
+            <header className="flex-none p-4 border-b border-bardo-accent/20 bg-black/40 backdrop-blur-md">
                 <div
-                    className="mx-auto flex justify-between items-center w-full transition-all duration-500"
+                    className="mx-auto flex justify-between items-center w-full"
                     style={{ maxWidth: 'var(--player-max-width, 48rem)' }}
                 >
                     <h1
                         className="text-bardo-accent text-sm tracking-wider"
                         style={{ fontFamily: 'var(--bardo-font-mono)' }}
                     >
-                        BARDOENGINE v1.0
+                        BARDO ENGINE v0.9.0
                     </h1>
                     <div className="flex items-center gap-4">
                         {onOptions && (
-                            <button
-                                onClick={onOptions}
-                                className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
-                                title="Opciones"
-                            >
-                                ⚙️
-                            </button>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={onToggleHistory}
+                                    className="p-2 text-white/60 hover:text-bardo-accent hover:bg-white/5 rounded-full transition-all group"
+                                    title="Bitácora (L)"
+                                >
+                                    <span className="text-xl group-hover:scale-110 transition-transform inline-block">📖</span>
+                                </button>
+                                <button
+                                    onClick={onOptions}
+                                    className="p-2 text-white/60 hover:text-bardo-accent hover:bg-white/5 rounded-full transition-all group"
+                                    title="Opciones"
+                                >
+                                    <span className="text-xl group-hover:rotate-90 transition-transform duration-500 inline-block">⚙️</span>
+                                </button>
+                            </div>
                         )}
                         {onSave && (
                             <button
@@ -137,15 +147,20 @@ export default function Player({
                 </div>
             </header>
 
-            {/* Main content */}
-            <main className="flex-1 flex flex-col justify-center p-4 md:p-8">
+            {/* Main content area - PURE BLOCK LAYOUT, NO FLEXBOX */}
+            <main className="flex-1 overflow-y-auto custom-scrollbar bg-bardo-bg">
+                {/* 
+                    Simple block container with fixed top padding.
+                    Text starts at a fixed position and ONLY grows downward.
+                    NO FLEXBOX = NO REDISTRIBUTION = NO BUMPING.
+                */}
                 <div
-                    className="mx-auto w-full transition-all duration-500"
+                    className="mx-auto w-full px-6 md:px-12 pt-[15vh] pb-[20vh]"
                     style={{ maxWidth: 'var(--player-max-width, 48rem)' }}
                 >
-                    {/* Text area */}
+                    {/* Text area - Fixed position from top, grows downward only */}
                     <div
-                        className="mb-8 cursor-pointer"
+                        className="mb-12 cursor-pointer"
                         onClick={handleSkip}
                     >
                         <TextDisplay
@@ -157,9 +172,9 @@ export default function Player({
                         />
                     </div>
 
-                    {/* Choices - Hidden if a minigame is pending */}
-                    {!isTyping && !hasPendingMinigame && (
-                        <div className="space-y-3">
+                    {/* Choices - Appear below text, no layout impact on text above */}
+                    {!isTyping && !hasPendingMinigame && choices.length > 0 && (
+                        <div className="space-y-4">
                             {choices.map((choice, index) => (
                                 <ChoiceButton
                                     key={index}
@@ -173,11 +188,10 @@ export default function Player({
 
                     {/* Controls Footer */}
                     {!isTyping && (
-                        <div className="space-y-3">
-
-                            {/* Pagination or Minigame Start (only if not auto-starting) */}
+                        <div className="mt-12">
+                            {/* Pagination or Minigame Start */}
                             {((choices.length === 0 && canContinue) || (hasPendingMinigame && !minigameAutoStart)) && !isEnded && (
-                                <div className="pt-4 flex justify-center">
+                                <div className="flex justify-center">
                                     <button
                                         onClick={hasPendingMinigame ? onMinigameReady : onContinue}
                                         className="group relative flex items-center justify-center gap-3 px-8 py-4 bg-bardo-accent/10 border border-bardo-accent text-bardo-accent font-mono text-lg hover:bg-bardo-accent hover:text-bardo-bg transition-all duration-300 rounded overflow-hidden"
@@ -188,7 +202,6 @@ export default function Player({
                                         <span className="relative z-10 text-xl group-hover:translate-x-1 transition-transform duration-300">
                                             {hasPendingMinigame ? '◈' : '❱'}
                                         </span>
-                                        {/* Retro pulse effect */}
                                         <div className="absolute inset-0 bg-bardo-accent/20 animate-pulse" />
                                     </button>
                                 </div>
@@ -196,7 +209,7 @@ export default function Player({
 
                             {/* End state */}
                             {isEnded && (
-                                <div className="pt-8 space-y-4 w-full">
+                                <div className="pt-8 space-y-4 w-full border-t border-bardo-accent/10">
                                     <p className="font-mono text-bardo-muted text-sm text-center">
                                         ─── FIN ───
                                     </p>
@@ -226,29 +239,36 @@ export default function Player({
                             )}
                         </div>
                     )}
-
-                    {/* Typing indicator */}
-                    {isTyping && typewriterDelay > 0 && (
-                        <p className="text-bardo-muted font-mono text-sm animate-pulse">
-                            Presiona cualquier tecla o click para continuar...
-                        </p>
-                    )}
-
-                    {/* Auto-advance indicator */}
-                    {!isTyping && autoAdvance && choices.length === 0 && !isEnded && (
-                        <p className="text-bardo-muted font-mono text-xs animate-pulse mt-4">
-                            ⏩ Auto-avance en {autoAdvanceDelay}s...
-                        </p>
-                    )}
                 </div>
             </main>
 
-            {/* Footer */}
-            <footer className="p-4 border-t border-bardo-accent/10">
+            {/* Footer - flex-none to stay at bottom */}
+            <footer className="flex-none p-4 border-t border-bardo-accent/10">
                 <p className="text-center font-mono text-bardo-muted/50 text-xs">
                     Powered by Ink • © BardoEngine
                 </p>
             </footer>
+
+            {/* Floating Indicators - OUTSIDE main, truly fixed at viewport level */}
+            {isTyping && typewriterDelay > 0 && (
+                <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] pointer-events-none">
+                    <div className="px-5 py-2.5 bg-black/80 backdrop-blur-md border border-white/20 rounded-full shadow-2xl">
+                        <p className="text-bardo-muted font-mono text-[10px] md:text-xs animate-pulse tracking-widest uppercase text-center font-bold">
+                            Presioná una tecla para continuar
+                        </p>
+                    </div>
+                </div>
+            )}
+
+            {!isTyping && autoAdvance && choices.length === 0 && !isEnded && (
+                <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] pointer-events-none">
+                    <div className="px-5 py-2.5 bg-black/80 backdrop-blur-md border border-white/20 rounded-full shadow-2xl">
+                        <p className="text-bardo-muted font-mono text-[10px] md:text-xs animate-pulse text-center font-bold tracking-tight">
+                            ⏩ AUTO-AVANCE EN <span className="text-bardo-accent">{autoAdvanceDelay}s</span>...
+                        </p>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

@@ -67,7 +67,7 @@ export default function TextDisplay({
 
     return (
         <div
-            className="relative select-none cursor-pointer space-y-6 transition-all duration-500"
+            className="relative select-none cursor-pointer space-y-6"
             style={{
                 textAlign: 'var(--player-text-align, left)',
                 fontFamily: 'var(--bardo-font-main)'
@@ -77,7 +77,7 @@ export default function TextDisplay({
                 paragraphs.map((para, i) => (
                     <p
                         key={i}
-                        className={`font-narrative ${fontSizeClass} leading-relaxed text-bardo-text animate-fade-in`}
+                        className={`font-narrative ${fontSizeClass} leading-relaxed text-bardo-text`}
                     >
                         {para}
                         {/* Show cursor only on the last paragraph being typed */}

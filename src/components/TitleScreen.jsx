@@ -110,8 +110,8 @@ export default function TitleScreen({
                     }}
                 />
 
-                {/* Content */}
-                <div className={`relative z-10 flex flex-col items-center gap-8 ${hideTitle ? 'justify-end h-full pb-16' : ''}`}>
+                {/* Content - Title only, no "press to start" here */}
+                <div className={`relative z-10 flex flex-col items-center gap-8 ${hideTitle ? 'justify-end h-full pb-32' : ''}`}>
                     {/* Game Title - hidden when background has title */}
                     {!hideTitle && (
                         <motion.h1
@@ -138,23 +138,23 @@ export default function TitleScreen({
                             {subtitle}
                         </motion.p>
                     )}
-
-                    {/* Press to Start */}
-                    {showPressToStart && isReady && (
-                        <motion.p
-                            className={`text-lg md:text-xl tracking-[0.15em] ${hideTitle ? 'text-white/90 bg-black/60 px-6 py-3 rounded' : 'text-bardo-accent/80 mt-12'}`}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: [0.5, 1, 0.5] }}
-                            transition={{
-                                duration: 2,
-                                repeat: Infinity,
-                                ease: "easeInOut"
-                            }}
-                        >
-                            PRESIONA UNA TECLA PARA CONTINUAR
-                        </motion.p>
-                    )}
                 </div>
+
+                {/* Press to Start - ABSOLUTELY POSITIONED, outside of flex container */}
+                {showPressToStart && isReady && (
+                    <motion.p
+                        className={`absolute bottom-16 left-1/2 -translate-x-1/2 z-20 text-lg md:text-xl tracking-[0.15em] ${hideTitle ? 'text-white/90 bg-black/60 px-6 py-3 rounded' : 'text-bardo-accent/80'}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0.5, 1, 0.5] }}
+                        transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                        }}
+                    >
+                        PRESIONA UNA TECLA PARA CONTINUAR
+                    </motion.p>
+                )}
 
                 {/* Decorative corners */}
                 <div className="absolute top-4 left-4 w-16 h-16 border-l-2 border-t-2 border-bardo-accent/30" />
