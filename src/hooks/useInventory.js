@@ -134,7 +134,7 @@ export function useInventory(config) {
         return [...items]
     }, [items])
 
-    return {
+    return useMemo(() => ({
         items,
         inventoryConfig,
         isEnabled: inventoryConfig.enabled,
@@ -147,6 +147,18 @@ export function useInventory(config) {
         clearInventory,
         loadInventory,
         exportInventory
-    }
+    }), [
+        items,
+        inventoryConfig,
+        addItem,
+        removeItem,
+        hasItem,
+        getItemCount,
+        getItemsWithInfo,
+        getItemsByCategory,
+        clearInventory,
+        loadInventory,
+        exportInventory
+    ])
 }
 
