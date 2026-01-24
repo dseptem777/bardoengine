@@ -81,6 +81,7 @@ export function useBardoEngine({
     // Theme Injection (Dynamic CSS Variables)
     // ==================
     const [isThemeReady, setIsThemeReady] = useState(false)
+    const prevThemeRef = useRef(null)
 
     useEffect(() => {
         const root = document.documentElement
@@ -97,17 +98,25 @@ export function useBardoEngine({
             vars.forEach(v => root.style.removeProperty(v))
         }
 
-        // IMMEDIATE: Block UI before ANY changes to prevent flash
-        setIsThemeReady(false)
-
         // 1. If we are entering a story but config is NOT LOADED yet, stay blocked
         if (storyId && !gameSystems.configLoaded) {
+            setIsThemeReady(false)
             return
         }
 
         const theme = gameSystems.config?.theme
 
-        // 2. Clear previous theme
+        // Check if theme actually changed to avoid spurious resets
+        const isSameTheme = JSON.stringify(prevThemeRef.current) === JSON.stringify(theme)
+
+        // If theme changed, block UI. If not, we just restore styles (cleanup cleared them) without blocking.
+        if (!isSameTheme) {
+            setIsThemeReady(false)
+            prevThemeRef.current = theme
+        }
+
+        // 2. Clear previous theme (if not already cleared by cleanup)
+        // Actually, cleanup runs before this, so styles are gone. We must re-apply.
         clearTheme()
 
         if (!theme) {
@@ -116,6 +125,7 @@ export function useBardoEngine({
             return () => {
                 clearTimeout(timer)
                 setIsThemeReady(false)
+                clearTheme()
             }
         }
 
@@ -163,15 +173,24 @@ export function useBardoEngine({
             if (borderWidth) root.style.setProperty('--ui-border-width', borderWidth)
         }
 
-        console.log('[Theme] Theme applied successfully')
 
-        // 4. Mandatory buffer to ensure all variables have propagated before showing UI
-        const timer = setTimeout(() => setIsThemeReady(true), 250)
+        // 4. Unblock UI
+        if (!isSameTheme) {
+            const timer = setTimeout(() => setIsThemeReady(true), 250)
+            return () => {
+                clearTimeout(timer)
+                // Do not reset isThemeReady here, or we get a flash on referential config changes.
+                // It will be reset in the next effect run if needed.
+                clearTheme()
+            }
+        } else {
+             // If theme was same, just make sure we are ready (if we weren't already)
+             if (!isThemeReady) setIsThemeReady(true)
 
-        return () => {
-            clearTimeout(timer)
-            setIsThemeReady(false)
-            clearTheme()
+             // Cleanup still needed to clear theme on next run
+             return () => {
+                 clearTheme()
+             }
         }
     }, [gameSystems.config, gameSystems.configLoaded, storyId])
 
