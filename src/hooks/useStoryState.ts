@@ -37,14 +37,14 @@ export function useStoryState(): UseStoryStateReturn {
 
     // Helper to process story continuation until a stop condition
     const processStoryLoop = useCallback((currentStory: Story) => {
-        let fullText = ''
-        let allTags: string[] = []
+        const textParts: string[] = []
+        const allTags: string[] = []
 
         while (currentStory.canContinue) {
             const nextBatch = currentStory.Continue()
             const tags = currentStory.currentTags || []
 
-            fullText += nextBatch + '\n\n'
+            textParts.push(nextBatch)
             allTags.push(...tags)
 
             // Break for pagination
@@ -57,7 +57,7 @@ export function useStoryState(): UseStoryStateReturn {
             if (tags.some((t: string) => t.trim().toLowerCase().startsWith('minigame:'))) break
         }
 
-        const trimmedText = fullText.trim()
+        const trimmedText = textParts.join('\n\n').trim()
 
         // Update state
         setText(trimmedText)
