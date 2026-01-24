@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import QTEGame from './minigames/QTEGame'
-import LockpickGame from './minigames/LockpickGame'
-import ArkanoidGame from './minigames/ArkanoidGame'
-import ApneaGame from './minigames/ApneaGame'
+import { getMinigameComponent } from '../config/minigameRegistry'
 
 /**
  * MinigameOverlay - Renders the active minigame
@@ -58,29 +55,23 @@ export default function MinigameOverlay({
         if (showingResult || !config) return null
 
         const { type, params } = config
+        const GameComponent = getMinigameComponent(type)
 
-        switch (type) {
-            case 'qte':
-                return <QTEGame params={params} onFinish={handleGameFinish} />
-            case 'lockpick':
-                return <LockpickGame params={params} onFinish={handleGameFinish} />
-            case 'arkanoid':
-                return <ArkanoidGame params={params} onFinish={handleGameFinish} />
-            case 'apnea':
-                return <ApneaGame params={params} onFinish={handleGameFinish} />
-            default:
-                return (
-                    <div className="text-white p-8 bg-black/80 border-2 border-red-500 text-center">
-                        <p className="text-xl mb-4">Minigame "{type}" not implemented.</p>
-                        <button
-                            onClick={onCancel}
-                            className="px-6 py-2 border border-white hover:bg-white hover:text-black transition-colors"
-                        >
-                            Close
-                        </button>
-                    </div>
-                )
+        if (GameComponent) {
+            return <GameComponent params={params} onFinish={handleGameFinish} />
         }
+
+        return (
+            <div className="text-white p-8 bg-black/80 border-2 border-red-500 text-center">
+                <p className="text-xl mb-4">Minigame "{type}" not implemented.</p>
+                <button
+                    onClick={onCancel}
+                    className="px-6 py-2 border border-white hover:bg-white hover:text-black transition-colors"
+                >
+                    Close
+                </button>
+            </div>
+        )
     }
 
     return (

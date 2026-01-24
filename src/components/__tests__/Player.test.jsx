@@ -65,6 +65,7 @@ describe('Player', () => {
         it('should render the header with BardoEngine branding', () => {
             render(<Player {...defaultProps} />)
 
+            // Matches "BARDO ENGINE" in the header (case sensitive to avoid footer match)
             expect(screen.getByText(/BARDO ENGINE/)).toBeInTheDocument()
         })
 
