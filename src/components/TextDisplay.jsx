@@ -16,7 +16,8 @@ export default function TextDisplay({
 }) {
     const [displayedText, setDisplayedText] = useState('')
     const indexRef = useRef(0)
-    const intervalRef = useRef(null)
+    const timeoutRef = useRef(null)
+    const anchorRef = useRef(null)
 
     // Split text into paragraphs for rendering
     const paragraphs = displayedText.split('\n').filter(p => p.trim().length > 0 || p.length > 0)
@@ -28,10 +29,13 @@ export default function TextDisplay({
         const textChanged = text !== prevTextRef.current
 
         if (textChanged) {
+            // Clear any existing timeout
+            if (timeoutRef.current) clearTimeout(timeoutRef.current)
+
+            // Reset on new text
             setDisplayedText('')
             indexRef.current = 0
             prevTextRef.current = text
-            if (intervalRef.current) clearInterval(intervalRef.current)
         }
 
         if (!text) return
@@ -52,33 +56,62 @@ export default function TextDisplay({
             return
         }
 
-        // Typewriter effect with configurable delay
-        intervalRef.current = setInterval(() => {
+        const typeChar = () => {
             if (indexRef.current < text.length) {
+                const currentChar = text[indexRef.current]
                 setDisplayedText(text.slice(0, indexRef.current + 1))
                 indexRef.current++
+
+                // Dynamic rhythm logic
+                // Calculate delay for next character based on current character punctuation
+                let dynamicDelay = typewriterDelay
+
+                // Pause on sentence endings
+                if (['.', '?', '!'].includes(currentChar)) {
+                    dynamicDelay = typewriterDelay * 12
+                }
+                // Short pause on commas
+                else if ([',', ';', ':'].includes(currentChar)) {
+                    dynamicDelay = typewriterDelay * 5
+                }
+
+                timeoutRef.current = setTimeout(typeChar, dynamicDelay)
             } else {
-                clearInterval(intervalRef.current)
                 onComplete?.()
             }
-        }, typewriterDelay)
+        }
+
+        // Start typing
+        typeChar()
 
         return () => {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current)
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
             }
         }
     }, [text, isTyping, onComplete, typewriterDelay, displayedText])
 
-    // Skip effect when isTyping changes to false
+    // Skip effect when isTyping changes to false (user clicked to skip)
     useEffect(() => {
         if (!isTyping && text) {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current)
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
             }
             setDisplayedText(text)
         }
     }, [isTyping, text])
+
+    // Auto-scroll logic: scroll the anchor (bottom of text) into view while typing
+    useEffect(() => {
+        if (isTyping && anchorRef.current && typeof anchorRef.current.scrollIntoView === 'function') {
+            // Using 'block: center' keeps the active typing line near the middle of the screen
+            // providing natural padding at the bottom.
+            anchorRef.current.scrollIntoView({
+                block: 'center',
+                behavior: 'auto'
+            })
+        }
+    }, [displayedText, isTyping])
 
     const fontSizeClass = FONT_SIZE_CLASSES[fontSize] || FONT_SIZE_CLASSES.normal
 
@@ -110,7 +143,9 @@ export default function TextDisplay({
                 // Fallback for empty/initial state to maintain layout
                 <p className={`font-narrative ${fontSizeClass} leading-relaxed opacity-0`}>&nbsp;</p>
             )}
+
+            {/* Scroll anchor: invisible element that moves with the text */}
+            <div ref={anchorRef} className="h-px w-full pointer-events-none opacity-0" aria-hidden="true" />
         </div>
     )
 }
-

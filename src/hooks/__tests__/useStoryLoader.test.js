@@ -119,4 +119,24 @@ describe('useStoryLoader', () => {
             })
         })
     })
+
+    describe('performance', () => {
+        it('should maintain stable reference for stories array across renders', () => {
+            const devStories = {
+                'toybox': { inkVersion: 21, root: [] }
+            }
+
+            const { result, rerender } = renderHook(() => useStoryLoader({ devStories }))
+
+            const initialStories = result.current.stories
+
+            // Force a re-render with the same props
+            rerender({ devStories })
+
+            const nextStories = result.current.stories
+
+            // strict equality check to verify reference stability
+            expect(nextStories).toBe(initialStories)
+        })
+    })
 })

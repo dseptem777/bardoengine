@@ -1,13 +1,40 @@
 import { useState, useCallback, useMemo } from 'react'
 
+export interface StatDefinition {
+    id: string;
+    name?: string;
+    initial?: number;
+    min?: number;
+    max?: number;
+    displayType?: 'bar' | 'value';
+    color?: string;
+    icon?: string;
+}
+
+export interface StatsConfig {
+    enabled: boolean;
+    definitions: StatDefinition[];
+    onZero?: Record<string, { action: string; [key: string]: any }>;
+}
+
+export interface GameConfigWithStats {
+    stats?: StatsConfig;
+    [key: string]: any;
+}
+
+export interface StatInfo extends StatDefinition {
+    current: number;
+    percentage: number | null;
+}
+
 /**
  * useStats - Hook for managing game stats (HP, MP, Cordura, Karma, etc.)
  * Supports both 'bar' type (resources) and 'value' type (attributes)
  * 
  * @param {Object} config - Game configuration object (from loadGameConfig)
  */
-export function useStats(config) {
-    const statsConfig = useMemo(() => {
+export function useStats(config: GameConfigWithStats | null) {
+    const statsConfig = useMemo<StatsConfig>(() => {
         return config?.stats || { enabled: false, definitions: [], onZero: {} }
     }, [config])
 
@@ -15,14 +42,14 @@ export function useStats(config) {
     const getInitialStats = useCallback(() => {
         if (!statsConfig.enabled) return {}
 
-        const initial = {}
+        const initial: Record<string, number> = {}
         statsConfig.definitions.forEach(def => {
             initial[def.id] = def.initial ?? 0
         })
         return initial
     }, [statsConfig])
 
-    const [stats, setStats] = useState(getInitialStats)
+    const [stats, setStats] = useState<Record<string, number>>(getInitialStats)
 
     // Reset stats when config changes
     useMemo(() => {
@@ -33,7 +60,7 @@ export function useStats(config) {
      * Modify a stat by delta (add or subtract)
      * Respects min/max bounds if defined
      */
-    const modifyStat = useCallback((statId, delta) => {
+    const modifyStat = useCallback((statId: string, delta: number) => {
         const def = statsConfig.definitions.find(d => d.id === statId)
         if (!def) {
             console.warn(`Stat "${statId}" not found in config`)
@@ -54,7 +81,7 @@ export function useStats(config) {
     /**
      * Set a stat to an absolute value
      */
-    const setStat = useCallback((statId, value) => {
+    const setStat = useCallback((statId: string, value: number) => {
         const def = statsConfig.definitions.find(d => d.id === statId)
         if (!def) {
             console.warn(`Stat "${statId}" not found in config`)
@@ -71,7 +98,7 @@ export function useStats(config) {
     /**
      * Get detailed info about a stat
      */
-    const getStatInfo = useCallback((statId) => {
+    const getStatInfo = useCallback((statId: string): StatInfo | null => {
         const def = statsConfig.definitions.find(d => d.id === statId)
         if (!def) return null
 
@@ -88,7 +115,7 @@ export function useStats(config) {
     /**
      * Get all stats with their full info
      */
-    const getAllStatsInfo = useCallback(() => {
+    const getAllStatsInfo = useCallback((): (StatInfo | null)[] => {
         return statsConfig.definitions.map(def => getStatInfo(def.id))
     }, [statsConfig, getStatInfo])
 
@@ -96,9 +123,9 @@ export function useStats(config) {
      * Check if any stat has reached zero (for game over conditions)
      */
     const checkZeroStats = useCallback(() => {
-        const zeroStats = []
+        const zeroStats: any[] = []
         statsConfig.definitions.forEach(def => {
-            if (def.displayType === 'bar' && stats[def.id] <= 0) {
+            if (def.displayType === 'bar' && (stats[def.id] ?? 0) <= 0) {
                 const zeroAction = statsConfig.onZero?.[def.id]
                 if (zeroAction) {
                     zeroStats.push({ statId: def.id, ...zeroAction })
@@ -118,7 +145,7 @@ export function useStats(config) {
     /**
      * Load stats from saved data
      */
-    const loadStats = useCallback((savedStats) => {
+    const loadStats = useCallback((savedStats: Record<string, number>) => {
         if (savedStats && typeof savedStats === 'object') {
             setStats(savedStats)
         }
@@ -156,4 +183,3 @@ export function useStats(config) {
         exportStats
     ])
 }
-

@@ -34,7 +34,7 @@ const DEV_STORIES = {
 
 // Format for story selector
 const AVAILABLE_STORIES = [
-    { id: 'centinelas', title: '🛡️ CENTINELAS DEL SUR', data: centinelasStory },
+    { id: 'centinelas', title: '🚨 CENTINELAS DEL SUR', data: centinelasStory },
     { id: 'toybox', title: '📦 BARDO TOYBOX (Minigames)', data: toyboxStory },
     { id: 'apnea', title: '🫁 APNEA', data: apneaStory },
     { id: 'serruchin', title: '🪚 SERRUCHÍN', data: serruchinStory },

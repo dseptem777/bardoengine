@@ -1,13 +1,19 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react'
+import { normalizeAchievements } from '../config/achievementsRegistry'
 
 /**
  * useAchievements - Hook for managing game achievements with separate persistence
  * Achievements persist across save deletions - stored independently from game saves
  * 
  * @param {string} gameId - Unique game identifier
- * @param {Array} achievementDefinitions - Array of achievement definitions from config
+ * @param {Array} rawDefinitions - Array of achievement definitions from config
  */
-export function useAchievements(gameId, achievementDefinitions = []) {
+export function useAchievements(gameId, rawDefinitions = []) {
+    // Normalize and validate definitions
+    const achievementDefinitions = useMemo(() =>
+        normalizeAchievements(rawDefinitions),
+    [rawDefinitions])
+
     const storageKey = gameId ? `bardo_achievements_${gameId}` : null
     const prevStorageKey = useRef(null)
 

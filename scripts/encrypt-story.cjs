@@ -47,6 +47,13 @@ function main() {
         storyId = args[storyIndex + 1];
     }
 
+    // Support --title flag
+    let storyTitle = null;
+    const titleIndex = args.indexOf('--title');
+    if (titleIndex !== -1 && args[titleIndex + 1]) {
+        storyTitle = args[titleIndex + 1];
+    }
+
     if (!storyId || storyId.startsWith('-')) {
         console.error('Usage: npm run encrypt-story serruchin');
         console.error('   or: node scripts/encrypt-story.cjs serruchin');
@@ -59,6 +66,14 @@ function main() {
     // Ensure output directory exists
     if (!fs.existsSync(outDir)) {
         fs.mkdirSync(outDir, { recursive: true });
+    } else {
+        // Clean old encrypted stories to avoid confusion in production builds
+        console.log('Cleaning old encrypted stories from resources...');
+        const oldFiles = fs.readdirSync(outDir).filter(f => f.endsWith('.enc'));
+        oldFiles.forEach(f => {
+            fs.unlinkSync(path.join(outDir, f));
+            console.log(`  - Deleted: ${f}`);
+        });
     }
 
     const inputFile = path.join(srcDir, `${storyId}.json`);
@@ -76,7 +91,14 @@ function main() {
     console.log(`Encrypting: ${storyId}`);
 
     // Read and encrypt
-    const content = fs.readFileSync(inputFile, 'utf8');
+    let content = fs.readFileSync(inputFile, 'utf8');
+
+    // Strip UTF-8 BOM if present (EF BB BF)
+    if (content.charCodeAt(0) === 0xFEFF) {
+        console.log(`  - Standardizing: Stripped UTF-8 BOM from ${storyId}`);
+        content = content.slice(1);
+    }
+
     const encrypted = encrypt(content);
 
     // Write encrypted file
@@ -86,6 +108,7 @@ function main() {
     const configFile = path.join(__dirname, '..', 'src', 'story-config.json');
     const config = {
         storyId: storyId,
+        title: storyTitle,
         encrypted: true,
         buildTime: new Date().toISOString()
     };

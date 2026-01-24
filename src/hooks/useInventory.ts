@@ -1,5 +1,34 @@
 import { useState, useCallback, useMemo } from 'react'
+// @ts-ignore
 import { getItemDefinition } from '../config/loadGameConfig'
+
+export interface ItemDefinition {
+    id: string;
+    name: string;
+    description?: string;
+    icon?: string;
+    stackable?: boolean;
+    category?: string;
+    [key: string]: any;
+}
+
+export interface InventoryConfig {
+    enabled: boolean;
+    maxSlots: number;
+    categories: string[];
+}
+
+export interface GameConfigWithInventory {
+    inventory?: InventoryConfig;
+    [key: string]: any;
+}
+
+export interface InventoryItem {
+    id: string;
+    qty: number;
+}
+
+export interface InventoryItemWithInfo extends InventoryItem, ItemDefinition {}
 
 /**
  * useInventory - Hook for managing game inventory
@@ -7,16 +36,16 @@ import { getItemDefinition } from '../config/loadGameConfig'
  * 
  * @param {Object} config - Game configuration object (from loadGameConfig)
  */
-export function useInventory(config) {
-    const inventoryConfig = useMemo(() => {
+export function useInventory(config: GameConfigWithInventory | null) {
+    const inventoryConfig = useMemo<InventoryConfig>(() => {
         return config?.inventory || { enabled: false, maxSlots: 10, categories: ['items'] }
     }, [config])
 
     // Items stored as array of { id, qty }
-    const [items, setItems] = useState([])
+    const [items, setItems] = useState<InventoryItem[]>([])
 
     // Helper to get item definition from this game's config
-    const getItemDef = useCallback((itemId) => {
+    const getItemDef = useCallback((itemId: string): ItemDefinition => {
         return getItemDefinition(config, itemId)
     }, [config])
 
@@ -25,7 +54,7 @@ export function useInventory(config) {
      * @param {string} itemId - Item identifier
      * @param {number} qty - Quantity to add (default 1)
      */
-    const addItem = useCallback((itemId, qty = 1) => {
+    const addItem = useCallback((itemId: string, qty: number = 1) => {
         const itemDef = getItemDef(itemId)
 
         setItems(prev => {
@@ -58,7 +87,7 @@ export function useInventory(config) {
      * @param {string} itemId - Item identifier
      * @param {number} qty - Quantity to remove (default: all)
      */
-    const removeItem = useCallback((itemId, qty = null) => {
+    const removeItem = useCallback((itemId: string, qty: number | null = null) => {
         setItems(prev => {
             const existingIndex = prev.findIndex(i => i.id === itemId)
             if (existingIndex < 0) return prev
@@ -66,14 +95,14 @@ export function useInventory(config) {
             const existing = prev[existingIndex]
 
             // Remove completely or reduce quantity
-            if (qty === null || existing.qty <= qty) {
+            if (qty === null || existing.qty <= qty!) {
                 return prev.filter((_, i) => i !== existingIndex)
             }
 
             const updated = [...prev]
             updated[existingIndex] = {
                 ...existing,
-                qty: existing.qty - qty
+                qty: existing.qty - qty!
             }
             return updated
         })
@@ -82,14 +111,14 @@ export function useInventory(config) {
     /**
      * Check if player has an item
      */
-    const hasItem = useCallback((itemId) => {
+    const hasItem = useCallback((itemId: string) => {
         return items.some(i => i.id === itemId && i.qty > 0)
     }, [items])
 
     /**
      * Get quantity of an item
      */
-    const getItemCount = useCallback((itemId) => {
+    const getItemCount = useCallback((itemId: string) => {
         const item = items.find(i => i.id === itemId)
         return item?.qty || 0
     }, [items])
@@ -97,7 +126,7 @@ export function useInventory(config) {
     /**
      * Get all items with their full definitions
      */
-    const getItemsWithInfo = useCallback(() => {
+    const getItemsWithInfo = useCallback((): InventoryItemWithInfo[] => {
         return items.map(item => ({
             ...item,
             ...getItemDef(item.id)
@@ -107,7 +136,7 @@ export function useInventory(config) {
     /**
      * Get items by category
      */
-    const getItemsByCategory = useCallback((category) => {
+    const getItemsByCategory = useCallback((category: string) => {
         return getItemsWithInfo().filter(item => item.category === category)
     }, [getItemsWithInfo])
 
@@ -121,7 +150,7 @@ export function useInventory(config) {
     /**
      * Load inventory from saved data
      */
-    const loadInventory = useCallback((savedItems) => {
+    const loadInventory = useCallback((savedItems: any) => {
         if (Array.isArray(savedItems)) {
             setItems(savedItems)
         }
@@ -161,4 +190,3 @@ export function useInventory(config) {
         exportInventory
     ])
 }
-

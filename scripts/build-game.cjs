@@ -188,7 +188,7 @@ async function main() {
     updateTauriConfig(storyId, gameConfig.title, gameConfig.version);
 
     // Step 2: Encrypt story
-    if (!runCommand(`node scripts/encrypt-story.cjs ${storyId}`, 'Encriptando historia')) {
+    if (!runCommand(`node scripts/encrypt-story.cjs ${storyId} --title "${gameConfig.title}"`, 'Encriptando historia')) {
         process.exit(1);
     }
 
