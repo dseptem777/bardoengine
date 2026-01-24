@@ -1,5 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react'
-import { Story } from 'inkjs'
+import { useCallback, useEffect, useRef } from 'react'
 import { useVFX } from './useVFX'
 import { useAudio } from './useAudio'
 import { useSaveSystem } from './useSaveSystem'
@@ -8,6 +7,7 @@ import { useAchievements } from './useAchievements'
 import { useMinigameController } from './useMinigameController'
 import { useThemeManager } from './useThemeManager'
 import { useTagProcessor } from './useTagProcessor'
+import { useStoryState } from './useStoryState'
 
 interface BardoEngineOptions {
     storyId: string;
@@ -20,8 +20,9 @@ interface BardoEngineOptions {
 
 /**
  * useBardoEngine - Central orchestrator hook for the BardoEngine
- * 
+ *
  * Consolidates all story logic, state management, and subsystem coordination.
+ * Refactored to delegate state management to useStoryState.
  */
 export function useBardoEngine({
     storyId,
@@ -32,18 +33,23 @@ export function useBardoEngine({
     getSfxVolume
 }: BardoEngineOptions) {
     // ==================
-    // Core Story State
+    // Story State Delegate
     // ==================
-    const [story, setStory] = useState<Story | null>(null)
-    const [text, setText] = useState('')
-    const [choices, setChoices] = useState<any[]>([])
-    const [canContinue, setCanContinue] = useState(false)
-    const [isEnded, setIsEnded] = useState(false)
-    const [history, setHistory] = useState<any[]>([]) // Bitácora narrativa
-
-    // Refs for callbacks (avoid stale closures)
-    const storyRef = useRef<Story | null>(null)
-    const continueStoryRef = useRef<(() => void) | null>(null)
+    const storyState = useStoryState()
+    const {
+        story,
+        text,
+        choices,
+        canContinue,
+        isEnded,
+        history,
+        initStory: initStoryState,
+        continueStory: continueStoryState,
+        makeChoice: makeChoiceState,
+        setGlobalVariable,
+        getGlobalVariable,
+        resetStoryState
+    } = storyState
 
     // ==================
     // Sub-systems
@@ -82,7 +88,7 @@ export function useBardoEngine({
         (extrasConfig.jukebox?.length > 0)
 
     // ==================
-    // Theme Injection (Dynamic CSS Variables)
+    // Theme Injection
     // ==================
     const isThemeReady = useThemeManager(gameSystems.config, storyId)
 
@@ -90,22 +96,25 @@ export function useBardoEngine({
     // Minigame Controller
     // ==================
 
+    // Ref to break circular dependency
+    const continueStoryRef = useRef<(() => void) | null>(null)
+
     // Result commit handler
     const handleMinigameResult = useCallback((result: boolean | number) => {
-        const currentStory = storyRef.current
-        if (!currentStory) return
+        if (!story) return
 
         const numericResult = (result === true || result === 1) ? 1 : 0
         console.log(`[Ink Bridge] Committing result: ${numericResult}`)
-        currentStory.variablesState["minigame_result"] = numericResult
 
-        const verified = currentStory.variablesState["minigame_result"]
+        setGlobalVariable("minigame_result", numericResult)
+        const verified = getGlobalVariable("minigame_result")
         console.log(`[Ink Bridge] Verified value in Ink: ${verified}`)
 
+        // Auto-continue after minigame
         if (continueStoryRef.current) {
             continueStoryRef.current()
         }
-    }, [])
+    }, [story, setGlobalVariable, getGlobalVariable])
 
     const minigameController = useMinigameController(handleMinigameResult)
 
@@ -114,7 +123,8 @@ export function useBardoEngine({
     // ==================
 
     const { processTags } = useTagProcessor({
-        storyRef,
+        // @ts-ignore
+        storyRef: { current: story }, // Adapter since tagProcessor expects a ref, but we have the instance
         minigameController,
         achievementsSystem,
         gameSystems,
@@ -122,200 +132,94 @@ export function useBardoEngine({
     })
 
     // ==================
-    // Story Continuation
+    // Story Continuation Wrapper
     // ==================
 
+    // Wrapped continue function that coordinates systems
     const continueStory = useCallback(() => {
-        const currentStory = storyRef.current
-        if (!currentStory || minigameController.isPlaying) return
+        if (!story || minigameController.isPlaying) return
 
-        let fullText = ''
-        let allTags: string[] = []
+        const { text: newText, tags } = continueStoryState()
 
-        while (currentStory.canContinue) {
-            const nextBatch = currentStory.Continue()
-            const tags = currentStory.currentTags
+        processTags(tags)
 
-            fullText += nextBatch + '\n\n'
+        if (storyId && newText) {
             // @ts-ignore
-            allTags = [...allTags, ...(tags || [])]
-
-            // Break for pagination
-            // @ts-ignore
-            if ((tags || []).some(t => {
-                const tag = t.trim().toLowerCase()
-                return tag === 'next' || tag === 'page'
-            })) break
-
-            // Break for minigame
-            // @ts-ignore
-            if ((tags || []).some(t => t.trim().toLowerCase().startsWith('minigame:'))) break
+            saveSystem.autoSave(story.state.toJson(), newText, gameSystems.exportGameSystems() || undefined)
         }
+    }, [story, minigameController.isPlaying, continueStoryState, processTags, storyId, saveSystem, gameSystems])
 
-        const trimmedText = fullText.trim()
-        setText(trimmedText)
-        setChoices(currentStory.currentChoices)
-        setCanContinue(currentStory.canContinue)
-        setIsEnded(!currentStory.canContinue && currentStory.currentChoices.length === 0)
-
-        // Add to history (Bitácora)
-        if (trimmedText) {
-            setHistory(prev => [...prev, {
-                text: trimmedText,
-                timestamp: Date.now(),
-                tags: allTags
-            }])
-        }
-
-        processTags(allTags)
-
-        if (storyId) {
-            // @ts-ignore
-            saveSystem.autoSave(currentStory.state.toJson(), trimmedText, gameSystems.exportGameSystems() || undefined)
-        }
-    }, [storyId, processTags, saveSystem, gameSystems, minigameController.isPlaying])
-
-    // Keep ref updated for callbacks
+    // Keep ref updated
     continueStoryRef.current = continueStory
 
     // ==================
-    // Story Initialization
+    // Story Initialization Wrapper
     // ==================
 
     const initStory = useCallback((data: any, savedState: any = null, savedText: string = '', savedGameSystems: any = null) => {
-        const newStory = new Story(data)
-
-        if (savedState) {
-            newStory.state.LoadJson(savedState)
-        }
+        initStoryState(data, savedState, savedText)
 
         // Set New Game+ flag
         try {
-            newStory.variablesState["new_game_plus"] = achievementsSystem.hasCompletedGame
+            setGlobalVariable("new_game_plus", achievementsSystem.hasCompletedGame)
             console.log('[NG+] Set new_game_plus =', achievementsSystem.hasCompletedGame)
         } catch (e) {
-            console.log('[NG+] Story does not have new_game_plus variable')
+            console.log('[NG+] Error setting new_game_plus')
         }
-
-        setStory(newStory)
-        storyRef.current = newStory
-        setHistory([]) // Clear history on new game
 
         // Load saved game systems
         if (savedGameSystems) {
             gameSystems.loadGameSystems(savedGameSystems)
         }
-
-        // Restore saved text or start fresh
-        if (savedText) {
-            setText(savedText)
-            setChoices(newStory.currentChoices)
-            setCanContinue(newStory.canContinue)
-            setIsEnded(!newStory.canContinue && newStory.currentChoices.length === 0)
-            // Add restored text to history
-            setHistory([{ text: savedText, timestamp: Date.now(), tags: [] }])
-        } else {
-            setIsEnded(false)
-        }
-    }, [gameSystems, achievementsSystem.hasCompletedGame])
+    }, [initStoryState, setGlobalVariable, achievementsSystem.hasCompletedGame, gameSystems])
 
     // Auto-continue on story init (when no saved text)
     useEffect(() => {
         if (story && !text) {
-            if (!story.canContinue && story.currentChoices.length > 0) {
-                setChoices(story.currentChoices)
-                setCanContinue(false)
-                setIsEnded(false)
-                return
-            }
+            // If already ended (e.g. short story or error), don't continue
+            if (isEnded) return
 
-            let fullText = ''
-            let allTags: string[] = []
+            // If we have choices but no text (rare), don't auto continue
+            if (!canContinue && choices.length > 0) return
 
-            while (story.canContinue) {
-                const nextBatch = story.Continue()
-                fullText += nextBatch
-                // @ts-ignore
-                allTags = [...allTags, ...(story.currentTags || [])]
-
-                // @ts-ignore
-                if ((story.currentTags || []).some(t =>
-                    t.trim().toLowerCase() === 'next' ||
-                    t.trim().toLowerCase() === 'page'
-                )) {
-                    break
-                }
-            }
-
-            const trimmedText = fullText.trim()
-            setText(trimmedText)
-            setChoices(story.currentChoices)
-            setCanContinue(story.canContinue)
-            setIsEnded(!story.canContinue && story.currentChoices.length === 0)
-
-            // Add to history
-            if (trimmedText) {
-                setHistory([{ text: trimmedText, timestamp: Date.now(), tags: allTags }])
-            }
-
-            processTags(allTags)
-
-            if (storyId) {
-                // @ts-ignore
-                saveSystem.autoSave(story.state.toJson(), trimmedText, gameSystems.exportGameSystems() || undefined)
-            }
+            continueStory()
         }
-    }, [story, text, storyId, processTags, saveSystem, gameSystems])
+    }, [story, text, isEnded, canContinue, choices.length, continueStory])
 
     // ==================
     // Actions
     // ==================
 
     const makeChoice = useCallback((index: number) => {
-        const currentStory = storyRef.current
-        if (!currentStory) return
-
-        // Get the text of the choice before making it
-        const choice = currentStory.currentChoices[index]
-        const choiceText = choice ? choice.text : ''
-
         clearVFX()
-        currentStory.ChooseChoiceIndex(index)
 
-        // Add choice to history (Bitácora)
-        if (choiceText) {
-            setHistory(prev => [...prev, {
-                text: `> ${choiceText}`,
-                timestamp: Date.now(),
-                type: 'choice'
-            }])
+        // makeChoiceState updates history internally
+        const { text: newText, tags } = makeChoiceState(index)
+
+        processTags(tags)
+
+        if (storyId && newText) {
+            // @ts-ignore
+            saveSystem.autoSave(story.state.toJson(), newText, gameSystems.exportGameSystems() || undefined)
         }
-
-        continueStory()
-    }, [continueStory, clearVFX])
+    }, [clearVFX, makeChoiceState, processTags, storyId, saveSystem, story, gameSystems])
 
     const restart = useCallback(() => {
         if (storyData && storyId) {
             clearVFX()
             stopMusic(false)
             gameSystems.resetGameSystems()
-            setText('')
-            setChoices([])
-            setIsEnded(false)
-            setHistory([])
+            resetStoryState()
             initStory(storyData)
         }
-    }, [storyData, storyId, clearVFX, stopMusic, gameSystems, initStory])
+    }, [storyData, storyId, clearVFX, stopMusic, gameSystems, resetStoryState, initStory])
 
     const backToStart = useCallback(() => {
-        setStory(null)
-        setText('')
-        setChoices([])
-        setHistory([])
+        resetStoryState()
         clearVFX()
         stopMusic()
         gameSystems.resetGameSystems()
-    }, [clearVFX, stopMusic, gameSystems])
+    }, [resetStoryState, clearVFX, stopMusic, gameSystems])
 
     const finishGame = useCallback(() => {
         achievementsSystem.markGameComplete()
@@ -324,12 +228,9 @@ export function useBardoEngine({
 
     // Minigame handlers
     const handleMinigameStart = useCallback(() => {
-        const currentStory = storyRef.current
-        if (currentStory) {
-            currentStory.variablesState["minigame_result"] = -1
-        }
+        setGlobalVariable("minigame_result", -1)
         minigameController.startGame()
-    }, [minigameController])
+    }, [minigameController, setGlobalVariable])
 
     // ==================
     // Save/Load Actions
