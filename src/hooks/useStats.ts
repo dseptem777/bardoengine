@@ -158,7 +158,7 @@ export function useStats(config: GameConfigWithStats | null) {
         return { ...stats }
     }, [stats])
 
-    return {
+    return useMemo(() => ({
         stats,
         statsConfig,
         isEnabled: statsConfig.enabled,
@@ -170,5 +170,16 @@ export function useStats(config: GameConfigWithStats | null) {
         resetStats,
         loadStats,
         exportStats
-    }
+    }), [
+        stats,
+        statsConfig,
+        modifyStat,
+        setStat,
+        getStatInfo,
+        getAllStatsInfo,
+        checkZeroStats,
+        resetStats,
+        loadStats,
+        exportStats
+    ])
 }

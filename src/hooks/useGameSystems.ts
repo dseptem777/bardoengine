@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react'
+import { useCallback, useState, useEffect, useMemo } from 'react'
 import { useStats, GameConfigWithStats } from './useStats'
 import { useInventory, GameConfigWithInventory } from './useInventory'
 // @ts-ignore
@@ -171,7 +171,7 @@ export function useGameSystems(storyId: string) {
         }
     }, [statsHook, inventoryHook])
 
-    return {
+    return useMemo(() => ({
         // Config
         config,
         configLoaded,
@@ -203,5 +203,15 @@ export function useGameSystems(storyId: string) {
         resetGameSystems,
         loadGameSystems,
         exportGameSystems
-    }
+    }), [
+        config,
+        configLoaded,
+        statsHook,
+        inventoryHook,
+        processGameTag,
+        processGameTags,
+        resetGameSystems,
+        loadGameSystems,
+        exportGameSystems
+    ])
 }

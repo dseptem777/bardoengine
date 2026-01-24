@@ -32,12 +32,47 @@ export default function Player({
     const autoAdvanceTimerRef = useRef(null)
     const interactiveRef = useRef(null)
 
+    // Scroll handling refs
+    const scrollContainerRef = useRef(null)
+    const contentRef = useRef(null)
+    const isStickyRef = useRef(true)
+
+    // Handle user scroll to detect if they want to stick to bottom
+    const handleScroll = useCallback(() => {
+        if (!scrollContainerRef.current) return
+
+        const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current
+        // If user is within 50px of bottom, sticky is ON
+        const isAtBottom = scrollHeight - scrollTop - clientHeight < 50
+        isStickyRef.current = isAtBottom
+    }, [])
+
+    // Setup resize observer for auto-scrolling
+    useEffect(() => {
+        if (!contentRef.current || !scrollContainerRef.current) return
+
+        const resizeObserver = new ResizeObserver(() => {
+            if (isStickyRef.current && scrollContainerRef.current) {
+                scrollContainerRef.current.scrollTo({
+                    top: scrollContainerRef.current.scrollHeight,
+                    behavior: 'smooth'
+                })
+            }
+        })
+
+        resizeObserver.observe(contentRef.current)
+
+        return () => resizeObserver.disconnect()
+    }, [])
+
     useEffect(() => {
         // If no text but has interactive content, skip typewriter immediately
         if (!text && (choices.length > 0 || isEnded)) {
             setIsTyping(false)
         } else if (text) {
             setIsTyping(true)
+            // Force stick to bottom when new text arrives
+            isStickyRef.current = true
         }
     }, [text, choices.length, isEnded])
 
@@ -163,13 +198,18 @@ export default function Player({
             </header>
 
             {/* Main content area - PURE BLOCK LAYOUT, NO FLEXBOX */}
-            <main className="flex-1 overflow-y-auto custom-scrollbar bg-bardo-bg">
+            <main
+                ref={scrollContainerRef}
+                onScroll={handleScroll}
+                className="flex-1 overflow-y-auto custom-scrollbar bg-bardo-bg"
+            >
                 {/* 
                     Simple block container with fixed top padding.
                     Text starts at a fixed position and ONLY grows downward.
                     NO FLEXBOX = NO REDISTRIBUTION = NO BUMPING.
                 */}
                 <div
+                    ref={contentRef}
                     className="mx-auto w-full px-6 md:px-12 pt-[15vh] pb-[20vh]"
                     style={{ maxWidth: 'var(--player-max-width, 48rem)' }}
                 >

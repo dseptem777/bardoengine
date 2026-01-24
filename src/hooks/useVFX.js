@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { parseVFXTag, VFX_TYPES } from '../config/vfxRegistry'
 
 export function useVFX(audioCallbacks = {}, vfxEnabled = true) {
     const { playSfx = null, playMusic = null, stopMusic = null } = audioCallbacks
@@ -10,72 +11,78 @@ export function useVFX(audioCallbacks = {}, vfxEnabled = true) {
     })
 
     const triggerVFX = useCallback((tag) => {
-        // Visual effects - only trigger if VFX enabled
-        if (vfxEnabled) {
-            // Parse tag and trigger effect
-            if (tag === 'shake') {
-                setVfxState(prev => ({ ...prev, shake: true }))
-                setTimeout(() => {
-                    setVfxState(prev => ({ ...prev, shake: false }))
-                }, 500)
-            }
+        const effect = parseVFXTag(tag)
+        if (!effect) return
 
-            if (tag.startsWith('flash_')) {
-                const color = tag.replace('flash_', '')
-                setVfxState(prev => ({ ...prev, flash: color }))
-                setTimeout(() => {
-                    setVfxState(prev => ({ ...prev, flash: null }))
-                }, 400)
-            }
-
-            if (tag === 'flash_multi') {
-                const colors = ['red', 'blue', 'yellow', 'purple', 'green']
-                let i = 0
-                const interval = setInterval(() => {
-                    setVfxState(prev => ({ ...prev, flash: colors[i % colors.length] }))
-                    i++
-                    if (i >= 5) {
-                        clearInterval(interval)
-                        setVfxState(prev => ({ ...prev, flash: null }))
-                    }
-                }, 100)
-            }
-        }
-
-        // Background always works (not really a disruptive VFX)
-        if (tag.startsWith('bg:')) {
-            const bg = tag.replace('bg:', '')
-            setVfxState(prev => ({ ...prev, background: bg }))
-        }
-
-        // SFX: play_sfx:sound_id
-        if (tag.startsWith('play_sfx:')) {
-            const sfxId = tag.replace('play_sfx:', '')
-            if (playSfx) {
-                playSfx(sfxId)
-            } else {
-                console.log(`[SFX] Would play: ${sfxId}`)
-            }
-        }
-
-        // MUSIC: music:track_id (starts looping track with fade-in)
-        if (tag.startsWith('music:')) {
-            const musicId = tag.replace('music:', '')
-            if (musicId === 'stop') {
-                if (stopMusic) {
-                    stopMusic()
-                } else {
-                    console.log('[Music] Would stop')
+        switch (effect.type) {
+            case VFX_TYPES.SHAKE:
+                if (vfxEnabled) {
+                    setVfxState(prev => ({ ...prev, shake: true }))
+                    setTimeout(() => {
+                        setVfxState(prev => ({ ...prev, shake: false }))
+                    }, 500)
                 }
-            } else if (playMusic) {
-                playMusic(musicId)
-            } else {
-                console.log(`[Music] Would play: ${musicId}`)
-            }
-        }
+                break
 
-        if (tag === 'pitch_high') {
-            console.log('[VFX] Pitch high effect triggered')
+            case VFX_TYPES.FLASH:
+                if (vfxEnabled) {
+                    const { color } = effect
+
+                    if (color === 'multi') {
+                        // Special multi-color flash sequence
+                        const colors = ['red', 'blue', 'yellow', 'purple', 'green']
+                        let i = 0
+                        const interval = setInterval(() => {
+                            setVfxState(prev => ({ ...prev, flash: colors[i % colors.length] }))
+                            i++
+                            if (i >= 5) {
+                                clearInterval(interval)
+                                setVfxState(prev => ({ ...prev, flash: null }))
+                            }
+                        }, 100)
+                    } else {
+                        // Single color flash
+                        setVfxState(prev => ({ ...prev, flash: color }))
+                        setTimeout(() => {
+                            setVfxState(prev => ({ ...prev, flash: null }))
+                        }, 400)
+                    }
+                }
+                break
+
+            case VFX_TYPES.BACKGROUND:
+                setVfxState(prev => ({ ...prev, background: effect.id }))
+                break
+
+            case VFX_TYPES.SFX:
+                if (playSfx) {
+                    playSfx(effect.id)
+                } else {
+                    console.log(`[SFX] Would play: ${effect.id}`)
+                }
+                break
+
+            case VFX_TYPES.MUSIC:
+                if (effect.action === 'stop') {
+                    if (stopMusic) {
+                        stopMusic()
+                    } else {
+                        console.log('[Music] Would stop')
+                    }
+                } else {
+                    if (playMusic) {
+                        playMusic(effect.id)
+                    } else {
+                        console.log(`[Music] Would play: ${effect.id}`)
+                    }
+                }
+                break
+
+            case VFX_TYPES.CUSTOM:
+                if (effect.id === 'pitch_high') {
+                    console.log('[VFX] Pitch high effect triggered')
+                }
+                break
         }
     }, [playSfx, playMusic, stopMusic, vfxEnabled])
 

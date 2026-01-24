@@ -163,7 +163,7 @@ export function useInventory(config: GameConfigWithInventory | null) {
         return [...items]
     }, [items])
 
-    return {
+    return useMemo(() => ({
         items,
         inventoryConfig,
         isEnabled: inventoryConfig.enabled,
@@ -176,5 +176,17 @@ export function useInventory(config: GameConfigWithInventory | null) {
         clearInventory,
         loadInventory,
         exportInventory
-    }
+    }), [
+        items,
+        inventoryConfig,
+        addItem,
+        removeItem,
+        hasItem,
+        getItemCount,
+        getItemsWithInfo,
+        getItemsByCategory,
+        clearInventory,
+        loadInventory,
+        exportInventory
+    ])
 }
