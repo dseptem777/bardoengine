@@ -92,13 +92,13 @@ export function useStoryLoader({ devStories = {} }) {
         return [];
     }, [isProductionMode, productionStory, devStories]);
 
-    return {
+    return useMemo(() => ({
         stories,
         isLoading,
         error,
         isProductionMode,
         isTauri: isTauri()
-    };
+    }), [stories, isLoading, error, isProductionMode]);
 }
 
 export default useStoryLoader;
