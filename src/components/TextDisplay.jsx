@@ -8,7 +8,6 @@ const FONT_SIZE_CLASSES = {
 }
 
 export default function TextDisplay({
-    useEffect(() => { console.log('[TextDisplay] MOUNTED'); return () => console.log('[TextDisplay] UNMOUNTED') }, [])
     text,
     isTyping,
     onComplete,
