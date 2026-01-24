@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useMemo } from 'react'
 import { Story } from 'inkjs'
 
 export interface StoryHistoryEntry {
@@ -37,15 +37,15 @@ export function useStoryState(): UseStoryStateReturn {
 
     // Helper to process story continuation until a stop condition
     const processStoryLoop = useCallback((currentStory: Story) => {
-        let fullText = ''
-        let allTags: string[] = []
+        const textParts: string[] = []
+        const allTags: string[] = []
 
         while (currentStory.canContinue) {
             const nextBatch = currentStory.Continue()
             const tags = currentStory.currentTags || []
 
-            fullText += nextBatch + '\n\n'
-            allTags = [...allTags, ...tags]
+            textParts.push(nextBatch)
+            allTags.push(...tags)
 
             // Break for pagination
             if (tags.some((t: string) => {
@@ -57,7 +57,7 @@ export function useStoryState(): UseStoryStateReturn {
             if (tags.some((t: string) => t.trim().toLowerCase().startsWith('minigame:'))) break
         }
 
-        const trimmedText = fullText.trim()
+        const trimmedText = textParts.join('\n\n').trim()
 
         // Update state
         setText(trimmedText)
@@ -127,12 +127,6 @@ export function useStoryState(): UseStoryStateReturn {
             setHistory([{ text: savedText, timestamp: Date.now(), tags: [], type: 'text' }])
         } else {
             // Initial continue if starting fresh
-            // We use a timeout or immediate call depending on how we want to handle the first render
-            // But usually the orchestrator will call continue or the effect will trigger.
-            // For now, we just set up the story. The orchestrator often handles the first 'continue' or the effect does.
-            // Let's replicate useBardoEngine's behavior: it had a useEffect that triggered if (story && !text).
-            // We will let the consumer handle the initial continue or we can do it here.
-            // BUT: initStory in useBardoEngine didn't auto-continue, the useEffect did.
             setIsEnded(false)
         }
     }, [])
@@ -170,7 +164,7 @@ export function useStoryState(): UseStoryStateReturn {
         setCurrentTags([])
     }, [])
 
-    return {
+    return useMemo(() => ({
         story,
         text,
         choices,
@@ -182,6 +176,21 @@ export function useStoryState(): UseStoryStateReturn {
         continueStory,
         makeChoice,
         setGlobalVariable,
+        getGlobalVariable,
         resetStoryState
-    }
+    }), [
+        story,
+        text,
+        choices,
+        canContinue,
+        isEnded,
+        history,
+        currentTags,
+        initStory,
+        continueStory,
+        makeChoice,
+        setGlobalVariable,
+        getGlobalVariable,
+        resetStoryState
+    ])
 }

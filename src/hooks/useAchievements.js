@@ -143,26 +143,26 @@ export function useAchievements(gameId, rawDefinitions = []) {
     /**
      * Get combined achievements with unlock status
      */
-    const achievements = achievementDefinitions.map(def => ({
+    const achievements = useMemo(() => achievementDefinitions.map(def => ({
         ...def,
         unlocked: unlockedIds.includes(def.id),
         // Hide title/description for hidden achievements that aren't unlocked
         displayTitle: (def.hidden && !unlockedIds.includes(def.id)) ? '???' : def.title,
         displayDescription: (def.hidden && !unlockedIds.includes(def.id)) ? 'Logro secreto' : def.description
-    }))
+    })), [achievementDefinitions, unlockedIds])
 
     /**
      * Stats for progress display
      */
-    const stats = {
+    const stats = useMemo(() => ({
         total: achievementDefinitions.length,
         unlocked: unlockedIds.length,
         percentage: achievementDefinitions.length > 0
             ? Math.round((unlockedIds.length / achievementDefinitions.length) * 100)
             : 0
-    }
+    }), [achievementDefinitions.length, unlockedIds.length])
 
-    return {
+    return useMemo(() => ({
         achievements,
         unlockAchievement,
         isUnlocked,
@@ -173,5 +173,15 @@ export function useAchievements(gameId, rawDefinitions = []) {
         // New Game+ support
         hasCompletedGame,
         markGameComplete
-    }
+    }), [
+        achievements,
+        unlockAchievement,
+        isUnlocked,
+        resetAllAchievements,
+        clearToast,
+        pendingToast,
+        stats,
+        hasCompletedGame,
+        markGameComplete
+    ])
 }

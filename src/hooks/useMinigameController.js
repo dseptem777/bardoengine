@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useMemo } from 'react'
 
 /**
  * useMinigameController - Centralized minigame state machine
@@ -78,7 +78,7 @@ export function useMinigameController(onResultCommit) {
         resultRef.current = null
     }, [])
 
-    return {
+    return useMemo(() => ({
         // State
         state,
         config,
@@ -94,7 +94,15 @@ export function useMinigameController(onResultCommit) {
         finishGame,
         cancelGame,
         reset
-    }
+    }), [
+        state,
+        config,
+        queueGame,
+        startGame,
+        finishGame,
+        cancelGame,
+        reset
+    ])
 }
 
 /**

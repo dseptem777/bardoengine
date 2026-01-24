@@ -77,12 +77,12 @@ export function useBardoEngine({
 
     // Achievements system
     // @ts-ignore
-    const achievementDefs = gameSystems.config?.achievements || []
+    const achievementDefs = useMemo(() => gameSystems.config?.achievements || [], [gameSystems.config])
     const achievementsSystem = useAchievements(storyId, achievementDefs)
 
     // Extras config
     // @ts-ignore
-    const extrasConfig = gameSystems.config?.extras || {}
+    const extrasConfig = useMemo(() => gameSystems.config?.extras || {}, [gameSystems.config])
     const hasExtras = achievementDefs.length > 0 ||
         (extrasConfig.gallery?.length > 0) ||
         (extrasConfig.jukebox?.length > 0)
@@ -122,9 +122,13 @@ export function useBardoEngine({
     // Tag Processing
     // ==================
 
+    // Keep a stable ref of the story instance
+    const storyRef = useRef<any>(null)
+    storyRef.current = story
+
     const { processTags } = useTagProcessor({
         // @ts-ignore
-        storyRef: { current: story }, // Adapter since tagProcessor expects a ref, but we have the instance
+        storyRef,
         minigameController,
         achievementsSystem,
         gameSystems,
