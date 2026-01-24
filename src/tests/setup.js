@@ -36,6 +36,15 @@ Object.defineProperty(navigator, 'clipboard', {
 })
 
 // ============================================
+// ResizeObserver Mock
+// ============================================
+global.ResizeObserver = class ResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+}
+
+// ============================================
 // Console Cleanup (optional: silence test output)
 // ============================================
 // Uncomment to silence console during tests:
@@ -73,4 +82,3 @@ vi.mock('howler', () => {
         }
     }
 })
-
