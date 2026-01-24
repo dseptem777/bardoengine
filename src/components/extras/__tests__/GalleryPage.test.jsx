@@ -12,7 +12,7 @@ vi.mock('framer-motion', () => ({
         div: ({ children, className, onClick, ...props }) => (
             <div className={className} onClick={onClick} {...props}>{children}</div>
         ),
-        button: ({ children, className, onClick, disabled, ...props }) => (
+        button: ({ children, className, onClick, disabled, whileHover, whileTap, ...props }) => (
             <button className={className} onClick={onClick} disabled={disabled} {...props}>{children}</button>
         )
     },

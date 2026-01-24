@@ -1,7 +1,21 @@
 import { useCallback, useState, useEffect } from 'react'
-import { useStats } from './useStats'
-import { useInventory } from './useInventory'
+import { useStats, GameConfigWithStats } from './useStats'
+import { useInventory, GameConfigWithInventory } from './useInventory'
+// @ts-ignore
 import { loadGameConfig, DEFAULT_CONFIG } from '../config/loadGameConfig'
+
+export interface MinigameRequest {
+    type: 'minigame';
+    name: string;
+    params: string[];
+}
+
+export type ProcessTagResult = boolean | MinigameRequest;
+
+export interface SavedGameSystems {
+    stats?: Record<string, number>;
+    inventory?: any[];
+}
 
 /**
  * useGameSystems - Orchestrator hook that combines Stats + Inventory
@@ -15,8 +29,8 @@ import { loadGameConfig, DEFAULT_CONFIG } from '../config/loadGameConfig'
  * - #inv:remove:itemId[:qty]
  * - #inv:clear
  */
-export function useGameSystems(storyId) {
-    const [config, setConfig] = useState(DEFAULT_CONFIG)
+export function useGameSystems(storyId: string) {
+    const [config, setConfig] = useState<GameConfigWithStats & GameConfigWithInventory>(DEFAULT_CONFIG)
     const [configLoaded, setConfigLoaded] = useState(false)
 
     // Load config when storyId changes
@@ -51,7 +65,7 @@ export function useGameSystems(storyId) {
      * Parse and process a single game system tag
      * Returns true if tag was handled, false otherwise
      */
-    const processGameTag = useCallback((tag) => {
+    const processGameTag = useCallback((tag: string): ProcessTagResult => {
         const trimmedTag = tag.trim()
 
         // Handle stat tags: #stat:statId:value
@@ -122,7 +136,7 @@ export function useGameSystems(storyId) {
     /**
      * Process multiple tags at once
      */
-    const processGameTags = useCallback((tags) => {
+    const processGameTags = useCallback((tags: string | string[]) => {
         const tagArray = Array.isArray(tags) ? tags : [tags]
         tagArray.forEach(tag => processGameTag(tag))
     }, [processGameTag])
@@ -138,7 +152,7 @@ export function useGameSystems(storyId) {
     /**
      * Load game systems from saved data
      */
-    const loadGameSystems = useCallback((savedData) => {
+    const loadGameSystems = useCallback((savedData: SavedGameSystems) => {
         if (savedData?.stats) {
             statsHook.loadStats(savedData.stats)
         }
@@ -150,7 +164,7 @@ export function useGameSystems(storyId) {
     /**
      * Export game systems for saving
      */
-    const exportGameSystems = useCallback(() => {
+    const exportGameSystems = useCallback((): SavedGameSystems => {
         return {
             stats: statsHook.exportStats(),
             inventory: inventoryHook.exportInventory()
@@ -191,4 +205,3 @@ export function useGameSystems(storyId) {
         exportGameSystems
     }
 }
-
