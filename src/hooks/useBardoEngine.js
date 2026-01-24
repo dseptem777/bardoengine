@@ -241,15 +241,15 @@ export function useBardoEngine({
         const currentStory = storyRef.current
         if (!currentStory || minigameController.isPlaying) return
 
-        let fullText = ''
-        let allTags = []
+        const textParts = []
+        const allTags = []
 
         while (currentStory.canContinue) {
             const nextBatch = currentStory.Continue()
             const tags = currentStory.currentTags
 
-            fullText += nextBatch + '\n\n'
-            allTags = [...allTags, ...tags]
+            textParts.push(nextBatch)
+            allTags.push(...tags)
 
             // Break for pagination
             if (tags.some(t => {
@@ -261,6 +261,7 @@ export function useBardoEngine({
             if (tags.some(t => t.trim().toLowerCase().startsWith('minigame:'))) break
         }
 
+        const fullText = textParts.join('\n\n')
         const trimmedText = fullText.trim()
         setText(trimmedText)
         setChoices(currentStory.currentChoices)
@@ -337,13 +338,13 @@ export function useBardoEngine({
                 return
             }
 
-            let fullText = ''
-            let allTags = []
+            const textParts = []
+            const allTags = []
 
             while (story.canContinue) {
                 const nextBatch = story.Continue()
-                fullText += nextBatch
-                allTags = [...allTags, ...story.currentTags]
+                textParts.push(nextBatch)
+                allTags.push(...story.currentTags)
 
                 if (story.currentTags.some(t =>
                     t.trim().toLowerCase() === 'next' ||
@@ -353,6 +354,7 @@ export function useBardoEngine({
                 }
             }
 
+            const fullText = textParts.join('')
             const trimmedText = fullText.trim()
             setText(trimmedText)
             setChoices(story.currentChoices)
