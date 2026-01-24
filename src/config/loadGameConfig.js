@@ -32,7 +32,8 @@ export const DEFAULT_CONFIG = {
         maxSlots: 10,
         categories: ['items']
     },
-    items: {}
+    items: {},
+    achievements: []
 }
 
 // Cache for loaded configs

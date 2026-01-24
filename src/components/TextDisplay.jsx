@@ -16,12 +16,15 @@ export default function TextDisplay({
 }) {
     const [displayedText, setDisplayedText] = useState('')
     const indexRef = useRef(0)
-    const intervalRef = useRef(null)
+    const timeoutRef = useRef(null)
 
     // Split text into paragraphs for rendering
     const paragraphs = displayedText.split('\n').filter(p => p.trim().length > 0 || p.length > 0)
 
     useEffect(() => {
+        // Clear any existing timeout
+        if (timeoutRef.current) clearTimeout(timeoutRef.current)
+
         // Reset on new text
         setDisplayedText('')
         indexRef.current = 0
@@ -35,29 +38,46 @@ export default function TextDisplay({
             return
         }
 
-        // Typewriter effect with configurable delay
-        intervalRef.current = setInterval(() => {
+        const typeChar = () => {
             if (indexRef.current < text.length) {
+                const currentChar = text[indexRef.current]
                 setDisplayedText(text.slice(0, indexRef.current + 1))
                 indexRef.current++
+
+                // Dynamic rhythm logic
+                // Calculate delay for next character based on current character punctuation
+                let dynamicDelay = typewriterDelay
+
+                // Pause on sentence endings
+                if (['.', '?', '!'].includes(currentChar)) {
+                    dynamicDelay = typewriterDelay * 12
+                }
+                // Short pause on commas
+                else if ([',', ';', ':'].includes(currentChar)) {
+                    dynamicDelay = typewriterDelay * 5
+                }
+
+                timeoutRef.current = setTimeout(typeChar, dynamicDelay)
             } else {
-                clearInterval(intervalRef.current)
                 onComplete?.()
             }
-        }, typewriterDelay)
+        }
+
+        // Start typing
+        typeChar()
 
         return () => {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current)
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
             }
         }
     }, [text, isTyping, onComplete, typewriterDelay])
 
-    // Skip effect when isTyping changes to false
+    // Skip effect when isTyping changes to false (user clicked to skip)
     useEffect(() => {
         if (!isTyping && text) {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current)
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
             }
             setDisplayedText(text)
         }
@@ -96,4 +116,3 @@ export default function TextDisplay({
         </div>
     )
 }
-
