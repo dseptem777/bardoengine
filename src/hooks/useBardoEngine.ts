@@ -122,9 +122,13 @@ export function useBardoEngine({
     // Tag Processing
     // ==================
 
+    // Keep a stable ref of the story instance
+    const storyRef = useRef<any>(null)
+    storyRef.current = story
+
     const { processTags } = useTagProcessor({
         // @ts-ignore
-        storyRef: { current: story }, // Adapter since tagProcessor expects a ref, but we have the instance
+        storyRef,
         minigameController,
         achievementsSystem,
         gameSystems,
