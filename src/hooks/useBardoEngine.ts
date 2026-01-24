@@ -77,12 +77,12 @@ export function useBardoEngine({
 
     // Achievements system
     // @ts-ignore
-    const achievementDefs = gameSystems.config?.achievements || []
+    const achievementDefs = useMemo(() => gameSystems.config?.achievements || [], [gameSystems.config])
     const achievementsSystem = useAchievements(storyId, achievementDefs)
 
     // Extras config
     // @ts-ignore
-    const extrasConfig = gameSystems.config?.extras || {}
+    const extrasConfig = useMemo(() => gameSystems.config?.extras || {}, [gameSystems.config])
     const hasExtras = achievementDefs.length > 0 ||
         (extrasConfig.gallery?.length > 0) ||
         (extrasConfig.jukebox?.length > 0)

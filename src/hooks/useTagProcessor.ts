@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { parseMinigameTag } from './useMinigameController'
 
 interface TagProcessorOptions {
@@ -47,5 +47,5 @@ export function useTagProcessor({
         })
     }, [gameSystems, triggerVFX, minigameController, achievementsSystem, storyRef])
 
-    return { processTags }
+    return useMemo(() => ({ processTags }), [processTags])
 }

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { parseVFXTag, VFX_TYPES } from '../config/vfxRegistry'
 
 export function useVFX(audioCallbacks = {}, vfxEnabled = true) {
@@ -90,5 +90,9 @@ export function useVFX(audioCallbacks = {}, vfxEnabled = true) {
         setVfxState(prev => ({ ...prev, shake: false, flash: null }))
     }, [])
 
-    return { vfxState, triggerVFX, clearVFX }
+    return useMemo(() => ({
+        vfxState,
+        triggerVFX,
+        clearVFX
+    }), [vfxState, triggerVFX, clearVFX])
 }

@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react'
+import { useCallback, useState, useEffect, useMemo } from 'react'
 
 const STORAGE_KEY = 'bardo_saves'
 const MAX_SAVES = 10
@@ -164,7 +164,7 @@ export function useSaveSystem(storyId) {
     const hasAnySave = saves.length > 0
     const hasContinue = lastSaveId !== null
 
-    return {
+    return useMemo(() => ({
         // Save operations
         saveGame,
         autoSave,
@@ -177,5 +177,16 @@ export function useSaveSystem(storyId) {
         lastSaveId,
         hasAnySave,
         hasContinue
-    }
+    }), [
+        saveGame,
+        autoSave,
+        loadSave,
+        loadLastSave,
+        deleteSave,
+        clearAllSaves,
+        saves,
+        lastSaveId,
+        hasAnySave,
+        hasContinue
+    ])
 }
