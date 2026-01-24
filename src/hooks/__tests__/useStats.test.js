@@ -254,4 +254,42 @@ describe('useStats', () => {
             })
         })
     })
+
+    describe('configuration changes', () => {
+        it('should reset stats when configuration changes', () => {
+            const configA = {
+                stats: {
+                    enabled: true,
+                    definitions: [
+                        { id: 'hp', initial: 100 }
+                    ]
+                }
+            }
+
+            const configB = {
+                stats: {
+                    enabled: true,
+                    definitions: [
+                        { id: 'mp', initial: 50 }
+                    ]
+                }
+            }
+
+            const { result, rerender } = renderHook(({ config }) => useStats(config), {
+                initialProps: { config: configA }
+            })
+
+            // Check initial state from Config A
+            expect(result.current.stats).toEqual({ hp: 100 })
+
+            // Change to Config B
+            rerender({ config: configB })
+
+            // Check state from Config B
+            expect(result.current.stats).toEqual({ mp: 50 })
+
+            // Ensure old stats are gone
+            expect(result.current.stats.hp).toBeUndefined()
+        })
+    })
 })
