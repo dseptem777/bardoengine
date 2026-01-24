@@ -45,7 +45,7 @@ export function useStoryState(): UseStoryStateReturn {
             const tags = currentStory.currentTags || []
 
             fullText += nextBatch + '\n\n'
-            allTags = [...allTags, ...tags]
+            allTags.push(...tags)
 
             // Break for pagination
             if (tags.some((t: string) => {
