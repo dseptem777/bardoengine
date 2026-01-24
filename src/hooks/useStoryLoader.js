@@ -5,7 +5,7 @@
  * - Tauri Production: Decrypts via Rust backend
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 // Check if running in Tauri
 const isTauri = () => {
@@ -65,7 +65,7 @@ export function useStoryLoader({ devStories = {} }) {
     }, [isProductionMode]);
 
     // Get available stories based on mode
-    const getStories = useCallback(() => {
+    const stories = useMemo(() => {
         if (isProductionMode && productionStory) {
             return [productionStory];
         }
@@ -80,7 +80,7 @@ export function useStoryLoader({ devStories = {} }) {
     }, [isProductionMode, productionStory, devStories]);
 
     return {
-        stories: getStories(),
+        stories,
         isLoading,
         error,
         isProductionMode,
