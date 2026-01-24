@@ -5,7 +5,7 @@
  * - Tauri Production: Decrypts via Rust backend
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import storyConfig from '../story-config.json';
 
 // Check if running in Tauri
