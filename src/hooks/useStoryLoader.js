@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import storyConfig from '../story-config.json';
 
 // Check if running in Tauri
 const isTauri = () => {
@@ -43,14 +44,26 @@ export function useStoryLoader({ devStories = {} }) {
                     throw new Error('No encrypted story found');
                 }
 
-                // Load the first (and should be only) story
-                const storyId = availableStories[0];
+                // In production, we specifically want the story ID from our build config
+                const targetStoryId = storyConfig.storyId;
+
+                if (!availableStories.includes(targetStoryId)) {
+                    console.warn(`Target story '${targetStoryId}' not found in resources. Falling back to first available.`);
+                }
+
+                const storyId = availableStories.includes(targetStoryId) ? targetStoryId : availableStories[0];
                 const decryptedJson = await invoke('decrypt_story', { storyId });
-                const storyData = JSON.parse(decryptedJson);
+
+                // Safety: Strip UTF-8 BOM if it somehow sneaked through
+                const cleanJson = decryptedJson.startsWith('\uFEFF')
+                    ? decryptedJson.slice(1)
+                    : decryptedJson;
+
+                const storyData = JSON.parse(cleanJson);
 
                 setProductionStory({
                     id: storyId,
-                    title: storyId.toUpperCase(),
+                    title: storyConfig.title || storyId.toUpperCase(),
                     data: storyData
                 });
             } catch (err) {
