@@ -17,6 +17,7 @@ export default function TextDisplay({
     const [displayedText, setDisplayedText] = useState('')
     const indexRef = useRef(0)
     const intervalRef = useRef(null)
+    const anchorRef = useRef(null)
 
     // Split text into paragraphs for rendering
     const paragraphs = displayedText.split('\n').filter(p => p.trim().length > 0 || p.length > 0)
@@ -63,6 +64,18 @@ export default function TextDisplay({
         }
     }, [isTyping, text])
 
+    // Auto-scroll logic: scroll the anchor (bottom of text) into view while typing
+    useEffect(() => {
+        if (isTyping && anchorRef.current && typeof anchorRef.current.scrollIntoView === 'function') {
+            // Using 'block: center' keeps the active typing line near the middle of the screen
+            // providing natural padding at the bottom.
+            anchorRef.current.scrollIntoView({
+                block: 'center',
+                behavior: 'auto'
+            })
+        }
+    }, [displayedText, isTyping])
+
     const fontSizeClass = FONT_SIZE_CLASSES[fontSize] || FONT_SIZE_CLASSES.normal
 
     return (
@@ -93,6 +106,9 @@ export default function TextDisplay({
                 // Fallback for empty/initial state to maintain layout
                 <p className={`font-narrative ${fontSizeClass} leading-relaxed opacity-0`}>&nbsp;</p>
             )}
+
+            {/* Scroll anchor: invisible element that moves with the text */}
+            <div ref={anchorRef} className="h-px w-full pointer-events-none opacity-0" aria-hidden="true" />
         </div>
     )
 }

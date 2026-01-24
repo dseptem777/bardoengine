@@ -30,6 +30,7 @@ export default function Player({
     const hasInteractiveContent = choices.length > 0 || isEnded
     const [isTyping, setIsTyping] = useState(text ? true : !hasInteractiveContent)
     const autoAdvanceTimerRef = useRef(null)
+    const interactiveRef = useRef(null)
 
     useEffect(() => {
         // If no text but has interactive content, skip typewriter immediately
@@ -82,6 +83,20 @@ export default function Player({
             }, autoAdvanceDelay * 1000)
         }
     }, [autoAdvance, autoAdvanceDelay, choices.length, isEnded, onContinue, hasPendingMinigame, minigameAutoStart, onMinigameReady])
+
+    // Scroll to interactive area when typing finishes
+    useEffect(() => {
+        if (!isTyping && interactiveRef.current && typeof interactiveRef.current.scrollIntoView === 'function') {
+            // Delay slightly to ensure DOM has rendered the choices/buttons
+            const timer = setTimeout(() => {
+                interactiveRef.current.scrollIntoView({
+                    block: 'center',
+                    behavior: 'smooth'
+                })
+            }, 100)
+            return () => clearTimeout(timer)
+        }
+    }, [isTyping])
 
     // Cancel auto-advance if user interacts
     const cancelAutoAdvance = useCallback(() => {
@@ -172,73 +187,76 @@ export default function Player({
                         />
                     </div>
 
-                    {/* Choices - Appear below text, no layout impact on text above */}
-                    {!isTyping && !hasPendingMinigame && choices.length > 0 && (
-                        <div className="space-y-4">
-                            {choices.map((choice, index) => (
-                                <ChoiceButton
-                                    key={index}
-                                    text={choice.text}
-                                    index={index}
-                                    onClick={() => handleChoice(index)}
-                                />
-                            ))}
-                        </div>
-                    )}
+                    {/* Choices & Footer Area - Scroll target when typing completes */}
+                    <div ref={interactiveRef} className="mt-8">
+                        {/* Choices - Appear below text, no layout impact on text above */}
+                        {!isTyping && !hasPendingMinigame && choices.length > 0 && (
+                            <div className="space-y-4">
+                                {choices.map((choice, index) => (
+                                    <ChoiceButton
+                                        key={index}
+                                        text={choice.text}
+                                        index={index}
+                                        onClick={() => handleChoice(index)}
+                                    />
+                                ))}
+                            </div>
+                        )}
 
-                    {/* Controls Footer */}
-                    {!isTyping && (
-                        <div className="mt-12">
-                            {/* Pagination or Minigame Start */}
-                            {((choices.length === 0 && canContinue) || (hasPendingMinigame && !minigameAutoStart)) && !isEnded && (
-                                <div className="flex justify-center">
-                                    <button
-                                        onClick={hasPendingMinigame ? onMinigameReady : onContinue}
-                                        className="group relative flex items-center justify-center gap-3 px-8 py-4 bg-bardo-accent/10 border border-bardo-accent text-bardo-accent font-mono text-lg hover:bg-bardo-accent hover:text-bardo-bg transition-all duration-300 rounded overflow-hidden"
-                                    >
-                                        <span className="relative z-10 tracking-widest uppercase">
-                                            {hasPendingMinigame ? 'Comenzar Juego' : 'Siguiente'}
-                                        </span>
-                                        <span className="relative z-10 text-xl group-hover:translate-x-1 transition-transform duration-300">
-                                            {hasPendingMinigame ? '◈' : '❱'}
-                                        </span>
-                                        <div className="absolute inset-0 bg-bardo-accent/20 animate-pulse" />
-                                    </button>
-                                </div>
-                            )}
+                        {/* Controls Footer */}
+                        {!isTyping && (
+                            <div className="mt-8">
+                                {/* Pagination or Minigame Start */}
+                                {((choices.length === 0 && canContinue) || (hasPendingMinigame && !minigameAutoStart)) && !isEnded && (
+                                    <div className="flex justify-center">
+                                        <button
+                                            onClick={hasPendingMinigame ? onMinigameReady : onContinue}
+                                            className="group relative flex items-center justify-center gap-3 px-8 py-4 bg-bardo-accent/10 border border-bardo-accent text-bardo-accent font-mono text-lg hover:bg-bardo-accent hover:text-bardo-bg transition-all duration-300 rounded overflow-hidden"
+                                        >
+                                            <span className="relative z-10 tracking-widest uppercase">
+                                                {hasPendingMinigame ? 'Comenzar Juego' : 'Siguiente'}
+                                            </span>
+                                            <span className="relative z-10 text-xl group-hover:translate-x-1 transition-transform duration-300">
+                                                {hasPendingMinigame ? '◈' : '❱'}
+                                            </span>
+                                            <div className="absolute inset-0 bg-bardo-accent/20 animate-pulse" />
+                                        </button>
+                                    </div>
+                                )}
 
-                            {/* End state */}
-                            {isEnded && (
-                                <div className="pt-8 space-y-4 w-full border-t border-bardo-accent/10">
-                                    <p className="font-mono text-bardo-muted text-sm text-center">
-                                        ─── FIN ───
-                                    </p>
-                                    <div className="w-full flex justify-center">
-                                        <div className="inline-flex gap-4 items-center flex-wrap justify-center">
-                                            <button
-                                                onClick={onRestart}
-                                                className="min-w-[140px] px-6 py-3 bg-bardo-accent text-bardo-bg font-mono hover:brightness-110 transition-all rounded text-center"
-                                            >
-                                                REINICIAR
-                                            </button>
-                                            <button
-                                                onClick={onFinish}
-                                                className="min-w-[140px] px-6 py-3 bg-green-600 text-white font-mono hover:bg-green-500 transition-colors rounded text-center"
-                                            >
-                                                ✓ FINALIZAR
-                                            </button>
-                                            <button
-                                                onClick={onBack}
-                                                className="min-w-[140px] px-6 py-3 border border-bardo-accent text-bardo-accent font-mono hover:bg-bardo-accent hover:text-bardo-bg transition-colors rounded text-center"
-                                            >
-                                                MENÚ
-                                            </button>
+                                {/* End state */}
+                                {isEnded && (
+                                    <div className="pt-8 space-y-4 w-full border-t border-bardo-accent/10">
+                                        <p className="font-mono text-bardo-muted text-sm text-center">
+                                            ─── FIN ───
+                                        </p>
+                                        <div className="w-full flex justify-center">
+                                            <div className="inline-flex gap-4 items-center flex-wrap justify-center">
+                                                <button
+                                                    onClick={onRestart}
+                                                    className="min-w-[140px] px-6 py-3 bg-bardo-accent text-bardo-bg font-mono hover:brightness-110 transition-all rounded text-center"
+                                                >
+                                                    REINICIAR
+                                                </button>
+                                                <button
+                                                    onClick={onFinish}
+                                                    className="min-w-[140px] px-6 py-3 bg-green-600 text-white font-mono hover:bg-green-500 transition-colors rounded text-center"
+                                                >
+                                                    ✓ FINALIZAR
+                                                </button>
+                                                <button
+                                                    onClick={onBack}
+                                                    className="min-w-[140px] px-6 py-3 border border-bardo-accent text-bardo-accent font-mono hover:bg-bardo-accent hover:text-bardo-bg transition-colors rounded text-center"
+                                                >
+                                                    MENÚ
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </main>
 
