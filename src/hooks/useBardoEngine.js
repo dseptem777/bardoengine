@@ -8,6 +8,37 @@ import { useAchievements } from './useAchievements'
 import { useMinigameController, parseMinigameTag } from './useMinigameController'
 
 /**
+ * Helper to extract text and tags from story until a break condition is met.
+ * Uses Array Push + Join for performance.
+ */
+function extractStoryContent(storyInstance, separator = '\n\n', stopOnMinigame = true) {
+    const textParts = []
+    const allTags = []
+
+    while (storyInstance.canContinue) {
+        const nextBatch = storyInstance.Continue()
+        const tags = storyInstance.currentTags
+
+        textParts.push(nextBatch)
+        allTags.push(...tags)
+
+        // Break for pagination
+        if (tags.some(t => {
+            const tag = t.trim().toLowerCase()
+            return tag === 'next' || tag === 'page'
+        })) break
+
+        // Break for minigame
+        if (stopOnMinigame && tags.some(t => t.trim().toLowerCase().startsWith('minigame:'))) break
+    }
+
+    return {
+        fullText: textParts.join(separator),
+        allTags
+    }
+}
+
+/**
  * useBardoEngine - Central orchestrator hook for the BardoEngine
  * 
  * Consolidates all story logic, state management, and subsystem coordination
@@ -241,27 +272,7 @@ export function useBardoEngine({
         const currentStory = storyRef.current
         if (!currentStory || minigameController.isPlaying) return
 
-        const textParts = []
-        const allTags = []
-
-        while (currentStory.canContinue) {
-            const nextBatch = currentStory.Continue()
-            const tags = currentStory.currentTags
-
-            textParts.push(nextBatch)
-            allTags.push(...tags)
-
-            // Break for pagination
-            if (tags.some(t => {
-                const tag = t.trim().toLowerCase()
-                return tag === 'next' || tag === 'page'
-            })) break
-
-            // Break for minigame
-            if (tags.some(t => t.trim().toLowerCase().startsWith('minigame:'))) break
-        }
-
-        const fullText = textParts.join('\n\n')
+        const { fullText, allTags } = extractStoryContent(currentStory)
         const trimmedText = fullText.trim()
         setText(trimmedText)
         setChoices(currentStory.currentChoices)
@@ -338,23 +349,8 @@ export function useBardoEngine({
                 return
             }
 
-            const textParts = []
-            const allTags = []
-
-            while (story.canContinue) {
-                const nextBatch = story.Continue()
-                textParts.push(nextBatch)
-                allTags.push(...story.currentTags)
-
-                if (story.currentTags.some(t =>
-                    t.trim().toLowerCase() === 'next' ||
-                    t.trim().toLowerCase() === 'page'
-                )) {
-                    break
-                }
-            }
-
-            const fullText = textParts.join('')
+            // Note: Changed separator to '\n\n' for consistency with continueStory
+            const { fullText, allTags } = extractStoryContent(story, '\n\n')
             const trimmedText = fullText.trim()
             setText(trimmedText)
             setChoices(story.currentChoices)
