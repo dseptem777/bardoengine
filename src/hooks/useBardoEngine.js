@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react'
 import { Story } from 'inkjs'
 import { useVFX } from './useVFX'
 import { useAudio } from './useAudio'
@@ -100,8 +100,8 @@ export function useBardoEngine({
         // IMMEDIATE: Block UI before ANY changes to prevent flash
         setIsThemeReady(false)
 
-        // 1. If we are entering a story but config is missing, stay blocked
-        if (storyId && !gameSystems.config && !gameSystems.error) {
+        // 1. If we are entering a story but config is NOT LOADED yet, stay blocked
+        if (storyId && !gameSystems.configLoaded) {
             return
         }
 
@@ -173,7 +173,7 @@ export function useBardoEngine({
             setIsThemeReady(false)
             clearTheme()
         }
-    }, [gameSystems.config, storyId])
+    }, [gameSystems.config, gameSystems.configLoaded, storyId])
 
     // ==================
     // Minigame Controller
@@ -475,7 +475,63 @@ export function useBardoEngine({
     // Return API
     // ==================
 
-    return {
+    const actions = useMemo(() => ({
+        initStory,
+        continueStory,
+        makeChoice,
+        restart,
+        backToStart,
+        finishGame,
+        // Save/Load
+        newGame,
+        continueGame,
+        loadSave,
+        manualSave,
+        // Minigame
+        handleMinigameStart,
+    }), [
+        initStory,
+        continueStory,
+        makeChoice,
+        restart,
+        backToStart,
+        finishGame,
+        newGame,
+        continueGame,
+        loadSave,
+        manualSave,
+        handleMinigameStart
+    ])
+
+    const subsystems = useMemo(() => ({
+        audio: { playSfx, playMusic, stopMusic, stopAllAudio },
+        vfx: { vfxState, triggerVFX, clearVFX },
+        saveSystem,
+        gameSystems,
+        achievementsSystem,
+        minigameController,
+    }), [
+        playSfx, playMusic, stopMusic, stopAllAudio,
+        vfxState, triggerVFX, clearVFX,
+        saveSystem,
+        gameSystems,
+        achievementsSystem,
+        minigameController
+    ])
+
+    const config = useMemo(() => ({
+        extrasConfig,
+        hasExtras,
+        achievementDefs,
+    }), [extrasConfig, hasExtras, achievementDefs])
+
+    const settingsHelpers = useMemo(() => ({
+        getTypewriterDelay,
+        getMusicVolume,
+        getSfxVolume,
+    }), [getTypewriterDelay, getMusicVolume, getSfxVolume])
+
+    return useMemo(() => ({
         // Core state
         story,
         text,
@@ -485,45 +541,21 @@ export function useBardoEngine({
         history,
         isThemeReady,
 
-        // Actions
-        actions: {
-            initStory,
-            continueStory,
-            makeChoice,
-            restart,
-            backToStart,
-            finishGame,
-            // Save/Load
-            newGame,
-            continueGame,
-            loadSave,
-            manualSave,
-            // Minigame
-            handleMinigameStart,
-        },
-
-        // Sub-systems (exposed for components that need them)
-        subsystems: {
-            audio: { playSfx, playMusic, stopMusic, stopAllAudio },
-            vfx: { vfxState, triggerVFX, clearVFX },
-            saveSystem,
-            gameSystems,
-            achievementsSystem,
-            minigameController,
-        },
-
-        // Config/derived
-        config: {
-            extrasConfig,
-            hasExtras,
-            achievementDefs,
-        },
-
-        // Settings passthrough
-        settingsHelpers: {
-            getTypewriterDelay,
-            getMusicVolume,
-            getSfxVolume,
-        }
-    }
+        actions,
+        subsystems,
+        config,
+        settingsHelpers
+    }), [
+        story,
+        text,
+        choices,
+        canContinue,
+        isEnded,
+        history,
+        isThemeReady,
+        actions,
+        subsystems,
+        config,
+        settingsHelpers
+    ])
 }

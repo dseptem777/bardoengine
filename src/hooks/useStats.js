@@ -131,7 +131,7 @@ export function useStats(config) {
         return { ...stats }
     }, [stats])
 
-    return {
+    return useMemo(() => ({
         stats,
         statsConfig,
         isEnabled: statsConfig.enabled,
@@ -143,6 +143,17 @@ export function useStats(config) {
         resetStats,
         loadStats,
         exportStats
-    }
+    }), [
+        stats,
+        statsConfig,
+        modifyStat,
+        setStat,
+        getStatInfo,
+        getAllStatsInfo,
+        checkZeroStats,
+        resetStats,
+        loadStats,
+        exportStats
+    ])
 }
 

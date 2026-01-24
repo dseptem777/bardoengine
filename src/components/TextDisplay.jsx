@@ -21,17 +21,34 @@ export default function TextDisplay({
     // Split text into paragraphs for rendering
     const paragraphs = displayedText.split('\n').filter(p => p.trim().length > 0 || p.length > 0)
 
+    // Track previous text to know when to reset
+    const prevTextRef = useRef(text)
+
     useEffect(() => {
-        // Reset on new text
-        setDisplayedText('')
-        indexRef.current = 0
+        const textChanged = text !== prevTextRef.current
+
+        if (textChanged) {
+            setDisplayedText('')
+            indexRef.current = 0
+            prevTextRef.current = text
+            if (intervalRef.current) clearInterval(intervalRef.current)
+        }
 
         if (!text) return
 
         // If not typing OR typewriter delay is 0 (instant), show full text immediately
         if (!isTyping || typewriterDelay === 0) {
             setDisplayedText(text)
-            onComplete?.()
+            // Only call onComplete if we just finished (or skipped)
+            // Avoid calling it repeatedly if re-rendering
+            if (displayedText !== text) {
+               onComplete?.()
+            }
+            return
+        }
+
+        // If we already finished typing this text, don't restart interval
+        if (displayedText === text && !textChanged) {
             return
         }
 
@@ -51,7 +68,7 @@ export default function TextDisplay({
                 clearInterval(intervalRef.current)
             }
         }
-    }, [text, isTyping, onComplete, typewriterDelay])
+    }, [text, isTyping, onComplete, typewriterDelay, displayedText])
 
     // Skip effect when isTyping changes to false
     useEffect(() => {
