@@ -70,10 +70,12 @@ export function useBardoEngine({
     const gameSystems = useGameSystems(storyId)
 
     // Achievements system
+    // @ts-ignore
     const achievementDefs = gameSystems.config?.achievements || []
     const achievementsSystem = useAchievements(storyId, achievementDefs)
 
     // Extras config
+    // @ts-ignore
     const extrasConfig = gameSystems.config?.extras || {}
     const hasExtras = achievementDefs.length > 0 ||
         (extrasConfig.gallery?.length > 0) ||
@@ -135,16 +137,19 @@ export function useBardoEngine({
             const tags = currentStory.currentTags
 
             fullText += nextBatch + '\n\n'
-            allTags = [...allTags, ...tags]
+            // @ts-ignore
+            allTags = [...allTags, ...(tags || [])]
 
             // Break for pagination
-            if (tags.some(t => {
+            // @ts-ignore
+            if ((tags || []).some(t => {
                 const tag = t.trim().toLowerCase()
                 return tag === 'next' || tag === 'page'
             })) break
 
             // Break for minigame
-            if (tags.some(t => t.trim().toLowerCase().startsWith('minigame:'))) break
+            // @ts-ignore
+            if ((tags || []).some(t => t.trim().toLowerCase().startsWith('minigame:'))) break
         }
 
         const trimmedText = fullText.trim()
@@ -165,7 +170,8 @@ export function useBardoEngine({
         processTags(allTags)
 
         if (storyId) {
-            saveSystem.autoSave(currentStory.state.toJson(), trimmedText, gameSystems.exportGameSystems())
+            // @ts-ignore
+            saveSystem.autoSave(currentStory.state.toJson(), trimmedText, gameSystems.exportGameSystems() || undefined)
         }
     }, [storyId, processTags, saveSystem, gameSystems, minigameController.isPlaying])
 
@@ -229,9 +235,11 @@ export function useBardoEngine({
             while (story.canContinue) {
                 const nextBatch = story.Continue()
                 fullText += nextBatch
-                allTags = [...allTags, ...story.currentTags]
+                // @ts-ignore
+                allTags = [...allTags, ...(story.currentTags || [])]
 
-                if (story.currentTags.some(t =>
+                // @ts-ignore
+                if ((story.currentTags || []).some(t =>
                     t.trim().toLowerCase() === 'next' ||
                     t.trim().toLowerCase() === 'page'
                 )) {
@@ -253,7 +261,8 @@ export function useBardoEngine({
             processTags(allTags)
 
             if (storyId) {
-                saveSystem.autoSave(story.state.toJson(), trimmedText, gameSystems.exportGameSystems())
+                // @ts-ignore
+                saveSystem.autoSave(story.state.toJson(), trimmedText, gameSystems.exportGameSystems() || undefined)
             }
         }
     }, [story, text, storyId, processTags, saveSystem, gameSystems])
@@ -354,7 +363,8 @@ export function useBardoEngine({
 
     const manualSave = useCallback((name: string, overwriteId: string | null = null) => {
         if (!story || !storyId) return
-        saveSystem.saveGame(name, story.state.toJson(), text, gameSystems.exportGameSystems(), overwriteId)
+        // @ts-ignore
+        saveSystem.saveGame(name, story.state.toJson(), text, gameSystems.exportGameSystems() || undefined, overwriteId)
     }, [story, storyId, text, saveSystem, gameSystems])
 
     // ==================

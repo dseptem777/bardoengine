@@ -52,7 +52,7 @@ export function useThemeManager(config: any, storyId: string) {
 
             if (googleFonts && Array.isArray(googleFonts) && googleFonts.length > 0) {
                 const fontId = 'bardo-dynamic-fonts'
-                let link = document.getElementById(fontId)
+                let link = document.getElementById(fontId) as HTMLLinkElement | null;
                 if (!link) {
                     link = document.createElement('link')
                     link.id = fontId

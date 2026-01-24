@@ -4,9 +4,13 @@ import fs from 'fs'
 import path from 'path'
 
 // Helper to load JSON story data
-const loadStory = (filename) => {
+const loadStory = (filename: any) => {
     const filePath = path.resolve(__dirname, '../../src/stories', filename)
-    const content = fs.readFileSync(filePath, 'utf-8')
+    let content = fs.readFileSync(filePath, 'utf-8')
+    // Remove BOM if present
+    if (content.charCodeAt(0) === 0xFEFF) {
+        content = content.slice(1)
+    }
     return JSON.parse(content)
 }
 
