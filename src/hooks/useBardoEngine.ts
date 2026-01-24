@@ -90,7 +90,7 @@ export function useBardoEngine({
     // ==================
     // Theme Injection
     // ==================
-    const isThemeReady = useThemeManager(gameSystems.config, storyId)
+    const isThemeReady = useThemeManager(gameSystems.config, storyId, gameSystems.configLoaded)
 
     // ==================
     // Minigame Controller
