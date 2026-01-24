@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 
 export interface StatDefinition {
     id: string;
@@ -52,7 +52,7 @@ export function useStats(config: GameConfigWithStats | null) {
     const [stats, setStats] = useState<Record<string, number>>(getInitialStats)
 
     // Reset stats when config changes
-    useMemo(() => {
+    useEffect(() => {
         setStats(getInitialStats())
     }, [getInitialStats])
 
