@@ -5,21 +5,23 @@ import { useAudio } from './useAudio'
 import { useSaveSystem } from './useSaveSystem'
 import { useGameSystems } from './useGameSystems'
 import { useAchievements } from './useAchievements'
-import { useMinigameController, parseMinigameTag } from './useMinigameController'
+import { useMinigameController } from './useMinigameController'
+import { useThemeManager } from './useThemeManager'
+import { useTagProcessor } from './useTagProcessor'
+
+interface BardoEngineOptions {
+    storyId: string;
+    storyData: any;
+    settings: any;
+    getTypewriterDelay: () => number;
+    getMusicVolume: () => number;
+    getSfxVolume: () => number;
+}
 
 /**
  * useBardoEngine - Central orchestrator hook for the BardoEngine
  * 
- * Consolidates all story logic, state management, and subsystem coordination
- * that was previously scattered across App.jsx (~600 lines → this hook).
- * 
- * @param {Object} options
- * @param {string} options.storyId - Current story identifier
- * @param {Object} options.storyData - Story JSON data (from inkjs compile)
- * @param {Object} options.settings - User settings from useSettings
- * @param {Function} options.getTypewriterDelay - Function to get typewriter delay
- * @param {Function} options.getMusicVolume - Function to get music volume
- * @param {Function} options.getSfxVolume - Function to get SFX volume
+ * Consolidates all story logic, state management, and subsystem coordination.
  */
 export function useBardoEngine({
     storyId,
@@ -28,20 +30,20 @@ export function useBardoEngine({
     getTypewriterDelay,
     getMusicVolume,
     getSfxVolume
-}) {
+}: BardoEngineOptions) {
     // ==================
     // Core Story State
     // ==================
-    const [story, setStory] = useState(null)
+    const [story, setStory] = useState<Story | null>(null)
     const [text, setText] = useState('')
-    const [choices, setChoices] = useState([])
+    const [choices, setChoices] = useState<any[]>([])
     const [canContinue, setCanContinue] = useState(false)
     const [isEnded, setIsEnded] = useState(false)
-    const [history, setHistory] = useState([]) // Bitácora narrativa
+    const [history, setHistory] = useState<any[]>([]) // Bitácora narrativa
 
     // Refs for callbacks (avoid stale closures)
-    const storyRef = useRef(null)
-    const continueStoryRef = useRef(null)
+    const storyRef = useRef<Story | null>(null)
+    const continueStoryRef = useRef<(() => void) | null>(null)
 
     // ==================
     // Sub-systems
@@ -68,10 +70,12 @@ export function useBardoEngine({
     const gameSystems = useGameSystems(storyId)
 
     // Achievements system
+    // @ts-ignore
     const achievementDefs = gameSystems.config?.achievements || []
     const achievementsSystem = useAchievements(storyId, achievementDefs)
 
     // Extras config
+    // @ts-ignore
     const extrasConfig = gameSystems.config?.extras || {}
     const hasExtras = achievementDefs.length > 0 ||
         (extrasConfig.gallery?.length > 0) ||
@@ -80,107 +84,14 @@ export function useBardoEngine({
     // ==================
     // Theme Injection (Dynamic CSS Variables)
     // ==================
-    const [isThemeReady, setIsThemeReady] = useState(false)
-
-    useEffect(() => {
-        const root = document.documentElement
-
-        // Helper to clear all possible Bardo-related CSS variables
-        const clearTheme = () => {
-            const vars = [
-                '--bardo-accent', '--bardo-bg', '--bardo-text', '--bardo-muted',
-                '--bardo-font-main', '--bardo-font-header', '--bardo-font-mono',
-                '--stats-top', '--stats-left', '--inventory-top', '--inventory-right',
-                '--player-max-width', '--player-text-align',
-                '--ui-border-radius', '--ui-border-width'
-            ]
-            vars.forEach(v => root.style.removeProperty(v))
-        }
-
-        // IMMEDIATE: Block UI before ANY changes to prevent flash
-        setIsThemeReady(false)
-
-        // 1. If we are entering a story but config is missing, stay blocked
-        if (storyId && !gameSystems.config && !gameSystems.error) {
-            return
-        }
-
-        const theme = gameSystems.config?.theme
-
-        // 2. Clear previous theme
-        clearTheme()
-
-        if (!theme) {
-            // No theme config: set defaults and wait a bit for browser to catch up
-            const timer = setTimeout(() => setIsThemeReady(true), 200)
-            return () => {
-                clearTimeout(timer)
-                setIsThemeReady(false)
-            }
-        }
-
-        // 3. Apply New Theme settings
-        if (theme.primaryColor) root.style.setProperty('--bardo-accent', theme.primaryColor)
-        if (theme.bgColor) root.style.setProperty('--bardo-bg', theme.bgColor)
-        if (theme.textColor) root.style.setProperty('--bardo-text', theme.textColor)
-
-        if (theme.typography) {
-            const { mainFont, headerFont, googleFonts } = theme.typography
-            if (mainFont) root.style.setProperty('--bardo-font-main', mainFont)
-            if (headerFont) root.style.setProperty('--bardo-font-header', headerFont)
-
-            if (googleFonts && Array.isArray(googleFonts) && googleFonts.length > 0) {
-                const fontId = 'bardo-dynamic-fonts'
-                let link = document.getElementById(fontId)
-                if (!link) {
-                    link = document.createElement('link')
-                    link.id = fontId
-                    link.rel = 'stylesheet'
-                    document.head.appendChild(link)
-                }
-                const families = googleFonts.map(f => f.replace(/ /g, '+')).join('&family=')
-                link.href = `https://fonts.googleapis.com/css2?family=${families}&display=swap`
-            }
-        }
-
-        if (theme.layout) {
-            const { statsPosition, inventoryPosition, playerMaxWidth, textAlignment } = theme.layout
-            if (statsPosition) {
-                if (statsPosition.top) root.style.setProperty('--stats-top', `${statsPosition.top}rem`)
-                if (statsPosition.left) root.style.setProperty('--stats-left', `${statsPosition.left}rem`)
-            }
-            if (inventoryPosition) {
-                if (inventoryPosition.top) root.style.setProperty('--inventory-top', `${inventoryPosition.top}rem`)
-                if (inventoryPosition.right) root.style.setProperty('--inventory-right', `${inventoryPosition.right}rem`)
-            }
-            if (playerMaxWidth) root.style.setProperty('--player-max-width', playerMaxWidth)
-            if (textAlignment) root.style.setProperty('--player-text-align', textAlignment)
-        }
-
-        if (theme.uiStyle) {
-            const { borderRadius, borderWidth } = theme.uiStyle
-            if (borderRadius) root.style.setProperty('--ui-border-radius', borderRadius)
-            if (borderWidth) root.style.setProperty('--ui-border-width', borderWidth)
-        }
-
-        console.log('[Theme] Theme applied successfully')
-
-        // 4. Mandatory buffer to ensure all variables have propagated before showing UI
-        const timer = setTimeout(() => setIsThemeReady(true), 250)
-
-        return () => {
-            clearTimeout(timer)
-            setIsThemeReady(false)
-            clearTheme()
-        }
-    }, [gameSystems.config, storyId])
+    const isThemeReady = useThemeManager(gameSystems.config, storyId)
 
     // ==================
     // Minigame Controller
     // ==================
 
     // Result commit handler
-    const handleMinigameResult = useCallback((result) => {
+    const handleMinigameResult = useCallback((result: boolean | number) => {
         const currentStory = storyRef.current
         if (!currentStory) return
 
@@ -202,36 +113,13 @@ export function useBardoEngine({
     // Tag Processing
     // ==================
 
-    const processTags = useCallback((tags) => {
-        tags.forEach(rawTag => {
-            const tag = rawTag.trim()
-            if (!tag) return
-
-            // Minigame tag
-            const minigameConfig = parseMinigameTag(tag, storyRef)
-            if (minigameConfig) {
-                console.log('[Tags] Minigame detected:', minigameConfig)
-                minigameController.queueGame(minigameConfig)
-                return
-            }
-
-            // Achievement unlock tag
-            if (tag.toLowerCase().startsWith('achievement:unlock:')) {
-                const achievementId = tag.split(':')[2]
-                console.log('[Tags] Achievement unlock:', achievementId)
-                achievementsSystem.unlockAchievement(achievementId)
-                return
-            }
-
-            // Game systems tags (stats, inventory)
-            const handled = gameSystems.processGameTag(tag)
-
-            // Fall back to VFX
-            if (!handled) {
-                triggerVFX(tag)
-            }
-        })
-    }, [gameSystems, triggerVFX, minigameController, achievementsSystem])
+    const { processTags } = useTagProcessor({
+        storyRef,
+        minigameController,
+        achievementsSystem,
+        gameSystems,
+        triggerVFX
+    })
 
     // ==================
     // Story Continuation
@@ -242,23 +130,26 @@ export function useBardoEngine({
         if (!currentStory || minigameController.isPlaying) return
 
         let fullText = ''
-        let allTags = []
+        let allTags: string[] = []
 
         while (currentStory.canContinue) {
             const nextBatch = currentStory.Continue()
             const tags = currentStory.currentTags
 
             fullText += nextBatch + '\n\n'
-            allTags = [...allTags, ...tags]
+            // @ts-ignore
+            allTags = [...allTags, ...(tags || [])]
 
             // Break for pagination
-            if (tags.some(t => {
+            // @ts-ignore
+            if ((tags || []).some(t => {
                 const tag = t.trim().toLowerCase()
                 return tag === 'next' || tag === 'page'
             })) break
 
             // Break for minigame
-            if (tags.some(t => t.trim().toLowerCase().startsWith('minigame:'))) break
+            // @ts-ignore
+            if ((tags || []).some(t => t.trim().toLowerCase().startsWith('minigame:'))) break
         }
 
         const trimmedText = fullText.trim()
@@ -279,7 +170,8 @@ export function useBardoEngine({
         processTags(allTags)
 
         if (storyId) {
-            saveSystem.autoSave(currentStory.state.toJson(), trimmedText, gameSystems.exportGameSystems())
+            // @ts-ignore
+            saveSystem.autoSave(currentStory.state.toJson(), trimmedText, gameSystems.exportGameSystems() || undefined)
         }
     }, [storyId, processTags, saveSystem, gameSystems, minigameController.isPlaying])
 
@@ -290,7 +182,7 @@ export function useBardoEngine({
     // Story Initialization
     // ==================
 
-    const initStory = useCallback((data, savedState = null, savedText = '', savedGameSystems = null) => {
+    const initStory = useCallback((data: any, savedState: any = null, savedText: string = '', savedGameSystems: any = null) => {
         const newStory = new Story(data)
 
         if (savedState) {
@@ -338,14 +230,16 @@ export function useBardoEngine({
             }
 
             let fullText = ''
-            let allTags = []
+            let allTags: string[] = []
 
             while (story.canContinue) {
                 const nextBatch = story.Continue()
                 fullText += nextBatch
-                allTags = [...allTags, ...story.currentTags]
+                // @ts-ignore
+                allTags = [...allTags, ...(story.currentTags || [])]
 
-                if (story.currentTags.some(t =>
+                // @ts-ignore
+                if ((story.currentTags || []).some(t =>
                     t.trim().toLowerCase() === 'next' ||
                     t.trim().toLowerCase() === 'page'
                 )) {
@@ -367,7 +261,8 @@ export function useBardoEngine({
             processTags(allTags)
 
             if (storyId) {
-                saveSystem.autoSave(story.state.toJson(), trimmedText, gameSystems.exportGameSystems())
+                // @ts-ignore
+                saveSystem.autoSave(story.state.toJson(), trimmedText, gameSystems.exportGameSystems() || undefined)
             }
         }
     }, [story, text, storyId, processTags, saveSystem, gameSystems])
@@ -376,7 +271,7 @@ export function useBardoEngine({
     // Actions
     // ==================
 
-    const makeChoice = useCallback((index) => {
+    const makeChoice = useCallback((index: number) => {
         const currentStory = storyRef.current
         if (!currentStory) return
 
@@ -457,7 +352,7 @@ export function useBardoEngine({
         return null
     }, [saveSystem, storyData, initStory])
 
-    const loadSave = useCallback((saveId) => {
+    const loadSave = useCallback((saveId: string) => {
         const saveData = saveSystem.loadSave(saveId)
         if (saveData && storyData) {
             initStory(storyData, saveData.state, saveData.text, saveData.gameSystems)
@@ -466,9 +361,10 @@ export function useBardoEngine({
         return null
     }, [saveSystem, storyData, initStory])
 
-    const manualSave = useCallback((name, overwriteId = null) => {
+    const manualSave = useCallback((name: string, overwriteId: string | null = null) => {
         if (!story || !storyId) return
-        saveSystem.saveGame(name, story.state.toJson(), text, gameSystems.exportGameSystems(), overwriteId)
+        // @ts-ignore
+        saveSystem.saveGame(name, story.state.toJson(), text, gameSystems.exportGameSystems() || undefined, overwriteId)
     }, [story, storyId, text, saveSystem, gameSystems])
 
     // ==================

@@ -65,7 +65,7 @@ describe('Player', () => {
         it('should render the header with BardoEngine branding', () => {
             render(<Player {...defaultProps} />)
 
-            expect(screen.getByText(/BARDOENGINE/)).toBeInTheDocument()
+            expect(screen.getByText(/BARDO ENGINE/)).toBeInTheDocument()
         })
 
         it('should render the story text', () => {
