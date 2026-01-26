@@ -266,6 +266,7 @@ function AppContent({ onStorySelect }) {
                     stories={AVAILABLE_STORIES}
                     onSelect={selectStoryDev}
                     hasSave={() => false}
+                    onOpenEditor={() => setShowEditor(true)}
                 />
             )}
 

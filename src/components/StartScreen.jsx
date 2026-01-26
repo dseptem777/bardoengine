@@ -96,7 +96,7 @@ export default function StartScreen({
             {onOpenEditor && (
                 <button
                     onClick={onOpenEditor}
-                    className="absolute bottom-4 right-4 z-20 text-gray-500 hover:text-bardo-accent transition-colors font-mono text-xs opacity-50 hover:opacity-100 uppercase tracking-widest"
+                    className="absolute bottom-4 right-4 z-20 text-bardo-accent hover:text-white transition-colors font-mono text-xs uppercase tracking-widest border border-bardo-accent/30 px-3 py-1 rounded hover:bg-bardo-accent/20"
                 >
                     [The Loom]
                 </button>

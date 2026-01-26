@@ -1,6 +1,6 @@
-export default function StorySelector({ stories, onSelect, hasSave }) {
+export default function StorySelector({ stories, onSelect, hasSave, onOpenEditor }) {
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-4">
+        <div className="min-h-screen flex flex-col items-center justify-center p-4 relative">
             {/* Logo */}
             <div className="text-center mb-12">
                 <h1 className="font-mono text-4xl md:text-6xl text-bardo-accent mb-2 tracking-tight">
@@ -49,6 +49,16 @@ export default function StorySelector({ stories, onSelect, hasSave }) {
             <p className="mt-12 font-mono text-bardo-muted/50 text-xs text-center">
                 Powered by Ink • Built with React
             </p>
+
+            {/* Editor Button (Dev) */}
+            {onOpenEditor && (
+                <button
+                    onClick={onOpenEditor}
+                    className="absolute bottom-4 right-4 z-20 text-bardo-accent hover:text-white transition-colors font-mono text-xs uppercase tracking-widest border border-bardo-accent/30 px-3 py-1 rounded hover:bg-bardo-accent/20"
+                >
+                    [The Loom]
+                </button>
+            )}
         </div>
     )
 }
