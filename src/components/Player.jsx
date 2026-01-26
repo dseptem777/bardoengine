@@ -25,6 +25,7 @@ export default function Player({
     hasPendingMinigame = false,
     onMinigameReady = null,
     minigameAutoStart = true,
+    checkBurned = null,
 }) {
     // If no text but has interactive content, skip typewriter
     const hasInteractiveContent = choices.length > 0 || isEnded
@@ -232,14 +233,18 @@ export default function Player({
                         {/* Choices - Appear below text, no layout impact on text above */}
                         {!isTyping && !hasPendingMinigame && choices.length > 0 && (
                             <div className="space-y-4">
-                                {choices.map((choice, index) => (
-                                    <ChoiceButton
-                                        key={index}
-                                        text={choice.text}
-                                        index={index}
-                                        onClick={() => handleChoice(index)}
-                                    />
-                                ))}
+                                {choices.map((choice, index) => {
+                                    const isBurned = checkBurned ? checkBurned(choice) : false
+                                    return (
+                                        <ChoiceButton
+                                            key={index}
+                                            text={choice.text}
+                                            index={index}
+                                            onClick={() => !isBurned && handleChoice(index)}
+                                            isBurned={isBurned}
+                                        />
+                                    )
+                                })}
                             </div>
                         )}
 

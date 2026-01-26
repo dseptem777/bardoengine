@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, Suspense } from 'react'
 import Player from './components/Player'
 import StorySelector from './components/StorySelector'
 import StartScreen from './components/StartScreen'
@@ -15,6 +15,8 @@ import MinigameOverlay from './components/MinigameOverlay'
 import { useStoryLoader } from './hooks/useStoryLoader'
 import { useBardoEngine } from './hooks/useBardoEngine'
 import { SettingsProvider, useSettings } from './hooks/useSettings'
+
+const BardoEditor = React.lazy(() => import('./editor/BardoEditor'))
 
 // Import the compiled stories (used in development mode)
 import partuzaStory from './stories/partuza.json'
@@ -54,6 +56,7 @@ function AppContent({ onStorySelect }) {
     const [historyOpen, setHistoryOpen] = useState(false)
     const [inventoryOpen, setInventoryOpen] = useState(false)
     const [extrasOpen, setExtrasOpen] = useState(false)
+    const [showEditor, setShowEditor] = useState(false)
 
     // Story loader with environment detection
     const { stories, isLoading: storyLoading, error: storyError, isProductionMode } = useStoryLoader({
@@ -152,6 +155,14 @@ function AppContent({ onStorySelect }) {
         actions.manualSave(name, overwriteId)
         setSaveModalMode(null)
     }, [actions])
+
+    // Helper to check if a choice is burned (Hubs)
+    const checkChoiceBurned = useCallback((choice) => {
+        if (!choice || !choice.pathStringOnChoice) return false
+        const targetKnot = choice.pathStringOnChoice.split('.')[0]
+        // @ts-ignore
+        return gameSystems.hubs.isBurned(targetKnot)
+    }, [gameSystems])
 
     // Keyboard shortcuts
     useEffect(() => {
@@ -280,6 +291,7 @@ function AppContent({ onStorySelect }) {
                     onLoadGame={() => setSaveModalMode('load')}
                     onOptions={() => setOptionsOpen(true)}
                     onExtras={() => setExtrasOpen(true)}
+                    onOpenEditor={!isProductionMode ? () => setShowEditor(true) : null}
                     onBack={!isProductionMode ? backToStorySelector : null}
                 />
             )}
@@ -309,6 +321,7 @@ function AppContent({ onStorySelect }) {
                     hasPendingMinigame={minigameController.isPending}
                     onMinigameReady={actions.handleMinigameStart}
                     minigameAutoStart={minigameController.config?.autoStart}
+                    checkBurned={checkChoiceBurned}
                 />
             )}
 
@@ -341,6 +354,13 @@ function AppContent({ onStorySelect }) {
                 onDismiss={achievementsSystem.clearToast}
                 playSound={audio.playSfx}
             />
+
+            {/* Bardo Editor Overlay */}
+            {showEditor && (
+                <Suspense fallback={<div className="fixed inset-0 z-[200] bg-black text-white flex items-center justify-center font-mono">LOADING THE LOOM...</div>}>
+                    <BardoEditor onClose={() => setShowEditor(false)} />
+                </Suspense>
+            )}
         </div>
     )
 }

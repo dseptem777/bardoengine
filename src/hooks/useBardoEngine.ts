@@ -197,6 +197,25 @@ export function useBardoEngine({
     const makeChoice = useCallback((index: number) => {
         clearVFX()
 
+        // Hubs: Check exclusions
+        if (story) {
+            try {
+                const choice = story.currentChoices[index]
+                if (choice) {
+                    const currentPath = story.state.currentPathString || ""
+                    const currentKnot = currentPath.split('.')[0]
+
+                    const targetPath = choice.pathStringOnChoice || ""
+                    const targetKnot = targetPath.split('.')[0]
+
+                    // @ts-ignore
+                    gameSystems.hubs.handleChoice(currentKnot, targetKnot)
+                }
+            } catch (e) {
+                console.warn("[BardoEngine] Error processing hub choice:", e)
+            }
+        }
+
         // makeChoiceState updates history internally
         const { text: newText, tags } = makeChoiceState(index)
 

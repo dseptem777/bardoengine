@@ -1,6 +1,7 @@
 import { useCallback, useState, useEffect, useMemo } from 'react'
 import { useStats, GameConfigWithStats } from './useStats'
 import { useInventory, GameConfigWithInventory } from './useInventory'
+import { useHubs } from './useHubs'
 // @ts-ignore
 import { loadGameConfig, DEFAULT_CONFIG } from '../config/loadGameConfig'
 
@@ -15,10 +16,11 @@ export type ProcessTagResult = boolean | MinigameRequest;
 export interface SavedGameSystems {
     stats?: Record<string, number>;
     inventory?: any[];
+    burnedKnots?: string[];
 }
 
 /**
- * useGameSystems - Orchestrator hook that combines Stats + Inventory
+ * useGameSystems - Orchestrator hook that combines Stats + Inventory + Hubs
  * and provides a unified interface for processing game tags
  * 
  * Loads config asynchronously from {storyId}.config.json
@@ -60,6 +62,8 @@ export function useGameSystems(storyId: string) {
     // Pass config to child hooks
     const statsHook = useStats(config)
     const inventoryHook = useInventory(config)
+    // @ts-ignore
+    const hubsHook = useHubs(config.hubs || [])
 
     /**
      * Parse and process a single game system tag
@@ -147,7 +151,8 @@ export function useGameSystems(storyId: string) {
     const resetGameSystems = useCallback(() => {
         statsHook.resetStats()
         inventoryHook.clearInventory()
-    }, [statsHook, inventoryHook])
+        hubsHook.resetHubs()
+    }, [statsHook, inventoryHook, hubsHook])
 
     /**
      * Load game systems from saved data
@@ -159,7 +164,10 @@ export function useGameSystems(storyId: string) {
         if (savedData?.inventory) {
             inventoryHook.loadInventory(savedData.inventory)
         }
-    }, [statsHook, inventoryHook])
+        if (savedData?.burnedKnots) {
+            hubsHook.loadHubsState(savedData.burnedKnots)
+        }
+    }, [statsHook, inventoryHook, hubsHook])
 
     /**
      * Export game systems for saving
@@ -167,9 +175,10 @@ export function useGameSystems(storyId: string) {
     const exportGameSystems = useCallback((): SavedGameSystems => {
         return {
             stats: statsHook.exportStats(),
-            inventory: inventoryHook.exportInventory()
+            inventory: inventoryHook.exportInventory(),
+            burnedKnots: hubsHook.exportHubsState()
         }
-    }, [statsHook, inventoryHook])
+    }, [statsHook, inventoryHook, hubsHook])
 
     return useMemo(() => ({
         // Config
@@ -197,6 +206,9 @@ export function useGameSystems(storyId: string) {
         getItemsWithInfo: inventoryHook.getItemsWithInfo,
         getItemsByCategory: inventoryHook.getItemsByCategory,
 
+        // Hubs
+        hubs: hubsHook,
+
         // Combined operations
         processGameTag,
         processGameTags,
@@ -208,6 +220,7 @@ export function useGameSystems(storyId: string) {
         configLoaded,
         statsHook,
         inventoryHook,
+        hubsHook,
         processGameTag,
         processGameTags,
         resetGameSystems,

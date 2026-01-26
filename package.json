@@ -23,7 +23,8 @@
     "inkjs": "^2.2.0",
     "inklecate": "^1.8.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "reactflow": "^11.11.4"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.9.6",
