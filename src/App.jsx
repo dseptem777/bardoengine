@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, Suspense } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import Player from './components/Player'
 import StorySelector from './components/StorySelector'
 import StartScreen from './components/StartScreen'
@@ -155,14 +155,6 @@ function AppContent({ onStorySelect }) {
         actions.manualSave(name, overwriteId)
         setSaveModalMode(null)
     }, [actions])
-
-    // Helper to check if a choice is burned (Hubs)
-    const checkChoiceBurned = useCallback((choice) => {
-        if (!choice || !choice.pathStringOnChoice) return false
-        const targetKnot = choice.pathStringOnChoice.split('.')[0]
-        // @ts-ignore
-        return gameSystems.hubs.isBurned(targetKnot)
-    }, [gameSystems])
 
     // Keyboard shortcuts
     useEffect(() => {

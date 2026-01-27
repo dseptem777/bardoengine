@@ -1,61 +1,39 @@
 export function generateInk(nodes, edges) {
-    let inkContent = "";
+    let ink = "";
 
-    // Sort nodes to have Hubs first (convention)
-    const sortedNodes = [...nodes].sort((a, b) => {
-        const typeA = a.data?.type || 'knot';
-        const typeB = b.data?.type || 'knot';
-        if (typeA === 'hub' && typeB !== 'hub') return -1;
-        if (typeA !== 'hub' && typeB === 'hub') return 1;
-        return 0;
-    });
+    // Helper to get connected nodes
+    const getConnections = (sourceId) => {
+        return edges
+            .filter(e => e.source === sourceId)
+            .map(e => nodes.find(n => n.id === e.target));
+    };
 
-    sortedNodes.forEach(node => {
-        const id = node.id;
-        const { label, text, type } = node.data || {};
-        const nodeText = text || `Content for ${label || id}`;
+    nodes.forEach(node => {
+        if (node.data.type === 'hub') {
+            ink += `=== ${node.id} ===\n`;
+            ink += `${node.data.text || ""}\n`;
 
-        inkContent += `=== ${id} ===\n`;
-        // Add metadata tags
-        if (type === 'hub') inkContent += `#hub\n`;
-
-        inkContent += `${nodeText}\n\n`;
-
-        // Find outgoing edges
-        const outgoing = edges.filter(e => e.source === id);
-
-        if (outgoing.length === 0) {
-            inkContent += `    -> DONE\n`;
-        } else {
-            outgoing.forEach(edge => {
-                const targetNode = nodes.find(n => n.id === edge.target);
-                const targetLabel = edge.label || targetNode?.data?.label || edge.target;
-
-                inkContent += `+ [${targetLabel}] -> ${edge.target}\n`;
+            const connections = getConnections(node.id);
+            connections.forEach(target => {
+                ink += `+ [${target.data.label}] -> ${target.id}\n`;
             });
+            ink += `\n`;
+        } else {
+            ink += `=== ${node.id} ===\n`;
+            ink += `${node.data.text || ""}\n`;
+            // Add default return to hub if it's an alley? Or let user define.
+            // For now just basic structure.
+            ink += `-> DONE\n\n`;
         }
-        inkContent += `\n`;
     });
 
-    return inkContent;
+    return ink;
 }
 
 export function generateHubRegistry(nodes) {
-    const registry = [];
-
-    nodes.filter(n => n.data?.type === 'hub').forEach(hub => {
-        const rules = hub.data?.burnRules || [];
-
-        if (rules.length > 0) {
-            registry.push({
-                id: hub.id,
-                options: rules.map(r => ({
-                    target: r.targetId,
-                    burns: r.burnedIds
-                }))
-            });
-        }
-    });
-
-    return registry;
+    const hubs = nodes.filter(n => n.data.type === 'hub');
+    return hubs.map(hub => ({
+        id: hub.id,
+        options: hub.data.burnRules || []
+    }));
 }

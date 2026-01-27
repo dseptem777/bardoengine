@@ -5,6 +5,8 @@ import { useHubs } from './useHubs'
 // @ts-ignore
 import { loadGameConfig, DEFAULT_CONFIG } from '../config/loadGameConfig'
 
+const EMPTY_HUBS = [];
+
 export interface MinigameRequest {
     type: 'minigame';
     name: string;
@@ -63,7 +65,7 @@ export function useGameSystems(storyId: string) {
     const statsHook = useStats(config)
     const inventoryHook = useInventory(config)
     // @ts-ignore
-    const hubsHook = useHubs(config.hubs || [])
+    const hubsHook = useHubs(config.hubs || EMPTY_HUBS)
 
     /**
      * Parse and process a single game system tag
