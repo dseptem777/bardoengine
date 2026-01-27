@@ -42,11 +42,23 @@ export default function BardoEditor({ onClose }) {
         choice: ChoiceNode,
     }), []);
 
-    const onConnect = useCallback((params) => setEdges((eds) => addEdge({
-        ...params,
-        animated: true,
-        style: { stroke: '#2b6cee', strokeWidth: 2 }
-    }, eds)), [setEdges]);
+    const onConnect = useCallback((params) => {
+        // If connecting from a choice node, prompt for edge label
+        const sourceNode = nodes.find(n => n.id === params.source);
+
+        let label = '';
+        if (sourceNode?.type === 'choice') {
+            label = prompt('Enter choice text (e.g., "Go left", "Attack"):') || '';
+        }
+
+        setEdges((eds) => addEdge({
+            ...params,
+            animated: true,
+            style: { stroke: '#2b6cee', strokeWidth: 2 },
+            label,
+            labelStyle: { fill: '#ffffff', fontWeight: 600 },
+        }, eds));
+    }, [setEdges, nodes]);
 
     const handleSelectionChange = useCallback(({ nodes: selectedNodes }) => {
         setSelectedNodeId(selectedNodes[0]?.id || null);
