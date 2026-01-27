@@ -74,12 +74,19 @@ export function useHubs(hubsList: HubConfig[] = []): UseHubsReturn {
         return burnedKnots
     }, [burnedKnots])
 
-    return {
+    return useMemo(() => ({
         burnedKnots,
         isBurned,
         handleChoice,
         resetHubs,
         loadHubsState,
         exportHubsState
-    }
+    }), [
+        burnedKnots,
+        isBurned,
+        handleChoice,
+        resetHubs,
+        loadHubsState,
+        exportHubsState
+    ])
 }
