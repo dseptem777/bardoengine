@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, Suspense } from 'react'
 import Player from './components/Player'
 import StorySelector from './components/StorySelector'
 import StartScreen from './components/StartScreen'
@@ -110,6 +110,13 @@ function AppContent({ onStorySelect }) {
     const getIntroConfig = () => {
         return gameSystems.config?.intro || {}
     }
+
+    // Helper to check if a choice is burned
+    const checkChoiceBurned = useCallback((choice) => {
+        if (!gameSystems?.hubs?.isBurned) return false
+        const targetKnot = choice.pathStringOnChoice?.split('.')[0]
+        return targetKnot ? gameSystems.hubs.isBurned(targetKnot) : false
+    }, [gameSystems])
 
     // Dev mode: select story
     const selectStoryDev = useCallback((storyInfo) => {
