@@ -79,10 +79,22 @@ export default function BardoEditor({ onClose }) {
     const updateNodeType = (type) => {
         setNodes(nds => nds.map(node => {
             if (node.id === selectedNodeId) {
+                // Determine ReactFlow node type
+                const getNodeType = (t) => {
+                    if (t === 'hub') return 'hub';
+                    if (t === 'choice') return 'choice';
+                    return 'knot'; // knot, alley use knot renderer
+                };
+
                 return {
                     ...node,
-                    type: type === 'hub' ? 'hub' : 'knot', // Use 'knot' renderer for alley too
-                    data: { ...node.data, type }
+                    type: getNodeType(type),
+                    data: {
+                        ...node.data,
+                        type,
+                        // Add default options if changing to choice
+                        ...(type === 'choice' && !node.data.options && { options: ['Option 1', 'Option 2'] })
+                    }
                 };
             }
             return node;
@@ -377,19 +389,40 @@ export default function BardoEditor({ onClose }) {
                             </div>
 
                             {/* Type Selection */}
-                            <div className="grid grid-cols-3 gap-2">
-                                {['hub', 'knot', 'alley'].map(type => (
-                                    <button
-                                        key={type}
-                                        onClick={() => updateNodeType(type)}
-                                        className={`py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider border transition-all ${selectedNode.data.type === type
-                                            ? 'bg-[#2b6cee]/20 border-[#2b6cee] text-[#2b6cee]'
-                                            : 'bg-[#1c1f27] border-[#282e39] text-[#9da6b9] hover:bg-[#282e39]'
-                                            }`}
-                                    >
-                                        {type}
-                                    </button>
-                                ))}
+                            <div className="grid grid-cols-2 gap-2">
+                                <button
+                                    onClick={() => updateNodeType('hub')}
+                                    className={`py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider border transition-all ${selectedNode.data.type === 'hub'
+                                        ? 'bg-[#2b6cee]/20 border-[#2b6cee] text-[#2b6cee]'
+                                        : 'bg-[#1c1f27] border-[#282e39] text-[#9da6b9] hover:bg-[#282e39]'
+                                        }`}
+                                >
+                                    hub
+                                </button>
+                                <button
+                                    onClick={() => updateNodeType('knot')}
+                                    className={`py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider border transition-all ${selectedNode.data.type === 'knot'
+                                        ? 'bg-[#2b6cee]/20 border-[#2b6cee] text-[#2b6cee]'
+                                        : 'bg-[#1c1f27] border-[#282e39] text-[#9da6b9] hover:bg-[#282e39]'
+                                        }`}
+                                >
+                                    knot
+                                </button>
+                                <button
+                                    onClick={() => updateNodeType('alley')}
+                                    className={`py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider border transition-all ${selectedNode.data.type === 'alley'
+                                        ? 'bg-[#2b6cee]/20 border-[#2b6cee] text-[#2b6cee]'
+                                        : 'bg-[#1c1f27] border-[#282e39] text-[#9da6b9] hover:bg-[#282e39]'
+                                        }`}
+                                >
+                                    alley
+                                </button>
+                                <button
+                                    onClick={() => updateNodeType('choice')}
+                                    className={`px-3 py-1.5 text-xs rounded-lg transition-all border ${selectedNode?.data?.type === 'choice' ? 'bg-purple-500 border-purple-600 text-white' : 'bg-[#1c1f27] border-[#282e39] text-[#9da6b9] hover:text-white'}`}
+                                >
+                                    CHOICE
+                                </button>
                             </div>
 
                             {/* Hub Rules */}
