@@ -14,6 +14,7 @@ export default function StartScreen({
     onLoadGame,
     onOptions,
     onExtras,
+    onOpenEditor = null,
     onBack = null // For dev mode: back to story selector
 }) {
     return (
@@ -90,6 +91,16 @@ export default function StartScreen({
                 <p className="text-gray-600 text-sm mt-8">
                     Powered by BardoEngine v1.0
                 </p>
+
+            {/* Editor Button (Dev) */}
+            {onOpenEditor && (
+                <button
+                    onClick={onOpenEditor}
+                    className="absolute bottom-4 right-4 z-20 text-bardo-accent hover:text-white transition-colors font-mono text-xs uppercase tracking-widest border border-bardo-accent/30 px-3 py-1 rounded hover:bg-bardo-accent/20"
+                >
+                    [The Loom]
+                </button>
+            )}
             </div>
         </div>
     )

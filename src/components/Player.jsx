@@ -25,6 +25,7 @@ export default function Player({
     hasPendingMinigame = false,
     onMinigameReady = null,
     minigameAutoStart = true,
+    checkBurned = null
 }) {
     // If no text but has interactive content, skip typewriter
     const hasInteractiveContent = choices.length > 0 || isEnded
@@ -238,6 +239,7 @@ export default function Player({
                                         text={choice.text}
                                         index={index}
                                         onClick={() => handleChoice(index)}
+                                        disabled={checkBurned ? checkBurned(choice) : false}
                                     />
                                 ))}
                             </div>

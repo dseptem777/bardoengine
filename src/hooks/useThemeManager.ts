@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-export function useThemeManager(config: any, storyId: string) {
+export function useThemeManager(config: any, storyId: string, configLoaded: boolean = true) {
     const [isThemeReady, setIsThemeReady] = useState(false)
 
     useEffect(() => {
@@ -21,8 +21,8 @@ export function useThemeManager(config: any, storyId: string) {
         // IMMEDIATE: Block UI before ANY changes to prevent flash
         setIsThemeReady(false)
 
-        // 1. If we are entering a story but config is missing, stay blocked
-        if (storyId && !config) {
+        // 1. If we are entering a story but config is missing or not fully loaded, stay blocked
+        if (storyId && (!config || !configLoaded)) {
             return
         }
 
@@ -94,7 +94,7 @@ export function useThemeManager(config: any, storyId: string) {
             setIsThemeReady(false)
             clearTheme()
         }
-    }, [config, storyId])
+    }, [config, storyId, configLoaded])
 
     return isThemeReady
 }
