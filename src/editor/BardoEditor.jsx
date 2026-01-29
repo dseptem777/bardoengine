@@ -14,6 +14,18 @@ import { useEditorState } from './hooks/useEditorState';
 // Node ID counter for new nodes
 let idCounter = Date.now();
 
+const BARDO_TAGS = [
+    { tag: '#shake', desc: 'Shake the screen' },
+    { tag: '#flash', desc: 'Flash white' },
+    { tag: '#play_sfx:', desc: 'Play sound effect' },
+    { tag: '#play_bgm:', desc: 'Change background music' },
+    { tag: '#stop_bgm', desc: 'Stop music' },
+    { tag: '#inventory_add:', desc: 'Add item to inventory' },
+    { tag: '#inventory_remove:', desc: 'Remove item' },
+    { tag: '#stat_add:', desc: 'Update a stat value' },
+    { tag: '#wait:', desc: 'Pause narrative for X seconds' }
+];
+
 const getId = () => `node_${idCounter++}`;
 
 export default function BardoEditor({ onClose }) {
@@ -407,6 +419,23 @@ export default function BardoEditor({ onClose }) {
                                 <p className="mt-2 text-[10px] text-[#4b5563]">
                                     Tip: Use #tags for VFX (e.g. #shake, #flash)
                                 </p>
+
+                                {/* Quick Tag Helper */}
+                                <div className="mt-3 flex flex-wrap gap-1.5 border-t border-[#282e39] pt-3">
+                                    {BARDO_TAGS.map(item => (
+                                        <button
+                                            key={item.tag}
+                                            onClick={() => {
+                                                const currentContent = selectedNode.data.content || '';
+                                                updateNodeData('content', currentContent + (currentContent ? '\n' : '') + item.tag);
+                                            }}
+                                            className="px-2 py-1 rounded bg-[#1c1f27] border border-[#282e39] text-[9px] text-[#9da6b9] hover:text-white hover:border-[#2b6cee] transition-all font-mono"
+                                            title={item.desc}
+                                        >
+                                            {item.tag.replace(':', '')}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
 
                             {/* Choice Options Editor */}
