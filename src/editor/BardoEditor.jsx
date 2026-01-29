@@ -70,7 +70,12 @@ export default function BardoEditor({ onClose }) {
     const updateNodeData = (key, value) => {
         setNodes(nds => nds.map(node => {
             if (node.id === selectedNodeId) {
-                return { ...node, data: { ...node.data, [key]: value } };
+                // Sync content and text properties for backward compatibility
+                const newData = { ...node.data, [key]: value };
+                if (key === 'content') newData.text = value;
+                if (key === 'text') newData.content = value;
+
+                return { ...node, data: newData };
             }
             return node;
         }));
@@ -388,6 +393,72 @@ export default function BardoEditor({ onClose }) {
                                 />
                             </div>
 
+                            {/* Narrative Content */}
+                            <div className="mb-6">
+                                <label className="block text-[10px] uppercase font-bold text-[#4b5563] mb-2 tracking-widest">
+                                    Narrative Content
+                                </label>
+                                <textarea
+                                    className="w-full h-32 bg-[#0b0c10] border border-[#282e39] rounded-lg p-3 text-sm text-white focus:outline-none focus:border-[#2b6cee] transition-all resize-none placeholder-[#4b5563]"
+                                    value={selectedNode?.data?.content || ''}
+                                    onChange={(e) => updateNodeData('content', e.target.value)}
+                                    placeholder="Enter the story text for this node..."
+                                />
+                                <p className="mt-2 text-[10px] text-[#4b5563]">
+                                    Tip: Use #tags for VFX (e.g. #shake, #flash)
+                                </p>
+                            </div>
+
+                            {/* Choice Options Editor */}
+                            {selectedNode?.data?.type === 'choice' && (
+                                <div className="mb-6 animate-fade-in">
+                                    <label className="block text-[10px] uppercase font-bold text-purple-500 mb-2 tracking-widest">
+                                        Choice Options
+                                    </label>
+                                    <div className="space-y-2">
+                                        {(selectedNode.data.options || []).map((option, index) => (
+                                            <div key={index} className="flex gap-2">
+                                                <input
+                                                    className="flex-1 bg-[#0b0c10] border border-[#282e39] rounded-lg h-9 px-3 text-sm text-white focus:outline-none focus:border-purple-500 transition-all font-medium"
+                                                    value={option}
+                                                    onChange={(e) => {
+                                                        const newOptions = [...selectedNode.data.options];
+                                                        newOptions[index] = e.target.value;
+                                                        updateNodeData('options', newOptions);
+                                                    }}
+                                                    placeholder={`Option ${index + 1}`}
+                                                />
+                                                {/* Botón para eliminar opción si hay más de 2 */}
+                                                {selectedNode.data.options.length > 2 && (
+                                                    <button
+                                                        onClick={() => {
+                                                            const newOptions = selectedNode.data.options.filter((_, i) => i !== index);
+                                                            updateNodeData('options', newOptions);
+                                                        }}
+                                                        className="w-9 h-9 flex items-center justify-center bg-[#1c1f27] text-red-400 hover:bg-red-500/10 rounded-lg border border-[#282e39] transition-all"
+                                                    >
+                                                        <span className="material-symbols-outlined text-sm">delete</span>
+                                                    </button>
+                                                )}
+                                            </div>
+                                        ))}
+
+                                        {/* Botón para agregar opción (máximo 4) */}
+                                        {(selectedNode.data.options?.length || 0) < 4 && (
+                                            <button
+                                                onClick={() => {
+                                                    const newOptions = [...(selectedNode.data.options || []), `New Option` ];
+                                                    updateNodeData('options', newOptions);
+                                                }}
+                                                className="w-full h-9 flex items-center justify-center gap-2 bg-[#1c1f27] text-[#9da6b9] hover:text-white hover:bg-[#282e39] rounded-lg border border-[#282e39] border-dashed transition-all text-xs"
+                                            >
+                                                <span className="material-symbols-outlined text-sm">add</span> Add Option
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Type Selection */}
                             <div className="grid grid-cols-2 gap-2">
                                 <button
@@ -444,17 +515,6 @@ export default function BardoEditor({ onClose }) {
                                     />
                                 </div>
                             )}
-
-                            {/* Content */}
-                            <div className="flex-1 flex flex-col">
-                                <label className="text-[#9da6b9] text-[10px] uppercase font-bold mb-2 block">Ink Content</label>
-                                <textarea
-                                    className={`w-full bg-[#1c1f27] border border-[#282e39] rounded-lg p-4 text-sm font-mono text-gray-300 focus:border-[#2b6cee] focus:outline-none transition-all resize-none ${isContentMaximized ? 'h-[500px]' : 'h-40'}`}
-                                    value={selectedNode.data.text || ''}
-                                    onChange={(e) => updateNodeData('text', e.target.value)}
-                                    placeholder="Enter Ink narrative content here..."
-                                />
-                            </div>
 
                             {/* Toggle Burned (For Knots) */}
                             {selectedNode.data.type !== 'hub' && (
