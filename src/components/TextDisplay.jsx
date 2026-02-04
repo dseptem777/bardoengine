@@ -19,6 +19,12 @@ export default function TextDisplay({
     const timeoutRef = useRef(null)
     const anchorRef = useRef(null)
 
+    // Store onComplete in a ref to avoid re-triggering the effect when callback changes
+    const onCompleteRef = useRef(onComplete)
+    useEffect(() => {
+        onCompleteRef.current = onComplete
+    }, [onComplete])
+
     // Split text into paragraphs for rendering
     const paragraphs = displayedText.split('\n').filter(p => p.trim().length > 0 || p.length > 0)
 
@@ -35,7 +41,7 @@ export default function TextDisplay({
         // If not typing OR typewriter delay is 0 (instant), show full text immediately
         if (!isTyping || typewriterDelay === 0) {
             setDisplayedText(text)
-            onComplete?.()
+            onCompleteRef.current?.()
             return
         }
 
@@ -60,7 +66,7 @@ export default function TextDisplay({
 
                 timeoutRef.current = setTimeout(typeChar, dynamicDelay)
             } else {
-                onComplete?.()
+                onCompleteRef.current?.()
             }
         }
 
@@ -72,7 +78,7 @@ export default function TextDisplay({
                 clearTimeout(timeoutRef.current)
             }
         }
-    }, [text, isTyping, onComplete, typewriterDelay])
+    }, [text, isTyping, typewriterDelay]) // Removed onComplete from deps
 
     // Skip effect when isTyping changes to false (user clicked to skip)
     useEffect(() => {

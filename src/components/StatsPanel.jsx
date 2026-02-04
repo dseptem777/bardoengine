@@ -1,57 +1,105 @@
 import { motion, AnimatePresence } from 'framer-motion'
 
 /**
- * StatsPanel - Displays game stats (HP bars, attribute values)
- * Supports two display types:
- * - 'bar': Progress bar for resources (HP, MP, Stamina)
- * - 'value': Simple numeric display for attributes (STR, INT)
+ * StatsPanel - Displays game stats as an "ID Card"
+ * Only shows when player has entered their name (discovery moment)
+ * 
+ * Props:
+ * - stats: Current stat values
+ * - statsConfig: Config with enabled, playerNameVariable, definitions
+ * - getAllStatsInfo: Function to get all stat definitions with current values
+ * - playerName: The player's name (from story variable)
  */
-export default function StatsPanel({ stats, statsConfig, getAllStatsInfo }) {
+export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, playerName }) {
+    // Don't show if stats not enabled
     if (!statsConfig?.enabled) return null
+
+    // Don't show if player name variable is configured but empty
+    const requiresName = !!statsConfig.playerNameVariable
+    if (requiresName && !playerName) return null
 
     const allStats = getAllStatsInfo()
     const barStats = allStats.filter(s => s.displayType === 'bar')
     const valueStats = allStats.filter(s => s.displayType === 'value')
 
     return (
-        <motion.div
-            className="fixed z-40 pointer-events-none"
-            style={{
-                top: 'var(--stats-top)',
-                left: 'var(--stats-left)'
-            }}
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-        >
-            <div
-                className="bg-black/80 border border-bardo-accent/30 p-3 backdrop-blur-sm min-w-[200px]"
-                style={{ borderRadius: 'var(--ui-border-radius)' }}
+        <AnimatePresence>
+            <motion.div
+                className="fixed z-40 pointer-events-none"
+                style={{
+                    top: 'var(--stats-top)',
+                    left: 'var(--stats-left)'
+                }}
+                initial={{ opacity: 0, scale: 0.8, y: -20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.5, type: 'spring', bounce: 0.3 }}
             >
-                {/* Bar Stats (Resources) */}
-                {barStats.length > 0 && (
-                    <div className="space-y-2">
-                        {barStats.map(stat => (
-                            <StatBar key={stat.id} stat={stat} value={stats[stat.id]} />
-                        ))}
-                    </div>
-                )}
+                <div
+                    className="bg-gradient-to-br from-gray-900 to-gray-950 border-2 border-bardo-accent/50 backdrop-blur-sm overflow-hidden shadow-lg shadow-bardo-accent/20"
+                    style={{
+                        borderRadius: 'var(--ui-border-radius)',
+                        minWidth: '220px'
+                    }}
+                >
+                    {/* ID Card Header with Name */}
+                    {playerName && (
+                        <motion.div
+                            className="bg-bardo-accent/20 border-b border-bardo-accent/30 px-4 py-3"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.2 }}
+                        >
+                            <div className="text-[10px] uppercase tracking-widest text-bardo-accent/70 mb-1">
+                                Agente
+                            </div>
+                            <div className="text-lg font-bold text-bardo-accent tracking-wide">
+                                {playerName}
+                            </div>
+                        </motion.div>
+                    )}
 
-                {/* Divider if both types exist */}
-                {barStats.length > 0 && valueStats.length > 0 && (
-                    <div className="border-t border-bardo-accent/20 my-2" />
-                )}
+                    {/* Stats Content */}
+                    <div className="p-3 space-y-3">
+                        {/* Bar Stats (Resources) */}
+                        {barStats.length > 0 && (
+                            <div className="space-y-2">
+                                {barStats.map((stat, index) => (
+                                    <motion.div
+                                        key={stat.id}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0.3 + index * 0.1 }}
+                                    >
+                                        <StatBar stat={stat} value={stats[stat.id]} />
+                                    </motion.div>
+                                ))}
+                            </div>
+                        )}
 
-                {/* Value Stats (Attributes) */}
-                {valueStats.length > 0 && (
-                    <div className="flex flex-wrap gap-3">
-                        {valueStats.map(stat => (
-                            <StatValue key={stat.id} stat={stat} value={stats[stat.id]} />
-                        ))}
+                        {/* Divider if both types exist */}
+                        {barStats.length > 0 && valueStats.length > 0 && (
+                            <div className="border-t border-bardo-accent/20" />
+                        )}
+
+                        {/* Value Stats (Attributes) */}
+                        {valueStats.length > 0 && (
+                            <div className="flex flex-wrap gap-3">
+                                {valueStats.map((stat, index) => (
+                                    <motion.div
+                                        key={stat.id}
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ delay: 0.4 + index * 0.1 }}
+                                    >
+                                        <StatValue stat={stat} value={stats[stat.id]} />
+                                    </motion.div>
+                                ))}
+                            </div>
+                        )}
                     </div>
-                )}
-            </div>
-        </motion.div>
+                </div>
+            </motion.div>
+        </AnimatePresence>
     )
 }
 

@@ -31,6 +31,7 @@
     },
     "stats": {
         "enabled": true,
+        "playerNameVariable": "nombre_personaje",
         "definitions": [
             {
                 "id": "hp",
@@ -80,5 +81,24 @@
             "claves"
         ]
     },
-    "items": {}
+    "items": {
+        "fotos_profundo": {
+            "name": "Fotos del Profundo",
+            "description": "Evidencia visual de la entidad en la morgue.",
+            "icon": "📸",
+            "category": "documentos"
+        },
+        "mano_nn": {
+            "name": "Mano del NN",
+            "description": "Una mano cercenada con marcas rituales. Horrorosa.",
+            "icon": "🤚",
+            "category": "items"
+        },
+        "descripcion_profundo": {
+            "name": "Datos: El Profundo",
+            "description": "Información táctica sobre los híbridos marinos.",
+            "icon": "📝",
+            "category": "documentos"
+        }
+    }
 }

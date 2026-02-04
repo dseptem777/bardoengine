@@ -16,13 +16,11 @@ function getDefaultSaveName() {
 /**
  * SaveLoadModal - Modal for saving and loading game states
  * 
- * Modes:
- * - 'save': Shows input for save name + existing saves to overwrite
- * - 'load': Shows list of saves to load
+ * Now includes internal tabs to switch between save and load modes
  */
 export default function SaveLoadModal({
     isOpen,
-    mode = 'load', // 'save' | 'load'
+    mode: initialMode = 'save', // Initial mode when opening
     saves = [],
     onSave,
     onLoad,
@@ -31,11 +29,19 @@ export default function SaveLoadModal({
 }) {
     const [saveName, setSaveName] = useState('')
     const [selectedSave, setSelectedSave] = useState(null)
+    const [activeTab, setActiveTab] = useState(initialMode) // Internal tab state
     const inputRef = useRef(null)
+
+    // Sync internal tab with prop when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            setActiveTab(initialMode)
+        }
+    }, [isOpen, initialMode])
 
     // Set default save name when modal opens in save mode
     useEffect(() => {
-        if (isOpen && mode === 'save') {
+        if (isOpen && activeTab === 'save') {
             setSaveName(getDefaultSaveName())
             setSelectedSave(null)
             // Select text after state update
@@ -46,7 +52,7 @@ export default function SaveLoadModal({
                 }
             }, 50)
         }
-    }, [isOpen, mode])
+    }, [isOpen, activeTab])
 
     if (!isOpen) return null
 
@@ -95,11 +101,28 @@ export default function SaveLoadModal({
                     exit={{ scale: 0.9, opacity: 0 }}
                     onClick={e => e.stopPropagation()}
                 >
-                    {/* Header */}
+                    {/* Header with Tabs */}
                     <div className="flex items-center justify-between p-4 border-b border-bardo-accent/30">
-                        <h2 className="text-xl font-bold text-bardo-accent">
-                            {mode === 'save' ? '💾 GUARDAR PARTIDA' : '📂 CARGAR PARTIDA'}
-                        </h2>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={() => setActiveTab('save')}
+                                className={`text-lg font-bold transition-colors ${activeTab === 'save'
+                                    ? 'text-bardo-accent'
+                                    : 'text-gray-500 hover:text-gray-300'
+                                    }`}
+                            >
+                                💾 GUARDAR
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('load')}
+                                className={`text-lg font-bold transition-colors ${activeTab === 'load'
+                                    ? 'text-bardo-accent'
+                                    : 'text-gray-500 hover:text-gray-300'
+                                    }`}
+                            >
+                                📂 CARGAR
+                            </button>
+                        </div>
                         <button
                             onClick={onClose}
                             className="text-gray-500 hover:text-white text-2xl"
@@ -111,7 +134,7 @@ export default function SaveLoadModal({
                     {/* Content */}
                     <div className="p-4 max-h-[60vh] overflow-y-auto">
                         {/* Save Mode: Name Input */}
-                        {mode === 'save' && (
+                        {activeTab === 'save' && (
                             <div className="mb-4">
                                 <label className="block text-gray-400 text-sm mb-2">
                                     Nombre del guardado:
@@ -143,7 +166,7 @@ export default function SaveLoadModal({
                         {/* Saves List */}
                         {saves.length > 0 ? (
                             <div className="space-y-2">
-                                {mode === 'save' && saves.length > 0 && (
+                                {activeTab === 'save' && saves.length > 0 && (
                                     <p className="text-gray-500 text-sm mb-2">O sobrescribir:</p>
                                 )}
                                 {saves.map(save => (
@@ -151,17 +174,20 @@ export default function SaveLoadModal({
                                         key={save.id}
                                         className={`
                                             flex items-center justify-between p-3 rounded
-                                            border border-gray-700 hover:border-bardo-accent/50
-                                            cursor-pointer transition-colors
+                                            border cursor-pointer transition-colors
+                                            ${save.isAutosave
+                                                ? 'border-yellow-600/50 bg-yellow-900/10 hover:border-yellow-500'
+                                                : 'border-gray-700 hover:border-bardo-accent/50'}
                                             ${selectedSave?.id === save.id ? 'border-bardo-accent bg-bardo-accent/10' : ''}
                                         `}
-                                        onClick={() => mode === 'load' ? handleLoad(save) : setSelectedSave(save)}
+                                        onClick={() => activeTab === 'load' ? handleLoad(save) : setSelectedSave(save)}
                                         whileHover={{ scale: 1.01 }}
                                         whileTap={{ scale: 0.99 }}
                                     >
                                         <div className="flex-1 min-w-0">
-                                            <div className="text-white font-medium truncate">
+                                            <div className={`font-medium truncate ${save.isAutosave ? 'text-yellow-400' : 'text-white'}`}>
                                                 {save.name}
+                                                {save.isAutosave && <span className="text-xs ml-2 text-yellow-600">(usado por Continuar)</span>}
                                             </div>
                                             <div className="text-gray-500 text-xs">
                                                 {formatDate(save.timestamp)}
@@ -179,12 +205,12 @@ export default function SaveLoadModal({
                             </div>
                         ) : (
                             <div className="text-center text-gray-500 py-8">
-                                {mode === 'load' ? 'No hay partidas guardadas' : ''}
+                                {activeTab === 'load' ? 'No hay partidas guardadas' : ''}
                             </div>
                         )}
 
                         {/* Overwrite selected */}
-                        {mode === 'save' && selectedSave && (
+                        {activeTab === 'save' && selectedSave && (
                             <button
                                 onClick={() => {
                                     onSave(selectedSave.name, selectedSave.id)

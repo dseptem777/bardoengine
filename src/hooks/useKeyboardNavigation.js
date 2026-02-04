@@ -5,6 +5,7 @@ import { useEffect, useCallback } from 'react'
  * 
  * Controles:
  * - 1-9: Seleccionar opción por número
+ * - Space/Enter: Continuar (cuando hay botón "Siguiente")
  * - Any key (excepto Escape, modificadores, F-keys): Skip typewriter
  * - Escape: Volver al menú
  */
@@ -12,9 +13,11 @@ export function useKeyboardNavigation({
     choices,
     isTyping,
     isEnded,
+    canContinue = false,
     onChoice,
     onSkip,
     onBack,
+    onContinue,
     disabled = false
 }) {
     const handleKeyDown = useCallback((event) => {
@@ -48,6 +51,13 @@ export function useKeyboardNavigation({
             return
         }
 
+        // Space or Enter → Continue (when "Siguiente" button is shown)
+        if ((key === ' ' || key === 'Enter') && choices.length === 0 && canContinue && !isEnded) {
+            event.preventDefault()
+            onContinue?.()
+            return
+        }
+
         // Number keys 1-9 for choice selection
         if (choices.length > 0 && !isEnded) {
             const num = parseInt(key, 10)
@@ -59,7 +69,7 @@ export function useKeyboardNavigation({
                 }
             }
         }
-    }, [choices, isTyping, isEnded, onChoice, onSkip, onBack])
+    }, [choices, isTyping, isEnded, canContinue, onChoice, onSkip, onBack, onContinue, disabled])
 
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown)

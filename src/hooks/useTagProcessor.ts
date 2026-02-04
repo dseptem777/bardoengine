@@ -7,6 +7,7 @@ interface TagProcessorOptions {
     achievementsSystem: any;
     gameSystems: any;
     triggerVFX: (tag: string) => void;
+    onInputRequest?: (varName: string, placeholder: string) => void;
 }
 
 export function useTagProcessor({
@@ -14,7 +15,8 @@ export function useTagProcessor({
     minigameController,
     achievementsSystem,
     gameSystems,
-    triggerVFX
+    triggerVFX,
+    onInputRequest
 }: TagProcessorOptions) {
     const processTags = useCallback((tags: string[]) => {
         tags.forEach(rawTag => {
@@ -40,12 +42,26 @@ export function useTagProcessor({
             // Game systems tags (stats, inventory)
             const handled = gameSystems.processGameTag(tag)
 
+            // Input tag
+            if (tag.toLowerCase().startsWith('input:')) {
+                const parts = tag.split(':')
+                const varName = parts[1]
+                const placeholder = parts[2] || 'Ingresa el nombre...'
+                console.log('[Tags] Input request:', varName)
+
+                // We'll pass this up to the orchestrator via a new callback
+                if (onInputRequest) {
+                    onInputRequest(varName, placeholder)
+                }
+                return
+            }
+
             // Fall back to VFX
             if (!handled) {
                 triggerVFX(tag)
             }
         })
-    }, [gameSystems, triggerVFX, minigameController, achievementsSystem, storyRef])
+    }, [gameSystems, triggerVFX, minigameController, achievementsSystem, storyRef, onInputRequest])
 
     return { processTags }
 }

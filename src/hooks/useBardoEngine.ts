@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useMemo } from 'react'
+import { useCallback, useEffect, useRef, useMemo, useState } from 'react'
 import { useVFX } from './useVFX'
 import { useAudio } from './useAudio'
 import { useSaveSystem } from './useSaveSystem'
@@ -16,6 +16,11 @@ interface BardoEngineOptions {
     getTypewriterDelay: () => number;
     getMusicVolume: () => number;
     getSfxVolume: () => number;
+}
+
+export interface InputRequest {
+    varName: string;
+    placeholder: string;
 }
 
 /**
@@ -50,6 +55,27 @@ export function useBardoEngine({
         getGlobalVariable,
         resetStoryState
     } = storyState
+
+    // ==================
+    // Input System
+    // ==================
+    const [pendingInput, setPendingInput] = useState<InputRequest | null>(null)
+
+    const handleInputRequest = useCallback((varName: string, placeholder: string) => {
+        setPendingInput({ varName, placeholder })
+    }, [])
+
+    const commitInput = useCallback((value: string) => {
+        if (!pendingInput) return
+
+        setGlobalVariable(pendingInput.varName, value)
+        setPendingInput(null)
+
+        // Resume story after input
+        if (continueStoryRef.current) {
+            continueStoryRef.current()
+        }
+    }, [pendingInput, setGlobalVariable])
 
     // ==================
     // Sub-systems
@@ -132,7 +158,8 @@ export function useBardoEngine({
         minigameController,
         achievementsSystem,
         gameSystems,
-        triggerVFX
+        triggerVFX,
+        onInputRequest: handleInputRequest
     })
 
     // ==================
@@ -195,6 +222,11 @@ export function useBardoEngine({
     // ==================
 
     const makeChoice = useCallback((index: number) => {
+        if (typeof index !== 'number' || isNaN(index)) {
+            console.error("[BardoEngine] Invalid choice index:", index)
+            return
+        }
+
         clearVFX()
 
         // Hubs: Check exclusions
@@ -309,9 +341,11 @@ export function useBardoEngine({
         manualSave,
         // Minigame
         handleMinigameStart,
+        // Input
+        commitInput,
     }), [
         initStory, continueStory, makeChoice, restart, backToStart, finishGame,
-        newGame, continueGame, loadSave, manualSave, handleMinigameStart
+        newGame, continueGame, loadSave, manualSave, handleMinigameStart, commitInput
     ])
 
     const subsystems = useMemo(() => ({
@@ -321,10 +355,11 @@ export function useBardoEngine({
         gameSystems,
         achievementsSystem,
         minigameController,
+        input: { pendingInput, commitInput }
     }), [
         playSfx, playMusic, stopMusic, stopAllAudio,
         vfxState, triggerVFX, clearVFX,
-        saveSystem, gameSystems, achievementsSystem, minigameController
+        saveSystem, gameSystems, achievementsSystem, minigameController, pendingInput, commitInput
     ])
 
     const configRef = useMemo(() => ({

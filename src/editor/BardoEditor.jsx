@@ -8,6 +8,7 @@ import 'reactflow/dist/style.css';
 import HubNode from './nodes/HubNode';
 import KnotNode from './nodes/KnotNode';
 import ChoiceNode from './nodes/ChoiceNode';
+import PreviewPanel from './components/PreviewPanel';
 import { generateInk, generateHubRegistry } from './utils/generateInk';
 import { useEditorState } from './hooks/useEditorState';
 
@@ -39,6 +40,7 @@ export default function BardoEditor({ onClose }) {
 
     const [selectedNodeId, setSelectedNodeId] = useState(null);
     const [isContentMaximized, setIsContentMaximized] = useState(false);
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
     // ReactFlow instance to project coordinates
     const [rfInstance, setRfInstance] = useState(null);
@@ -279,11 +281,30 @@ export default function BardoEditor({ onClose }) {
                         <span className="material-symbols-outlined text-sm">download</span> Export
                     </button>
 
+                    <div className="w-px h-6 bg-[#282e39] mx-1"></div>
+
+                    {/* Preview Button */}
+                    <button
+                        onClick={() => setIsPreviewOpen(true)}
+                        className="flex items-center gap-2 rounded-lg h-9 px-4 bg-green-600 text-white text-sm font-bold hover:bg-green-500 transition-all shadow-lg shadow-green-500/20"
+                    >
+                        <span className="material-symbols-outlined text-sm">play_arrow</span>
+                        Preview
+                    </button>
+
                     <button onClick={onClose} className="flex items-center justify-center rounded-lg h-9 w-9 bg-[#1c1f27] text-[#9da6b9] hover:text-white hover:bg-[#282e39] border border-[#282e39] transition-all">
                         <span className="material-symbols-outlined text-xl">close</span>
                     </button>
                 </div>
             </header>
+
+            {isPreviewOpen && (
+                <PreviewPanel
+                    nodes={nodes}
+                    edges={edges}
+                    onClose={() => setIsPreviewOpen(false)}
+                />
+            )}
 
             <div className="flex-1 w-full relative canvas-grid bg-[#0b0c10] overflow-hidden flex font-display">
                 {/* Side Navigation (Floating Tool Palette) */}
@@ -476,7 +497,7 @@ export default function BardoEditor({ onClose }) {
                                         {(selectedNode.data.options?.length || 0) < 4 && (
                                             <button
                                                 onClick={() => {
-                                                    const newOptions = [...(selectedNode.data.options || []), `New Option` ];
+                                                    const newOptions = [...(selectedNode.data.options || []), `New Option`];
                                                     updateNodeData('options', newOptions);
                                                 }}
                                                 className="w-full h-9 flex items-center justify-center gap-2 bg-[#1c1f27] text-[#9da6b9] hover:text-white hover:bg-[#282e39] rounded-lg border border-[#282e39] border-dashed transition-all text-xs"

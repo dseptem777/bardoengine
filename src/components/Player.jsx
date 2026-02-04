@@ -12,6 +12,7 @@ export default function Player({
     onFinish,
     onBack,
     onSave,
+    onLoad,
     onContinue,
     canContinue,
     onOptions,
@@ -91,15 +92,15 @@ export default function Player({
     }, [])
 
     // Keyboard navigation
-
-    // Keyboard navigation
     useKeyboardNavigation({
         choices,
         isTyping,
         isEnded,
+        canContinue,
         onChoice,
         onSkip: handleSkip,
         onBack,
+        onContinue,
         disabled: isMinigameActive
     })
 
@@ -166,17 +167,17 @@ export default function Player({
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={onToggleHistory}
-                                    className="p-2 text-white/60 hover:text-bardo-accent hover:bg-white/5 rounded-full transition-all group"
+                                    className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
                                     title="Bitácora (L)"
                                 >
-                                    <span className="text-xl group-hover:scale-110 transition-transform inline-block">📖</span>
+                                    📖 BITÁCORA
                                 </button>
                                 <button
                                     onClick={onOptions}
-                                    className="p-2 text-white/60 hover:text-bardo-accent hover:bg-white/5 rounded-full transition-all group"
+                                    className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
                                     title="Opciones"
                                 >
-                                    <span className="text-xl group-hover:rotate-90 transition-transform duration-500 inline-block">⚙️</span>
+                                    ⚙️ OPCIONES
                                 </button>
                             </div>
                         )}
@@ -185,7 +186,7 @@ export default function Player({
                                 onClick={onSave}
                                 className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
                             >
-                                💾 GUARDAR
+                                💾 GUARDAR/CARGAR
                             </button>
                         )}
                         <button
@@ -230,6 +231,9 @@ export default function Player({
 
                     {/* Choices & Footer Area - Scroll target when typing completes */}
                     <div ref={interactiveRef} className="mt-8">
+                        {/* Debug log (hidden in prod) */}
+                        <div className="hidden">{console.log('[Player] Render choices. isTyping:', isTyping, 'Length:', choices.length)}</div>
+
                         {/* Choices - Appear below text, no layout impact on text above */}
                         {!isTyping && !hasPendingMinigame && choices.length > 0 && (
                             <div className="space-y-4">

@@ -12,6 +12,7 @@ import InventoryPanel from './components/InventoryPanel'
 import ExtrasMenu from './components/ExtrasMenu'
 import AchievementToast from './components/AchievementToast'
 import MinigameOverlay from './components/MinigameOverlay'
+import InputOverlay from './components/InputOverlay'
 import { useStoryLoader } from './hooks/useStoryLoader'
 import { useBardoEngine } from './hooks/useBardoEngine'
 import { SettingsProvider, useSettings } from './hooks/useSettings'
@@ -205,7 +206,7 @@ function AppContent({ onStorySelect }) {
             <SaveLoadModal
                 isOpen={saveModalMode !== null}
                 mode={saveModalMode || 'load'}
-                saves={saveSystem.saves.filter(s => !s.isAutosave)}
+                saves={saveSystem.saves}
                 onSave={handleManualSave}
                 onLoad={handleLoadSave}
                 onDelete={saveSystem.deleteSave}
@@ -231,6 +232,11 @@ function AppContent({ onStorySelect }) {
                     stats={gameSystems.stats}
                     statsConfig={gameSystems.statsConfig}
                     getAllStatsInfo={gameSystems.getAllStatsInfo}
+                    playerName={
+                        gameSystems.statsConfig?.playerNameVariable
+                            ? story?.variablesState?.[gameSystems.statsConfig.playerNameVariable] || ''
+                            : null
+                    }
                 />
             )}
 
@@ -291,7 +297,7 @@ function AppContent({ onStorySelect }) {
                     onLoadGame={() => setSaveModalMode('load')}
                     onOptions={() => setOptionsOpen(true)}
                     onExtras={() => setExtrasOpen(true)}
-                    onOpenEditor={!isProductionMode ? () => setShowEditor(true) : null}
+                    onOpenEditor={null} // Removed: editor only from main selector
                     onBack={!isProductionMode ? backToStorySelector : null}
                 />
             )}
@@ -307,6 +313,7 @@ function AppContent({ onStorySelect }) {
                     onFinish={actions.finishGame}
                     onBack={backToStartScreen}
                     onSave={() => setSaveModalMode('save')}
+                    onLoad={() => setSaveModalMode('load')}
                     onContinue={actions.continueStory}
                     canContinue={canContinue}
                     onOptions={() => setOptionsOpen(true)}
@@ -355,8 +362,16 @@ function AppContent({ onStorySelect }) {
                 playSound={audio.playSfx}
             />
 
-            {/* Bardo Editor Overlay */}
-            {showEditor && (
+            {/* Input Overlay */}
+            <InputOverlay
+                isOpen={!!subsystems.input.pendingInput}
+                placeholder={subsystems.input.pendingInput?.placeholder}
+                onCommit={subsystems.input.commitInput}
+                onCancel={() => { }} // Could implement a cancel that just resumes without setting var
+            />
+
+            {/* Bardo Editor Overlay - Only visible in Story Selector view */}
+            {showEditor && showStorySelector && (
                 <Suspense fallback={<div className="fixed inset-0 z-[200] bg-black text-white flex items-center justify-center font-mono">LOADING THE LOOM...</div>}>
                     <BardoEditor onClose={() => setShowEditor(false)} />
                 </Suspense>
