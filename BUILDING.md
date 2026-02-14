@@ -1,6 +1,7 @@
 # 🎮 BardoEngine - Guía de Build para Desarrolladores
 
 Esta guía explica cómo crear builds standalone de juegos usando BardoEngine.
+Soporta **Windows, macOS, Linux y Android**.
 
 ---
 
@@ -19,9 +20,11 @@ bardoengine/
 │   └── story-config.json     # Config generado en build (no editar)
 ├── scripts/
 │   ├── build-game.cjs        # Script interactivo de build
-│   └── encrypt-story.cjs     # Encripta historias para producción
+│   ├── encrypt-story.cjs     # Encripta historias para producción
+│   └── setup-android.ps1     # Setup automático de Android
 ├── src-tauri/
 │   ├── tauri.conf.json       # Config de Tauri (auto-generado en build)
+│   ├── gen/android/          # Proyecto Android (auto-generado)
 │   └── target/release/bundle/nsis/  # 📦 Instaladores generados
 └── public/
     ├── sounds/               # Efectos de sonido
@@ -92,18 +95,109 @@ npm run build-game
 | Windows | `nsis` | `{GameTitle}_{version}_x64-setup.exe` |
 | macOS | `dmg`, `app` | `{GameTitle}_{version}_x64.dmg` |
 | Linux | `appimage`, `deb` | `{GameTitle}_{version}_amd64.AppImage`, `.deb` |
+| Android | `apk`, `aab` | `.apk` (debug/testing), `.aab` (Google Play) |
 
 ### Output
 
 Los bundles quedan en:
 ```
+# Desktop
 src-tauri/target/release/bundle/
 ├── nsis/      # Windows
 ├── dmg/       # macOS
 ├── macos/     # macOS App bundle
 ├── appimage/  # Linux AppImage
 └── deb/       # Linux .deb
+
+# Android
+src-tauri/gen/android/app/build/outputs/
+├── apk/       # APK para testing directo
+└── bundle/    # AAB para Google Play
 ```
+
+---
+
+## 📱 Build para Android
+
+### Prerequisitos
+
+1. **Android Studio** instalado y abierto al menos una vez
+2. Desde SDK Manager de Android Studio, instalar:
+   - Android SDK Platform (API 34+)
+   - Android SDK Platform-Tools
+   - NDK (Side by side)
+   - Android SDK Build-Tools
+   - Android SDK Command-line Tools
+3. **Rust Android targets** (se instalan automáticamente con el setup)
+
+### Setup Automático
+
+```powershell
+npm run android:setup
+```
+
+Este script:
+- ✅ Detecta Android Studio
+- ✅ Configura `JAVA_HOME`, `ANDROID_HOME`, `NDK_HOME`
+- ✅ Instala los Rust targets para ARM/x86
+- ✅ Instala SDK components via sdkmanager
+- ✅ Inicializa el proyecto Android de Tauri (`tauri android init`)
+
+### Setup Manual
+
+Si preferís configurar a mano:
+
+```powershell
+# 1. Variables de entorno (PowerShell)
+[System.Environment]::SetEnvironmentVariable("JAVA_HOME", "C:\Program Files\Android\Android Studio\jbr", "User")
+[System.Environment]::SetEnvironmentVariable("ANDROID_HOME", "$env:LocalAppData\Android\Sdk", "User")
+$NDK_VER = Get-ChildItem -Name "$env:LocalAppData\Android\Sdk\ndk" | Select-Object -Last 1
+[System.Environment]::SetEnvironmentVariable("NDK_HOME", "$env:LocalAppData\Android\Sdk\ndk\$NDK_VER", "User")
+
+# 2. Rust targets
+rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
+
+# 3. Inicializar proyecto Tauri Android
+npm run android:init
+```
+
+### Comandos de Android
+
+| Comando | Descripción |
+|---------|-------------|
+| `npm run android:setup` | Setup completo automatizado |
+| `npm run android:init` | Inicializa proyecto Android de Tauri |
+| `npm run android:dev` | Dev mode con hot-reload en emulador/device |
+| `npm run android:build` | Build debug APK (testing) |
+| `npm run android:release` | Build release AAB (Google Play) |
+| `npm run build-game` | Builder interactivo (ahora incluye opción Android) |
+
+### Testing en Dispositivo
+
+```powershell
+# Dev mode con hot-reload
+npm run android:dev
+
+# O build + instalar APK manualmente
+npm run android:build
+# El APK queda en: src-tauri/gen/android/app/build/outputs/apk/
+# Transferilo al dispositivo e instalarlo
+```
+
+### Firma para Google Play
+
+Para publicar en Google Play necesitás firmar el AAB:
+
+1. Generá un keystore:
+```powershell
+keytool -genkey -v -keystore bardoengine-release.keystore -alias bardoengine -keyalg RSA -keysize 2048 -validity 10000
+```
+
+2. Configurá la firma en `src-tauri/gen/android/app/build.gradle.kts`
+
+3. Build release: `npm run android:release`
+
+> ⚠️ **Nunca commitees el keystore ni las passwords.** Agregá `*.keystore` al `.gitignore`.
 
 ---
 
@@ -225,6 +319,35 @@ Asegurate de que el juego tenga `title` y `version` en `gameConfig.js`.
 
 ### Build muy lento
 El primer build de Tauri tarda ~5-10 min porque compila Rust. Los siguientes son más rápidos.
+
+### Android: "SDK not found"
+```powershell
+# Verificar variables de entorno
+echo $env:JAVA_HOME
+echo $env:ANDROID_HOME
+echo $env:NDK_HOME
+
+# Si faltan, correr el setup:
+npm run android:setup
+```
+
+### Android: "NDK not found"
+Instalá el NDK desde Android Studio > Settings > SDK Manager > SDK Tools > NDK (Side by side).
+
+### Android: Build falla con error de Gradle
+```powershell
+# Limpiar cache de Gradle
+Remove-Item -Recurse -Force "$env:USERPROFILE\.gradle\caches" -ErrorAction SilentlyContinue
+# Reintentar build
+npm run android:build
+```
+
+### Android: No detecta emulador/dispositivo
+```powershell
+# Verificar que adb detecta el device
+& "$env:ANDROID_HOME\platform-tools\adb.exe" devices
+# Si no aparece, habilitá USB Debugging en el teléfono
+```
 
 ---
 

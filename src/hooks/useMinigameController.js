@@ -207,6 +207,11 @@ function parseLegacyFormat(content) {
         case 'arkanoid':
             // No additional params needed
             break
+        case 'keymash':
+            config.params.key = parts[1] || 'V'
+            config.params.count = parseInt(parts[2]) || 30
+            config.params.timeLimit = parseFloat(parts[3]) || 15
+            break
     }
 
     return config

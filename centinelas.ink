@@ -1,8 +1,18 @@
 // ---------------------------------------------------------
 // PROYECTO: Centinelas del Sur
 // MOTOR: BardoEngine
-// CONTENIDO: Capítulo 0 (Orígenes) + Intermisión 0 (Hub)
+// CONTENIDO: Capítulo 0 (Orígenes) + Capítulo 1 + Intermisión 1
 // ---------------------------------------------------------
+
+VAR nombre_personaje = ""
+VAR magia = 0
+VAR fuerza = 0
+VAR conocimiento = 0
+VAR entrada_temprana = false
+VAR tiene_fotos = false
+VAR tiene_mano = false
+VAR tiene_descripcion = false
+VAR new_game_plus = false
 
 -> capitulo_0
 
@@ -433,4 +443,342 @@ Es hora de ponerse a trabajar.
 
 Te dirigís hacia la sede de "El Faro" para recibir tu siguiente misión.
 
+-> capitulo_1
+
+=== capitulo_1 ===
+# music:misterio_ambient
+La sede de "El Faro" estaba en el fondo de un predio universitario. A esa hora de la noche era un mundo aparte. A lo lejos se escuchaban los ruidos de algunos universitarios, festejando haber aprobado alguna materia o pensando a qué fiesta ir más tarde.
+
++ [Me gustaría ser como ellos]
++ [Ingenuos. Todo su conocimiento es una sombra de la verdad]
+
+- Cómo seas. Estaba frente a la puerta de la sede de "El Faro". Una mole sin ventanas con una puerta gigante de dos hojas. En una se veía un Faro gigante emanando su luz y en la otra se representaba un mar embravecido.
+# next
+Más tiempo pasás mirando la puerta más te das cuenta de figuras raras entre las olas. Ojos. Manos. Colmillos. Cosas que no podés definir. Te preguntás qué pensarán los estudiantes que se alejan (a fumar un porro o tener algo de intimidad) cuando ven esta puerta.
+# next
+Faltan cinco minutos para la hora en que te citaron para darte una misión de campo. Hasta ahora solo te estuviste encargado de tareas menores y misiones de apoyo. 
+¿Qué hacés?
+
++ [Espero hasta la hora pactada] -> entrada_puntual
++ [Al mal trago darle prisa. Abro la puerta] -> entrada_temprana_k
+
+=== entrada_puntual ===
+~ entrada_temprana = false
+-> hall_central
+
+=== entrada_temprana_k ===
+~ entrada_temprana = true
+-> hall_central
+
+=== hall_central ===
+El hall central es un cuarto gigante, en el cual en el piso está representado el mismo logo que la puerta. A pesar de que el edificio no tiene ventanas el clima es agradable y no está viciado.
+# shake
+No es necesario ser un gran practicante de magia para darse cuenta de la gran cantidad de magia defensiva que hay en el lugar. Lo sentís como un dejo de gusto amargo en tu boca.
+# next
+El único ruido proviene del escritorio de la secretaria, la Sra. Enríquez, que está tipeando algo en su máquina de escribir.
+
++ [¿Por qué no pasamos a computadoras?]
+    - — El tiempo no es una construcción social que todos intentamos acatar. En especial cuando se realiza tareas complejas. Y todas las tareas de El Faro son complejas.
+    Enríquez te da una mirada que te hace sospechar que el título de "secretaria" es menospreciar la totalidad de su capacidad.
+    Intentás justificarte pero levanta la mano para callarte. Un gesto simple pero efectivo.
+    — Tal vez la hora de tu llegada era clave y al adelantarte arruinaste todo. Que no se repita, por favor.
+    { entrada_temprana:
+        Y respecto al tema de las computadoras. Yo ya trabajaba acá cuando cualquier mago de todo por dos pesos intentaba mezclar la protección astral con internet. Después del incidente del 2007 pasé a medios totalmente analógicos.
+    }
+    -> mision_profe
+
++ [Toser un poco hasta que ella se fije en vos]
+    Enríquez te mira. Mira el reloj. Y te ignora hasta la hora exacta en la cual fuiste citado.
+    - — Guardián, voy a asegurarme de descontar de su próximo sueldo las sumas necesarias para comprarle un reloj.
+    -> mision_profe
+
+=== mision_profe ===
+- — El Profesor lo espera en el piso de arriba para darle su primera misión de campo. Por favor, no la arruine. Ya llené un formulario con sus datos y no quiero perder tiempo destruyendo el formulario… y llenando los formularios correspondientes para justificar la destrucción de documentación.
+# next
+El Profesor, Enríquez. Ninguno era un nombre real. Todos los guardianes de El Faro usan alias para proteger su vida civil. 
+Vos también. ¿Cuál es?
+
+# input:nombre_personaje:Tu nombre en clave...
+# next
+— Bienvenido {nombre_personaje}. Lo estaba esperando.
+El Profesor tiene una barba tan tupida como calva es su cabeza, usa un saco con pitucones y está fumando una pipa. No sabés si el hombre se convirtió en el alias o si es el apodo mejor puesto en la historia de la humanidad.
+# next
+La oficina del profesor es pequeña y acogedora. Estantes con libros van del piso al techo y el grueso de la habitación está ocupado por su escritorio de caoba.
+Tal vez sea la alfombra y el techo rojo, pero algo te da la sensación de que estás dentro de algo vivo. Cómo un corazón. Hasta sentís un palpitar rítmico a lo lejos.
+
++ [Usar magia para espiar que pasa]
+    { magia >= 20: 
+        Intentás sintonizar con el pulso del lugar, pero una mano mental te empuja suavemente.
+    }
+    — No lo hagas — dice el profesor con un tono tranquilo mientras te guiña el ojo — mejor no ser tan curioso. Menos cuando se es el gato.
+    -> tema_cadaveres
+
++ [Fijarse si hay un patrón en el orden de los libros]
+    { conocimiento >= 20:
+        Notás que los lomos forman una secuencia geométrica, pero es demasiado compleja para descifrarla rápido.
+    }
+    — No lo hagas — dice el profesor con un tono tranquilo mientras te guiña el ojo — mejor no ser tan curioso. Menos cuando se es el gato.
+    -> tema_cadaveres
+
++ [Mejor no arruinarla frente al jefe]
+    Decidís mantener la compostura. El Profesor asiente, satisfecho con tu disciplina.
+    -> tema_cadaveres
+
+=== tema_cadaveres ===
+— Hace tiempo que están apareciendo cadáveres en las playas de Costa Alegre, horribles cadáveres – El Profesor se toma unos momentos para fumar de su pipa – su piel denota un patrón de dolor. Alguien se toma el trabajo de marcar signos y runas en su cuerpo antes de degollarlos y arrojarlos al mar.
+— ¿Pudimos adivinar de qué se trata en base a las runas? – Te mordés la lengua en cuanto terminás de hacer la pregunta.
+# next
+— Tenemos un equipo trabajando en eso. Alguien tira los cadáveres marcados al mar…. y el mar los devuelve. Pueden ser marcas para que lo que sea que vive en el fondo del mar detecte al cuerpo. Tal vez una especie de ritual, o un diálogo.
+— ¿Un diálogo en la piel de un cadáver?
+— Cadáveres que hasta no hace tanto eran personas – El Profesor te mira a los ojos y sube un tono la voz – Es nuestra ciudad, las personas que debemos cuidar, y alguien los está sacrificando.
+# next
+Muchas cosas acechan a los humanos. Nuestros fluidos, nuestra carne, nuestras emociones. Para la mayoría de los seres sobrenaturales no estamos en la cima de la pirámide alimenticia.
+Aun así, los sacrificios humanos son un gran NO. Generalmente significa que algo consiguió armar una organización de humanos que lo apoye y está acumulando poder. Sea lo que sea, ya te imaginás yendo directo a la cueva oscura y llevarlos ante la justicia.
+# next
+— Tu trabajo es recolectar información en el campo. El día de ayer apareció un nuevo cuerpo en la costa y fue llevado a la morgue de la ciudad. Hasta ahora es un NN, sería de gran ayuda que vayas y nos consigas cualquier tipo de información.
+Estamos teniendo problemas con los cuerpos, muchos tienen la tendencia a desaparecer.
+— ¿Cómo que se levantan y andan?
+— Como que alguien se los lleva. Hasta ahora perdimos tres cuerpos. Uno retirado por una figura misteriosa, los otros dos arrancados de las ambulancias.
+# next
+Tu primera misión. Sacrificios humanos, cadáveres, figuras misteriosas. ¿Estás a la altura?
+
++ [Obviamente. Llegó mi momento de brillar.] -> en_la_morgue
++ [No, voy a terminar muerto.]
+    — Disculpe Profesor, pero esta misión suena un poco peligrosa para mí. ¿No sería conveniente que usted arregle el problema?
+    El Profesor suspira. — La ventaja de estar en esta oficina es que podés tener el plano general. Créame guardián, cuando yo salgo es para algo más importante. Vaya a la morgue y vuelva con un informe que no me haga arrepentir.
+    -> en_la_morgue
++ [Pedir ayuda antes de salir] -> pedir_ayuda
+
+=== pedir_ayuda ===
+— Tenemos tres guardianes en la sede que podrían ayudarte...
++ [Hablar con Enríquez (Sabiduría)] -> ayuda_enriquez
++ [Entrenar con Cabral (Fuerza)] -> ayuda_cabral
++ [Visitar a Mary Shelley (Magia)] -> ayuda_shelley
+
+=== ayuda_enriquez ===
+Enríquez termina sacando un libro grueso de un cajón. El golpe sobre el escritorio hace eco por todo el edificio. Una guía telefónica de una ciudad poblada.
+Lees sobre la sabiduría de los anteriores Guardianes. Aprendés mucho de sus aciertos y más de las notas al pie sobre sus errores.
+# stat:conocimiento:+5
+# next
+-> en_la_morgue
+
+=== ayuda_cabral ===
+Cabral te somete a una sesión de entrenamiento. El hombre es un manco, pero te tira al piso cinco veces antes de que puedas pestañear. Recibís una buena dosis de humildad y técnica.
+# stat:fuerza:+5
+# next
+-> en_la_morgue
+
+=== ayuda_shelley ===
+Mary Shelley te clava una aguja llena de una sustancia de un verde antinatural. Dice que es para "relajar barreras psicológicas modernas que rechazan la magia". Luego del mareo inicial, tus sentidos se sienten más despejados.
+# stat:magia:+5
+# next
+-> en_la_morgue
+
+=== en_la_morgue ===
+# music:terror_ambient
+El palacio de justicia era una mole de diez pisos de mármol y cemento con gárgolas amenazantes. La morgue judicial estaba en el segundo subsuelo. Gracias a la identificación de El Faro, una buena camisa y caminar rápido, pasaste sin problemas frente a los policías.
+# next
+Llegaste a la puerta de la morgue al final de un pasillo largo. Un agente custodiaba el lugar con una escopeta apoyada contra la pared. Tu identificación bastó para pasar.
+Adentro, la morgue era un depósito de cadáveres con una pared llena de pequeñas puertas frigoríficas. Eran demasiadas. ¿Cómo encontrar el cuerpo?
+
++ [Rastrear energía mágica residual] -> buscar_magia
++ [Hackear la computadora del forense] -> buscar_sabiduria
++ [Abrir todas las puertas a lo bruto] -> buscar_fuerza
+
+=== buscar_magia ===
+Cerrás los ojos y dejas que la habitación te hable. Sentís el dolor del lugar golpeando contra tu piel como alquitrán.
+{ 
+  - magia >= 25:
+    Tu voluntad es fuerte. Haces un gesto y cortas las malas energías en seco identificando el punto exacto. -> frente_al_cadaver(true)
+  - else:
+    Te llega un grito de agonía. Es como avanzar contra una ventisca de agujas. Tardás demasiado, pero al final lo encontrás. -> frente_al_cadaver(false)
+}
+
+=== buscar_sabiduria ===
+Te sentás frente a la vieja computadora. 
+{ 
+  - conocimiento >= 25:
+    Encontrás un post-it viejo. Deducís la nueva contraseña en segundos. El expediente del NN te da la ubicación exacta. -> frente_al_cadaver(true)
+  - else:
+    Probás "amor", "123", nada. Terminas buscando en el tacho de basura y descifrando un código sucio. Tardás demasiado. -> frente_al_cadaver(false)
+}
+
+=== buscar_fuerza ===
+Empezás a tirar de las puertas frigoríficas.
+{ 
+  - fuerza >= 25:
+    Lo encarás como un entrenamiento funcional. Fresa y brutal. En una de las últimas puertas hallás lo que buscabas. -> frente_al_cadaver(true)
+  - else:
+    Es un trabajo engorroso. Tenés que alejarte un par de veces para no vomitar. Hay demasiada muerte acumulada aquí. -> frente_al_cadaver(false)
+}
+
+=== frente_al_cadaver(rapido) ===
+# next
+El cuerpo no es bonito. Su pecho tiene tres renglones de una escritura apretada. Un brazo fue desollado y quemado. Un corte en su estómago como una sonrisa cruel.
+Sacas las fotos de rigor. 
+# inv:add:fotos_profundo
+~ tiene_fotos = true
+{ not rapido:
+    # play_sfx:tension
+    En el pasillo escuchás al policía discutiendo con alguien. Una voz grave y amenazante.
+}
+Giras para irte y notás una sierra médica sobre una camilla. Una idea llega a tu cabeza: El Faro podría usar la mano para identificar al NN o convocar su espíritu.
+# next
+Agarrás fuerte la mano y empezás a serruchar. La carne es dura, más de lo que esperabas. Tu camisa está empapada en sudor. 
+{ not rapido: 
+    # play_sfx:disparos_escopeta # shake
+    ¡TIROS! Dos disparos de escopeta en el pasillo. Un silencio mortal y luego un ruido sordo. Algo pesado acaba de caer. Los problemas se acercan.
+}
+# next
+Usas tu peso para dar el último corte. El hueso cede. Ya tenés la mano en tu poder.
+# inv:add:mano_nn
+~ tiene_mano = true
+# play_sfx:puerta_golpe
+Algo está por entrar en la morgue.
+
++ [Esconderme en el ducto de ventilación] -> escape_ducto(rapido)
++ [Esconderme dentro de un frigorífico] -> escape_escondite
++ [Preparar una trampa] -> escape_trampa
+
+=== escape_ducto(rapido) ===
+{ 
+  - rapido:
+    Amontonás camillas y trepás rápido. { fuerza >= 25: Te metés en el ducto con agilidad absoluta. | Te cuesta, pero lográs meterte antes de que la pirámide colapse. }
+    # next
+    # play_sfx:puerta_destruida
+    Abajo, la puerta sale volando y algo gigante entra destrozando todo. Te arrastrás por el tubo angosto y sucio hasta salir a la calle. -> final_morgue_exito
+  - else:
+    No hay tiempo para trepar con sigilo. Corrés hacia el ducto pero la puerta se abre de par en par. -> encuentro_monstruo
+}
+
+=== escape_escondite ===
+Te metés en uno de los frigoríficos con un cadáver. Frío e incómodo. 
+# play_sfx:puerta_destruida
+Alguien patea la puerta y el monitor del escritorio vuela en mil pedazos.
+# next
+Por la rendija ves a una criatura de más de dos metros. Piel gris, garras negras, ojos oscuros.
+# inv:add:descripcion_profundo
+~ tiene_descripcion = true
+{ magia >= 20: Sentís su hambre, una vibración acuática y antigua. }
+Ves cómo se empieza a... COMER... el cadáver del NN. 
+{ conocimiento >= 25: Comprendés que están borrando rastros genéticos. }
+Esperás a que se retire y salís huyendo a toda velocidad. -> final_morgue_exito
+
+=== escape_trampa ===
+{ 
+  - magia > fuerza and magia > conocimiento:
+    # play_sfx:magia_oscura
+    Dibujas un símbolo de dolor puro frente a la puerta con sangre residual.
+  - fuerza > magia and fuerza > conocimiento:
+    # play_sfx:clic_arma
+    Preparás una trampa con tu escopeta directa a la cara de quien entre.
+  - else:
+    Electrificás la manija de la puerta con un puente eléctrico improvisado. 
+}
+
+# play_sfx:puerta_destruida
+La entidad entra. Es masiva, ojos negros, mandíbula de tiburón. Tu trampa lo golpea de lleno, pero apenas lo detiene. No es humano.
+# inv:add:descripcion_profundo
+~ tiene_descripcion = true
++ [Huir aprovechando la distracción] -> final_morgue_escape
++ [Atacar con todo lo que tengo] -> pelea_monstruo
+
+=== pelea_monstruo ===
+Vacías el cargador y cargás con un hacha. La piel del ser es dura como el cemento. El hacha se quiebra al tercer golpe.
+{ 
+  - fuerza >= 25:
+    # stat:hp:-25 # flash_red # shake
+    Recibís un zarpazo que te destroza la guardia. Lográs rodar hacia atrás pero tu brazo sangra profusamente.
+    -> final_morgue_escape
+  - else:
+    # stat:hp:-50 # flash_red # shake
+    El golpe te manda al piso. Un corte profundo va del hombro a la cintura. El dolor es insoportable.
+    -> final_morgue_escape
+}
+
+=== encuentro_monstruo ===
+La entidad te encuentra antes de que puedas escapar. Sus ojos negros se clavan en vos.
++ [Luchar por tu vida] -> pelea_monstruo
++ [Intentar huir desesperadamente] -> final_morgue_escape
+
+=== final_morgue_escape ===
+Corrés por los pasillos. Te resbalás con los restos del policía (ahora carne picada). El miedo te da alas. 
+{ 
+  - fuerza >= 25:
+    Llegás a tu auto. La garra del ser roza el vidrio trasero mientras arrancás a toda velocidad. -> final_morgue_exito
+  - else:
+    # stat:hp:-10
+    Te perdés en el laberinto. Lográs esconderte en un vestuario hasta que el ser se retira con el cuerpo del NN. Salís temblando hacia el Faro. -> final_morgue_exito
+}
+
+=== final_morgue_exito ===
+# music:misterio_ambient
+De regreso en El Faro, dejas la mano del NN sobre el escritorio de Enríquez. Ella te mira, rocía desinfectante y te manda arriba.
+# next
+- Felicitaciones - El Profesor te da un abrazo que huele a tabaco eterno - volver es una victoria. 
+{ tiene_fotos: Le mostras las fotos. }
+- Sin duda era un Profundo. Seres de otros planos que viven en el fondo marino. Híbridos, embajadores de una secta. 
+- Si te vuelves a encontrar con uno, intenta que abra la boca. Son débiles por dentro.
+# next
+Volvés a tu casa agotado. Sospechás que esto es el principio de algo más grande. Tarde o temprano te volverás a encontrar con esa entidad. Pero eso es problema del {nombre_personaje} del futuro. Ahora te toca dormir.
+# next
+-> intermision_1
+
+// =========================================================
+// INTERMISIÓN 1: PESADILLAS Y PISTAS
+// =========================================================
+
+=== intermision_1 ===
+# music:ciudad_ambient
+Te despertás a las tres de la mañana con un olor a salitre en la nariz. Hace días que te acosa una pesadilla de ahogo en un mar de sangre.
+Ya que no podés dormir, decidís aprovechar el tiempo.
+¿Qué querés hacer antes de tu próxima misión?
+
++ [Bajar a la playa a despejarte] -> inter_playa
++ [Visitar a la Tarotista de las afueras] -> inter_tarot
++ [Ayudar a Jesús "El Jaguar" en los muelles] -> inter_jesus
++ [Ir a la enfermería con Mary Shelley] -> inter_enfermeria
++ [Ir directo al Faro por una nueva misión] -> inter_misiones
+
+=== inter_playa ===
+Crees ver un cadáver en la orilla, pero es solo un tronco con algas. Tu salud mental está en juego.
+# stat:hp:+5
+-> inter_misiones
+
+=== inter_tarot ===
+Una anciana elegante te tira las cartas. - Te voy a dar un consejo: usa los símbolos antiguos si la situación se pone pesada.
+-> inter_misiones
+
+=== inter_jesus ===
+Te encontrás con Jesús, un hombre jaguar ("Aba"). Te pide ayuda con un vampiro que tiene secuestrada a una mujer.
++ [Ataque frontal con Jesús]
+    La mujer muere en la pelea. Jesús está decepcionado.
+    -> inter_misiones
++ [Generar una distracción estratégica]
+    Lográs salvar a la mujer. Jesús te lo agradece.
+    # stat:conocimiento:+5
+    -> inter_misiones
++ [Sigilo absoluto]
+    Inmovilizás a la mujer mientras Jesús termina con el vampiro. Queda viva aunque con abstinencia.
+    # stat:fuerza:+5
+    -> inter_misiones
+
+=== inter_enfermeria ===
+Mary Shelley te cura las heridas. - Lindo cuerpo. Si morís, intentá mantener las extremidades pegadas al torso para que sea más fácil revivirte.
+# stat:hp:+20
+-> inter_misiones
+
+=== inter_misiones ===
+# music:misterio_ambient
+El Faro te ha asignado dos casos urgentes. Debes elegir uno:
+
++ [Casos: PEQUEÑOS INOCENTES (Orfanato)] -> prox_mision_1
++ [Casos: EL NUEVO AMANECER (Asesinato familiar)] -> prox_mision_2
+
+=== prox_mision_1 ===
+Te dirigís al orfanato. El destino de esos niños depende de vos.
+-> END
+
+=== prox_mision_2 ===
+Vas a la escena del crimen. Algo huele a ritual desde aquí.
 -> END

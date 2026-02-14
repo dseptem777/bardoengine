@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useMemo } from 'react'
+import { useCallback, useEffect, useRef, useMemo, useState } from 'react'
 import { useVFX } from './useVFX'
 import { useAudio } from './useAudio'
 import { useSaveSystem } from './useSaveSystem'
@@ -8,6 +8,8 @@ import { useMinigameController } from './useMinigameController'
 import { useThemeManager } from './useThemeManager'
 import { useTagProcessor } from './useTagProcessor'
 import { useStoryState } from './useStoryState'
+import { useWillpowerSystem } from './useWillpowerSystem'
+import { useSpiderInfestation } from './useSpiderInfestation'
 
 interface BardoEngineOptions {
     storyId: string;
@@ -16,6 +18,11 @@ interface BardoEngineOptions {
     getTypewriterDelay: () => number;
     getMusicVolume: () => number;
     getSfxVolume: () => number;
+}
+
+export interface InputRequest {
+    varName: string;
+    placeholder: string;
 }
 
 /**
@@ -52,6 +59,27 @@ export function useBardoEngine({
     } = storyState
 
     // ==================
+    // Input System
+    // ==================
+    const [pendingInput, setPendingInput] = useState<InputRequest | null>(null)
+
+    const handleInputRequest = useCallback((varName: string, placeholder: string) => {
+        setPendingInput({ varName, placeholder })
+    }, [])
+
+    const commitInput = useCallback((value: string) => {
+        if (!pendingInput) return
+
+        setGlobalVariable(pendingInput.varName, value)
+        setPendingInput(null)
+
+        // Resume story after input
+        if (continueStoryRef.current) {
+            continueStoryRef.current()
+        }
+    }, [pendingInput, setGlobalVariable])
+
+    // ==================
     // Sub-systems
     // ==================
 
@@ -77,12 +105,12 @@ export function useBardoEngine({
 
     // Achievements system
     // @ts-ignore
-    const achievementDefs = gameSystems.config?.achievements || []
+    const achievementDefs = useMemo(() => gameSystems.config?.achievements || [], [gameSystems.config])
     const achievementsSystem = useAchievements(storyId, achievementDefs)
 
     // Extras config
     // @ts-ignore
-    const extrasConfig = gameSystems.config?.extras || {}
+    const extrasConfig = useMemo(() => gameSystems.config?.extras || {}, [gameSystems.config])
     const hasExtras = achievementDefs.length > 0 ||
         (extrasConfig.gallery?.length > 0) ||
         (extrasConfig.jukebox?.length > 0)
@@ -119,6 +147,73 @@ export function useBardoEngine({
     const minigameController = useMinigameController(handleMinigameResult)
 
     // ==================
+    // Parallel Willpower System
+    // ==================
+    const [willpowerState, willpowerActions] = useWillpowerSystem(
+        (passed) => {
+            // Callback when willpower check happens
+            console.log(`[WillpowerSystem] Check result: ${passed}`)
+        }
+    )
+
+    const handleWillpowerStart = useCallback((config: { decayRate?: string, targetKey?: string, initialValue?: number }) => {
+        willpowerActions.startWillpower({
+            decayRate: config.decayRate || 'normal',
+            targetKey: config.targetKey || 'V',
+            value: config.initialValue ?? 100
+        })
+    }, [willpowerActions])
+
+    const handleWillpowerStop = useCallback(() => {
+        willpowerActions.stopWillpower()
+    }, [willpowerActions])
+
+    const handleWillpowerCheck = useCallback((threshold: number): boolean => {
+        return willpowerActions.checkWillpower(threshold)
+    }, [willpowerActions])
+
+    const getWillpowerValue = useCallback((): number => {
+        return willpowerState.value
+    }, [willpowerState.value])
+
+    // ==================
+    // Spider Infestation System (Non-blocking)
+    // ==================
+
+    const spiderInfestation = useSpiderInfestation()
+
+    const handleSpiderStart = useCallback((config: any) => {
+        spiderInfestation.actions.startInfestation(config)
+    }, [spiderInfestation.actions])
+
+    const handleSpiderStop = useCallback(() => {
+        spiderInfestation.actions.stopInfestation()
+    }, [spiderInfestation.actions])
+
+    const handleSpiderCheck = useCallback((threshold: number) => {
+        const survived = spiderInfestation.actions.checkKills(threshold)
+        // Set variable in Ink
+        if (storyRef?.current) {
+            try {
+                storyRef.current.variablesState['spider_survived'] = survived
+                console.log(`[Spider] Set spider_survived = ${survived}`)
+            } catch (e) {
+                console.warn('[Spider] Could not set spider_survived:', e)
+            }
+        }
+        // Auto-select gate choice 0 after brief delay (Ink timing fix)
+        setTimeout(() => {
+            if (makeChoiceRef.current) {
+                makeChoiceRef.current(0)
+            }
+        }, 2000)
+    }, [spiderInfestation.actions])
+
+    const handleSpiderDifficulty = useCallback((difficulty: string) => {
+        spiderInfestation.actions.changeDifficulty(difficulty)
+    }, [spiderInfestation.actions])
+
+    // ==================
     // Tag Processing
     // ==================
 
@@ -132,7 +227,16 @@ export function useBardoEngine({
         minigameController,
         achievementsSystem,
         gameSystems,
-        triggerVFX
+        triggerVFX,
+        onInputRequest: handleInputRequest,
+        onWillpowerStart: handleWillpowerStart,
+        onWillpowerStop: handleWillpowerStop,
+        onWillpowerCheck: handleWillpowerCheck,
+        getWillpowerValue,
+        onSpiderStart: handleSpiderStart,
+        onSpiderStop: handleSpiderStop,
+        onSpiderCheck: handleSpiderCheck,
+        onSpiderDifficulty: handleSpiderDifficulty
     })
 
     // ==================
@@ -153,7 +257,7 @@ export function useBardoEngine({
         }
     }, [story, minigameController.isPlaying, continueStoryState, processTags, storyId, saveSystem, gameSystems])
 
-    // Keep ref updated
+    // Keep refs updated
     continueStoryRef.current = continueStory
 
     // ==================
@@ -195,7 +299,33 @@ export function useBardoEngine({
     // ==================
 
     const makeChoice = useCallback((index: number) => {
+        if (typeof index !== 'number' || isNaN(index)) {
+            console.error("[BardoEngine] Invalid choice index:", index)
+            return
+        }
+
+
+
         clearVFX()
+
+        // Hubs: Check exclusions
+        if (story) {
+            try {
+                const choice = story.currentChoices[index]
+                if (choice) {
+                    const currentPath = story.state.currentPathString || ""
+                    const currentKnot = currentPath.split('.')[0]
+
+                    const targetPath = choice.pathStringOnChoice || ""
+                    const targetKnot = targetPath.split('.')[0]
+
+                    // @ts-ignore
+                    gameSystems.hubs.handleChoice(currentKnot, targetKnot)
+                }
+            } catch (e) {
+                console.warn("[BardoEngine] Error processing hub choice:", e)
+            }
+        }
 
         // makeChoiceState updates history internally
         const { text: newText, tags } = makeChoiceState(index)
@@ -208,22 +338,30 @@ export function useBardoEngine({
         }
     }, [clearVFX, makeChoiceState, processTags, storyId, saveSystem, story, gameSystems])
 
+    // Keep makeChoice ref updated for spider phase auto-select
+    const makeChoiceRef = useRef<any>(null)
+    makeChoiceRef.current = makeChoice
+
     const restart = useCallback(() => {
         if (storyData && storyId) {
             clearVFX()
             stopMusic(false)
             gameSystems.resetGameSystems()
+            willpowerActions.stopWillpower()
+            spiderInfestation.actions.stopInfestation()
             resetStoryState()
             initStory(storyData)
         }
-    }, [storyData, storyId, clearVFX, stopMusic, gameSystems, resetStoryState, initStory])
+    }, [storyData, storyId, clearVFX, stopMusic, gameSystems, willpowerActions, resetStoryState, initStory])
 
     const backToStart = useCallback(() => {
         resetStoryState()
         clearVFX()
         stopMusic()
         gameSystems.resetGameSystems()
-    }, [resetStoryState, clearVFX, stopMusic, gameSystems])
+        willpowerActions.stopWillpower()
+        spiderInfestation.actions.stopInfestation()
+    }, [resetStoryState, clearVFX, stopMusic, gameSystems, willpowerActions, spiderInfestation.actions])
 
     const finishGame = useCallback(() => {
         achievementsSystem.markGameComplete()
@@ -290,9 +428,11 @@ export function useBardoEngine({
         manualSave,
         // Minigame
         handleMinigameStart,
+        // Input
+        commitInput,
     }), [
         initStory, continueStory, makeChoice, restart, backToStart, finishGame,
-        newGame, continueGame, loadSave, manualSave, handleMinigameStart
+        newGame, continueGame, loadSave, manualSave, handleMinigameStart, commitInput
     ])
 
     const subsystems = useMemo(() => ({
@@ -302,10 +442,19 @@ export function useBardoEngine({
         gameSystems,
         achievementsSystem,
         minigameController,
+        input: { pendingInput, commitInput },
+        willpower: {
+            state: willpowerState,
+            actions: willpowerActions,
+            updateValue: willpowerActions.updateValue
+        },
+        spiderInfestation
     }), [
         playSfx, playMusic, stopMusic, stopAllAudio,
         vfxState, triggerVFX, clearVFX,
-        saveSystem, gameSystems, achievementsSystem, minigameController
+        saveSystem, gameSystems, achievementsSystem, minigameController, pendingInput, commitInput,
+        willpowerState, willpowerActions,
+        spiderInfestation
     ])
 
     const configRef = useMemo(() => ({
