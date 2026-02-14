@@ -114,8 +114,14 @@ function main() {
     };
     fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
 
+    // Also copy story-config.json into Tauri resources so the Rust backend
+    // can read it on Android (where read_dir doesn't work on asset URIs)
+    const resourceConfigFile = path.join(outDir, 'story-config.json');
+    fs.writeFileSync(resourceConfigFile, JSON.stringify(config, null, 2));
+
     console.log(`✓ Encrypted: ${outputFile}`);
     console.log(`✓ Config: ${configFile}`);
+    console.log(`✓ Resource config: ${resourceConfigFile}`);
     console.log(`✓ Ready for Tauri build!`);
 }
 

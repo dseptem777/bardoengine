@@ -7,7 +7,10 @@ export function useVFX(audioCallbacks = {}, vfxEnabled = true) {
     const [vfxState, setVfxState] = useState({
         shake: false,
         flash: null,
-        background: null
+        background: null,
+        // Horror system additions
+        horrorEffect: null,
+        horrorIntensity: 1.0
     })
 
     const triggerVFX = useCallback((tag) => {
@@ -83,16 +86,56 @@ export function useVFX(audioCallbacks = {}, vfxEnabled = true) {
                     console.log('[VFX] Pitch high effect triggered')
                 }
                 break
+
+            // Horror VFX handling
+            case VFX_TYPES.UI_HORROR:
+                if (vfxEnabled) {
+                    console.log(`[VFX] Horror effect: ${effect.effect}`)
+                    setVfxState(prev => ({
+                        ...prev,
+                        horrorEffect: effect.effect
+                    }))
+                }
+                break
         }
     }, [playSfx, playMusic, stopMusic, vfxEnabled])
 
     const clearVFX = useCallback(() => {
-        setVfxState(prev => ({ ...prev, shake: false, flash: null }))
+        setVfxState(prev => ({
+            ...prev,
+            shake: false,
+            flash: null,
+            horrorEffect: null,
+            horrorIntensity: 1.0
+        }))
+    }, [])
+
+    // Specific horror effect controls
+    const setHorrorEffect = useCallback((effect, intensity = 1.0) => {
+        if (vfxEnabled) {
+            setVfxState(prev => ({
+                ...prev,
+                horrorEffect: effect,
+                horrorIntensity: intensity
+            }))
+        }
+    }, [vfxEnabled])
+
+    const clearHorrorEffect = useCallback(() => {
+        setVfxState(prev => ({
+            ...prev,
+            horrorEffect: null,
+            horrorIntensity: 1.0
+        }))
     }, [])
 
     return useMemo(() => ({
         vfxState,
         triggerVFX,
-        clearVFX
-    }), [vfxState, triggerVFX, clearVFX])
+        clearVFX,
+        // Horror-specific exports
+        setHorrorEffect,
+        clearHorrorEffect
+    }), [vfxState, triggerVFX, clearVFX, setHorrorEffect, clearHorrorEffect])
 }
+

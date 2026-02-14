@@ -21,6 +21,10 @@ try {
 } catch (e) {
     console.error('❌ Compilation error:', e.message);
     if (e.errors) {
+        console.error('Details:');
         e.errors.forEach(err => console.error('  -', err));
+    } else {
+        console.error('No detailed errors found in the exception object.');
+        console.error(e); // Print full error
     }
 }

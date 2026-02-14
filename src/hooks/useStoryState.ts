@@ -37,31 +37,38 @@ export function useStoryState(): UseStoryStateReturn {
 
     // Helper to process story continuation until a stop condition
     const processStoryLoop = useCallback((currentStory: Story) => {
-        const textParts: string[] = []
+        let fullText = ""
         const allTags: string[] = []
 
-        while (currentStory.canContinue) {
-            const nextBatch = currentStory.Continue()
-            const tags = currentStory.currentTags || []
+        try {
+            while (currentStory.canContinue) {
+                const nextBatch = currentStory.Continue()
+                const tags = currentStory.currentTags || []
 
-            textParts.push(nextBatch)
-            allTags.push(...tags)
+                fullText += nextBatch + '\n\n'
+                allTags.push(...tags)
 
-            // Break for pagination
-            if (tags.some((t: string) => {
-                const tag = t.trim().toLowerCase()
-                return tag === 'next' || tag === 'page'
-            })) break
+                // Break for pagination
+                if (tags.some((t: string) => {
+                    const tag = t.trim().toLowerCase()
+                    return tag === 'next' || tag === 'page'
+                })) break
 
-            // Break for minigame - Orchestrator handles the actual game start, but we must pause text generation
-            if (tags.some((t: string) => t.trim().toLowerCase().startsWith('minigame:'))) break
+                // Break for minigame - Orchestrator handles the actual game start, but we must pause text generation
+                if (tags.some((t: string) => t.trim().toLowerCase().startsWith('minigame:'))) break
+            }
+        } catch (e) {
+            console.error("[StoryState] Ink Runtime Error during processing:", e)
+            fullText += "\n\n[System Error: The story encountered a critical error and cannot continue.]"
         }
 
-        const trimmedText = textParts.join('\n\n').trim()
+        const trimmedText = fullText.trim()
+
+        console.log(`[StoryState] processed loop. Text len: ${trimmedText.length}. Choices: ${currentStory.currentChoices.length}. CanContinue: ${currentStory.canContinue}`)
 
         // Update state
         setText(trimmedText)
-        setChoices(currentStory.currentChoices)
+        setChoices([...currentStory.currentChoices])
         setCanContinue(currentStory.canContinue)
         setIsEnded(!currentStory.canContinue && currentStory.currentChoices.length === 0)
         setCurrentTags(allTags)
@@ -88,12 +95,36 @@ export function useStoryState(): UseStoryStateReturn {
 
     const makeChoice = useCallback((index: number) => {
         const currentStory = storyRef.current
-        if (!currentStory) return { text: '', tags: [] }
+        if (!currentStory) {
+            console.error("[StoryState] makeChoice called but story is null")
+            return { text: '', tags: [] }
+        }
 
-        const choice = currentStory.currentChoices[index]
-        const choiceText = choice ? choice.text : ''
+        // Defensive check: Is the index valid?
+        if (!currentStory.currentChoices || index >= currentStory.currentChoices.length) {
+            console.warn(`[StoryState] DESYNC DETECTED! UI requested choice ${index}, but Engine has ${currentStory.currentChoices?.length || 0} choices. Resyncing UI.`)
 
-        currentStory.ChooseChoiceIndex(index)
+            // Force UI resync
+            setChoices([...(currentStory.currentChoices || [])])
+            setCanContinue(currentStory.canContinue)
+            return { text: '', tags: [] }
+        }
+
+        // Capture choice text for history BEFORE choosing (because Ink clears currentChoices after choosing)
+        let choiceText = ""
+        try {
+            const choice = currentStory.currentChoices[index]
+            choiceText = choice ? choice.text : ""
+        } catch (e) {
+            console.warn("[StoryState] Could not retrieve choice text for history")
+        }
+
+        try {
+            currentStory.ChooseChoiceIndex(index)
+        } catch (e) {
+            console.error("[StoryState] Ink 'ChooseChoiceIndex' failed:", e)
+            return { text: '', tags: [] }
+        }
 
         // Record choice in history
         if (choiceText) {

@@ -10,6 +10,11 @@
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build",
+    "android:setup": "powershell -ExecutionPolicy Bypass -File scripts/setup-android.ps1",
+    "android:init": "tauri android init",
+    "android:dev": "tauri android dev",
+    "android:build": "npx tauri android build --debug",
+    "android:release": "npx tauri android build",
     "encrypt-story": "node scripts/encrypt-story.cjs",
     "build-game": "node scripts/build-game.cjs",
     "test": "vitest",
@@ -23,7 +28,8 @@
     "inkjs": "^2.2.0",
     "inklecate": "^1.8.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "reactflow": "^11.11.4"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.9.6",
@@ -33,7 +39,7 @@
     "@types/node": "25.0.10",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.0",
+    "@vitejs/plugin-react-swc": "^4.2.3",
     "@vitest/coverage-v8": "4.0.18",
     "autoprefixer": "^10.4.19",
     "jsdom": "24.0.0",
