@@ -1,16 +1,16 @@
 import { motion, AnimatePresence } from 'framer-motion'
 
 /**
- * StatsPanel - Displays game stats as an "ID Card"
- * Only shows when player has entered their name (discovery moment)
- * 
+ * StatsPanel - Displays game stats as an "ID Card" (desktop) or slim bar strip (mobile)
+ *
  * Props:
  * - stats: Current stat values
  * - statsConfig: Config with enabled, playerNameVariable, definitions
  * - getAllStatsInfo: Function to get all stat definitions with current values
  * - playerName: The player's name (from story variable)
+ * - isMobile: Whether to render in mobile slim-bar mode
  */
-export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, playerName }) {
+export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, playerName, isMobile }) {
     // Don't show if stats not enabled
     if (!statsConfig?.enabled) return null
 
@@ -22,6 +22,44 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
     const barStats = allStats.filter(s => s.displayType === 'bar')
     const valueStats = allStats.filter(s => s.displayType === 'value')
 
+    // Mobile: only render slim bar stats (value stats go in header via HeaderStats)
+    if (isMobile) {
+        if (barStats.length === 0) return null
+
+        return (
+            <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none mobile-slim-bars">
+                <div className="flex w-full">
+                    {barStats.map(stat => {
+                        const percentage = stat.max ? Math.max(0, Math.min(100, (stats[stat.id] / stat.max) * 100)) : 0
+                        const isCritical = percentage <= 10
+                        return (
+                            <div
+                                key={stat.id}
+                                className="flex-1 h-1.5 bg-gray-900/80"
+                                title={`${stat.label}: ${stats[stat.id]}/${stat.max}`}
+                            >
+                                <motion.div
+                                    className="h-full"
+                                    style={{ backgroundColor: stat.color || '#facc15' }}
+                                    initial={{ width: 0 }}
+                                    animate={{
+                                        width: `${percentage}%`,
+                                        opacity: isCritical ? [1, 0.5, 1] : 1
+                                    }}
+                                    transition={{
+                                        width: { duration: 0.3, ease: 'easeOut' },
+                                        opacity: isCritical ? { duration: 0.5, repeat: Infinity } : {}
+                                    }}
+                                />
+                            </div>
+                        )
+                    })}
+                </div>
+            </div>
+        )
+    }
+
+    // Desktop: full ID card panel (unchanged)
     return (
         <AnimatePresence>
             <motion.div
@@ -100,6 +138,41 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
                 </div>
             </motion.div>
         </AnimatePresence>
+    )
+}
+
+/**
+ * HeaderStats - Compact value stats for embedding in the mobile header
+ */
+export function HeaderStats({ stats, statsConfig, getAllStatsInfo }) {
+    if (!statsConfig?.enabled) return null
+
+    const allStats = getAllStatsInfo()
+    const valueStats = allStats.filter(s => s.displayType === 'value')
+
+    if (valueStats.length === 0) return null
+
+    return (
+        <div className="flex items-center gap-2 text-xs font-mono">
+            {valueStats.map((stat, index) => {
+                const value = stats[stat.id]
+                const displayValue = value >= 0 ? `+${value}` : value
+                const isKarmaStyle = stat.id === 'karma'
+                const color = isKarmaStyle
+                    ? (value > 0 ? '#22c55e' : value < 0 ? '#ef4444' : '#9ca3af')
+                    : (stat.color || '#facc15')
+
+                return (
+                    <span key={stat.id} className="flex items-center gap-0.5">
+                        {index > 0 && <span className="text-gray-600 mx-0.5">|</span>}
+                        <span>{stat.icon}</span>
+                        <span className="font-bold" style={{ color }}>
+                            {isKarmaStyle ? displayValue : value}
+                        </span>
+                    </span>
+                )
+            })}
+        </div>
     )
 }
 

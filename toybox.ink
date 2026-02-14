@@ -3,6 +3,9 @@
 
 VAR minigame_result = -1
 VAR agilidad = 5
+VAR fuerza = 10
+VAR magia = 10
+VAR sabiduria = 10
 VAR hp = 100
 VAR tiene_ganzua = true
 VAR new_game_plus = false
@@ -19,14 +22,48 @@ Selecciona un minijuego para testear la integración.
     [🌟 NEW GAME+ ACTIVO - Contenido exclusivo desbloqueado]
 }
 
-[TUS STATS: Agilidad={agilidad}, HP={hp}]
+[STATS ACTUALES: F={fuerza}, M={magia}, S={sabiduria}, HP={hp}]
 
++ [🕷️ INVASIÓN (Modo Araña)] -> test_spider
 + [QTE - Reflejos] -> test_qte
 + [Lockpick - Dificultad según Agilidad] -> test_lockpick
 + [Arkanoid - Arcade] -> test_arkanoid
-+ [Subir Agilidad (+2)] -> subir_agilidad
++ [Debug: Subir Stats (+20)] -> subir_stats
 + {new_game_plus} [⭐ Contenido NG+ Exclusivo] -> ng_plus_content
 + [Back to Main Menu] -> END
+
+=== subir_stats ===
+~ fuerza = fuerza + 20
+~ magia = magia + 20
+~ sabiduria = sabiduria + 20
+Tus stats han subido.
++ [Volver] -> main
+
+VAR spider_survived = false
+
+=== test_spider ===
+# SPIDER_PHASE: duration=20, threshold=5, difficulty=normal, fuerza={fuerza}, magia={magia}, sabiduria={sabiduria}
+El corredor se estrecha. Algo cruje sobre tu cabeza.
+
+Sentís un cosquilleo en la nuca. Las paredes se mueven... no, son ellas.
+
+Las arañas bajan por las paredes. Están en todos lados.
+
+Tenés que sobrevivir. Aplastá las arañas. Sacá las telarañas.
++ [→] -> spider_result
+
+=== spider_result ===
+{ spider_survived:
+    ¡SOBREVIVISTE! Lograste abrirte paso aplastando a las que se cruzaron.
+    # achievement:unlock:spider_killer
+- else:
+    CAÍSTE. Las arañas te cubrieron. No aplastaste suficientes.
+    # stat:hp:-25
+    [-25 HP]
+}
++ [Volver al menú] -> main
+
+
 
 === subir_agilidad ===
 ~ agilidad = agilidad + 2

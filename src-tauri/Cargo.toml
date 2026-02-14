@@ -23,5 +23,20 @@ serde = { version = "1.0", features = ["derive"] }
 log = "0.4"
 tauri = { version = "2.9.5", features = [] }
 tauri-plugin-log = "2"
+tauri-plugin-fs = "2"
 aes-gcm = "0.10"
 base64 = "0.21"
+
+[profile.release]
+strip = true        # Strip debug symbols from binary
+lto = true          # Link-Time Optimization — smaller + faster binary
+codegen-units = 1   # Better optimization (slower compile)
+opt-level = "s"     # Optimize for size
+
+# Fast release profile for testing — same as release but much faster to compile
+# Use with: npx tauri android build --config "profile=fast-release" or via build script
+[profile.fast-release]
+inherits = "release"
+lto = "thin"          # Thin LTO — 80% of the benefit, fraction of the time
+codegen-units = 16    # Parallel codegen — much faster compile
+opt-level = 2         # Speed over size — slightly larger but faster to compile

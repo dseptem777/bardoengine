@@ -13,9 +13,15 @@ import ExtrasMenu from './components/ExtrasMenu'
 import AchievementToast from './components/AchievementToast'
 import MinigameOverlay from './components/MinigameOverlay'
 import InputOverlay from './components/InputOverlay'
+import HorrorVFXLayer from './components/HorrorVFXLayer'
+import WillpowerMeter from './components/WillpowerMeter'
+import ForcedClickOverlay from './components/ForcedClickOverlay'
+import SpiderOverlay from './components/SpiderOverlay'
+import { useHeavyCursor } from './hooks/useHeavyCursor'
 import { useStoryLoader } from './hooks/useStoryLoader'
 import { useBardoEngine } from './hooks/useBardoEngine'
 import { SettingsProvider, useSettings } from './hooks/useSettings'
+import { useIsMobile } from './hooks/useMediaQuery'
 
 const BardoEditor = React.lazy(() => import('./editor/BardoEditor'))
 
@@ -25,6 +31,8 @@ import serruchinStory from './stories/serruchin.json'
 import centinelasStory from './stories/centinelas.json'
 import toyboxStory from './stories/toybox.json'
 import apneaStory from './stories/apnea.json'
+import vampiroStory from './stories/vampiro.json'
+import spiderDemoStory from './stories/spider_demo.json'
 
 // Dev mode stories
 const DEV_STORIES = {
@@ -32,22 +40,28 @@ const DEV_STORIES = {
     partuza: partuzaStory,
     centinelas: centinelasStory,
     toybox: toyboxStory,
-    apnea: apneaStory
+    apnea: apneaStory,
+    vampiro: vampiroStory,
+    spider_demo: spiderDemoStory
 }
 
-// Format for story selector
 const AVAILABLE_STORIES = [
+    { id: 'vampiro', title: '🧛 EL PESO DE LA VOLUNTAD (Meta-Horror Demo)', data: vampiroStory },
     { id: 'centinelas', title: '🚨 CENTINELAS DEL SUR', data: centinelasStory },
     { id: 'toybox', title: '📦 BARDO TOYBOX (Minigames)', data: toyboxStory },
     { id: 'apnea', title: '🫁 APNEA', data: apneaStory },
     { id: 'serruchin', title: '🪚 SERRUCHÍN', data: serruchinStory },
-    { id: 'partuza', title: 'Tu nombre en clave es Partuza', data: partuzaStory }
+    { id: 'partuza', title: 'Tu nombre en clave es Partuza', data: partuzaStory },
+    { id: 'spider_demo', title: '🕷️ INFESTACIÓN (Spider Demo)', data: spiderDemoStory }
 ]
 
 // Inner App component that uses settings context
 function AppContent({ onStorySelect }) {
     // Settings
     const { settings, getTypewriterDelay, getMusicVolume, getSfxVolume } = useSettings()
+
+    // Mobile detection
+    const isMobile = useIsMobile()
 
     // Screen state (NOT delegated to hook - UI concerns)
     const [selectedStory, setSelectedStory] = useState(null)
@@ -58,6 +72,8 @@ function AppContent({ onStorySelect }) {
     const [inventoryOpen, setInventoryOpen] = useState(false)
     const [extrasOpen, setExtrasOpen] = useState(false)
     const [showEditor, setShowEditor] = useState(false)
+    const [choicesVisible, setChoicesVisible] = useState(false)  // True when Player's typewriter is done
+    const [meterRevealed, setMeterRevealed] = useState(false)    // True once bar has been shown for first time
 
     // Story loader with environment detection
     const { stories, isLoading: storyLoading, error: storyError, isProductionMode } = useStoryLoader({
@@ -94,7 +110,90 @@ function AppContent({ onStorySelect }) {
         story, text, choices, canContinue, isEnded, history,
         actions, subsystems, config
     } = engine
-    const { audio, vfx, saveSystem, gameSystems, achievementsSystem, minigameController } = subsystems
+    const { audio, vfx, saveSystem, gameSystems, achievementsSystem, minigameController, willpower, spiderInfestation } = subsystems
+
+    // Track if we've auto-submitted due to zero willpower
+    const [hasAutoSubmitted, setHasAutoSubmitted] = useState(false)
+    const [showForcedClick, setShowForcedClick] = useState(false)
+
+    // Reset auto-submit flag and reveal state when choices or text change
+    useEffect(() => {
+        setHasAutoSubmitted(false)
+        setShowForcedClick(false)
+        setChoicesVisible(false)
+        // Do NOT reset meterRevealed here. It is now strictly controlled by 'active' state.
+    }, [choices, currentStoryId, text])
+
+    // Manage willpower meter "reveal" state
+    // The meter is revealed ONLY via the onWillpowerHintVisible callback from TextDisplay
+    // when it detects the hint text "[PRESIONÁ" in the narrative.
+    useEffect(() => {
+        // When willpower becomes inactive, hide the meter
+        setMeterRevealed(false)
+    }, [willpower?.state?.active])
+
+    // Trigger forced click animation when willpower reaches 0
+    useEffect(() => {
+        if (willpower?.state?.active &&
+            willpower?.state?.value <= 0 &&
+            choices.length >= 2 &&
+            !hasAutoSubmitted) {
+            console.log('[Willpower] Zero willpower - starting forced click takeover')
+            setHasAutoSubmitted(true)
+            setShowForcedClick(true)
+        }
+    }, [willpower?.state?.value, willpower?.state?.active, choices.length, hasAutoSubmitted, actions])
+
+    // Handle forced click completion
+    const handleForcedClickComplete = useCallback(() => {
+        console.log('[Willpower] Forced click complete - selecting ceder')
+        setShowForcedClick(false)
+        actions.makeChoice(1)  // Index 1 = second option = ceder
+    }, [actions])
+
+    // ==================
+    // Heavy Cursor Effect (Meta-Horror)
+    // ==================
+    // Activate heavy cursor when willpower system is active OR horror effects are active
+    const horrorEffect = vfx.vfxState?.horrorEffect
+    const willpowerActive = willpower?.state?.active
+
+    const shouldActivateHeavyCursor = (willpowerActive && (meterRevealed || showForcedClick)) ||
+        horrorEffect === 'static_mind' ||
+        horrorEffect === 'blur_vignette' ||
+        horrorEffect === 'submission_fade'
+
+    // Map willpower/horror state to cursor resistance level
+    const getResistanceLevel = () => {
+        if (!shouldActivateHeavyCursor) return 'none'
+
+        // When willpower is active, use the decay rate to determine cursor heaviness
+        if (willpowerActive) {
+            const decayRate = willpower?.state?.decayRate || 'normal'
+            // Map decay rate to cursor resistance
+            const cursorMap = {
+                slow: 'low',
+                normal: 'medium',
+                fast: 'high',
+                extreme: 'extreme'
+            }
+            return cursorMap[decayRate] || 'medium'
+        }
+
+        // Fall back to horror effect based resistance
+        if (horrorEffect === 'static_mind') return 'high'
+        if (horrorEffect === 'blur_vignette') return 'medium'
+        if (horrorEffect === 'submission_fade') return 'extreme'
+        return 'low'
+    }
+
+    useHeavyCursor({
+        resistanceLevel: getResistanceLevel(),
+        enabled: shouldActivateHeavyCursor,
+        showTrail: shouldActivateHeavyCursor,
+        magnetTarget: null,
+        magnetStrength: 0
+    })
 
     // ==================
     // Screen Navigation Handlers
@@ -202,6 +301,37 @@ function AppContent({ onStorySelect }) {
         <div className="min-h-screen bg-bardo-bg relative overflow-hidden transition-colors duration-500">
             <VFXLayer vfxState={vfx.vfxState} />
 
+            {/* Horror VFX Layer - Extended effects for meta-horror */}
+            <HorrorVFXLayer
+                effect={vfx.vfxState.horrorEffect}
+                intensity={vfx.vfxState.horrorIntensity}
+            />
+
+            {/* Parallel Willpower Meter - Shows after first reveal, stays until inactive */}
+            <WillpowerMeter
+                active={willpower?.state?.active && meterRevealed && !minigameController.isPlaying}
+                initialValue={100}
+                decayRate={willpower?.state?.decayRate || 'normal'}
+                targetKey={willpower?.state?.targetKey || 'V'}
+                onValueChange={willpower?.updateValue}
+                position="left"
+            />
+
+            {/* Forced Click Animation - When willpower reaches 0 */}
+            <ForcedClickOverlay
+                active={showForcedClick}
+                targetSelector='[data-choice-index="1"]'
+                choicesVisible={choicesVisible}
+                onComplete={handleForcedClickComplete}
+                message="Ya no tenés control..."
+            />
+
+            {/* Spider Infestation Overlay - Parasitic horror on story UI */}
+            <SpiderOverlay
+                state={spiderInfestation.state}
+                actions={spiderInfestation.actions}
+            />
+
             {/* Save/Load Modal */}
             <SaveLoadModal
                 isOpen={saveModalMode !== null}
@@ -237,6 +367,7 @@ function AppContent({ onStorySelect }) {
                             ? story?.variablesState?.[gameSystems.statsConfig.playerNameVariable] || ''
                             : null
                     }
+                    isMobile={isMobile}
                 />
             )}
 
@@ -248,6 +379,8 @@ function AppContent({ onStorySelect }) {
                     getItemsWithInfo={gameSystems.getItemsWithInfo}
                     isOpen={inventoryOpen}
                     onToggle={() => setInventoryOpen(prev => !prev)}
+                    isMobile={isMobile}
+                    hideToggle={isMobile}
                 />
             )}
 
@@ -329,6 +462,23 @@ function AppContent({ onStorySelect }) {
                     onMinigameReady={actions.handleMinigameStart}
                     minigameAutoStart={minigameController.config?.autoStart}
                     checkBurned={checkChoiceBurned}
+                    // Willpower system - pass difficulty level for random resistance scaling
+                    willpowerActive={willpower?.state?.active}
+                    choiceResistanceLevel={willpower?.state?.active ? willpower?.state?.decayRate || 'normal' : 'none'}
+                    // Notify when choices become visible (after typewriter finishes)
+                    onChoicesVisibleChange={setChoicesVisible}
+                    // Notify when the willpower mashing hint starts typing
+                    onWillpowerHintVisible={() => setMeterRevealed(true)}
+                    // Mobile layout props
+                    isMobile={isMobile}
+                    headerStatsProps={isMobile && gameSystems.statsConfig?.enabled ? {
+                        stats: gameSystems.stats,
+                        statsConfig: gameSystems.statsConfig,
+                        getAllStatsInfo: gameSystems.getAllStatsInfo
+                    } : null}
+                    inventoryEnabled={!!gameSystems.inventoryConfig?.enabled}
+                    onToggleInventory={() => setInventoryOpen(prev => !prev)}
+                    inventoryItemCount={gameSystems.getItemsWithInfo?.()?.length || 0}
                 />
             )}
 

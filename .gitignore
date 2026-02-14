@@ -30,3 +30,15 @@ src-tauri/target/
 # Story encryption (generated files - not for version control)
 src/story-config.json
 src-tauri/resources/*.enc
+
+# Android (Tauri Mobile)
+*.keystore
+*.jks
+src-tauri/gen/
+android-builds/
+
+# AI / Agent
+.agent/
+.claude/
+CLAUDE.md
+tech demo vamp.txt

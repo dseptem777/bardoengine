@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import TextDisplay from './TextDisplay'
 import ChoiceButton from './ChoiceButton'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation'
+import { HeaderStats } from './StatsPanel'
 
 export default function Player({
     text,
@@ -26,20 +27,36 @@ export default function Player({
     hasPendingMinigame = false,
     onMinigameReady = null,
     minigameAutoStart = true,
-    checkBurned = null
+    checkBurned = null,
+    willpowerActive = false,
+    choiceResistanceLevel = 'none',  // 'none', 'slow', 'normal', 'fast', 'extreme'
+    onChoicesVisibleChange = null,   // Callback when choices visibility changes
+    onWillpowerHintVisible = null,   // Callback when willpower mash hint is revealed
+    // Mobile props
+    isMobile = false,
+    headerStatsProps = null,         // { stats, statsConfig, getAllStatsInfo }
+    inventoryEnabled = false,
+    onToggleInventory = null,
+    inventoryItemCount = 0
 }) {
     // If no text but has interactive content, skip typewriter
     const hasInteractiveContent = choices.length > 0 || isEnded
     const [isTyping, setIsTyping] = useState(text ? true : !hasInteractiveContent)
     const autoAdvanceTimerRef = useRef(null)
     const interactiveRef = useRef(null)
+    const choiceButtonRefs = useRef({})
 
     // Scroll handling refs
     const scrollContainerRef = useRef(null)
     const contentRef = useRef(null)
     const isStickyRef = useRef(true)
 
-    // Handle user scroll to detect if they want to stick to bottom
+    // Auto-hide header state (mobile only)
+    const [headerVisible, setHeaderVisible] = useState(true)
+    const lastScrollTopRef = useRef(0)
+    const scrollDeltaRef = useRef(0)
+
+    // Handle user scroll to detect if they want to stick to bottom + auto-hide header
     const handleScroll = useCallback(() => {
         if (!scrollContainerRef.current) return
 
@@ -47,7 +64,35 @@ export default function Player({
         // If user is within 50px of bottom, sticky is ON
         const isAtBottom = scrollHeight - scrollTop - clientHeight < 50
         isStickyRef.current = isAtBottom
-    }, [])
+
+        // Auto-hide header on mobile
+        if (isMobile) {
+            const delta = scrollTop - lastScrollTopRef.current
+            lastScrollTopRef.current = scrollTop
+
+            // Accumulate scroll delta for threshold
+            if (delta > 0) {
+                // Scrolling down
+                scrollDeltaRef.current = Math.max(0, scrollDeltaRef.current + delta)
+                if (scrollDeltaRef.current > 30) {
+                    setHeaderVisible(false)
+                    scrollDeltaRef.current = 0
+                }
+            } else if (delta < 0) {
+                // Scrolling up
+                scrollDeltaRef.current = Math.min(0, scrollDeltaRef.current + delta)
+                if (scrollDeltaRef.current < -10) {
+                    setHeaderVisible(true)
+                    scrollDeltaRef.current = 0
+                }
+            }
+
+            // Always show header at top of page
+            if (scrollTop < 10) {
+                setHeaderVisible(true)
+            }
+        }
+    }, [isMobile])
 
     // Setup resize observer for auto-scrolling
     useEffect(() => {
@@ -87,9 +132,37 @@ export default function Player({
         }
     }, [text])
 
+    // Notify parent when choices visibility changes
+    useEffect(() => {
+        const areChoicesVisible = !isTyping && choices.length > 0
+        if (onChoicesVisibleChange) {
+            onChoicesVisibleChange(areChoicesVisible)
+        }
+    }, [isTyping, choices.length, onChoicesVisibleChange])
+
     const handleSkip = useCallback(() => {
+        // Block skipping only when willpower bar is VISIBLE (active + choices present)
+        // Before choices appear, text can still be skipped
+        if (willpowerActive && choices.length > 0) {
+            console.log('[Player] Text skip blocked - willpower active with choices')
+            return
+        }
         setIsTyping(false)
-    }, [])
+    }, [willpowerActive, choices.length])
+
+    // Handle keyboard resistance - simulates clicking choice multiple times
+    const handleResistanceKeyPress = useCallback((index) => {
+        // Only first choice (resistir) has resistance, others (ceder) select immediately
+        if (!willpowerActive || index !== 0) {
+            onChoice(index)
+            return
+        }
+
+        // Delegate to the choice button ref
+        if (choiceButtonRefs.current[index]) {
+            choiceButtonRefs.current[index].simulateClick()
+        }
+    }, [willpowerActive, onChoice])
 
     // Keyboard navigation
     useKeyboardNavigation({
@@ -101,7 +174,9 @@ export default function Player({
         onSkip: handleSkip,
         onBack,
         onContinue,
-        disabled: isMinigameActive
+        disabled: isMinigameActive,
+        resistanceActive: willpowerActive,
+        onResistanceKeyPress: handleResistanceKeyPress
     })
 
     const handleTypingComplete = useCallback(() => {
@@ -148,36 +223,53 @@ export default function Player({
         onChoice(index)
     }, [onChoice, cancelAutoAdvance])
 
+    // Header transition classes
+    const headerTransformClass = isMobile
+        ? `transition-transform duration-300 ease-in-out ${headerVisible ? 'translate-y-0' : '-translate-y-full'}`
+        : ''
+
     return (
         <div className="h-screen flex flex-col bg-bardo-bg overflow-hidden transition-colors duration-500">
             {/* Header */}
-            <header className="flex-none p-4 border-b border-bardo-accent/20 bg-black/40 backdrop-blur-md">
+            <header
+                className={`flex-none border-b border-bardo-accent/20 bg-black/40 backdrop-blur-md z-30 ${headerTransformClass}`}
+                style={{ padding: isMobile ? '0.625rem' : '1rem', paddingTop: isMobile ? 'calc(0.625rem + var(--safe-area-top, 0px))' : 'calc(1rem + var(--safe-area-top, 0px))' }}
+            >
                 <div
                     className="mx-auto flex justify-between items-center w-full"
                     style={{ maxWidth: 'var(--player-max-width, 48rem)' }}
                 >
-                    <h1
-                        className="text-bardo-accent text-sm tracking-wider"
-                        style={{ fontFamily: 'var(--bardo-font-mono)' }}
-                    >
-                        BARDO ENGINE v0.9.0
-                    </h1>
-                    <div className="flex items-center gap-4">
+                    {/* Left side: title + mobile header stats */}
+                    <div className="flex items-center gap-3 min-w-0">
+                        <h1
+                            className="text-bardo-accent text-sm tracking-wider shrink-0"
+                            style={{ fontFamily: 'var(--bardo-font-mono)' }}
+                        >
+                            {isMobile ? 'BARDO' : 'BARDO ENGINE v0.9.0'}
+                        </h1>
+                        {/* Mobile: value stats inline in header */}
+                        {isMobile && headerStatsProps && (
+                            <HeaderStats {...headerStatsProps} />
+                        )}
+                    </div>
+
+                    {/* Right side: buttons */}
+                    <div className="flex items-center gap-2 sm:gap-4">
                         {onOptions && (
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1 sm:gap-2">
                                 <button
                                     onClick={onToggleHistory}
                                     className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
                                     title="Bitácora (L)"
                                 >
-                                    📖 BITÁCORA
+                                    {isMobile ? '📖' : '📖 BITÁCORA'}
                                 </button>
                                 <button
                                     onClick={onOptions}
                                     className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
                                     title="Opciones"
                                 >
-                                    ⚙️ OPCIONES
+                                    {isMobile ? '⚙️' : '⚙️ OPCIONES'}
                                 </button>
                             </div>
                         )}
@@ -186,14 +278,29 @@ export default function Player({
                                 onClick={onSave}
                                 className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
                             >
-                                💾 GUARDAR/CARGAR
+                                {isMobile ? '💾' : '💾 GUARDAR/CARGAR'}
+                            </button>
+                        )}
+                        {/* Mobile: inventory toggle in header */}
+                        {isMobile && inventoryEnabled && onToggleInventory && (
+                            <button
+                                onClick={onToggleInventory}
+                                className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors relative"
+                                title="Inventario"
+                            >
+                                🎒
+                                {inventoryItemCount > 0 && (
+                                    <span className="absolute -top-1 -right-2 bg-bardo-accent text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                                        {inventoryItemCount}
+                                    </span>
+                                )}
                             </button>
                         )}
                         <button
                             onClick={onBack}
                             className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
                         >
-                            ← MENÚ
+                            {isMobile ? '←' : '← MENÚ'}
                         </button>
                     </div>
                 </div>
@@ -205,14 +312,14 @@ export default function Player({
                 onScroll={handleScroll}
                 className="flex-1 overflow-y-auto custom-scrollbar bg-bardo-bg"
             >
-                {/* 
+                {/*
                     Simple block container with fixed top padding.
                     Text starts at a fixed position and ONLY grows downward.
                     NO FLEXBOX = NO REDISTRIBUTION = NO BUMPING.
                 */}
                 <div
                     ref={contentRef}
-                    className="mx-auto w-full px-6 md:px-12 pt-[15vh] pb-[20vh]"
+                    className="mx-auto w-full px-4 sm:px-6 md:px-12 pt-[10vh] sm:pt-[15vh] pb-[20vh]"
                     style={{ maxWidth: 'var(--player-max-width, 48rem)' }}
                 >
                     {/* Text area - Fixed position from top, grows downward only */}
@@ -226,11 +333,13 @@ export default function Player({
                             onComplete={handleTypingComplete}
                             typewriterDelay={typewriterDelay}
                             fontSize={fontSize}
+                            seekString={willpowerActive ? '[PRESIONÁ' : null}
+                            onStringFound={onWillpowerHintVisible}
                         />
                     </div>
 
                     {/* Choices & Footer Area - Scroll target when typing completes */}
-                    <div ref={interactiveRef} className="mt-8">
+                    <div ref={interactiveRef} className="mt-8 choice-container">
                         {/* Debug log (hidden in prod) */}
                         <div className="hidden">{console.log('[Player] Render choices. isTyping:', isTyping, 'Length:', choices.length)}</div>
 
@@ -240,10 +349,13 @@ export default function Player({
                                 {choices.map((choice, index) => (
                                     <ChoiceButton
                                         key={index}
+                                        ref={(el) => { choiceButtonRefs.current[index] = el }}
                                         text={choice.text}
                                         index={index}
                                         onClick={() => handleChoice(index)}
                                         disabled={checkBurned ? checkBurned(choice) : false}
+                                        // Only first choice (resistir) has resistance, others (ceder) are easy
+                                        resistanceLevel={willpowerActive && index === 0 ? choiceResistanceLevel : 'none'}
                                     />
                                 ))}
                             </div>
@@ -314,7 +426,7 @@ export default function Player({
             </footer>
 
             {/* Floating Indicators - OUTSIDE main, truly fixed at viewport level */}
-            {isTyping && typewriterDelay > 0 && (
+            {isTyping && typewriterDelay > 0 && !(willpowerActive && choices.length > 0) && (
                 <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] pointer-events-none">
                     <div className="px-5 py-2.5 bg-black/80 backdrop-blur-md border border-white/20 rounded-full shadow-2xl">
                         <p className="text-bardo-muted font-mono text-[10px] md:text-xs animate-pulse tracking-widest uppercase text-center font-bold">

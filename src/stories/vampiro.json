@@ -1,0 +1,720 @@
+{
+    "inkVersion": 21,
+    "root": [
+        [
+            {
+                "->": "inicio"
+            },
+            [
+                "done",
+                {
+                    "#n": "g-0"
+                }
+            ],
+            null
+        ],
+        "done",
+        {
+            "inicio": [
+                "^Llegás al galpón abandonado en las afueras. El silencio es absoluto, roto solo por el goteo de agua en algún lugar del fondo.",
+                "\n",
+                "^\"¿Jesús?\" susurrás, pero no hay respuesta. Tu compañero ha desaparecido tras una pila de cajas oxidadas.",
+                "\n",
+                "^De repente, una corriente de aire helado te golpea el rostro.",
+                "\n",
+                "ev",
+                "str",
+                "^Entrar al galpón",
+                "/str",
+                "/ev",
+                {
+                    "*": ".^.c-0",
+                    "flg": 20
+                },
+                {
+                    "c-0": [
+                        "\n",
+                        {
+                            "->": "entrada_galpon"
+                        },
+                        {
+                            "#f": 5
+                        }
+                    ]
+                }
+            ],
+            "entrada_galpon": [
+                [
+                    "#",
+                    "^bg:warehouse_dark",
+                    "/#",
+                    "#",
+                    "^music:dread_ambient",
+                    "/#",
+                    "#",
+                    "^UI_EFFECT: cold_blue",
+                    "/#",
+                    "^El aire en el galpón se vuelve pesado.",
+                    "\n",
+                    "^Jesús, ahora en su forma de Yaguareté Aba, está lidiando con el vampiro en los techos, pero vos sentís una mirada clavada en tu nuca.",
+                    "\n",
+                    "^Una voz sedosa resuena directamente en tu cráneo:",
+                    "\n",
+                    "^\"No tenés que pelear, querido. Puedo hacerte sentir... tan bien.\"",
+                    "\n",
+                    "#",
+                    "^WILLPOWER_START: normal",
+                    "/#",
+                    "#",
+                    "^UI_EFFECT: blur_vignette",
+                    "/#",
+                    "^Sentís cómo algo presiona contra tu mente. Tu voluntad empieza a flaquear...",
+                    "\n",
+                    "^[PRESIONÁ \"V\" PARA RESISTIR mientras elegís]",
+                    "\n",
+                    "ev",
+                    "str",
+                    "^Resistir el llamado",
+                    "/str",
+                    "/ev",
+                    {
+                        "*": ".^.c-0",
+                        "flg": 20
+                    },
+                    "ev",
+                    "str",
+                    "^Ceder al placer",
+                    "/str",
+                    "/ev",
+                    {
+                        "*": ".^.c-1",
+                        "flg": 20
+                    },
+                    {
+                        "c-0": [
+                            "\n",
+                            "#",
+                            "^WILLPOWER_CHECK: 1",
+                            "/#",
+                            "ev",
+                            {
+                                "VAR?": "willpower_passed"
+                            },
+                            "/ev",
+                            [
+                                {
+                                    "->": ".^.b",
+                                    "c": true
+                                },
+                                {
+                                    "b": [
+                                        "\n",
+                                        {
+                                            "->": "resistencia_exitosa"
+                                        },
+                                        {
+                                            "->": ".^.^.^.9"
+                                        },
+                                        null
+                                    ]
+                                }
+                            ],
+                            [
+                                {
+                                    "->": ".^.b"
+                                },
+                                {
+                                    "b": [
+                                        "\n",
+                                        {
+                                            "->": "resistencia_fallida"
+                                        },
+                                        {
+                                            "->": ".^.^.^.9"
+                                        },
+                                        null
+                                    ]
+                                }
+                            ],
+                            "nop",
+                            "\n",
+                            {
+                                "#f": 5
+                            }
+                        ],
+                        "c-1": [
+                            "\n",
+                            "#",
+                            "^WILLPOWER_STOP",
+                            "/#",
+                            {
+                                "->": "ceder_primera"
+                            },
+                            {
+                                "#f": 5
+                            }
+                        ]
+                    }
+                ],
+                null
+            ],
+            "resistencia_exitosa": [
+                [
+                    "#",
+                    "^UI_EFFECT: none",
+                    "/#",
+                    "#",
+                    "^shake",
+                    "/#",
+                    "#",
+                    "^flash_white",
+                    "/#",
+                    "^¡LO LOGRASTE!",
+                    "\n",
+                    "^Luchas contra tus propios músculos. Tu mano pesa como si fuera de plomo mientras intentás alcanzar tu arma, pero tu voluntad prevalece.",
+                    "\n",
+                    "^\"Interesante...\" ronronea la voz. \"Tenés más fuego del que esperaba.\"",
+                    "\n",
+                    "#",
+                    "^WILLPOWER_START: fast",
+                    "/#",
+                    "#",
+                    "^UI_EFFECT: static_mind",
+                    "/#",
+                    "^La presión sobre tu mente se intensifica. El vampiro ya no juega.",
+                    "\n",
+                    "ev",
+                    "str",
+                    "^Mantener la resistencia",
+                    "/str",
+                    "/ev",
+                    {
+                        "*": ".^.c-0",
+                        "flg": 20
+                    },
+                    {
+                        "c-0": [
+                            "\n",
+                            "#",
+                            "^WILLPOWER_CHECK: 1",
+                            "/#",
+                            "ev",
+                            {
+                                "VAR?": "willpower_passed"
+                            },
+                            "/ev",
+                            [
+                                {
+                                    "->": ".^.b",
+                                    "c": true
+                                },
+                                {
+                                    "b": [
+                                        "\n",
+                                        {
+                                            "->": "duelo_vampiro"
+                                        },
+                                        {
+                                            "->": ".^.^.^.9"
+                                        },
+                                        null
+                                    ]
+                                }
+                            ],
+                            [
+                                {
+                                    "->": ".^.b"
+                                },
+                                {
+                                    "b": [
+                                        "\n",
+                                        {
+                                            "->": "ceder_parcial"
+                                        },
+                                        {
+                                            "->": ".^.^.^.9"
+                                        },
+                                        null
+                                    ]
+                                }
+                            ],
+                            "nop",
+                            "\n",
+                            {
+                                "#f": 5
+                            }
+                        ]
+                    }
+                ],
+                null
+            ],
+            "resistencia_fallida": [
+                "ev",
+                {
+                    "VAR?": "willpower"
+                },
+                30,
+                "-",
+                {
+                    "VAR=": "willpower",
+                    "re": true
+                },
+                "/ev",
+                "ev",
+                {
+                    "VAR?": "sometimiento"
+                },
+                25,
+                "+",
+                {
+                    "VAR=": "sometimiento",
+                    "re": true
+                },
+                "/ev",
+                "#",
+                "^UI_EFFECT: blood_pulse",
+                "/#",
+                "^Tu voluntad cede. Solo un poco. Pero es suficiente.",
+                "\n",
+                "^\"Shhh... no peleés...\"",
+                "\n",
+                {
+                    "->": "ceder_parcial"
+                },
+                null
+            ],
+            "ceder_primera": [
+                "ev",
+                {
+                    "VAR?": "sometimiento"
+                },
+                50,
+                "+",
+                {
+                    "VAR=": "sometimiento",
+                    "re": true
+                },
+                "/ev",
+                "ev",
+                {
+                    "VAR?": "willpower"
+                },
+                40,
+                "-",
+                {
+                    "VAR=": "willpower",
+                    "re": true
+                },
+                "/ev",
+                "#",
+                "^UI_EFFECT: blur_vignette",
+                "/#",
+                "^Una calidez antinatural recorre tu espina dorsal.",
+                "\n",
+                "^\"Eso es... déjate llevar...\"",
+                "\n",
+                "^Los bordes de tu visión se oscurecen. ¿Para qué pelear?",
+                "\n",
+                "^Tus piernas se mueven solas, acercándote a la figura entre las sombras.",
+                "\n",
+                {
+                    "->": "final_sometido"
+                },
+                null
+            ],
+            "ceder_parcial": [
+                [
+                    "ev",
+                    {
+                        "VAR?": "willpower"
+                    },
+                    20,
+                    "-",
+                    {
+                        "VAR=": "willpower",
+                        "re": true
+                    },
+                    "/ev",
+                    "#",
+                    "^WILLPOWER_START: fast",
+                    "/#",
+                    "#",
+                    "^UI_EFFECT: blur_vignette",
+                    "/#",
+                    "^Tus rodillas golpean el suelo del galpón. No querías arrodillarte.",
+                    "\n",
+                    "^¿O sí?",
+                    "\n",
+                    "^La figura emerge de las sombras. Sus ojos son pozos de oscuridad imposible.",
+                    "\n",
+                    "^\"Tan cerca... ¿podés sentirlo? La paz que ofrezco...\"",
+                    "\n",
+                    "^La presión es casi insoportable ahora.",
+                    "\n",
+                    "ev",
+                    "str",
+                    "^Un último intento de resistir",
+                    "/str",
+                    "/ev",
+                    {
+                        "*": ".^.c-0",
+                        "flg": 4
+                    },
+                    "ev",
+                    "str",
+                    "^Inclinar el cuello",
+                    "/str",
+                    "/ev",
+                    {
+                        "*": ".^.c-1",
+                        "flg": 4
+                    },
+                    {
+                        "c-0": [
+                            "\n",
+                            "#",
+                            "^WILLPOWER_CHECK: 1",
+                            "/#",
+                            "ev",
+                            {
+                                "VAR?": "willpower_passed"
+                            },
+                            "/ev",
+                            [
+                                {
+                                    "->": ".^.b",
+                                    "c": true
+                                },
+                                {
+                                    "b": [
+                                        "\n",
+                                        {
+                                            "->": "ultimo_intento_exito"
+                                        },
+                                        {
+                                            "->": ".^.^.^.9"
+                                        },
+                                        null
+                                    ]
+                                }
+                            ],
+                            [
+                                {
+                                    "->": ".^.b"
+                                },
+                                {
+                                    "b": [
+                                        "\n",
+                                        {
+                                            "->": "final_sometido"
+                                        },
+                                        {
+                                            "->": ".^.^.^.9"
+                                        },
+                                        null
+                                    ]
+                                }
+                            ],
+                            "nop",
+                            "\n",
+                            null
+                        ],
+                        "c-1": [
+                            "\n",
+                            "#",
+                            "^WILLPOWER_STOP",
+                            "/#",
+                            {
+                                "->": "final_sometido"
+                            },
+                            null
+                        ]
+                    }
+                ],
+                null
+            ],
+            "ultimo_intento_exito": [
+                "#",
+                "^UI_EFFECT: none",
+                "/#",
+                "#",
+                "^flash_white",
+                "/#",
+                "#",
+                "^shake",
+                "/#",
+                "^¡NO!",
+                "\n",
+                "^La palabra sale como un rugido. Tu sangre ancestral despierta.",
+                "\n",
+                "^El vampiro retrocede un paso, genuinamente sorprendido.",
+                "\n",
+                "^\"Vaya... hace décadas que no veo eso.\"",
+                "\n",
+                {
+                    "->": "duelo_vampiro"
+                },
+                null
+            ],
+            "duelo_vampiro": [
+                [
+                    "#",
+                    "^WILLPOWER_START: extreme",
+                    "/#",
+                    "#",
+                    "^UI_EFFECT: static_mind",
+                    "/#",
+                    "^El vampiro te sonríe. Sus ojos parecen ocupar todo el espacio del galpón.",
+                    "\n",
+                    "^\"Bueno entonces... hagámoslo de la manera difícil.\"",
+                    "\n",
+                    "^Se mueve. Más rápido de lo que deberías poder ver.",
+                    "\n",
+                    "^Tenés una fracción de segundo para reaccionar.",
+                    "\n",
+                    "ev",
+                    "str",
+                    "^¡ATACAR!",
+                    "/str",
+                    "/ev",
+                    {
+                        "*": ".^.c-0",
+                        "flg": 4
+                    },
+                    {
+                        "c-0": [
+                            "\n",
+                            "#",
+                            "^WILLPOWER_CHECK: 1",
+                            "/#",
+                            "ev",
+                            {
+                                "VAR?": "willpower_passed"
+                            },
+                            "/ev",
+                            [
+                                {
+                                    "->": ".^.b",
+                                    "c": true
+                                },
+                                {
+                                    "b": [
+                                        "\n",
+                                        {
+                                            "->": "evaluar_ataque"
+                                        },
+                                        {
+                                            "->": ".^.^.^.9"
+                                        },
+                                        null
+                                    ]
+                                }
+                            ],
+                            [
+                                {
+                                    "->": ".^.b"
+                                },
+                                {
+                                    "b": [
+                                        "\n",
+                                        {
+                                            "->": "derrota"
+                                        },
+                                        {
+                                            "->": ".^.^.^.9"
+                                        },
+                                        null
+                                    ]
+                                }
+                            ],
+                            "nop",
+                            "\n",
+                            null
+                        ]
+                    }
+                ],
+                null
+            ],
+            "evaluar_ataque": [
+                "#",
+                "^WILLPOWER_STOP",
+                "/#",
+                "ev",
+                {
+                    "VAR?": "willpower"
+                },
+                0,
+                ">",
+                "/ev",
+                [
+                    {
+                        "->": ".^.b",
+                        "c": true
+                    },
+                    {
+                        "b": [
+                            "\n",
+                            {
+                                "->": "victoria"
+                            },
+                            {
+                                "->": ".^.^.^.10"
+                            },
+                            null
+                        ]
+                    }
+                ],
+                [
+                    {
+                        "->": ".^.b"
+                    },
+                    {
+                        "b": [
+                            "\n",
+                            {
+                                "->": "victoria_pirrica"
+                            },
+                            {
+                                "->": ".^.^.^.10"
+                            },
+                            null
+                        ]
+                    }
+                ],
+                "nop",
+                "\n",
+                null
+            ],
+            "victoria": [
+                "#",
+                "^UI_EFFECT: none",
+                "/#",
+                "#",
+                "^music:stop",
+                "/#",
+                "#",
+                "^flash_white",
+                "/#",
+                "#",
+                "^shake",
+                "/#",
+                "^El filo del hacha conecta con su cuello.",
+                "\n",
+                "^Sangre negra salpica las paredes del galpón. El vampiro retrocede, más sorprendido que herido, pero herido al fin.",
+                "\n",
+                "^\"Vos... esto no termina acá.\"",
+                "\n",
+                "^Se disuelve en sombras justo cuando Jesús aterriza a tu lado, transformándose de vuelta a su forma humana.",
+                "\n",
+                "^\"¿Estás bien, Guardián?\"",
+                "\n",
+                "^Asentís. Pero podés sentir la marca que dejó en tu mente. Un susurro que no se calla del todo.",
+                "\n",
+                "^Algo cambió esta noche.",
+                "\n",
+                "^[VICTORIA - Final Resistencia]",
+                "\n",
+                "end",
+                null
+            ],
+            "victoria_pirrica": [
+                "#",
+                "^UI_EFFECT: blood_pulse",
+                "/#",
+                "#",
+                "^music:stop",
+                "/#",
+                "#",
+                "^shake",
+                "/#",
+                "^El hacha conecta, pero apenas.",
+                "\n",
+                "^Un corte superficial. Sangre negra gotea de su mejilla.",
+                "\n",
+                "^Él te mira con algo parecido al respeto... y al hambre.",
+                "\n",
+                "^\"Casi. Pero 'casi' no alcanza, ¿verdad?\"",
+                "\n",
+                "^Desaparece en las sombras antes de que puedas reaccionar.",
+                "\n",
+                "^Jesús aterriza a tu lado. \"¿Qué pasó? ¿Estás bien?\"",
+                "\n",
+                "^No estás seguro. La voz todavía susurra en tu cabeza.",
+                "\n",
+                "^[VICTORIA PÍRRICA - Sobreviviste, pero...]",
+                "\n",
+                "end",
+                null
+            ],
+            "derrota": [
+                "#",
+                "^WILLPOWER_STOP",
+                "/#",
+                "#",
+                "^UI_EFFECT: blood_pulse",
+                "/#",
+                "#",
+                "^music:stop",
+                "/#",
+                "^No fuiste lo suficientemente fuerte.",
+                "\n",
+                "^El vampiro aparece frente a vos en un parpadeo. Tu hacha cae de tus manos entumecidas.",
+                "\n",
+                "^\"Shhh... ya pasó. Ahora vas a dormir.\"",
+                "\n",
+                "^Su mano fría acaricia tu mejilla casi con ternura.",
+                "\n",
+                "^Lo último que ves son sus colmillos.",
+                "\n",
+                "^[DERROTA - Dominado]",
+                "\n",
+                "end",
+                null
+            ],
+            "final_sometido": [
+                "#",
+                "^WILLPOWER_STOP",
+                "/#",
+                "#",
+                "^UI_EFFECT: blur_vignette",
+                "/#",
+                "#",
+                "^music:dark_embrace",
+                "/#",
+                "^Ya no hay resistencia en vos.",
+                "\n",
+                "^Cuando los colmillos perforan tu cuello, sentís... alivio. Como volver a casa después de un largo viaje.",
+                "\n",
+                "^La voz susurra directamente en tu alma:",
+                "\n",
+                "^\"Bienvenido a casa, querido. Ahora sos mío.\"",
+                "\n",
+                "^La oscuridad te abraza. Y vos la abrazás de vuelta.",
+                "\n",
+                "^[SOMETIMIENTO TOTAL]",
+                "\n",
+                "end",
+                null
+            ],
+            "global decl": [
+                "ev",
+                100,
+                {
+                    "VAR=": "willpower"
+                },
+                0,
+                {
+                    "VAR=": "sometimiento"
+                },
+                false,
+                {
+                    "VAR=": "willpower_passed"
+                },
+                "/ev",
+                "end",
+                null
+            ]
+        }
+    ],
+    "listDefs": {}
+}

@@ -13,7 +13,8 @@ export const VFX_TYPES = {
     BACKGROUND: 'background',
     SFX: 'sfx',
     MUSIC: 'music',
-    CUSTOM: 'custom'
+    CUSTOM: 'custom',
+    UI_HORROR: 'ui_horror'
 }
 
 /**
@@ -66,10 +67,21 @@ export function parseVFXTag(tag) {
         return { type: VFX_TYPES.MUSIC, action: 'play', id: value }
     }
 
-    // 6. Custom / Misc
+    // 6. UI Horror Effects (new!)
+    // Format: UI_EFFECT: blur_vignette | cold_blue | blood_pulse | static_mind | none
+    if (t.toUpperCase().startsWith('UI_EFFECT:')) {
+        const effect = t.split(':')[1]?.trim().toLowerCase()
+        return {
+            type: VFX_TYPES.UI_HORROR,
+            effect: effect === 'none' ? null : effect
+        }
+    }
+
+    // 7. Custom / Misc
     if (t === 'pitch_high') {
         return { type: VFX_TYPES.CUSTOM, id: 'pitch_high' }
     }
 
     return null
 }
+

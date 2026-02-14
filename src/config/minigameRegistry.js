@@ -2,6 +2,7 @@ import QTEGame from '../components/minigames/QTEGame'
 import LockpickGame from '../components/minigames/LockpickGame'
 import ArkanoidGame from '../components/minigames/ArkanoidGame'
 import ApneaGame from '../components/minigames/ApneaGame'
+import KeyMashGame from '../components/minigames/KeyMashGame'
 
 /**
  * Minigame Registry
@@ -15,7 +16,8 @@ export const MINIGAME_REGISTRY = {
     'qte': QTEGame,
     'lockpick': LockpickGame,
     'arkanoid': ArkanoidGame,
-    'apnea': ApneaGame
+    'apnea': ApneaGame,
+    'keymash': KeyMashGame
 }
 
 /**

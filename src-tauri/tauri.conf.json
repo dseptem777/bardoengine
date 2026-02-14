@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "🚨 CENTINELAS DEL SUR",
-  "version": "0.1.0",
-  "identifier": "com.bardoengine.centinelas",
+  "productName": "🕷️ INFESTACIÓN",
+  "version": "1.0.0",
+  "identifier": "com.bardoengine.spiderdemo",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "🚨 CENTINELAS DEL SUR",
+        "title": "🕷️ INFESTACIÓN",
         "width": 1024,
         "height": 768,
         "resizable": true,
@@ -44,6 +44,9 @@
       "appimage": {
         "bundleMediaFramework": true
       }
+    },
+    "android": {
+      "minSdkVersion": 24
     }
   }
 }
