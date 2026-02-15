@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 
 /**
  * useWillpowerSystem - Parallel Willpower State Management
@@ -82,13 +82,12 @@ export function useWillpowerSystem(
         return passed
     }, [onPassCheck])
 
-    return [
-        state,
-        {
-            startWillpower,
-            stopWillpower,
-            updateValue,
-            checkWillpower
-        }
-    ]
+    const actions = useMemo(() => ({
+        startWillpower,
+        stopWillpower,
+        updateValue,
+        checkWillpower
+    }), [startWillpower, stopWillpower, updateValue, checkWillpower])
+
+    return [state, actions]
 }

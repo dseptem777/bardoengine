@@ -317,5 +317,5 @@ export function useSpiderInfestation() {
         stats: statsRef.current,
     }), [active, showingResult, difficulty, spiders, webs, killCount, threshold, phaseResult])
 
-    return { state, actions }
+    return useMemo(() => ({ state, actions }), [state, actions])
 }

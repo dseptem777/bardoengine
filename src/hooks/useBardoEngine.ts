@@ -129,7 +129,7 @@ export function useBardoEngine({
 
     // Result commit handler
     const handleMinigameResult = useCallback((result: boolean | number) => {
-        if (!story) return
+        if (!storyRef.current) return
 
         const numericResult = (result === true || result === 1) ? 1 : 0
         console.log(`[Ink Bridge] Committing result: ${numericResult}`)
@@ -142,19 +142,18 @@ export function useBardoEngine({
         if (continueStoryRef.current) {
             continueStoryRef.current()
         }
-    }, [story, setGlobalVariable, getGlobalVariable])
+    }, [setGlobalVariable, getGlobalVariable])
 
     const minigameController = useMinigameController(handleMinigameResult)
 
     // ==================
     // Parallel Willpower System
     // ==================
-    const [willpowerState, willpowerActions] = useWillpowerSystem(
-        (passed) => {
-            // Callback when willpower check happens
-            console.log(`[WillpowerSystem] Check result: ${passed}`)
-        }
-    )
+    const onWillpowerCheckCallback = useCallback((passed: boolean) => {
+        console.log(`[WillpowerSystem] Check result: ${passed}`)
+    }, [])
+
+    const [willpowerState, willpowerActions] = useWillpowerSystem(onWillpowerCheckCallback)
 
     const handleWillpowerStart = useCallback((config: { decayRate?: string, targetKey?: string, initialValue?: number }) => {
         willpowerActions.startWillpower({

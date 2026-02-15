@@ -51,7 +51,9 @@ describe('SaveLoadModal', () => {
                 />
             )
 
-            expect(screen.queryByText(/CARGAR PARTIDA/)).not.toBeInTheDocument()
+            // Should not find the active tab or content
+            expect(screen.queryByText(/💾 GUARDAR/)).not.toBeInTheDocument()
+            expect(screen.queryByText(/📂 CARGAR/)).not.toBeInTheDocument()
         })
     })
 
@@ -69,7 +71,7 @@ describe('SaveLoadModal', () => {
                 />
             )
 
-            expect(screen.getByText(/CARGAR PARTIDA/)).toBeInTheDocument()
+            expect(screen.getByText(/📂 CARGAR/)).toBeInTheDocument()
         })
 
         it('should display save slots', () => {
@@ -141,7 +143,7 @@ describe('SaveLoadModal', () => {
                 />
             )
 
-            expect(screen.getByText(/GUARDAR PARTIDA/)).toBeInTheDocument()
+            expect(screen.getByText(/💾 GUARDAR/)).toBeInTheDocument()
         })
 
         it('should show save name input with default value', () => {

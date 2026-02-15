@@ -23,7 +23,9 @@ describe('useVFX', () => {
             expect(result.current.vfxState).toEqual({
                 shake: false,
                 flash: null,
-                background: null
+                background: null,
+                horrorEffect: null,
+                horrorIntensity: 1.0
             })
         })
     })
