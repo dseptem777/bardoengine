@@ -8,12 +8,18 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import ChoiceButton from '../ChoiceButton'
 
 // Mock framer-motion to avoid animation issues in tests
-vi.mock('framer-motion', () => ({
-    motion: {
-        button: ({ children, ...props }) => <button {...props}>{children}</button>,
-        div: ({ children, ...props }) => <div {...props}>{children}</div>
+vi.mock('framer-motion', () => {
+    const start = vi.fn().mockResolvedValue(null)
+    const stop = vi.fn()
+    const set = vi.fn()
+    return {
+        motion: {
+            button: ({ children, ...props }) => <button {...props}>{children}</button>,
+            div: ({ children, ...props }) => <div {...props}>{children}</div>
+        },
+        useAnimation: () => ({ start, stop, set })
     }
-}))
+})
 
 describe('ChoiceButton', () => {
     beforeEach(() => {
@@ -70,7 +76,7 @@ describe('ChoiceButton', () => {
             expect(onClick).toHaveBeenCalledTimes(1)
         })
 
-        it('should handle multiple clicks', () => {
+        it('should prevent double submission', () => {
             const onClick = vi.fn()
             render(<ChoiceButton text="Option" index={0} onClick={onClick} />)
 
@@ -82,7 +88,8 @@ describe('ChoiceButton', () => {
             fireEvent.click(button)
             fireEvent.click(button)
 
-            expect(onClick).toHaveBeenCalledTimes(2)
+            // Should only call once due to choiceProcessedRef
+            expect(onClick).toHaveBeenCalledTimes(1)
         })
     })
 

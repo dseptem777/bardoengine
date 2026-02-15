@@ -7,20 +7,26 @@ import { render, screen, fireEvent, act } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 // Mock framer-motion (used by child components)
-vi.mock('framer-motion', () => ({
-    motion: {
-        div: ({ children, className, onClick, ...props }) => (
-            <div className={className} onClick={onClick} {...props}>{children}</div>
-        ),
-        button: ({ children, className, onClick, ...props }) => (
-            <button className={className} onClick={onClick} {...props}>{children}</button>
-        ),
-        span: ({ children, className, ...props }) => (
-            <span className={className} {...props}>{children}</span>
-        )
-    },
-    AnimatePresence: ({ children }) => <>{children}</>
-}))
+vi.mock('framer-motion', () => {
+    const start = vi.fn().mockResolvedValue(null)
+    const stop = vi.fn()
+    const set = vi.fn()
+    return {
+        motion: {
+            div: ({ children, className, onClick, ...props }) => (
+                <div className={className} onClick={onClick} {...props}>{children}</div>
+            ),
+            button: ({ children, className, onClick, ...props }) => (
+                <button className={className} onClick={onClick} {...props}>{children}</button>
+            ),
+            span: ({ children, className, ...props }) => (
+                <span className={className} {...props}>{children}</span>
+            )
+        },
+        AnimatePresence: ({ children }) => <>{children}</>,
+        useAnimation: () => ({ start, stop, set })
+    }
+})
 
 // Mock useKeyboardNavigation hook
 vi.mock('../../hooks/useKeyboardNavigation', () => ({
@@ -97,7 +103,7 @@ describe('Player', () => {
         it('should render options button when onOptions provided', () => {
             render(<Player {...defaultProps} />)
 
-            expect(screen.getByText('⚙️')).toBeInTheDocument()
+            expect(screen.getByRole('button', { name: /OPCIONES/i })).toBeInTheDocument()
         })
     })
 
@@ -164,7 +170,7 @@ describe('Player', () => {
             const onOptions = vi.fn()
             render(<Player {...defaultProps} onOptions={onOptions} />)
 
-            fireEvent.click(screen.getByText('⚙️'))
+            fireEvent.click(screen.getByRole('button', { name: /OPCIONES/i }))
 
             expect(onOptions).toHaveBeenCalled()
         })
