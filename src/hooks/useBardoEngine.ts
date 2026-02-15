@@ -10,6 +10,9 @@ import { useTagProcessor } from './useTagProcessor'
 import { useStoryState } from './useStoryState'
 import { useWillpowerSystem } from './useWillpowerSystem'
 import { useSpiderInfestation } from './useSpiderInfestation'
+import { useScrollFriction } from './useScrollFriction'
+import { useBossController } from './useBossController'
+import { useVisualDamage } from './useVisualDamage'
 
 interface BardoEngineOptions {
     storyId: string;
@@ -78,6 +81,9 @@ export function useBardoEngine({
             continueStoryRef.current()
         }
     }, [pendingInput, setGlobalVariable])
+
+    // Scroll container ref (shared with Player for scroll manipulation)
+    const scrollContainerRef = useRef<HTMLElement | null>(null)
 
     // ==================
     // Sub-systems
@@ -213,6 +219,76 @@ export function useBardoEngine({
     }, [spiderInfestation.actions])
 
     // ==================
+    // Scroll Friction System (Arrebatados)
+    // ==================
+    const [arrebatadosCount, setArrebatadosCount] = useState(0)
+    const [arrebatadosEnabled, setArrebatadosEnabled] = useState(false)
+    const [arrebatadosFuerza, setArrebatadosFuerza] = useState(10)
+
+    const scrollFriction = useScrollFriction({
+        scrollContainerRef,
+        enabled: arrebatadosEnabled,
+        arrebatadosCount,
+        fuerza: arrebatadosFuerza,
+    })
+
+    const handleArrebatadosStart = useCallback((config: { count: number, fuerza: number }) => {
+        setArrebatadosEnabled(true)
+        setArrebatadosCount(config.count)
+        setArrebatadosFuerza(config.fuerza)
+    }, [])
+
+    const handleArrebatadosAdd = useCallback((count: number) => {
+        setArrebatadosCount(prev => prev + count)
+    }, [])
+
+    const handleArrebatadosStop = useCallback(() => {
+        setArrebatadosEnabled(false)
+        setArrebatadosCount(0)
+    }, [])
+
+    // ==================
+    // Boss Controller System
+    // ==================
+    const bossController = useBossController()
+
+    const handleBossStart = useCallback((config: { name: string; hp: number }) => {
+        bossController.actions.startBoss(config)
+    }, [bossController.actions])
+
+    const handleBossPhase = useCallback((phase: number) => {
+        bossController.actions.setPhase(phase)
+    }, [bossController.actions])
+
+    const handleBossDamage = useCallback((amount: number) => {
+        bossController.actions.damage(amount)
+    }, [bossController.actions])
+
+    const handleBossCheck = useCallback((): boolean => {
+        return bossController.actions.checkBoss()
+    }, [bossController.actions])
+
+    const handleBossStop = useCallback(() => {
+        bossController.actions.stopBoss()
+    }, [bossController.actions])
+
+    // ==================
+    // Visual Damage System (Persistent)
+    // ==================
+    const visualDamage = useVisualDamage(storyId)
+
+    const visualDamageRef = useRef(visualDamage)
+    visualDamageRef.current = visualDamage
+
+    const handleVisualDamage = useCallback((config: { grayscale?: number, reset?: boolean }) => {
+        if (config.reset) {
+            visualDamageRef.current.resetDamage()
+        } else {
+            visualDamageRef.current.recordDeath()
+        }
+    }, [])
+
+    // ==================
     // Tag Processing
     // ==================
 
@@ -235,7 +311,16 @@ export function useBardoEngine({
         onSpiderStart: handleSpiderStart,
         onSpiderStop: handleSpiderStop,
         onSpiderCheck: handleSpiderCheck,
-        onSpiderDifficulty: handleSpiderDifficulty
+        onSpiderDifficulty: handleSpiderDifficulty,
+        onArrebatadosStart: handleArrebatadosStart,
+        onArrebatadosAdd: handleArrebatadosAdd,
+        onArrebatadosStop: handleArrebatadosStop,
+        onBossStart: handleBossStart,
+        onBossPhase: handleBossPhase,
+        onBossDamage: handleBossDamage,
+        onBossCheck: handleBossCheck,
+        onBossStop: handleBossStop,
+        onVisualDamage: handleVisualDamage,
     })
 
     // ==================
@@ -348,10 +433,12 @@ export function useBardoEngine({
             gameSystems.resetGameSystems()
             willpowerActions.stopWillpower()
             spiderInfestation.actions.stopInfestation()
+            handleArrebatadosStop()
+            bossController.actions.stopBoss()
             resetStoryState()
             initStory(storyData)
         }
-    }, [storyData, storyId, clearVFX, stopMusic, gameSystems, willpowerActions, resetStoryState, initStory])
+    }, [storyData, storyId, clearVFX, stopMusic, gameSystems, willpowerActions, spiderInfestation.actions, handleArrebatadosStop, bossController.actions, resetStoryState, initStory])
 
     const backToStart = useCallback(() => {
         resetStoryState()
@@ -360,7 +447,9 @@ export function useBardoEngine({
         gameSystems.resetGameSystems()
         willpowerActions.stopWillpower()
         spiderInfestation.actions.stopInfestation()
-    }, [resetStoryState, clearVFX, stopMusic, gameSystems, willpowerActions, spiderInfestation.actions])
+        handleArrebatadosStop()
+        bossController.actions.stopBoss()
+    }, [resetStoryState, clearVFX, stopMusic, gameSystems, willpowerActions, spiderInfestation.actions, handleArrebatadosStop, bossController.actions])
 
     const finishGame = useCallback(() => {
         achievementsSystem.markGameComplete()
@@ -447,13 +536,21 @@ export function useBardoEngine({
             actions: willpowerActions,
             updateValue: willpowerActions.updateValue
         },
-        spiderInfestation
+        spiderInfestation,
+        scrollFriction,
+        bossController: {
+            state: bossController.state,
+            actions: bossController.actions,
+        },
+        visualDamage,
+        scrollContainerRef,
     }), [
         playSfx, playMusic, stopMusic, stopAllAudio,
         vfxState, triggerVFX, clearVFX,
         saveSystem, gameSystems, achievementsSystem, minigameController, pendingInput, commitInput,
         willpowerState, willpowerActions,
-        spiderInfestation
+        spiderInfestation,
+        scrollFriction, bossController.state, bossController.actions, visualDamage
     ])
 
     const configRef = useMemo(() => ({
