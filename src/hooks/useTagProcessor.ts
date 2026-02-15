@@ -21,6 +21,18 @@ interface TagProcessorOptions {
     onSpiderStop?: () => void;
     onSpiderCheck?: (threshold: number) => void;
     onSpiderDifficulty?: (difficulty: string) => void;
+    // Arrebatados (scroll friction) callbacks
+    onArrebatadosStart?: (config: { count: number, fuerza: number }) => void;
+    onArrebatadosAdd?: (count: number) => void;
+    onArrebatadosStop?: () => void;
+    // Boss controller callbacks
+    onBossStart?: (config: { name: string, hp: number }) => void;
+    onBossPhase?: (phase: number) => void;
+    onBossDamage?: (amount: number) => void;
+    onBossCheck?: () => boolean;
+    onBossStop?: () => void;
+    // Visual damage callbacks
+    onVisualDamage?: (config: { grayscale?: number, reset?: boolean }) => void;
 }
 
 export function useTagProcessor({
@@ -39,7 +51,16 @@ export function useTagProcessor({
     onSpiderStart,
     onSpiderStop,
     onSpiderCheck,
-    onSpiderDifficulty
+    onSpiderDifficulty,
+    onArrebatadosStart,
+    onArrebatadosAdd,
+    onArrebatadosStop,
+    onBossStart,
+    onBossPhase,
+    onBossDamage,
+    onBossCheck,
+    onBossStop,
+    onVisualDamage
 }: TagProcessorOptions) {
     const processTags = useCallback((tags: string[]) => {
         tags.forEach(rawTag => {
@@ -211,6 +232,125 @@ export function useTagProcessor({
             }
 
             // ============================================
+            // ARREBATADOS (Scroll Friction) TAGS
+            // ============================================
+
+            if (tag.toUpperCase().startsWith('ARREBATADOS_START')) {
+                const rawParams = tag.split(':').slice(1).join(':').trim()
+                const parts = rawParams.split(',').map((s: string) => s.trim())
+                const config: any = { count: 3, fuerza: 10 }
+
+                for (const part of parts) {
+                    const [key, rawVal] = part.split('=').map((s: string) => s.trim())
+                    if (key && rawVal) {
+                        let val: any = rawVal
+                        const varMatch = rawVal.match(/^\{(.+)\}$/)
+                        if (varMatch && storyRef?.current) {
+                            try {
+                                val = storyRef.current.variablesState[varMatch[1]] ?? 0
+                            } catch (e) { val = 0 }
+                        } else {
+                            val = parseInt(rawVal) || 0
+                        }
+                        config[key] = val
+                    }
+                }
+
+                console.log('[Tags] ARREBATADOS_START:', config)
+                if (onArrebatadosStart) onArrebatadosStart(config)
+                return
+            }
+
+            if (tag.toUpperCase().startsWith('ARREBATADOS_ADD')) {
+                const count = parseInt(tag.split(':')[1]?.trim()) || 1
+                console.log(`[Tags] ARREBATADOS_ADD: ${count}`)
+                if (onArrebatadosAdd) onArrebatadosAdd(count)
+                return
+            }
+
+            if (tag.toUpperCase().startsWith('ARREBATADOS_STOP')) {
+                console.log('[Tags] ARREBATADOS_STOP')
+                if (onArrebatadosStop) onArrebatadosStop()
+                return
+            }
+
+            // ============================================
+            // BOSS CONTROLLER TAGS
+            // ============================================
+
+            if (tag.toUpperCase().startsWith('BOSS_START')) {
+                const rawParams = tag.split(':').slice(1).join(':').trim()
+                const parts = rawParams.split(',').map((s: string) => s.trim())
+                const config: any = { name: 'boss', hp: 100 }
+
+                for (const part of parts) {
+                    const [key, rawVal] = part.split('=').map((s: string) => s.trim())
+                    if (key && rawVal) {
+                        config[key] = key === 'hp' ? parseInt(rawVal) || 100 : rawVal
+                    }
+                }
+
+                console.log('[Tags] BOSS_START:', config)
+                if (onBossStart) onBossStart(config)
+                return
+            }
+
+            if (tag.toUpperCase().startsWith('BOSS_PHASE')) {
+                const phase = parseInt(tag.split(':')[1]?.trim()) || 1
+                console.log(`[Tags] BOSS_PHASE: ${phase}`)
+                if (onBossPhase) onBossPhase(phase)
+                return
+            }
+
+            if (tag.toUpperCase().startsWith('BOSS_DAMAGE')) {
+                const amount = parseInt(tag.split(':')[1]?.trim()) || 10
+                console.log(`[Tags] BOSS_DAMAGE: ${amount}`)
+                if (onBossDamage) onBossDamage(amount)
+                return
+            }
+
+            if (tag.toUpperCase().startsWith('BOSS_CHECK')) {
+                console.log('[Tags] BOSS_CHECK')
+                let defeated = false
+                if (onBossCheck) {
+                    defeated = onBossCheck()
+                }
+                if (storyRef?.current) {
+                    try {
+                        storyRef.current.variablesState['boss_defeated'] = defeated
+                        console.log(`[Tags] Set boss_defeated = ${defeated}`)
+                    } catch (e) {
+                        console.warn('[Tags] Could not set boss_defeated:', e)
+                    }
+                }
+                return
+            }
+
+            if (tag.toUpperCase().startsWith('BOSS_STOP')) {
+                console.log('[Tags] BOSS_STOP')
+                if (onBossStop) onBossStop()
+                return
+            }
+
+            // ============================================
+            // VISUAL DAMAGE TAGS
+            // ============================================
+
+            if (tag.toUpperCase().startsWith('VISUAL_DAMAGE')) {
+                const rawParam = tag.split(':').slice(1).join(':').trim()
+                if (rawParam.toLowerCase() === 'reset') {
+                    console.log('[Tags] VISUAL_DAMAGE: reset')
+                    if (onVisualDamage) onVisualDamage({ reset: true })
+                } else {
+                    const match = rawParam.match(/grayscale\s*=\s*([\d.]+)/)
+                    const grayscale = match ? parseFloat(match[1]) : 0.3
+                    console.log(`[Tags] VISUAL_DAMAGE: grayscale=${grayscale}`)
+                    if (onVisualDamage) onVisualDamage({ grayscale })
+                }
+                return
+            }
+
+            // ============================================
             // EXISTING TAG PROCESSING
             // ============================================
 
@@ -268,7 +408,16 @@ export function useTagProcessor({
         onSpiderStart,
         onSpiderStop,
         onSpiderCheck,
-        onSpiderDifficulty
+        onSpiderDifficulty,
+        onArrebatadosStart,
+        onArrebatadosAdd,
+        onArrebatadosStop,
+        onBossStart,
+        onBossPhase,
+        onBossDamage,
+        onBossCheck,
+        onBossStop,
+        onVisualDamage
     ])
 
     return useMemo(() => ({ processTags }), [processTags])
