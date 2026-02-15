@@ -33,6 +33,7 @@ import toyboxStory from './stories/toybox.json'
 import apneaStory from './stories/apnea.json'
 import vampiroStory from './stories/vampiro.json'
 import spiderDemoStory from './stories/spider_demo.json'
+import museoDemoStory from './stories/museo_demo.json'
 
 // Dev mode stories
 const DEV_STORIES = {
@@ -42,7 +43,8 @@ const DEV_STORIES = {
     toybox: toyboxStory,
     apnea: apneaStory,
     vampiro: vampiroStory,
-    spider_demo: spiderDemoStory
+    spider_demo: spiderDemoStory,
+    museo_demo: museoDemoStory
 }
 
 const AVAILABLE_STORIES = [
@@ -52,7 +54,8 @@ const AVAILABLE_STORIES = [
     { id: 'apnea', title: '🫁 APNEA', data: apneaStory },
     { id: 'serruchin', title: '🪚 SERRUCHÍN', data: serruchinStory },
     { id: 'partuza', title: 'Tu nombre en clave es Partuza', data: partuzaStory },
-    { id: 'spider_demo', title: '🕷️ INFESTACIÓN (Spider Demo)', data: spiderDemoStory }
+    { id: 'spider_demo', title: '🕷️ INFESTACIÓN (Spider Demo)', data: spiderDemoStory },
+    { id: 'museo_demo', title: '🏛️ EL OCASO EN EL MUSEO (Scroll/Boss Demo)', data: museoDemoStory }
 ]
 
 // Inner App component that uses settings context
