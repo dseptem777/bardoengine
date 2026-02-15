@@ -3,6 +3,8 @@ import TextDisplay from './TextDisplay'
 import ChoiceButton from './ChoiceButton'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation'
 import { HeaderStats } from './StatsPanel'
+import BossHPIndicator from './BossHPIndicator'
+import ScrollGrabOverlay from './ScrollGrabOverlay'
 
 export default function Player({
     text,
@@ -37,7 +39,13 @@ export default function Player({
     headerStatsProps = null,         // { stats, statsConfig, getAllStatsInfo }
     inventoryEnabled = false,
     onToggleInventory = null,
-    inventoryItemCount = 0
+    inventoryItemCount = 0,
+    // Boss fight props
+    bossState = null,
+    scrollFriction = null,
+    onScrollLock = null,
+    onScrollUnlock = null,
+    onBossPhaseComplete = null,
 }) {
     // If no text but has interactive content, skip typewriter
     const hasInteractiveContent = choices.length > 0 || isEnded
@@ -111,6 +119,14 @@ export default function Player({
 
         return () => resizeObserver.disconnect()
     }, [])
+
+    // Expose scroll container ref to parent for scroll manipulation hooks
+    useEffect(() => {
+        if (bossState && scrollContainerRef.current) {
+            // Make ref available externally via a data attribute
+            scrollContainerRef.current.dataset.scrollRef = 'true'
+        }
+    }, [bossState])
 
     useEffect(() => {
         // If no text but has interactive content, skip typewriter immediately
@@ -424,6 +440,45 @@ export default function Player({
                     Powered by Ink • © BardoEngine
                 </p>
             </footer>
+
+            {/* Boss HP Indicator */}
+            {bossState && (
+                <BossHPIndicator
+                    bossName={bossState.bossName}
+                    bossHp={bossState.bossHp}
+                    bossMaxHp={bossState.bossMaxHp}
+                    phase={bossState.phase}
+                    isActive={bossState.isActive}
+                />
+            )}
+
+            {/* Shadow Hands Overlay (Phase 2) */}
+            <ScrollGrabOverlay
+                active={bossState?.phase === 'phase_2'}
+                onScrollLock={onScrollLock}
+                onScrollUnlock={onScrollUnlock}
+                onPhaseComplete={onBossPhaseComplete}
+            />
+
+            {/* Arrebatados visual layer */}
+            {scrollFriction?.isActive && scrollFriction.arrebatadosElements?.length > 0 && (
+                <div className="fixed inset-0 z-[70] pointer-events-none overflow-hidden">
+                    {scrollFriction.arrebatadosElements.map((el, idx) => (
+                        <div
+                            key={el.id}
+                            className="absolute font-mono text-red-900/40 text-sm whitespace-nowrap animate-pulse"
+                            style={{
+                                top: `${20 + (el.paragraphIndex * 15)}%`,
+                                left: `${10 + ((idx * 17) % 70)}%`,
+                                transform: `rotate(${(idx * 3 - 4)}deg)`,
+                                textShadow: '0 0 10px rgba(139,0,0,0.3)',
+                            }}
+                        >
+                            {el.text}
+                        </div>
+                    ))}
+                </div>
+            )}
 
             {/* Floating Indicators - OUTSIDE main, truly fixed at viewport level */}
             {isTyping && typewriterDelay > 0 && !(willpowerActive && choices.length > 0) && (
