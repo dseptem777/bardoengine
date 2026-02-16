@@ -113,7 +113,7 @@ function AppContent({ onStorySelect }) {
         story, text, choices, canContinue, isEnded, history,
         actions, subsystems, config
     } = engine
-    const { audio, vfx, saveSystem, gameSystems, achievementsSystem, minigameController, willpower, spiderInfestation } = subsystems
+    const { audio, vfx, saveSystem, gameSystems, achievementsSystem, minigameController, willpower, spiderInfestation, scrollFriction, bossController, visualDamage, scrollContainerRef } = subsystems
 
     // Track if we've auto-submitted due to zero willpower
     const [hasAutoSubmitted, setHasAutoSubmitted] = useState(false)
@@ -482,6 +482,14 @@ function AppContent({ onStorySelect }) {
                     inventoryEnabled={!!gameSystems.inventoryConfig?.enabled}
                     onToggleInventory={() => setInventoryOpen(prev => !prev)}
                     inventoryItemCount={gameSystems.getItemsWithInfo?.()?.length || 0}
+                    // Scroll container ref (shared with scroll friction hook)
+                    scrollContainerRef={scrollContainerRef}
+                    // Boss fight props
+                    bossState={bossController?.state}
+                    scrollFriction={scrollFriction}
+                    onBossPhaseComplete={bossController?.handleBossPhaseComplete}
+                    onBossPlayerDeath={bossController?.handleBossPlayerDeath}
+                    sabiduria={gameSystems?.stats?.sabiduria}
                 />
             )}
 

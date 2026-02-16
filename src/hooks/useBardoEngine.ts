@@ -272,6 +272,59 @@ export function useBardoEngine({
         bossController.actions.stopBoss()
     }, [bossController.actions])
 
+    // Boss phase completion — damages boss and auto-selects gate choice,
+    // then flags for transition gate auto-advance
+    const handleBossPhaseComplete = useCallback((damage: number) => {
+        bossController.actions.damage(damage)
+        // Check if boss is now defeated and set Ink variable BEFORE story continues
+        // (Ink conditionals evaluate during continuation, before tags are processed)
+        const defeated = bossController.actions.checkBoss()
+        if (defeated) {
+            setGlobalVariable('boss_defeated', true)
+        }
+        // Flag: after this gate choice, auto-advance the transition gate too
+        bossTransitionPendingRef.current = true
+        // Auto-select the current phase's gate choice [→]
+        setTimeout(() => {
+            if (makeChoiceRef.current) {
+                makeChoiceRef.current(0)
+            }
+        }, 800)
+    }, [bossController.actions, setGlobalVariable])
+
+    // Boss phase 3 player death — auto-select gate choice to reach derrota
+    const handleBossPlayerDeath = useCallback(() => {
+        bossController.actions.playerDied()
+        bossTransitionPendingRef.current = true
+        setTimeout(() => {
+            if (makeChoiceRef.current) {
+                makeChoiceRef.current(0)
+            }
+        }, 1000)
+    }, [bossController.actions])
+
+    // Track whether we're waiting for a transition gate auto-advance
+    const bossTransitionPendingRef = useRef(false)
+
+    // Auto-select gate choices [→] that appear in transition knots AFTER a phase completes.
+    // We set bossTransitionPendingRef=true in handleBossPhaseComplete/handleBossPlayerDeath,
+    // then when the next gate choice appears, we auto-select it.
+    useEffect(() => {
+        if (!bossTransitionPendingRef.current) return
+        if (choices.length !== 1) return
+        const choiceText = choices[0]?.text?.trim()
+        if (choiceText !== '→') return
+
+        const timer = setTimeout(() => {
+            bossTransitionPendingRef.current = false
+            if (makeChoiceRef.current) {
+                makeChoiceRef.current(0)
+            }
+        }, 1500) // pause to display transition text
+
+        return () => clearTimeout(timer)
+    }, [choices])
+
     // ==================
     // Visual Damage System (Persistent)
     // ==================
@@ -541,6 +594,8 @@ export function useBardoEngine({
         bossController: {
             state: bossController.state,
             actions: bossController.actions,
+            handleBossPhaseComplete,
+            handleBossPlayerDeath,
         },
         visualDamage,
         scrollContainerRef,
@@ -550,7 +605,7 @@ export function useBardoEngine({
         saveSystem, gameSystems, achievementsSystem, minigameController, pendingInput, commitInput,
         willpowerState, willpowerActions,
         spiderInfestation,
-        scrollFriction, bossController.state, bossController.actions, visualDamage
+        scrollFriction, bossController.state, bossController.actions, handleBossPhaseComplete, handleBossPlayerDeath, visualDamage
     ])
 
     const configRef = useMemo(() => ({

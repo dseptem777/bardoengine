@@ -109,7 +109,7 @@ function isAndroidConfigured() {
     return hasJavaHome && hasAndroidHome && hasNdkHome;
 }
 
-function checkAndroidPrerequisites() {
+function checkAndroidPrerequisites(expectedIdentifier) {
     if (!isAndroidConfigured()) {
         console.error('\n✗ Android no está configurado.');
         console.error('  Ejecutá primero: powershell .\\scripts\\setup-android.ps1');
@@ -117,12 +117,38 @@ function checkAndroidPrerequisites() {
         return false;
     }
 
-    // Check for Tauri Android project
+    // Check for Tauri Android project — auto-reinit if missing or stale identifier
     const genAndroidPath = path.join(__dirname, '..', 'src-tauri', 'gen', 'android');
-    if (!fs.existsSync(genAndroidPath)) {
-        console.error('\n✗ Proyecto Android de Tauri no inicializado.');
-        console.error('  Ejecutá: npm run tauri android init\n');
-        return false;
+    let needsInit = !fs.existsSync(genAndroidPath);
+
+    if (!needsInit && expectedIdentifier) {
+        // Check if the existing gen/android matches the current identifier
+        // Identifier com.bardoengine.foo → expects .../java/com/bardoengine/foo/
+        const parts = expectedIdentifier.split('.');
+        const expectedDir = path.join(genAndroidPath, 'app', 'src', 'main', 'java', ...parts);
+        if (!fs.existsSync(expectedDir)) {
+            console.log(`\n⚠ gen/android fue generado para otro juego (no existe ${parts.join('.')})`);
+            needsInit = true;
+        }
+    }
+
+    if (needsInit) {
+        // Delete stale gen/android if it exists
+        if (fs.existsSync(genAndroidPath)) {
+            console.log('  → Eliminando gen/android viejo...');
+            fs.rmSync(genAndroidPath, { recursive: true, force: true });
+        }
+        console.log('  → Inicializando proyecto Android con tauri android init...');
+        try {
+            execSync('npx tauri android init', {
+                stdio: 'inherit',
+                cwd: path.join(__dirname, '..'),
+            });
+            console.log('  ✓ Proyecto Android inicializado\n');
+        } catch (e) {
+            console.error(`\n✗ Error inicializando Android: ${e.message}`);
+            return false;
+        }
     }
 
     return true;
@@ -200,9 +226,6 @@ async function main() {
         case '4':
             targetPlatform = 'Android';
             isAndroid = true;
-            if (!checkAndroidPrerequisites()) {
-                process.exit(1);
-            }
             break;
         case '5':
             targetPlatform = 'Todas (Desktop)';
@@ -223,6 +246,14 @@ async function main() {
 
     // Step 1: Update Tauri config
     updateTauriConfig(storyId, gameConfig.title, gameConfig.version);
+
+    // Step 1b: For Android, check/reinit gen/android after config is updated
+    if (isAndroid) {
+        const config = JSON.parse(fs.readFileSync(TAURI_CONF, 'utf8'));
+        if (!checkAndroidPrerequisites(config.identifier)) {
+            process.exit(1);
+        }
+    }
 
     // Step 2: Encrypt story
     if (!runCommand(`node scripts/encrypt-story.cjs ${storyId} --title "${gameConfig.title}"`, 'Encriptando historia')) {

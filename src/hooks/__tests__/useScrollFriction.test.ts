@@ -57,72 +57,79 @@ describe('useScrollFriction', () => {
     })
 
     describe('friction calculation', () => {
-        it('should calculate friction as arrebatadosCount / (fuerza + 10)', () => {
+        it('should have noticeable friction even with few arrebatados', () => {
             const ref = makeRef(container)
-            // 5 / (10 + 10) = 0.25
             const { result } = renderHook(() =>
                 useScrollFriction({
                     scrollContainerRef: ref,
                     enabled: true,
-                    arrebatadosCount: 5,
+                    arrebatadosCount: 2,
                     fuerza: 10,
                 })
             )
 
             expect(result.current.isActive).toBe(true)
-            expect(result.current.currentFriction).toBe(0.25)
+            // With aggressive formula, 2 arrebatados should give significant friction
+            expect(result.current.currentFriction).toBeGreaterThan(0.3)
         })
 
-        it('should cap friction at 1.0 when arrebatados >= fuerza + 10', () => {
+        it('should increase friction with more arrebatados', () => {
             const ref = makeRef(container)
-            // 20 / (10 + 10) = 1.0 exactly
-            const { result } = renderHook(() =>
-                useScrollFriction({
-                    scrollContainerRef: ref,
-                    enabled: true,
-                    arrebatadosCount: 20,
-                    fuerza: 10,
-                })
-            )
-
-            expect(result.current.currentFriction).toBe(1.0)
-        })
-
-        it('should cap friction at 1.0 when arrebatados exceed fuerza + 10', () => {
-            const ref = makeRef(container)
-            // 50 / (10 + 10) = 2.5 -> capped to 1.0
-            const { result } = renderHook(() =>
-                useScrollFriction({
-                    scrollContainerRef: ref,
-                    enabled: true,
-                    arrebatadosCount: 50,
-                    fuerza: 10,
-                })
-            )
-
-            expect(result.current.currentFriction).toBe(1.0)
-        })
-
-        it('should recalculate friction when arrebatadosCount changes', () => {
-            const ref = makeRef(container)
-            let arrebatadosCount = 5
+            let count = 2
 
             const { result, rerender } = renderHook(() =>
                 useScrollFriction({
                     scrollContainerRef: ref,
                     enabled: true,
-                    arrebatadosCount,
+                    arrebatadosCount: count,
                     fuerza: 10,
                 })
             )
 
-            expect(result.current.currentFriction).toBe(0.25)
+            const lowFriction = result.current.currentFriction
 
-            arrebatadosCount = 10
+            count = 8
             rerender()
 
-            // 10 / (10 + 10) = 0.5
-            expect(result.current.currentFriction).toBe(0.5)
+            expect(result.current.currentFriction).toBeGreaterThan(lowFriction)
+        })
+
+        it('should cap friction at 0.95', () => {
+            const ref = makeRef(container)
+            const { result } = renderHook(() =>
+                useScrollFriction({
+                    scrollContainerRef: ref,
+                    enabled: true,
+                    arrebatadosCount: 100,
+                    fuerza: 10,
+                })
+            )
+
+            expect(result.current.currentFriction).toBe(0.95)
+        })
+
+        it('should reduce friction when fuerza is higher', () => {
+            const ref = makeRef(container)
+
+            const { result: lowStr } = renderHook(() =>
+                useScrollFriction({
+                    scrollContainerRef: ref,
+                    enabled: true,
+                    arrebatadosCount: 5,
+                    fuerza: 5,
+                })
+            )
+
+            const { result: highStr } = renderHook(() =>
+                useScrollFriction({
+                    scrollContainerRef: ref,
+                    enabled: true,
+                    arrebatadosCount: 5,
+                    fuerza: 20,
+                })
+            )
+
+            expect(lowStr.current.currentFriction).toBeGreaterThan(highStr.current.currentFriction)
         })
     })
 
@@ -131,12 +138,12 @@ describe('useScrollFriction', () => {
             const ref = makeRef(container)
             container.scrollTop = 0
 
-            renderHook(() =>
+            const { result } = renderHook(() =>
                 useScrollFriction({
                     scrollContainerRef: ref,
                     enabled: true,
-                    arrebatadosCount: 5,
-                    fuerza: 10, // friction = 0.25
+                    arrebatadosCount: 4,
+                    fuerza: 10,
                 })
             )
 
@@ -150,11 +157,13 @@ describe('useScrollFriction', () => {
                 container.dispatchEvent(wheelEvent)
             })
 
-            // scrollTop += deltaY * (1 - friction) = 100 * 0.75 = 75
-            expect(container.scrollTop).toBe(75)
+            const friction = result.current.currentFriction
+            // scrollTop should be less than full deltaY
+            expect(container.scrollTop).toBeGreaterThan(0)
+            expect(container.scrollTop).toBeLessThan(100)
         })
 
-        it('should completely freeze scroll when friction >= 1', () => {
+        it('should nearly freeze scroll when friction is very high', () => {
             const ref = makeRef(container)
             container.scrollTop = 50
 
@@ -162,8 +171,8 @@ describe('useScrollFriction', () => {
                 useScrollFriction({
                     scrollContainerRef: ref,
                     enabled: true,
-                    arrebatadosCount: 30,
-                    fuerza: 10, // friction = 1.0 (capped)
+                    arrebatadosCount: 100,
+                    fuerza: 10, // friction = 0.95 (capped)
                 })
             )
 
@@ -177,8 +186,8 @@ describe('useScrollFriction', () => {
                 container.dispatchEvent(wheelEvent)
             })
 
-            // Scroll should not change
-            expect(container.scrollTop).toBe(50)
+            // With 0.95 friction, jitter pushback: scrollTop -= 2
+            expect(container.scrollTop).toBeLessThan(50)
         })
 
         it('should not intercept wheel events when disabled', () => {

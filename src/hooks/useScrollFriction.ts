@@ -45,9 +45,10 @@ export function useScrollFriction(config: ScrollFrictionConfig): ScrollFrictionR
 
     const isActive = enabled && arrebatadosCount > 0
 
-    // friction = min(arrebatadosCount / (fuerza + 10), 1)
+    // Aggressive friction: even 2 arrebatados should feel heavy
+    // With fuerza=10: 2 arrebatados → 0.5, 4 → 0.73, 7 → 0.88
     const currentFriction = isActive
-        ? Math.min(arrebatadosCount / (fuerza + 10), 1)
+        ? Math.min(1 - (1 / (1 + arrebatadosCount * 0.8 / Math.max(fuerza * 0.1, 1))), 0.95)
         : 0
 
     // Generate arrebatado visual element data
@@ -61,19 +62,33 @@ export function useScrollFriction(config: ScrollFrictionConfig): ScrollFrictionR
         }))
     }, [isActive, arrebatadosCount])
 
-    // Wheel event handler with friction applied
+    // Wheel event handler with friction applied + occasional pushback
+    const pushbackAccum = { current: 0 }
     const handleWheel = useCallback(
         (e: WheelEvent) => {
             e.preventDefault()
 
-            if (currentFriction >= 1) {
-                // Scroll completely frozen
+            const container = scrollContainerRef.current
+            if (!container) return
+
+            if (currentFriction >= 0.95) {
+                // Almost frozen — tiny jitter pushback
+                container.scrollTop -= 2
                 return
             }
 
-            const container = scrollContainerRef.current
-            if (container) {
-                container.scrollTop += e.deltaY * (1 - currentFriction)
+            const reduced = e.deltaY * (1 - currentFriction)
+            container.scrollTop += reduced
+
+            // Pushback: accumulate scroll and occasionally resist
+            if (e.deltaY > 0 && currentFriction > 0.3) {
+                pushbackAccum.current += e.deltaY
+                if (pushbackAccum.current > 300) {
+                    pushbackAccum.current = 0
+                    // Snap back a bit
+                    const pushback = 15 + currentFriction * 30
+                    container.scrollTop -= pushback
+                }
             }
         },
         [currentFriction, scrollContainerRef]

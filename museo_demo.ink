@@ -41,7 +41,7 @@ La radio se corta. El silencio del museo te traga.
 
 === museo_entrada ===
 # clear
-# ARREBATADOS_START: count=2, fuerza={fuerza}
+# ARREBATADOS_START: count=4, fuerza={fuerza}
 
 La puerta principal está entreabierta. Adentro, el aire huele a tierra mojada y a algo metálico, como sangre vieja.
 
@@ -67,7 +67,7 @@ Tu cautela te recompensa. [+2 Sabiduría]
 + [Entrar a la galería] -> galeria_1
 
 === galeria_1 ===
-# ARREBATADOS_ADD: 2
+# ARREBATADOS_ADD: 4
 # clear
 
 La Galería de Historia Natural. Vitrinas rotas, huesos de dinosaurios proyectando sombras grotescas.
@@ -121,7 +121,7 @@ Pero el esfuerzo te deja mareado.
 + [Seguir adelante] -> galeria_2
 
 === galeria_2 ===
-# ARREBATADOS_ADD: 3
+# ARREBATADOS_ADD: 5
 # clear
 
 Sala de Arqueología Andina. Aquí está la vitrina de la Momia de Salta — vacía. El vidrio está cubierto de escarcha negra.
@@ -176,10 +176,9 @@ Pero algo no está bien. Uno de los textos tiene un brillo diferente. Algo que n
 
 Encontrá la errata en el texto y clickeala para romper el hechizo.
 
-+ [Buscar la errata...] -> boss_fase_1_check
++ [→] -> boss_fase_1_check
 
 === boss_fase_1_check ===
-# BOSS_DAMAGE: 30
 
 ¡LO ENCONTRASTE!
 
@@ -190,7 +189,7 @@ El corredor se quiebra como un espejo. Amaru retrocede, sorprendido.
 # flash_white
 # shake
 
-+ [Avanzar a la siguiente fase] -> boss_fase_2
++ [→] -> boss_fase_2
 
 === boss_fase_2 ===
 # BOSS_PHASE: 2
@@ -208,10 +207,9 @@ Las manos intentan agarrar la interfaz. Sentís cómo el control se te escapa.
 
 Si dejás de sacudir, las manos te atrapan y el scroll se bloquea.
 
-+ [Resistir las manos] -> boss_fase_2_check
++ [→] -> boss_fase_2_check
 
 === boss_fase_2_check ===
-# BOSS_DAMAGE: 30
 
 ¡Te liberaste!
 
@@ -222,7 +220,7 @@ Las manos se retraen, chillando. Amaru escupe sangre negra.
 # shake
 # flash_white
 
-+ [Enfrentar la fase final] -> boss_fase_3
++ [→] -> boss_fase_3
 
 === boss_fase_3 ===
 # BOSS_PHASE: 3
@@ -242,7 +240,7 @@ Pero hay grietas en la realidad de Amaru — portales pequeños que pulsan con l
 
 Si el espacio llega a cero, morís.
 
-+ [Atacar los portales] -> boss_fase_3_check
++ [→] -> boss_fase_3_check
 
 === boss_fase_3_check ===
 # BOSS_CHECK

@@ -5,6 +5,7 @@ import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation'
 import { HeaderStats } from './StatsPanel'
 import BossHPIndicator from './BossHPIndicator'
 import ScrollGrabOverlay from './ScrollGrabOverlay'
+import BossPhaseOverlay from './BossPhaseOverlay'
 
 export default function Player({
     text,
@@ -40,12 +41,16 @@ export default function Player({
     inventoryEnabled = false,
     onToggleInventory = null,
     inventoryItemCount = 0,
+    // Shared scroll ref (from useBardoEngine, used by scroll friction hook)
+    scrollContainerRef: externalScrollRef = null,
     // Boss fight props
     bossState = null,
     scrollFriction = null,
     onScrollLock = null,
     onScrollUnlock = null,
     onBossPhaseComplete = null,
+    onBossPlayerDeath = null,
+    sabiduria = 10,
 }) {
     // If no text but has interactive content, skip typewriter
     const hasInteractiveContent = choices.length > 0 || isEnded
@@ -54,8 +59,9 @@ export default function Player({
     const interactiveRef = useRef(null)
     const choiceButtonRefs = useRef({})
 
-    // Scroll handling refs
-    const scrollContainerRef = useRef(null)
+    // Scroll handling refs — use external ref if provided (shared with scroll friction hook)
+    const localScrollRef = useRef(null)
+    const scrollContainerRef = externalScrollRef || localScrollRef
     const contentRef = useRef(null)
     const isStickyRef = useRef(true)
 
@@ -103,10 +109,13 @@ export default function Player({
     }, [isMobile])
 
     // Setup resize observer for auto-scrolling
+    // Disabled during scroll friction — player must scroll manually
+    const scrollFrictionActive = scrollFriction?.isActive
     useEffect(() => {
         if (!contentRef.current || !scrollContainerRef.current) return
 
         const resizeObserver = new ResizeObserver(() => {
+            if (scrollFrictionActive) return
             if (isStickyRef.current && scrollContainerRef.current) {
                 scrollContainerRef.current.scrollTo({
                     top: scrollContainerRef.current.scrollHeight,
@@ -127,6 +136,10 @@ export default function Player({
             scrollContainerRef.current.dataset.scrollRef = 'true'
         }
     }, [bossState])
+
+    // During boss phases, hide gate choices [→] — they're auto-selected by phase mechanics.
+    // Normal choices (like transition text) should still display.
+    const isBossGateChoice = bossState?.isActive && choices.length === 1 && choices[0]?.text?.trim() === '→'
 
     useEffect(() => {
         // If no text but has interactive content, skip typewriter immediately
@@ -360,7 +373,8 @@ export default function Player({
                         <div className="hidden">{console.log('[Player] Render choices. isTyping:', isTyping, 'Length:', choices.length)}</div>
 
                         {/* Choices - Appear below text, no layout impact on text above */}
-                        {!isTyping && !hasPendingMinigame && choices.length > 0 && (
+                        {/* Hide gate choices [→] during boss — they're auto-selected by phase mechanics */}
+                        {!isTyping && !hasPendingMinigame && choices.length > 0 && !isBossGateChoice && (
                             <div className="space-y-4">
                                 {choices.map((choice, index) => (
                                     <ChoiceButton
@@ -455,9 +469,24 @@ export default function Player({
             {/* Shadow Hands Overlay (Phase 2) */}
             <ScrollGrabOverlay
                 active={bossState?.phase === 'phase_2'}
+                textReady={!isTyping}
                 onScrollLock={onScrollLock}
                 onScrollUnlock={onScrollUnlock}
+                onPhaseComplete={() => onBossPhaseComplete?.(15)}
+                onPhaseFail={() => onBossPlayerDeath?.()}
+                onDrainHp={(amount) => {
+                    // HP drain while grabbed — visual feedback only (damage dealt at phase end)
+                }}
+            />
+
+            {/* Boss Phase Overlay (Phase 1: Errata Hunt, Phase 3: Viewport Collapse) */}
+            <BossPhaseOverlay
+                phase={bossState?.phase}
+                sabiduria={sabiduria}
+                textReady={!isTyping}
                 onPhaseComplete={onBossPhaseComplete}
+                onPlayerDeath={onBossPlayerDeath}
+                bossHp={bossState?.bossHp ?? 100}
             />
 
             {/* Arrebatados visual layer */}
