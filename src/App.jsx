@@ -47,17 +47,6 @@ const DEV_STORIES = {
     museo_demo: museoDemoStory
 }
 
-const AVAILABLE_STORIES = [
-    { id: 'vampiro', title: '🧛 EL PESO DE LA VOLUNTAD (Meta-Horror Demo)', data: vampiroStory },
-    { id: 'centinelas', title: '🚨 CENTINELAS DEL SUR', data: centinelasStory },
-    { id: 'toybox', title: '📦 BARDO TOYBOX (Minigames)', data: toyboxStory },
-    { id: 'apnea', title: '🫁 APNEA', data: apneaStory },
-    { id: 'serruchin', title: '🪚 SERRUCHÍN', data: serruchinStory },
-    { id: 'partuza', title: 'Tu nombre en clave es Partuza', data: partuzaStory },
-    { id: 'spider_demo', title: '🕷️ INFESTACIÓN (Spider Demo)', data: spiderDemoStory },
-    { id: 'museo_demo', title: '🏛️ EL OCASO EN EL MUSEO (Scroll/Boss Demo)', data: museoDemoStory }
-]
-
 // Inner App component that uses settings context
 function AppContent({ onStorySelect }) {
     // Settings
@@ -77,6 +66,44 @@ function AppContent({ onStorySelect }) {
     const [showEditor, setShowEditor] = useState(false)
     const [choicesVisible, setChoicesVisible] = useState(false)  // True when Player's typewriter is done
     const [meterRevealed, setMeterRevealed] = useState(false)    // True once bar has been shown for first time
+
+    // Dev story list (persisted in localStorage, all imported via .ink)
+    const [devStoryList, setDevStoryList] = useState(() => {
+        try {
+            const stored = localStorage.getItem('bardo_dev_stories')
+            if (!stored) return []
+            return JSON.parse(stored)
+        } catch { return [] }
+    })
+
+    const handleImportInk = useCallback(async (name, title, inkSource) => {
+        const { Compiler } = await import('inkjs/compiler/Compiler')
+        const { Story } = await import('inkjs')
+        const compiler = new Compiler(inkSource)
+        const compiled = compiler.Compile()
+        const jsonStr = compiled.ToJson()
+        // Validate it actually works as a Story
+        new Story(jsonStr)
+
+        const storyData = JSON.parse(jsonStr)
+        const id = name.replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase()
+        const entry = { id, title, data: storyData }
+
+        setDevStoryList(prev => {
+            const filtered = prev.filter(s => s.id !== id)
+            const next = [...filtered, entry]
+            localStorage.setItem('bardo_dev_stories', JSON.stringify(next))
+            return next
+        })
+    }, [])
+
+    const handleRemoveStory = useCallback((id) => {
+        setDevStoryList(prev => {
+            const next = prev.filter(s => s.id !== id)
+            localStorage.setItem('bardo_dev_stories', JSON.stringify(next))
+            return next
+        })
+    }, [])
 
     // Story loader with environment detection
     const { stories, isLoading: storyLoading, error: storyError, isProductionMode } = useStoryLoader({
@@ -404,10 +431,12 @@ function AppContent({ onStorySelect }) {
             {/* Story Selector (dev mode only) */}
             {!storyLoading && !storyError && showStorySelector && (
                 <StorySelector
-                    stories={AVAILABLE_STORIES}
+                    stories={devStoryList}
                     onSelect={selectStoryDev}
                     hasSave={() => false}
                     onOpenEditor={() => setShowEditor(true)}
+                    onImportInk={handleImportInk}
+                    onRemoveStory={handleRemoveStory}
                 />
             )}
 

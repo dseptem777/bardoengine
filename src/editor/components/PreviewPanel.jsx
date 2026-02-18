@@ -1,15 +1,25 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Player from '../../components/Player';
-import { StorySimulator } from '../utils/StorySimulator';
+import { Compiler } from 'inkjs/compiler/Compiler';
+import { Story } from 'inkjs';
+import { generateInk } from '../utils/generateInk';
 import { useVFX } from '../../hooks/useVFX';
+import { useMinigameController, parseMinigameTag } from '../../hooks/useMinigameController';
+import MinigameOverlay from '../../components/MinigameOverlay';
 
-export default function PreviewPanel({ nodes, edges, onClose }) {
-    const [simulator, setSimulator] = useState(null);
+export default function PreviewPanel({ nodes, edges, variables = [], onClose }) {
+    const simulatorRef = useRef(null);
+    const stateStackRef = useRef([]);
     const [text, setText] = useState('');
     const [choices, setChoices] = useState([]);
     const [canContinue, setCanContinue] = useState(false);
     const [isEnded, setIsEnded] = useState(false);
     const [history, setHistory] = useState([]);
+    const [compileError, setCompileError] = useState(null);
+
+    // Use ref for processTagsForNode to avoid stale closures in callbacks
+    const processTagsRef = useRef(null);
+    const autoStartedRef = useRef(false);
 
     // VFX System
     const { vfxState, triggerVFX, clearVFX } = useVFX({
@@ -18,74 +28,239 @@ export default function PreviewPanel({ nodes, edges, onClose }) {
         stopMusic: () => console.log('[Preview Stop Music]')
     });
 
-    const processTags = useCallback((tags) => {
+    // Minigame result handler — uses ref to avoid stale closure
+    const handleMinigameResult = useCallback((result) => {
+        console.log('[Preview] Minigame result:', result);
+        const story = simulatorRef.current;
+        if (!story) return;
+
+        // Store result in story variables
+        try {
+            story.variablesState['minigame_result'] = (result === true || result === 1) ? 1 : 0;
+        } catch (e) {
+            console.warn('[Preview] Could not set minigame_result variable:', e.message);
+        }
+
+        // Auto-continue story after minigame
+        if (story.canContinue) {
+            stateStackRef.current.push(story.state.toJson());
+            const nextText = story.Continue();
+            if (processTagsRef.current) processTagsRef.current(story.currentTags);
+            setText(nextText);
+            setChoices(story.currentChoices.map((c, i) => ({ text: c.text, index: i })));
+            setCanContinue(story.canContinue);
+            setIsEnded(!story.canContinue && story.currentChoices.length === 0);
+            setHistory(prev => [...prev, { text: nextText, type: 'text' }]);
+        }
+    }, []);
+
+    // Minigame Controller
+    const minigameController = useMinigameController(handleMinigameResult);
+
+    // Auto-start minigame when queued with autoStart (guarded against double-fire)
+    useEffect(() => {
+        if (minigameController.isPending && minigameController.config?.autoStart && !autoStartedRef.current) {
+            autoStartedRef.current = true;
+            minigameController.startGame();
+        }
+        if (!minigameController.isPending) {
+            autoStartedRef.current = false;
+        }
+    }, [minigameController.isPending, minigameController.config?.autoStart, minigameController.startGame]);
+
+    // Process tags — routes VFX and minigame tags
+    const processTagsForNode = useCallback((tags) => {
         if (!tags || tags.length === 0) return;
-        tags.forEach(tag => triggerVFX(tag));
-    }, [triggerVFX]);
 
-    // Initialize/Restart Simulator
-    const initSimulator = useCallback(() => {
-        const sim = new StorySimulator(nodes, edges);
-        setSimulator(sim);
+        tags.forEach(tag => {
+            const tagLower = tag.toLowerCase().trim();
 
-        // Initial state
-        const firstText = sim.Continue();
-        processTags(sim.currentTags);
-        setText(firstText);
-        setChoices(sim.currentChoices);
-        setCanContinue(sim.canContinue);
-        setIsEnded(!sim.canContinue && sim.currentChoices.length === 0);
-        setHistory([{ text: firstText, type: 'text' }]);
-    }, [nodes, edges, processTags]);
+            // KEY_MASH tag
+            if (tagLower.startsWith('key_mash:')) {
+                const countStr = tag.substring('KEY_MASH:'.length).trim();
+                const count = parseInt(countStr) || 30;
+                minigameController.queueGame({
+                    type: 'keymash',
+                    params: {
+                        key: 'V',
+                        count,
+                        timeLimit: Math.max(10, count * 0.5),
+                    },
+                    autoStart: true,
+                });
+                return;
+            }
+
+            // MINIGAME tag
+            if (tagLower.startsWith('minigame:') || tagLower.startsWith('minigame ')) {
+                const config = parseMinigameTag(tag);
+                if (config) {
+                    minigameController.queueGame(config);
+                }
+                return;
+            }
+
+            // Everything else goes to VFX
+            triggerVFX(tag);
+        });
+    }, [triggerVFX, minigameController]);
+
+    // Keep ref in sync so handleMinigameResult can use it without stale closure
+    useEffect(() => {
+        processTagsRef.current = processTagsForNode;
+    }, [processTagsForNode]);
+
+    // Sync story state to React state
+    const syncSimState = useCallback((story) => {
+        setChoices(story.currentChoices.map((c, i) => ({ text: c.text, index: i })));
+        setCanContinue(story.canContinue);
+        setIsEnded(!story.canContinue && story.currentChoices.length === 0);
+    }, []);
+
+    // Collect all text from canContinue until choices or end
+    const drainText = useCallback((story) => {
+        let fullText = '';
+        const allTags = [];
+        while (story.canContinue) {
+            stateStackRef.current.push(story.state.toJson());
+            const line = story.Continue();
+            if (line.trim()) {
+                fullText += (fullText ? '\n' : '') + line;
+            }
+            if (story.currentTags.length > 0) {
+                allTags.push(...story.currentTags);
+            }
+        }
+        return { text: fullText, tags: allTags };
+    }, []);
+
+    // Initialize/Restart with real Ink compilation
+    const initStory = useCallback(() => {
+        minigameController.reset();
+        setCompileError(null);
+
+        try {
+            const inkSource = generateInk(nodes, edges, variables);
+            const compiler = new Compiler(inkSource);
+            const compiled = compiler.Compile();
+            const jsonStr = compiled.ToJson();
+            const story = new Story(jsonStr);
+
+            simulatorRef.current = story;
+            stateStackRef.current = [];
+
+            // Drain initial text
+            const { text: firstText, tags } = drainText(story);
+            processTagsForNode(tags);
+            setText(firstText);
+            syncSimState(story);
+            setHistory([{ text: firstText, type: 'text' }]);
+        } catch (err) {
+            setCompileError(err.message || 'Failed to compile Ink');
+            simulatorRef.current = null;
+        }
+    }, [nodes, edges, variables, processTagsForNode, minigameController, syncSimState, drainText]);
 
     useEffect(() => {
-        initSimulator();
-    }, []); // Only on mount. Manual restart handle for live updates.
+        initStory();
+    }, []); // Only on mount. Manual restart via button.
 
     const handleContinue = useCallback(() => {
-        if (!simulator) return;
+        const story = simulatorRef.current;
+        if (!story || minigameController.isPlaying) return;
         clearVFX();
-        const nextText = simulator.Continue();
-        processTags(simulator.currentTags);
+
+        const { text: nextText, tags } = drainText(story);
+        processTagsForNode(tags);
         setText(nextText);
-        setChoices(simulator.currentChoices);
-        setCanContinue(simulator.canContinue);
-        setIsEnded(!simulator.canContinue && simulator.currentChoices.length === 0);
+        syncSimState(story);
         setHistory(prev => [...prev, { text: nextText, type: 'text' }]);
-    }, [simulator, processTags, clearVFX]);
+    }, [processTagsForNode, clearVFX, minigameController.isPlaying, syncSimState, drainText]);
 
     const handleChoice = useCallback((index) => {
-        if (!simulator) return;
+        const story = simulatorRef.current;
+        if (!story || minigameController.isPlaying) return;
         const choiceText = choices[index]?.text;
-        simulator.ChooseChoiceIndex(index);
+        story.ChooseChoiceIndex(index);
         clearVFX();
 
-        const nextText = simulator.Continue();
-        processTags(simulator.currentTags);
+        const { text: nextText, tags } = drainText(story);
+        processTagsForNode(tags);
         setText(nextText);
-        setChoices(simulator.currentChoices);
-        setCanContinue(simulator.canContinue);
-        setIsEnded(!simulator.canContinue && simulator.currentChoices.length === 0);
+        syncSimState(story);
 
         setHistory(prev => [
             ...prev,
             { text: `> ${choiceText}`, type: 'choice' },
             { text: nextText, type: 'text' }
         ]);
-    }, [simulator, choices, processTags, clearVFX]);
+    }, [choices, processTagsForNode, clearVFX, minigameController.isPlaying, syncSimState, drainText]);
 
     const handleBack = useCallback(() => {
-        if (!simulator) return;
-        if (simulator.GoBack()) {
-            clearVFX();
-            const currentText = simulator.Continue();
-            processTags(simulator.currentTags);
-            setText(currentText);
-            setChoices(simulator.currentChoices);
-            setCanContinue(simulator.canContinue);
-            setIsEnded(!simulator.canContinue && simulator.currentChoices.length === 0);
+        const story = simulatorRef.current;
+        if (!story || minigameController.isPlaying) return;
+        if (stateStackRef.current.length === 0) return;
+
+        clearVFX();
+        const snapshot = stateStackRef.current.pop();
+        story.state.LoadJson(snapshot);
+
+        // Re-read current state after restoring
+        if (story.canContinue) {
+            const { text: restoredText, tags } = drainText(story);
+            processTagsForNode(tags);
+            setText(restoredText);
         }
-    }, [simulator, processTags, clearVFX]);
+        syncSimState(story);
+    }, [processTagsForNode, clearVFX, minigameController.isPlaying, syncSimState, drainText]);
+
+    // Compile error view
+    if (compileError) {
+        return (
+            <div className="fixed inset-0 z-[100] bg-[#0b0c10] flex flex-col animate-fade-in">
+                <div className="h-12 bg-[#1c1f27] border-b border-[#282e39] flex items-center justify-between px-6 shrink-0">
+                    <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2">
+                            <span className="relative flex h-2 w-2">
+                                <span className="inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                            </span>
+                            <span className="text-red-400 text-xs font-bold uppercase tracking-wider">Compile Error</span>
+                        </div>
+                        <div className="w-px h-4 bg-[#282e39]"></div>
+                        <button
+                            onClick={initStory}
+                            className="text-[#9da6b9] hover:text-white flex items-center gap-1.5 transition-colors"
+                            title="Retry compilation"
+                        >
+                            <span className="material-symbols-outlined text-sm">refresh</span>
+                            <span className="text-[10px] uppercase font-bold">Retry</span>
+                        </button>
+                    </div>
+                    <button
+                        onClick={onClose}
+                        className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#282e39] text-[#9da6b9] hover:text-white hover:bg-red-500/20 hover:text-red-500 transition-all"
+                    >
+                        <span className="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+
+                <div className="flex-1 flex items-center justify-center p-8">
+                    <div className="max-w-xl w-full bg-[#1c1f27] rounded-lg border border-red-500/30 p-6">
+                        <div className="flex items-center gap-2 mb-4">
+                            <span className="material-symbols-outlined text-red-400">error</span>
+                            <h3 className="text-red-400 font-bold text-sm uppercase tracking-wider">Ink Compilation Failed</h3>
+                        </div>
+                        <pre className="text-red-300/80 text-xs font-mono whitespace-pre-wrap bg-[#0b0c10] rounded p-4 max-h-64 overflow-auto">
+                            {compileError}
+                        </pre>
+                        <p className="text-[#9da6b9] text-xs mt-4">
+                            Close the preview, fix the issue in your nodes, then try again.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="fixed inset-0 z-[100] bg-[#0b0c10] flex flex-col animate-fade-in">
@@ -101,7 +276,7 @@ export default function PreviewPanel({ nodes, edges, onClose }) {
                     </div>
                     <div className="w-px h-4 bg-[#282e39]"></div>
                     <button
-                        onClick={initSimulator}
+                        onClick={initStory}
                         className="text-[#9da6b9] hover:text-white flex items-center gap-1.5 transition-colors"
                         title="Restart from beginning"
                     >
@@ -111,7 +286,7 @@ export default function PreviewPanel({ nodes, edges, onClose }) {
                     <button
                         onClick={handleBack}
                         className="text-[#9da6b9] hover:text-white flex items-center gap-1.5 transition-colors"
-                        title="Step back to previous node"
+                        title="Step back to previous state"
                     >
                         <span className="material-symbols-outlined text-sm">arrow_back</span>
                         <span className="text-[10px] uppercase font-bold">Back</span>
@@ -134,6 +309,15 @@ export default function PreviewPanel({ nodes, edges, onClose }) {
                 />
             )}
 
+            {/* Minigame Overlay */}
+            <MinigameOverlay
+                isPlaying={minigameController.isPlaying}
+                config={minigameController.config}
+                onFinish={minigameController.finishGame}
+                onCancel={minigameController.cancelGame}
+                showResultScreen={true}
+            />
+
             {/* Simulated Player */}
             <div className={`flex-1 relative overflow-hidden transition-transform ${vfxState.shake ? 'animate-shake' : ''}`}>
                 <Player
@@ -143,9 +327,8 @@ export default function PreviewPanel({ nodes, edges, onClose }) {
                     isEnded={isEnded}
                     onContinue={handleContinue}
                     onChoice={handleChoice}
-                    onRestart={initSimulator}
+                    onRestart={initStory}
                     onBack={onClose}
-                    // Light theme overrides for the editor (optional)
                     typewriterDelay={20}
                 />
             </div>
