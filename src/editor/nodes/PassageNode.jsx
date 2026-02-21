@@ -1,5 +1,7 @@
-import React, { memo, useState, useCallback, useRef, useEffect } from 'react';
+import React, { memo, useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { Handle, Position } from 'reactflow';
+import SlashCommandPalette from '../components/SlashCommandPalette';
+import { getSlashQuery, insertTag, filterCommands } from '../utils/slashCommands';
 
 const TYPE_COLORS = {
     hub: { border: 'border-blue-500', bg: 'bg-blue-500', text: 'text-blue-400', headerBg: 'bg-blue-500/15', glow: 'shadow-blue-500/30' },
@@ -143,6 +145,10 @@ export default memo(({ id, data, selected }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editContent, setEditContent] = useState('');
     const [editChoices, setEditChoices] = useState([]);
+    const [slashQuery, setSlashQuery] = useState(null);
+    const [slashActiveIdx, setSlashActiveIdx] = useState(0);
+
+    const filteredCommands = useMemo(() => filterCommands(slashQuery), [slashQuery]);
     const textareaRef = useRef(null);
     const editContainerRef = useRef(null);
 
@@ -208,6 +214,7 @@ export default memo(({ id, data, selected }) => {
                 data.onChoicesChange(id, validChoices);
             }
         }
+        setSlashQuery(null);
         setIsEditing(false);
     }, [isEditing, id, editContent, editChoices, data]);
 
@@ -219,19 +226,61 @@ export default memo(({ id, data, selected }) => {
         commitEdit();
     }, [commitEdit]);
 
+    // Handle slash command selection
+    const handleSlashSelect = useCallback((command) => {
+        const textarea = textareaRef.current;
+        if (!textarea) return;
+        const cursor = textarea.selectionStart;
+        const newContent = insertTag(editContent, cursor, slashQuery, command.tag);
+        setEditContent(newContent);
+        setSlashQuery(null);
+        setSlashActiveIdx(0);
+        requestAnimationFrame(() => {
+            const newCursor = cursor - slashQuery.length - 1 + command.tag.length;
+            textarea.setSelectionRange(newCursor, newCursor);
+            textarea.focus();
+        });
+    }, [editContent, slashQuery]);
+
     // Handle keyboard in textarea
     const handleKeyDown = useCallback((e) => {
         e.stopPropagation();
+        if (slashQuery !== null && filteredCommands.length > 0) {
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setSlashActiveIdx(i => Math.min(i + 1, filteredCommands.length - 1));
+                return;
+            }
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setSlashActiveIdx(i => Math.max(i - 1, 0));
+                return;
+            }
+            if (e.key === 'Enter' || e.key === 'Tab') {
+                e.preventDefault();
+                handleSlashSelect(filteredCommands[slashActiveIdx]);
+                return;
+            }
+            if (e.key === 'Escape') {
+                setSlashQuery(null);
+                return;
+            }
+        }
         if (e.key === 'Escape') {
             commitEdit();
         }
-    }, [commitEdit]);
+    }, [slashQuery, filteredCommands, slashActiveIdx, handleSlashSelect, commitEdit]);
 
-    // Auto-resize textarea
+    // Auto-resize textarea + slash detection
     const handleTextareaChange = useCallback((e) => {
-        setEditContent(e.target.value);
+        const val = e.target.value;
+        const cursor = e.target.selectionStart;
+        setEditContent(val);
         e.target.style.height = 'auto';
         e.target.style.height = Math.min(e.target.scrollHeight, 300) + 'px';
+        const query = getSlashQuery(val, cursor);
+        setSlashQuery(query);
+        setSlashActiveIdx(0);
     }, []);
 
     // Inline choice editing helpers
@@ -313,15 +362,25 @@ export default memo(({ id, data, selected }) => {
                     {isEditing ? (
                         /* Edit mode */
                         <div ref={editContainerRef} onBlur={handleContainerBlur}>
-                            <textarea
-                                ref={textareaRef}
-                                className="w-full bg-[#0b0c10] border border-[#282e39] rounded-lg p-2 text-sm text-white/90 focus:outline-none focus:border-blue-500 transition-colors resize-none font-mono leading-relaxed placeholder-[#4b5563]"
-                                value={editContent}
-                                onChange={handleTextareaChange}
-                                onKeyDown={handleKeyDown}
-                                placeholder="Write your story here...&#10;&#10;Use #tags for effects (e.g. #shake, #music:theme)"
-                                style={{ minHeight: '100px', maxHeight: '300px' }}
-                            />
+                            <div className="relative">
+                                <textarea
+                                    ref={textareaRef}
+                                    className="w-full bg-[#0b0c10] border border-[#282e39] rounded-lg p-2 text-sm text-white/90 focus:outline-none focus:border-blue-500 transition-colors resize-none font-mono leading-relaxed placeholder-[#4b5563]"
+                                    value={editContent}
+                                    onChange={handleTextareaChange}
+                                    onKeyDown={handleKeyDown}
+                                    placeholder="Write your story here...&#10;&#10;Type / to insert tags (e.g. /shake, /music)"
+                                    style={{ minHeight: '100px', maxHeight: '300px' }}
+                                />
+                                {slashQuery !== null && filteredCommands.length > 0 && (
+                                    <SlashCommandPalette
+                                        commands={filteredCommands}
+                                        activeIndex={slashActiveIdx}
+                                        onSelect={handleSlashSelect}
+                                        onDismiss={() => setSlashQuery(null)}
+                                    />
+                                )}
+                            </div>
 
                             {/* Inline choices editor */}
                             {(

@@ -16,54 +16,6 @@ import { useEditorState } from './hooks/useEditorState';
 // Node ID counter for new nodes
 let idCounter = Date.now();
 
-const BARDO_TAGS = {
-    VFX: [
-        { tag: '#shake', desc: 'Shake the screen' },
-        { tag: '#flash_red', desc: 'Flash screen red' },
-        { tag: '#flash_white', desc: 'Flash screen white' },
-        { tag: '#bg:', desc: 'Set background image', hasValue: true },
-        { tag: '#play_sfx:', desc: 'Play sound effect', hasValue: true },
-        { tag: '#music:', desc: 'Play background music', hasValue: true },
-        { tag: '#music:stop', desc: 'Stop background music' },
-        { tag: '#UI_EFFECT:', desc: 'UI horror effect (blur_vignette, etc)', hasValue: true },
-    ],
-    Minigames: [
-        { tag: '#MINIGAME: type=qte', desc: 'Quick Time Event minigame' },
-        { tag: '#MINIGAME: type=lockpick', desc: 'Lockpick minigame' },
-        { tag: '#MINIGAME: type=arkanoid', desc: 'Arkanoid minigame' },
-        { tag: '#KEY_MASH:', desc: 'Key mashing challenge (target count)', hasValue: true },
-    ],
-    Horror: [
-        { tag: '#WILLPOWER_START:', desc: 'Start willpower drain (slow/normal/fast)', hasValue: true },
-        { tag: '#WILLPOWER_STOP', desc: 'Stop willpower drain' },
-        { tag: '#WILLPOWER_CHECK:', desc: 'Check willpower threshold', hasValue: true },
-        { tag: '#MOUSE_RESISTANCE:', desc: 'Heavy cursor (low/medium/high)', hasValue: true },
-        { tag: '#SPIDER_START:', desc: 'Spider infestation (difficulty=normal)', hasValue: true },
-        { tag: '#SPIDER_STOP', desc: 'Stop spider infestation' },
-        { tag: '#SPIDER_CHECK:', desc: 'Spider count check', hasValue: true },
-    ],
-    Combat: [
-        { tag: '#ARREBATADOS_START:', desc: 'Start arrebatados system', hasValue: true },
-        { tag: '#ARREBATADOS_STOP', desc: 'Stop arrebatados system' },
-        { tag: '#BOSS_START:', desc: 'Start boss encounter', hasValue: true },
-        { tag: '#BOSS_PHASE:', desc: 'Set boss phase', hasValue: true },
-        { tag: '#BOSS_DAMAGE:', desc: 'Apply boss damage', hasValue: true },
-        { tag: '#BOSS_CHECK', desc: 'Check boss status' },
-        { tag: '#BOSS_STOP', desc: 'End boss encounter' },
-        { tag: '#VISUAL_DAMAGE:', desc: 'Visual damage effect', hasValue: true },
-    ],
-    Game: [
-        { tag: '#stat:', desc: 'Modify stat (stat:hp:+10)', hasValue: true },
-        { tag: '#inventory_add:', desc: 'Add item to inventory', hasValue: true },
-        { tag: '#inventory_remove:', desc: 'Remove item from inventory', hasValue: true },
-        { tag: '#achievement:unlock:', desc: 'Unlock achievement', hasValue: true },
-        { tag: '#input:', desc: 'Prompt for text input', hasValue: true },
-        { tag: '#wait:', desc: 'Pause for X seconds', hasValue: true },
-        { tag: '#clear', desc: 'Clear screen' },
-        { tag: '#next', desc: 'Auto-continue to next beat' },
-    ],
-};
-
 const getId = () => `node_${idCounter++}`;
 
 export default function BardoEditor({ onClose }) {
@@ -85,7 +37,6 @@ export default function BardoEditor({ onClose }) {
     const [showExportMenu, setShowExportMenu] = useState(false);
     const [showShortcuts, setShowShortcuts] = useState(false);
     const [copyFeedback, setCopyFeedback] = useState(false);
-    const [collapsedCategories, setCollapsedCategories] = useState({});
     const [searchOpen, setSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [chapterFilter, setChapterFilter] = useState(''); // '' = show all
@@ -539,28 +490,6 @@ export default function BardoEditor({ onClose }) {
         setTimeout(() => { if (rfInstance) rfInstance.fitView({ padding: 0.2, duration: 400 }); }, 50);
     }, [nodes, edges, setNodes, rfInstance]);
 
-    const toggleCategory = (cat) => {
-        setCollapsedCategories(prev => ({ ...prev, [cat]: !prev[cat] }));
-    };
-
-    const appendTag = (tagItem) => {
-        if (tagItem.hasValue) {
-            const value = prompt(`Enter value for ${tagItem.tag}`) || '';
-            if (!value) return;
-            const fullTag = tagItem.tag + value;
-            const currentContent = selectedNode?.data?.content || '';
-            updateNodeData('content', currentContent + (currentContent ? '\n' : '') + fullTag);
-        } else {
-            const currentContent = selectedNode?.data?.content || '';
-            updateNodeData('content', currentContent + (currentContent ? '\n' : '') + tagItem.tag);
-        }
-    };
-
-    const insertVariable = (varName) => {
-        const currentContent = selectedNode?.data?.content || '';
-        updateNodeData('content', currentContent + `{${varName}}`);
-    };
-
     return (
         <div className="fixed inset-0 z-[200] bg-[#101622] flex flex-col text-white font-sans overflow-hidden">
             {/* Inject Styles & Fonts */}
@@ -1006,75 +935,6 @@ export default function BardoEditor({ onClose }) {
                                     onChange={(e) => updateNodeData('chapter', e.target.value)}
                                     placeholder="e.g. Act 1, Chapter 2..."
                                 />
-                            </div>
-
-                            {/* Narrative Content */}
-                            <div className="mb-6">
-                                <div className="flex items-center justify-between mb-2">
-                                    <label className="block text-[10px] uppercase font-bold text-[#4b5563] tracking-widest">
-                                        Narrative Content
-                                    </label>
-                                    {/* Insert Variable dropdown */}
-                                    {variables.length > 0 && (
-                                        <div className="relative group">
-                                            <button className="text-[9px] text-[#4b5563] hover:text-[#2b6cee] transition-colors flex items-center gap-1">
-                                                <span className="material-symbols-outlined text-xs">data_object</span>
-                                                Insert Var
-                                            </button>
-                                            <div className="hidden group-hover:block absolute right-0 top-full mt-1 bg-[#1c1f27] border border-[#282e39] rounded-lg shadow-xl z-50 min-w-[120px]">
-                                                {variables.map(v => (
-                                                    <button
-                                                        key={v.name}
-                                                        onClick={() => insertVariable(v.name)}
-                                                        className="w-full px-3 py-1.5 text-left text-xs text-[#9da6b9] hover:text-white hover:bg-[#282e39] font-mono"
-                                                    >
-                                                        {`{${v.name}}`}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                                <textarea
-                                    className="w-full h-32 bg-[#0b0c10] border border-[#282e39] rounded-lg p-3 text-sm text-white focus:outline-none focus:border-[#2b6cee] transition-all resize-none placeholder-[#4b5563]"
-                                    value={selectedNode?.data?.content || ''}
-                                    onChange={(e) => updateNodeData('content', e.target.value)}
-                                    placeholder="Enter the story text for this node..."
-                                />
-                                <p className="mt-2 text-[10px] text-[#4b5563]">
-                                    Tip: Use #tags for VFX (e.g. #shake, #flash_red)
-                                </p>
-
-                                {/* Categorized Tag Helper */}
-                                <div className="mt-3 border-t border-[#282e39] pt-3 space-y-2">
-                                    {Object.entries(BARDO_TAGS).map(([category, tags]) => (
-                                        <div key={category}>
-                                            <button
-                                                onClick={() => toggleCategory(category)}
-                                                className="flex items-center gap-1.5 w-full text-left mb-1"
-                                            >
-                                                <span className="material-symbols-outlined text-[#4b5563] text-xs">
-                                                    {collapsedCategories[category] ? 'chevron_right' : 'expand_more'}
-                                                </span>
-                                                <span className="text-[9px] text-[#4b5563] uppercase font-bold tracking-wider">{category}</span>
-                                            </button>
-                                            {!collapsedCategories[category] && (
-                                                <div className="flex flex-wrap gap-1.5 ml-4 mb-1">
-                                                    {tags.map(item => (
-                                                        <button
-                                                            key={item.tag}
-                                                            onClick={() => appendTag(item)}
-                                                            className="px-2 py-1 rounded bg-[#1c1f27] border border-[#282e39] text-[9px] text-[#9da6b9] hover:text-white hover:border-[#2b6cee] transition-all font-mono"
-                                                            title={item.desc}
-                                                        >
-                                                            {item.tag.replace(/#/g, '').replace(/:$/, '')}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
                             </div>
 
                             {/* Type Selection */}
