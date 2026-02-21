@@ -277,7 +277,7 @@ export default memo(({ id, data, selected }) => {
         const cursor = e.target.selectionStart;
         setEditContent(val);
         e.target.style.height = 'auto';
-        e.target.style.height = Math.min(e.target.scrollHeight, 300) + 'px';
+        e.target.style.height = e.target.scrollHeight + 'px';
         const query = getSlashQuery(val, cursor);
         setSlashQuery(query);
         setSlashActiveIdx(0);
@@ -315,7 +315,7 @@ export default memo(({ id, data, selected }) => {
         }
     }, [id, choices, data]);
 
-    const nodeWidth = isEditing ? 400 : 280;
+    const nodeWidth = isEditing ? 520 : 280;
 
     return (
         <div
@@ -361,7 +361,7 @@ export default memo(({ id, data, selected }) => {
                 <div className="px-3 py-2 min-h-[60px]">
                     {isEditing ? (
                         /* Edit mode */
-                        <div ref={editContainerRef} onBlur={handleContainerBlur}>
+                        <div ref={editContainerRef} onBlur={handleContainerBlur} onWheel={(e) => e.stopPropagation()} className="nopan">
                             <div className="relative">
                                 <textarea
                                     ref={textareaRef}
@@ -370,7 +370,7 @@ export default memo(({ id, data, selected }) => {
                                     onChange={handleTextareaChange}
                                     onKeyDown={handleKeyDown}
                                     placeholder="Write your story here...&#10;&#10;Type / to insert tags (e.g. /shake, /music)"
-                                    style={{ minHeight: '100px', maxHeight: '300px' }}
+                                    style={{ minHeight: '120px' }}
                                 />
                                 {slashQuery !== null && filteredCommands.length > 0 && (
                                     <SlashCommandPalette
