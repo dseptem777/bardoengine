@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion'
  * - playerName: The player's name (from story variable)
  * - isMobile: Whether to render in mobile slim-bar mode
  */
-export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, playerName, chapterName, isMobile }) {
+export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, playerName, nickname, chapterName, isMobile }) {
     // Don't show if stats not enabled
     if (!statsConfig?.enabled) return null
 
@@ -93,6 +93,11 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
                             <div className="text-lg font-bold text-bardo-accent tracking-wide">
                                 {playerName}
                             </div>
+                            {nickname && (
+                                <div className="text-xs text-bardo-accent/60 italic mt-0.5">
+                                    "{nickname}"
+                                </div>
+                            )}
                         </motion.div>
                     )}
 

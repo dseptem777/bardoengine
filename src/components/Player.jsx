@@ -31,6 +31,7 @@ export default function Player({
     onMinigameReady = null,
     minigameAutoStart = true,
     checkBurned = null,
+    checkLocked = null,
     willpowerActive = false,
     choiceResistanceLevel = 'none',  // 'none', 'slow', 'normal', 'fast', 'extreme'
     onChoicesVisibleChange = null,   // Callback when choices visibility changes
@@ -195,13 +196,26 @@ export default function Player({
         }
     }, [willpowerActive, onChoice])
 
+    // Check if a choice is locked (for keyboard nav filtering)
+    const isChoiceLocked = useCallback((index) => {
+        if (!checkLocked || !choices[index]) return false
+        const result = checkLocked(choices[index])
+        return result?.locked ?? false
+    }, [checkLocked, choices])
+
+    // Wrap onChoice for keyboard nav to skip locked choices
+    const onChoiceFiltered = useCallback((index) => {
+        if (isChoiceLocked(index)) return
+        onChoice(index)
+    }, [onChoice, isChoiceLocked])
+
     // Keyboard navigation
     useKeyboardNavigation({
         choices,
         isTyping,
         isEnded,
         canContinue,
-        onChoice,
+        onChoice: onChoiceFiltered,
         onSkip: handleSkip,
         onBack,
         onContinue,
@@ -388,18 +402,23 @@ export default function Player({
                         {/* Hide gate choices [→] during boss — they're auto-selected by phase mechanics */}
                         {!isTyping && !hasPendingMinigame && choices.length > 0 && !isBossGateChoice && (
                             <div className="space-y-4">
-                                {choices.map((choice, index) => (
-                                    <ChoiceButton
-                                        key={index}
-                                        ref={(el) => { choiceButtonRefs.current[index] = el }}
-                                        text={choice.text}
-                                        index={index}
-                                        onClick={() => handleChoice(index)}
-                                        disabled={checkBurned ? checkBurned(choice) : false}
-                                        // Only first choice (resistir) has resistance, others (ceder) are easy
-                                        resistanceLevel={willpowerActive && index === 0 ? choiceResistanceLevel : 'none'}
-                                    />
-                                ))}
+                                {choices.map((choice, index) => {
+                                    const lockResult = checkLocked ? checkLocked(choice) : null
+                                    const isLocked = lockResult?.locked ?? false
+                                    return (
+                                        <ChoiceButton
+                                            key={index}
+                                            ref={(el) => { choiceButtonRefs.current[index] = el }}
+                                            text={choice.text}
+                                            index={index}
+                                            onClick={() => handleChoice(index)}
+                                            disabled={checkBurned ? checkBurned(choice) : false}
+                                            lockedRequirement={isLocked ? lockResult.displayText : null}
+                                            // Only first choice (resistir) has resistance, others (ceder) are easy
+                                            resistanceLevel={willpowerActive && index === 0 ? choiceResistanceLevel : 'none'}
+                                        />
+                                    )
+                                })}
                             </div>
                         )}
 

@@ -32,6 +32,7 @@
     "stats": {
         "enabled": true,
         "playerNameVariable": "nombre_personaje",
+            "nicknameVariable": "apodo_personaje",
         "chapterVariable": "capitulo_actual",
         "definitions": [
             {

@@ -32,6 +32,7 @@ export interface SavedGameSystems {
  * - #inv:add:itemId[:qty]  (e.g., #inv:add:llave_dorada, #inv:add:balas:5)
  * - #inv:remove:itemId[:qty]
  * - #inv:clear
+ * - #inv:clear_mission  (keeps items with persistent: true)
  */
 export function useGameSystems(storyId: string) {
     const [config, setConfig] = useState<GameConfigWithStats & GameConfigWithInventory>(DEFAULT_CONFIG)
@@ -103,6 +104,12 @@ export function useGameSystems(storyId: string) {
             // Handle clear action (only needs 2 parts)
             if (action === 'clear') {
                 inventoryHook.clearInventory()
+                return true
+            }
+
+            // Handle clear_mission action - keeps persistent items
+            if (action === 'clear_mission') {
+                inventoryHook.clearNonPersistent()
                 return true
             }
 

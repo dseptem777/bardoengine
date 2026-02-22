@@ -22,6 +22,7 @@ import SpiderOverlay from './components/SpiderOverlay'
 import { useHeavyCursor } from './hooks/useHeavyCursor'
 import { useStoryLoader } from './hooks/useStoryLoader'
 import { useBardoEngine } from './hooks/useBardoEngine'
+import { processChoiceRequirements } from './utils/choiceRequirements'
 import { SettingsProvider, useSettings } from './hooks/useSettings'
 import { useIsMobile } from './hooks/useMediaQuery'
 
@@ -231,6 +232,12 @@ function AppContent({ onStorySelect }) {
         return targetKnot ? gameSystems.hubs.isBurned(targetKnot) : false
     }, [gameSystems])
 
+    // Helper to check if a choice is locked by requirements
+    const checkChoiceLocked = useCallback((choice) => {
+        if (!gameSystems) return null
+        return processChoiceRequirements(choice, gameSystems)
+    }, [gameSystems])
+
     // Dev mode: select story
     const selectStoryDev = useCallback((storyInfo) => {
         setSelectedStory(storyInfo)
@@ -381,6 +388,11 @@ function AppContent({ onStorySelect }) {
                             ? story?.variablesState?.[gameSystems.statsConfig.playerNameVariable] || ''
                             : null
                     }
+                    nickname={
+                        gameSystems.statsConfig?.nicknameVariable
+                            ? story?.variablesState?.[gameSystems.statsConfig.nicknameVariable] || ''
+                            : null
+                    }
                     chapterName={
                         gameSystems.statsConfig?.chapterVariable
                             ? story?.variablesState?.[gameSystems.statsConfig.chapterVariable] || ''
@@ -494,6 +506,7 @@ function AppContent({ onStorySelect }) {
                     onMinigameReady={actions.handleMinigameStart}
                     minigameAutoStart={minigameController.config?.autoStart}
                     checkBurned={checkChoiceBurned}
+                    checkLocked={checkChoiceLocked}
                     // Willpower system - pass difficulty level for random resistance scaling
                     willpowerActive={willpower?.state?.active}
                     choiceResistanceLevel={willpower?.state?.active ? willpower?.state?.decayRate || 'normal' : 'none'}

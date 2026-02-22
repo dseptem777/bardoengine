@@ -5,6 +5,7 @@
 // ---------------------------------------------------------
 
 VAR nombre_personaje = ""
+VAR apodo_personaje = ""
 VAR magia = 0
 VAR fuerza = 0
 VAR conocimiento = 0
@@ -140,6 +141,7 @@ Ni siquiera una tumba para Jorge, y eso que pregunté.
 
 El Faro me había encontrado.
 
+~ apodo_personaje = "Chispa"
 # stat:magia:+20 # stat:fuerza:+10 # stat:conocimiento:+10
 -> intermision_0
 
@@ -233,6 +235,7 @@ Los agentes de "El Faro" habían llegado. Una hora antes, y todos mis amigos seg
 
 Me levanté con una misión. Yo sería quien llegaría siempre una hora antes.
 
+~ apodo_personaje = "Madrugador"
 # stat:magia:+10 # stat:fuerza:+20 # stat:conocimiento:+10
 -> intermision_0
 
@@ -404,6 +407,7 @@ Parece que los agentes de "El Faro" recorren rutinariamente los neuropsiquiátri
 
 Ellos te ofrecieron un trabajo y una nueva oportunidad y no pensás desperdiciarla. Es más, tal vez hasta tengas espacio para la venganza.
 
+~ apodo_personaje = "Ratoncito"
 # stat:magia:+10 # stat:fuerza:+10 # stat:conocimiento:+20
 -> intermision_0
 
@@ -1390,8 +1394,8 @@ Necesitas más pistas para saber qué camino tomar en el bosque. Volves al Orfan
 -> hall_orfanato
 
 === bosque_opciones ===
-+ {tiene_machete} [Seguir el camino que te dio Belén] -> bosque_belen
-+ {tiene_info_demoniaca and magia >= 20} [Rastrear la energía demoníaca con magia] -> bosque_magia
++ [Seguir el camino que te dio Belén # REQUIRES: inv:machete_bosque] -> bosque_belen
++ [Rastrear la energía demoníaca con magia # REQUIRES: inv:info_invocacion_demoniaca, magia >= 20] -> bosque_magia
 + [Volver al orfanato] -> hall_orfanato
 
 === bosque_belen ===
@@ -1479,7 +1483,7 @@ Recorriendo el lugar te das cuenta que en un rincón el piso sede un poco. Tomas
 Una trampilla que lleva a un sótano, cerrada por una fuerte cadena con un candado. Todo tiene un aspecto vetusto y oxidado, te da la impresión de ser inclusive anterior al Orfanato
 
 * [Bueno, me tocará ver si encuentro una llave] -> sotano_buscar_llave
-* {conocimiento >= 25} [Esto no podes abrirlo con una ganzúa, pero si con un poco de ácido] -> sotano_acido
+* [Esto no podes abrirlo con una ganzúa, pero si con un poco de ácido # REQUIRES: conocimiento >= 25] -> sotano_acido
 
 === sotano_buscar_llave ===
 Lo importante es que, si vos no podes abrir esa trampilla, menos un chico. Aparte la cadena esta puesta de este lado asi que nada se pudo meter por ahí.
@@ -1607,8 +1611,8 @@ Aunque, tal vez sos vos quien está delirando. No todas las personas odiosas son
 Apoyas levemente tu mano en la manija de la puerta. Obviamente está cerrada
 
 * [Me doy media vuelta y continuo con mi investigación] -> oficina_ignorar
-* {conocimiento >= 20} [Saco mis ganzúas del bolso y empiezo a trabajar] -> oficina_ganzua
-* {fuerza >= 20} [Le doy una patada a la puerta y listo] -> oficina_patada
+* [Saco mis ganzúas del bolso y empiezo a trabajar # REQUIRES: conocimiento >= 20] -> oficina_ganzua
+* [Le doy una patada a la puerta y listo # REQUIRES: fuerza >= 20] -> oficina_patada
 * [Golpeo la puerta hasta que me atiendan] -> oficina_golpear
 
 === oficina_ignorar ===
@@ -1775,7 +1779,7 @@ Tenes que pasar.
 
 * [El fuego le gana a todo. Prendes fuego las telarañas] -> boveda_pasar
 * [Todavia tengo mi daga en la mano, las corto] -> boveda_pasar
-* {magia >= 20} [Simplemente descargo mi poder contra ellas] -> boveda_pasar_magia
+* [Simplemente descargo mi poder contra ellas # REQUIRES: magia >= 20] -> boveda_pasar_magia
 
 === boveda_pasar ===
 Lo importante es que logras llegar.
@@ -1821,7 +1825,7 @@ Atrás tuyo se escucha movimiento. Como si alguien estuviera clavando un centena
 Saltas por encima de la media que marcaba el camino. Casi estas afueran.
 Entonces las vez. Primero son meramente el reflejo de luz en la oscuridad. El brillo de sus ojos. Dieciséis ojos. Dos arañas. Dejas el cuerpo de Juan en el piso y te preparas para pelear
 
-* {fuerza >= 25} [Nadie me puede detener] -> cueva_pelea_fuerza
+* [Nadie me puede detener # REQUIRES: fuerza >= 25] -> cueva_pelea_fuerza
 * [Va a ser una pelea dura] -> cueva_pelea_normal
 
 === cueva_pelea_fuerza ===
@@ -1947,11 +1951,11 @@ Solo queda esperar que no se encuentren más arañas en el largo camino hacia la
 La araña gigante logra clavar una de sus extremidades en la pared y eso le da el punto de apoyo necesario para terminar de salir de la cueva. Ya no tenes más vueltas que dar, te toca ver cómo vencer a eso.
 
 * [Saco la espada y cargo directamente contra eso] -> combate_espada
-* {magia >= 15} [Le lanzo una bola de fuego] -> combate_magia
+* [Le lanzo una bola de fuego # REQUIRES: magia >= 15] -> combate_magia
 * [Disparos precisos a sus extremidades. Tal vez pierde el apoyo y se volverá a caer a la cueva] -> combate_disparos
-* {conocimiento >= 30 and tiene_info_demoniaca} [Es un demonio. Con las palabras correctas puede ser expulsado de este plano] -> combate_exorcismo
+* [Es un demonio. Con las palabras correctas puede ser expulsado de este plano # REQUIRES: conocimiento >= 30, inv:info_invocacion_demoniaca] -> combate_exorcismo
 * [Esto es una locura. Mejor huir a la capilla] -> combate_capilla
-* {fuerza >= 30} [Acercarme, cortar, huir antes que me ataque y repetir. Un baile letal] -> combate_fuerza
+* [Acercarme, cortar, huir antes que me ataque y repetir. Un baile letal # REQUIRES: fuerza >= 30] -> combate_fuerza
 
 === combate_espada ===
 # flash_red
