@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion'
  * - playerName: The player's name (from story variable)
  * - isMobile: Whether to render in mobile slim-bar mode
  */
-export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, playerName, isMobile }) {
+export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, playerName, chapterName, isMobile }) {
     // Don't show if stats not enabled
     if (!statsConfig?.enabled) return null
 
@@ -18,7 +18,7 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
     const requiresName = !!statsConfig.playerNameVariable
     if (requiresName && !playerName) return null
 
-    const allStats = getAllStatsInfo()
+    const allStats = getAllStatsInfo().filter(s => s && s.displayType !== 'relationship')
     const barStats = allStats.filter(s => s.displayType === 'bar')
     const valueStats = allStats.filter(s => s.displayType === 'value')
 
@@ -96,6 +96,13 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
                         </motion.div>
                     )}
 
+                    {/* Chapter indicator */}
+                    {chapterName && (
+                        <div className="px-4 py-1.5 border-b border-gray-800 text-[10px] text-gray-500 tracking-wide font-mono">
+                            {chapterName}
+                        </div>
+                    )}
+
                     {/* Stats Content */}
                     <div className="p-3 space-y-3">
                         {/* Bar Stats (Resources) */}
@@ -147,7 +154,7 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
 export function HeaderStats({ stats, statsConfig, getAllStatsInfo }) {
     if (!statsConfig?.enabled) return null
 
-    const allStats = getAllStatsInfo()
+    const allStats = getAllStatsInfo().filter(s => s && s.displayType !== 'relationship')
     const valueStats = allStats.filter(s => s.displayType === 'value')
 
     if (valueStats.length === 0) return null

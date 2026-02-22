@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 
 /**
@@ -15,8 +16,41 @@ export default function StartScreen({
     onOptions,
     onExtras,
     onOpenEditor = null,
-    onBack = null // For dev mode: back to story selector
+    onBack = null, // For dev mode: back to story selector
+    onCheatCode = null
 }) {
+    // Cheat code listener: typing "fanzine" unlocks debug mode
+    const [cheatActivated, setCheatActivated] = useState(false)
+    const timerRef = useRef(null)
+
+    useEffect(() => {
+        if (!onCheatCode) return
+
+        let buffer = ''
+        const handleKey = (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
+
+            buffer = (buffer + e.key.toLowerCase()).slice(-7)
+
+            if (buffer === 'fanzine') {
+                setCheatActivated(true)
+                onCheatCode()
+                buffer = ''
+                // Brief flash on title
+                setTimeout(() => setCheatActivated(false), 1500)
+            }
+
+            clearTimeout(timerRef.current)
+            timerRef.current = setTimeout(() => { buffer = '' }, 3000)
+        }
+
+        window.addEventListener('keydown', handleKey)
+        return () => {
+            window.removeEventListener('keydown', handleKey)
+            clearTimeout(timerRef.current)
+        }
+    }, [onCheatCode])
+
     return (
         <div className="min-h-screen bg-bardo-bg flex flex-col items-center justify-center relative overflow-hidden">
             {/* Background effects */}
@@ -43,8 +77,11 @@ export default function StartScreen({
             <div className="relative z-10 flex flex-col items-center gap-12">
                 {/* Game Title */}
                 <h1
-                    className="text-5xl md:text-7xl font-bold text-bardo-accent tracking-wider text-center"
-                    style={{ textShadow: '0 0 30px color-mix(in srgb, var(--bardo-accent) 50%, transparent)' }}
+                    className={`text-5xl md:text-7xl font-bold text-bardo-accent tracking-wider text-center transition-all duration-500 ${cheatActivated ? 'scale-105' : ''}`}
+                    style={{ textShadow: cheatActivated
+                        ? '0 0 60px var(--bardo-accent), 0 0 120px var(--bardo-accent)'
+                        : '0 0 30px color-mix(in srgb, var(--bardo-accent) 50%, transparent)'
+                    }}
                 >
                     {gameTitle}
                 </h1>

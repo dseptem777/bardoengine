@@ -32,6 +32,7 @@
     "stats": {
         "enabled": true,
         "playerNameVariable": "nombre_personaje",
+        "chapterVariable": "capitulo_actual",
         "definitions": [
             {
                 "id": "hp",
@@ -69,6 +70,16 @@
                 "min": 0,
                 "max": 100,
                 "initial": 0
+            },
+            {
+                "id": "amistad_jesus",
+                "label": "Jesús",
+                "icon": "🐆",
+                "displayType": "relationship",
+                "min": 0,
+                "max": 6,
+                "initial": 0,
+                "color": "#f59e0b"
             }
         ]
     },
@@ -98,6 +109,18 @@
             "name": "Datos: El Profundo",
             "description": "Información táctica sobre los híbridos marinos.",
             "icon": "📝",
+            "category": "documentos"
+        },
+        "machete_bosque": {
+            "name": "Machete de Juan",
+            "description": "Un mapa dibujado por Juan con el recorrido hasta la guarida del monstruo.",
+            "icon": "🗺️",
+            "category": "documentos"
+        },
+        "info_invocacion_demoniaca": {
+            "name": "Info: Invocación Demoníaca",
+            "description": "Las estatuas del sótano representan los cuatro obispos del 7mo círculo del infierno.",
+            "icon": "👹",
             "category": "documentos"
         }
     }

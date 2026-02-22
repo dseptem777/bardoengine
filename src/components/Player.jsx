@@ -41,6 +41,8 @@ export default function Player({
     inventoryEnabled = false,
     onToggleInventory = null,
     inventoryItemCount = 0,
+    relationshipsEnabled = false,
+    onToggleRelationships = null,
     // Shared scroll ref (from useBardoEngine, used by scroll friction hook)
     scrollContainerRef: externalScrollRef = null,
     // Boss fight props
@@ -308,6 +310,16 @@ export default function Player({
                                 className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
                             >
                                 {isMobile ? '💾' : '💾 GUARDAR/CARGAR'}
+                            </button>
+                        )}
+                        {/* Mobile: relationships toggle in header */}
+                        {isMobile && relationshipsEnabled && onToggleRelationships && (
+                            <button
+                                onClick={onToggleRelationships}
+                                className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
+                                title="Relaciones"
+                            >
+                                ❤️
                             </button>
                         )}
                         {/* Mobile: inventory toggle in header */}

@@ -58,7 +58,10 @@ export function useBardoEngine({
         makeChoice: makeChoiceState,
         setGlobalVariable,
         getGlobalVariable,
-        resetStoryState
+        resetStoryState,
+        spawnAtKnot: rawSpawnAtKnot,
+        getKnotList,
+        getVariables
     } = storyState
 
     // ==================
@@ -394,6 +397,15 @@ export function useBardoEngine({
         }
     }, [story, minigameController.isPlaying, continueStoryState, processTags, storyId, saveSystem, gameSystems])
 
+    // Debug spawn wrapper — sets variables, jumps to knot, processes tags
+    const spawnAtKnot = useCallback((knotName: string, variables: Record<string, any> = {}) => {
+        if (!story) return
+
+        clearVFX()
+        const { tags } = rawSpawnAtKnot(knotName, variables)
+        processTags(tags)
+    }, [story, clearVFX, rawSpawnAtKnot, processTags])
+
     // Keep refs updated
     continueStoryRef.current = continueStory
 
@@ -571,9 +583,14 @@ export function useBardoEngine({
         handleMinigameStart,
         // Input
         commitInput,
+        // Debug
+        spawnAtKnot,
+        getKnotList,
+        getVariables,
     }), [
         initStory, continueStory, makeChoice, restart, backToStart, finishGame,
-        newGame, continueGame, loadSave, manualSave, handleMinigameStart, commitInput
+        newGame, continueGame, loadSave, manualSave, handleMinigameStart, commitInput,
+        spawnAtKnot, getKnotList, getVariables
     ])
 
     const subsystems = useMemo(() => ({

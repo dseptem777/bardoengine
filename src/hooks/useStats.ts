@@ -6,7 +6,7 @@ export interface StatDefinition {
     initial?: number;
     min?: number;
     max?: number;
-    displayType?: 'bar' | 'value';
+    displayType?: 'bar' | 'value' | 'relationship';
     color?: string;
     icon?: string;
 }

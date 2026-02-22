@@ -8,15 +8,29 @@ VAR nombre_personaje = ""
 VAR magia = 0
 VAR fuerza = 0
 VAR conocimiento = 0
+VAR salud = 100
 VAR entrada_temprana = false
 VAR tiene_fotos = false
 VAR tiene_mano = false
 VAR tiene_descripcion = false
 VAR new_game_plus = false
+VAR amistad_jesus = 0
+VAR visito_cura = false
+VAR tiene_info_belen = false
+VAR tiene_machete = false
+VAR tiene_info_demoniaca = false
+VAR sabe_algo_sigue = false
+VAR llego_a_tiempo = false
+VAR puso_trampas = false
+VAR madre_alegria_vive = true
+VAR juan_vive = false
+VAR rapido_morgue = false
+VAR capitulo_actual = ""
 
 -> capitulo_0
 
 === capitulo_0 ===
+~ capitulo_actual = "Cap. 0 — Orígenes"
 # music:misterio_ambient
 ¿Cómo comienza tu historia?
 
@@ -398,6 +412,7 @@ Ellos te ofrecieron un trabajo y una nueva oportunidad y no pensás desperdiciar
 // =========================================================
 
 === intermision_0 ===
+~ capitulo_actual = "Intermisión 0"
 # music:ciudad_ambient
 Costa Alegre es una importante ciudad con costas al Atlántico Sur. Durante el verano es un centro vacacional importante pero, durante el resto del año, la industria pesquera y la presencia de una Universidad garantiza que se mantenga poblada.
 # next
@@ -446,6 +461,7 @@ Te dirigís hacia la sede de "El Faro" para recibir tu siguiente misión.
 -> capitulo_1
 
 === capitulo_1 ===
+~ capitulo_actual = "Cap. 1 — Un cadáver sin nombre"
 # music:misterio_ambient
 La sede de "El Faro" estaba en el fondo de un predio universitario. A esa hora de la noche era un mundo aparte. A lo lejos se escuchaban los ruidos de algunos universitarios, festejando haber aprobado alguna materia o pensando a qué fiesta ir más tarde.
 
@@ -556,145 +572,300 @@ Tu primera misión. Sacrificios humanos, cadáveres, figuras misteriosas. ¿Est�
 + [Visitar a Mary Shelley (Magia)] -> ayuda_shelley
 
 === ayuda_enriquez ===
-Enríquez termina sacando un libro grueso de un cajón. El golpe sobre el escritorio hace eco por todo el edificio. Una guía telefónica de una ciudad poblada.
-Lees sobre la sabiduría de los anteriores Guardianes. Aprendés mucho de sus aciertos y más de las notas al pie sobre sus errores.
+Antes de salir pasás por su escritorio. Ella sigue tipeando en su máquina de escribir en un claro intento de ignorarte. Cada paso que das, tipea con más fuerza.
+— Perdón — tenés que levantar la voz para ganarle al quejido mecánico de las teclas — Voy a salir a mi primer misión de campo y El Profesor recomendó…
+# next
+— Que te brinde el 101 de cómo hacemos las cosas en El Faro. Era altamente probable, no sos tan especial.
+Enríquez termina su frase sacando un libro grueso de uno de los cajones. Al caer sobre el escritorio el golpe hace eco por todo el edificio. No podés obviar que el libro tiene el grueso de una guía telefónica. Una guía telefónica de una ciudad poblada.
+# next
+Hojeás el libro y hay capítulos enteros dedicados a "Abrir cerraduras", "Anatomía humana e inhumana" y "Alimentar a animales salvajes". Rápidamente te das cuenta de que El Faro tiene un manual y recomendaciones para casi cualquier acción.
+También notás que todas las recomendaciones en ese manual son de palabras que empiezan con A.
+— Tranquilo — dice Enríquez mientras no puede contener una sonrisa — El manual que corresponde a la letra X es bastante más corto.
+# next
+Leés sobre la sabiduría de los anteriores Guardianes de El Faro. Aprendés mucho de sus aciertos y forma de hacer las cosas. Aprendés más de las notas al pie que dan cuenta de sus errores.
 # stat:conocimiento:+5
 # next
 -> en_la_morgue
 
 === ayuda_cabral ===
-Cabral te somete a una sesión de entrenamiento. El hombre es un manco, pero te tira al piso cinco veces antes de que puedas pestañear. Recibís una buena dosis de humildad y técnica.
+El campo de entrenamiento se encuentra en el subsuelo del edificio. Es una mezcla ecléctica entre un dojo, un gimnasio y un campo de tiro ubicado aún más abajo. Cabral se encuentra de espaldas pero, en cuanto ponés un pie en el dojo, se da cuenta de tu presencia.
+— Bienvenido Guardián. Es tu primera vez en el campo de entrenamiento, así que la tradición dicta que tengamos un sparring amistoso.
+# next
+Cabral no parece gran cosa, un hombre pequeño de piel oliva que parece evitar el contacto visual. No podés ignorar que una de las mangas de su judogi cuelga vacía. No sabías que había perdido un brazo en el ejercicio de su deber. Eso explica que uno de los mejores Guardianes haya terminado asignado a la base.
+Es un manco, esto no va a ser difícil.
+# next
+Es difícil. Eso es lo que pensás la tercera vez que Cabral te tira al piso. Para la quinta vez, que terminás hecho un bollo sobre vos mismo luego de que una certera patada en el esternón te dejó sin aire, recibís una buena dosis de humildad.
+# next
+— Buen entrenamiento Guardián. Vamos a tomar unos mates y descansar un poco. Aunque no te des cuenta aprendiste mucho hoy. Y yo aprendí de vos, así que voy a poder adaptar un entrenamiento para fortalecer tus ventajas y enseñarte a esconder tus debilidades.
+# next
+Cabral te somete a una sesión de entrenamiento completa. Practican un par de golpes y terminan con una pequeña visita al campo de tiro. Te sentís más preparado para enfrentarte a lo que sea.
 # stat:fuerza:+5
 # next
 -> en_la_morgue
 
 === ayuda_shelley ===
-Mary Shelley te clava una aguja llena de una sustancia de un verde antinatural. Dice que es para "relajar barreras psicológicas modernas que rechazan la magia". Luego del mareo inicial, tus sentidos se sienten más despejados.
+Antes de abrir la puerta del laboratorio te golpea una mezcla fuerte de olor a desinfectante, propio de cualquier hospital, con una mezcla de hierbas que no podés descifrar pero te parecen más propias de la cocina de una abuela.
+Adentro el cuadro es aún más caótico. Mientras en una esquina tenés equipo médico moderno, en la otra hay cristales y pentagramas. En una de las camillas se encuentra un cuerpo (tapado por una sábana por suerte) y por el bulto que se puede ver, notás que no es algo humano.
+# next
+— ¿Sos el nuevo conejillo de indias? — una voz chillona llama tu atención. Mary Shelley sale detrás de un biombo. Lo primero que te sorprende es lo joven que es. La mujer no puede tener más de treinta años y ya es una mente respetada.
+Una mente respetada que viaja en un cuerpo de metro cincuenta y tiene un pelo caótico donde pelean mechones azules, rosas y lo que suponés que es un color castaño natural.
+# next
+— Buenos días, estoy por salir a mi primer misión de campo y pasaba a ver si había algo que tenías ganas de probar, algo que tal vez me pueda dar una ventaja en la misión.
+— Eso también me sirve — Mary Shelley te pasa un formulario que firmás sin ver — Genial, muy bien que firmaste todas las formas. Si te llega a pasar algo voy a intentar revivirte por todos los medios posibles. Y si llegás a morir tu cuerpo pasa a ser propiedad del Ministerio.
+# next
+Mary Shelley te clava una aguja llena de una sustancia de un verde antinatural que no te inspira confianza. Según dice, es una sustancia ya probada para relajar barreras psicológicas y culturales. Una de las grandes dificultades para acceder a la magia en el mundo moderno es que subconsciente estamos educados para rechazarla. Esta inyección soluciona eso.
+# next
+Luego del mareo inicial te sentís mejor que nunca. Tus sentidos se sienten más despejados y estás plenamente consciente de todo rincón de tu cuerpo. Te da la impresión de que toda tu vida estabas cargando un peso extra invisible y ya no está.
 # stat:magia:+5
 # next
 -> en_la_morgue
 
 === en_la_morgue ===
 # music:terror_ambient
-El palacio de justicia era una mole de diez pisos de mármol y cemento con gárgolas amenazantes. La morgue judicial estaba en el segundo subsuelo. Gracias a la identificación de El Faro, una buena camisa y caminar rápido, pasaste sin problemas frente a los policías.
+El palacio de justicia era, bueno, un palacio. Una mole de diez pisos de mármol y cemento donde alguien había decidido agregar una serie de gárgolas a medio camino que miraban de forma amenazante a la Avenida.
+La morgue judicial se encontraba en algún lugar de este edificio. Por suerte El Faro les daba a sus guardianes una identificación relativamente vaga que permitía hacerse pasar por agentes de alguna organización gubernamental. Eso, una buena camisa y caminar rápido, era suficiente para engañar a todos los policías que estaban vigilando el lugar a esa hora de la madrugada.
 # next
-Llegaste a la puerta de la morgue al final de un pasillo largo. Un agente custodiaba el lugar con una escopeta apoyada contra la pared. Tu identificación bastó para pasar.
-Adentro, la morgue era un depósito de cadáveres con una pared llena de pequeñas puertas frigoríficas. Eran demasiadas. ¿Cómo encontrar el cuerpo?
+Las entrañas de la bestia eran… pobres. La mayoría del mobiliario parecía más viejo que vos y la mitad de las lamparitas titilaban de cansancio. Nadie se había molestado en poner un mapa así que tuviste que preguntar dos veces la dirección (a un empleado ojeroso que caminaba un pasillo oscuro y a un empleado de limpieza que evitaba hacer su trabajo).
+Aparentemente la morgue judicial estaba en el segundo subsuelo, pero para llegar a ese subsuelo había que tomar una escalera que por alguna razón empezaba en el segundo piso. Solo esperabas no tener que salir huyendo de ese lugar, era un verdadero laberinto.
+# next
+Por fin llegaste. La puerta de la morgue estaba al final de un pasillo largo, donde esperaba un escritorio con un agente gordo de la policía cuya doble papada estaba iluminada por la luz de su celular.
+Aun así, preferiste avanzar a pasos lentos y ruidosos. El policía no parecía la gran cosa pero la escopeta que estaba apoyada contra la pared, a distancia de su brazo, encomendaba respeto.
+Por suerte la identificación que te había otorgado El Faro bastó para pasar por el control.
+# next
+La morgue, en esencia, es un depósito pero para cadáveres. Frente a la puerta había un escritorio con una computadora.
+A la izquierda había un par de camillas (vacías por suerte) y una serie de instrumentos médicos. Al fondo había una pared llena de pequeñas puertas del piso al techo. Si algo te había enseñado el cine, es que esas eran las cámaras frigoríficas donde se depositaban los cuerpos.
+Lo que no esperabas es que sean tantas. ¿Cómo ibas a hacer para encontrar el cuerpo?
 
 + [Rastrear energía mágica residual] -> buscar_magia
 + [Hackear la computadora del forense] -> buscar_sabiduria
 + [Abrir todas las puertas a lo bruto] -> buscar_fuerza
 
 === buscar_magia ===
-Cerrás los ojos y dejas que la habitación te hable. Sentís el dolor del lugar golpeando contra tu piel como alquitrán.
-{ 
+Cerrás los ojos y te relajás. Ponés tu mente en blanco y dejás que la energía de la habitación te hable. Obviamente la morgue no tiene una buena energía, la sentís golpear contra tu piel, como alquitrán que repta hacia tu nariz. Te disociás un poco, la esencia es sentir la energía pero sin dejarte controlar por ella.
+# next
+{
   - magia >= 25:
-    Tu voluntad es fuerte. Haces un gesto y cortas las malas energías en seco identificando el punto exacto. -> frente_al_cadaver(true)
+    Te llega un grito. Dolor, miedo, rabia. Es alguien que sufrió una mala muerte. Su energía es tan fuerte como una tormenta, pero tu voluntad es aún más fuerte. Hacés un movimiento con tu mano para que el gesto refuerce tu poder mental y cortás las malas energías en seco. Nada se puede esconder de vos. ¡Lo encontraste!
+    -> frente_al_cadaver(true)
   - else:
-    Te llega un grito de agonía. Es como avanzar contra una ventisca de agujas. Tardás demasiado, pero al final lo encontrás. -> frente_al_cadaver(false)
+    Te llega un grito. Dolor, miedo, rabia. Es alguien que sufrió una mala muerte. Su energía es tan fuerte como una tormenta, intentás concentrarte pero es como avanzar contra una ventisca. Sentís la energía golpeando contra tu cuerpo, como un millón de agujas que se clavan en tu piel.
+    # next
+    Mientras tanto, algo está pasando en el pasillo fuera de la morgue. El agente de policía está levantando la voz mientras discute con alguien. Una voz grave y amenazante. Esperás poder terminar antes que esto se vuelva un problema.
+    Pasan cinco minutos, tal vez diez. ¡Lo encontraste!
+    -> frente_al_cadaver(false)
 }
 
 === buscar_sabiduria ===
-Te sentás frente a la vieja computadora. 
-{ 
+Te sentás frente a la computadora y le das al botón de encendido. La computadora tarda varios minutos en arrancar dado que posiblemente sea más vieja que vos, pero eso te da tiempo para estudiar el escritorio del forense a ver si hay alguna pista que te pueda ayudar para averiguar su clave.
+# next
+{
   - conocimiento >= 25:
-    Encontrás un post-it viejo. Deducís la nueva contraseña en segundos. El expediente del NN te da la ubicación exacta. -> frente_al_cadaver(true)
+    Un post-it en el tacho de basura con unos números garabateados. Sin duda la vieja contraseña. Tardás unos segundos en inferir cuál puede ser la nueva. Una vez adentro de la computadora todo te resulta intuitivo, rápidamente comprendés cómo navegar por el programa que utiliza el Poder Judicial de la Provincia.
+    El expediente del NN tiene la poca información que el gobierno juntó sobre el cadáver. Las fotos y el informe del forense no brindan información muy diferente a la que ya tenía El Profesor. Pero te da la ubicación exacta de la puerta en la cual se encuentra el cadáver. Es solo cuestión de abrir y ver.
+    -> frente_al_cadaver(true)
   - else:
-    Probás "amor", "123", nada. Terminas buscando en el tacho de basura y descifrando un código sucio. Tardás demasiado. -> frente_al_cadaver(false)
+    La gente siempre usa tres o cuatro contraseñas iguales. "Amor", "123", "fecha de nacimiento". Lamentablemente ninguna funciona. Golpeás el teclado en frustración y das vuelta el escritorio buscando alguna pista. Al último te das cuenta de que en el tacho de basura hay un viejo post-it con unos números garabateados. La vieja contraseña.
+    Lamentablemente no estás en tu mejor momento y tardás bastante en entender el patrón y descifrar cuál es la nueva.
+    # next
+    Mientras tanto, algo está pasando en el pasillo fuera de la morgue. El agente de policía está levantando la voz mientras discute con alguien. Una voz grave y amenazante. Esperás poder terminar antes que esto se vuelva un problema.
+    Pasan cinco minutos, tal vez diez. ¡Lo encontraste!
+    -> frente_al_cadaver(false)
 }
 
 === buscar_fuerza ===
-Empezás a tirar de las puertas frigoríficas.
-{ 
+Empezás a abrir las puertas de los contenedores. La primera se abre lentamente, metés tu mano y sale… el cadáver de un anciano que tiene toda la pinta de haber muerto por dos tiros en el pecho. Principalmente porque tiene dos orificios gigantes en el pecho. Una parte de vos esperaba tener suerte en el primer intento, pero parece que esto va a tardar un tiempo.
+# next
+{
   - fuerza >= 25:
-    Lo encarás como un entrenamiento funcional. Fresa y brutal. En una de las últimas puertas hallás lo que buscabas. -> frente_al_cadaver(true)
+    Le ponés velocidad, abrís una puerta y ya estás pasando a la siguiente. Lo encarás como una sesión de entrenamiento funcional, sin duda no le das a los otros cuerpos el respeto que merecen. Sentadilla, estirar el brazo, tirar, mirar. Siguiente.
+    Es frío y brutal. Pero funciona. En casi una de las últimas puertas encontrás al cadáver que buscabas.
+    -> frente_al_cadaver(true)
   - else:
-    Es un trabajo engorroso. Tenés que alejarte un par de veces para no vomitar. Hay demasiada muerte acumulada aquí. -> frente_al_cadaver(false)
+    La verdad es que es un trabajo engorroso. Las puertas más bajas requieren que te pongas en cuclillas y dos veces tenés que alejarte y contener las ganas de vomitar que se cocinan en la boca de tu estómago y queman por tu esófago. No tenías ni idea de que moría tanta gente en Costa Alegre.
+    # next
+    Mientras tanto, algo está pasando en el pasillo fuera de la morgue. El agente de policía está levantando la voz mientras discute con alguien. Una voz grave y amenazante. Esperás poder terminar antes que esto se vuelva un problema.
+    Pasan cinco minutos, tal vez diez. ¡Lo encontraste!
+    -> frente_al_cadaver(false)
 }
 
 === frente_al_cadaver(rapido) ===
 # next
-El cuerpo no es bonito. Su pecho tiene tres renglones de una escritura apretada. Un brazo fue desollado y quemado. Un corte en su estómago como una sonrisa cruel.
-Sacas las fotos de rigor. 
+Esta vez sí te dedicás a ver el cuerpo. No es bonito. Los cuerpos sacados del fondo del mar nunca lo son. Pero lo que hicieron en su carne antes de morir es peor. Su pecho tiene tres renglones de una ¿escritura? Símbolo tras símbolo, casi sin espacio entre ellos, como un niño que escribe en una hoja y teme quedarse sin espacio.
+Uno de sus brazos fue directamente desollado y su carne tiene la muestra de haber sido quemada. Como cuando se marca al ganado.
+No podés dejar de notar un corte en su estómago, como una sonrisa que va de costilla a costilla. Una fea herida.
+# next
+Sacás las fotos de rigor de todas las marcas y te tomás unos segundos para mirar el cuerpo. Alguien tiene que ser consciente de todo el horror que sufrió. Va a ser una carga que vas a llevar por siempre pero la tomás sin dudar, cuando muere una persona debe doler, debe importar.
+Aparte, esperás que en algún momento tengas la posibilidad de devolverle una parte del dolor a quien hizo esto.
 # inv:add:fotos_profundo
 ~ tiene_fotos = true
-{ not rapido:
+{ rapido:
     # play_sfx:tension
-    En el pasillo escuchás al policía discutiendo con alguien. Una voz grave y amenazante.
+    Mientras tanto, algo está pasando en el pasillo fuera de la morgue. El agente de policía está levantando la voz mientras discute con alguien. Una voz grave y amenazante. Esperás poder terminar antes que esto se vuelva un problema.
 }
-Giras para irte y notás una sierra médica sobre una camilla. Una idea llega a tu cabeza: El Faro podría usar la mano para identificar al NN o convocar su espíritu.
+{ not rapido:
+    La discusión de afuera de la morgue se convirtió en una discusión a toda regla. Los argumentos se convierten en gritos y, si bien la puerta te impide entender qué se está diciendo, es claro que la violencia está cerca.
+}
 # next
-Agarrás fuerte la mano y empezás a serruchar. La carne es dura, más de lo que esperabas. Tu camisa está empapada en sudor. 
-{ not rapido: 
+Girás para irte y notás, sobre una de las camillas, una sierra médica. Una idea llega a tu cabeza. Con una mano se pueden hacer muchas cosas: El Faro tiene acceso a bases de datos donde tal vez encontraría información para identificar al NN. Y los Guardianes con mayor talento sobrenatural también podrían hacer algo. Si bien no sirve para una Mano de Gloria (la persona no fue ahorcada) tal vez se puede convocar al espíritu para obtener cierta información.
+# next
+Agarrás fuerte la mano y empezás a serruchar. Por suerte no hay sangre ni gritos, pero la carne resulta más dura de lo que esperabas.
+# next
+Estás por la mitad del camino, el hueso ya se asoma entre la carne. Tu camisa está completamente transpirada, resultó ser más trabajo del que esperabas.
+{ not rapido:
     # play_sfx:disparos_escopeta # shake
-    ¡TIROS! Dos disparos de escopeta en el pasillo. Un silencio mortal y luego un ruido sordo. Algo pesado acaba de caer. Los problemas se acercan.
+    En el pasillo se escuchan tiros. Dos disparos de escopeta. Una pausa y un tercer disparo. No querés saber qué sobrevive a dos disparos de escopeta. Lo último que escuchás es al oficial de policía gritando y un ruido sordo. A pesar de que nunca lo viviste antes, algo animal dentro tuyo te dice que es el ruido de un cuerpo cayendo al piso. Los problemas se acercan.
 }
 # next
-Usas tu peso para dar el último corte. El hueso cede. Ya tenés la mano en tu poder.
+Usás tu peso para darle más poder a la sierra y seguís cortando. El hueso cede (esperás nunca enfrentarte a alguien que use esta arma) y la mano está, valga la redundancia, en tu mano.
+Esperás que en El Faro puedan hacer algo con esto.
 # inv:add:mano_nn
 ~ tiene_mano = true
-# play_sfx:puerta_golpe
-Algo está por entrar en la morgue.
+Ahora, hay que buscar una forma de salir de la morgue.
 
-+ [Esconderme en el ducto de ventilación] -> escape_ducto(rapido)
+{ rapido:
+    + [Escapar por el ducto de ventilación del techo] -> escape_ducto
+}
 + [Esconderme dentro de un frigorífico] -> escape_escondite
 + [Preparar una trampa] -> escape_trampa
++ [Soy un Guardián. Lo que entre se va a encontrar con una verdadera pelea] -> pelea_monstruo
 
-=== escape_ducto(rapido) ===
-{ 
-  - rapido:
-    Amontonás camillas y trepás rápido. { fuerza >= 25: Te metés en el ducto con agilidad absoluta. | Te cuesta, pero lográs meterte antes de que la pirámide colapse. }
-    # next
-    # play_sfx:puerta_destruida
-    Abajo, la puerta sale volando y algo gigante entra destrozando todo. Te arrastrás por el tubo angosto y sucio hasta salir a la calle. -> final_morgue_exito
-  - else:
-    No hay tiempo para trepar con sigilo. Corrés hacia el ducto pero la puerta se abre de par en par. -> encuentro_monstruo
-}
+=== escape_ducto ===
+Amontonás un par de camillas, unas cajas de suplementos médicos que parecen sólidas y unos gabinetes. De alguna forma terminás con una pirámide de dudosa estabilidad que te deja a los pies de la entrada al ducto de aire.
+Trepás por tu obra arquitectónica. Casi cuando estás por rozar la entrada al ducto de aire escuchás a la estructura crujir debajo de vos.
+# next
+Pero resiste. Un poco. Lo suficiente para que saques la rejilla del ducto y te metas por este. En cuanto la mitad de tu cuerpo ya está ahí, la pirámide colapsa en un montón de pedazos que se reparten por el piso de la morgue.
+Tus piernas quedan colgando, insitamente pataleando en el aire buscando dónde hacer pie.
+# next
+Clavás tus dedos en una pequeña grieta y hacés fuerza. Fuerza con tus brazos, fuerza con tu estómago. Toda la energía posible para meterte dentro del ducto. Transpirás y todo tu cuerpo tiembla por el shock de adrenalina.
+Pero lo lográs.
+# play_sfx:disparos_escopeta # shake
+En el pasillo se escuchan tiros. Dos disparos de escopeta. Una pausa y un tercer disparo. No querés saber qué sobrevive a dos disparos de escopeta. Lo último que escuchás es al oficial de policía gritando y un ruido sordo. A pesar de que nunca lo viviste antes, algo animal dentro tuyo te dice que es el ruido de un cuerpo cayendo al piso.
+# next
+El que hizo el ducto de aire nunca vio una película en su vida. En lugar de ser un pasillo cómodo donde alguien se puede arrastrar con un aspecto épico resulta ser un tubo angosto, oscuro, plagado de telarañas y moho. A lo lejos escuchás pequeñas patas recorrer el metal, huyendo de tu presencia, pero preferís no pensar en qué es.
+# play_sfx:puerta_destruida
+Abajo, en la morgue, la puerta sale volando de sus goznes a la par que se escucha un grito animal mientras algo grande y pesado se arrastra destruyendo con su avance las partes de la pirámide que te permitió subir acá.
+Esa es toda la motivación que necesitabas. Ya no importan la oscuridad, la suciedad ni que tengas que achicarte. Solo hay que avanzar.
+# next
+El ducto de aire te deja en algún lugar del primer piso. Te arrastrás para salir y te pasás la mano por la ropa, intentando sacarte la suciedad. Pensás cómo hacer también para recuperar algo de orgullo, pero por tu cabeza pasa el recuerdo de lo que sea que entró a la morgue y te das cuenta de que estar vivo es más importante.
+Aparte, en tu morral se siente el peso de la mano del NN. Eso es más que suficiente para decir que tu primera misión de campo fue un éxito.
+# next
+Antes de darte cuenta te encontrás en tu auto, con la llave puesta en la cerradura de encendido y el morral con la mano del NN en el asiento de acompañante.
+
++ [Enfilo directo a El Faro] -> final_morgue_exito
++ [Espero agazapado a ver qué sale del edificio] -> observar_monstruo
+
+=== observar_monstruo ===
+Eso no se hace esperar. La puerta del Palacio de Justicia se abre y las luces del edificio dejan ver una silueta.
+Es enorme, muy por encima de los dos metros y cada extremidad es del tamaño de tu torso.
+Usa un sobretodo que le tapa todo el cuerpo junto con una bufanda que le oculta el rostro, lo cual es una locura con este calor. A medida que avanza podés notar más detalles.
+# next
+En el pullover en su pecho se notan los múltiples orificios de entrada de los tiros de escopeta, aunque no hay sangre.
+En su espalda, debajo del sobretodo, se nota algo similar a una joroba.
+Su piel es grisácea y dura. En sus manos esto es aún más notorio, terminando cada dedo en una garra oscura.
+Sus ojos son negros como la noche y su mandíbula está inclinada hacia adelante, como si saliera del resto de su rostro.
+# inv:add:descripcion_profundo
+~ tiene_descripcion = true
+# next
+Con la mayor cautela que podés, sacás un par de fotos del ser mientras avanza hasta la esquina. Luego te retirás con el auto yendo para el lado contrario, a pesar de que no sea el camino más adecuado.
+# inv:add:fotos_profundo
+-> final_morgue_exito
 
 === escape_escondite ===
-Te metés en uno de los frigoríficos con un cadáver. Frío e incómodo. 
-# play_sfx:puerta_destruida
-Alguien patea la puerta y el monitor del escritorio vuela en mil pedazos.
+Dás una vuelta por la morgue pero no hay muchos lugares para esconderse. Abajo del escritorio parecía muy infantil.
+La idea llega condimentada con una pizca de ironía, el mejor lugar para esconderse es en los privados donde guardan los cadáveres.
+Solo esperás que no sea premonitorio.
 # next
-Por la rendija ves a una criatura de más de dos metros. Piel gris, garras negras, ojos oscuros.
+El lugar es frío e incómodo, apenas tenés espacio para mover el cuerpo. "Seguramente los cadáveres no se quejan". Tenés que hacer fuerza para controlar una risa morbosa. Seguro es tu cerebro intentando bajarle la gravedad a la situación.
+# play_sfx:puerta_destruida
+# shake
+Alguien patea la puerta de la morgue y la manda volando contra el escritorio que se parte al medio. El monitor de la computadora cae de frente y emite un quejido electrónico. Qué suerte que no elegiste ese escondite.
+# next
+Dejaste la puerta de tu escondite entreabierta. Intentás mirar qué es lo que entró a la morgue, qué cosa sobrevivió a unos tiros de escopeta. Por la rendija obtenés poca información. Es gigante (más de dos metros) y parece más robusto que un jugador de rugby, su espalda esconde algún tipo de joroba y sus manos no son humanas. Una piel gris y dura que termina en garras negras en lugar de dedos.
 # inv:add:descripcion_profundo
 ~ tiene_descripcion = true
-{ magia >= 20: Sentís su hambre, una vibración acuática y antigua. }
-Ves cómo se empieza a... COMER... el cadáver del NN. 
-{ conocimiento >= 25: Comprendés que están borrando rastros genéticos. }
-Esperás a que se retire y salís huyendo a toda velocidad. -> final_morgue_exito
+# next
+Calculás que está frente al cuerpo del NN. Ya no podés verlo así que te centrás en escuchar. Solo lamentás que tu corazón esté tan desbocado.
+Escuchás ropa moviéndose (¿Él sacándose la bufanda que tapa su rostro?) y un ruido que hace estremecer todo tu cuerpo, como piel siendo desgarrada.
+Luego empieza un sonido que puede ser tanto diente contra diente como filo contra filo.
+
++ [Asomarte a ver qué pasa] -> escondite_asomarse
++ [Quedarte quieto donde estás] -> escondite_quedarse
+
+=== escondite_asomarse ===
+Lentamente tomás lo que puede ser la peor decisión de tu vida y te asomás un poco. Lo ves de costado, la comisura de su boca va de oreja a oreja (textualmente) y su mandíbula se ensanchó hacia adelante dejando ver una hilera de dientes filosos y encorvados. Te hace pensar en un tiburón.
+Se está... comiendo... el cadáver...
+Ya terminó con los dos brazos y está por mandarse la cabeza y el torso en una sola mordida.
+Entrás para adentro de tu escondite poniendo las manos en tu boca para contener el grito.
+# next
+// TODO: minijuego de silencio
+Esperás una eternidad conteniendo la respiración hasta que la criatura se retira. Te arrastrás para salir. El cadáver del NN ya no está. Esa cosa se lo comió.
+Al menos recuperaste una mano, mejor ir para El Faro a ver qué pueden hacer con eso.
+-> final_morgue_exito
+
+=== escondite_quedarse ===
+Esperás cinco minutos. La mole se vuelve a mover, escuchás el poco mobiliario que sigue en pie quejándose y ser destruido por su peso.
+Y luego esperás cinco minutos más. Diez minutos. Hasta que la sensación de miedo abandona tu cuerpo.
+# next
+Te arrastrás para salir de tu escondite. El cadáver NN ya no está ahí. Esa... cosa... se lo comió.
+Al menos recuperaste una mano, mejor ir para El Faro a ver qué pueden hacer con eso.
+-> final_morgue_exito
 
 === escape_trampa ===
-{ 
+Tenés unos minutos para improvisar una emboscada, sea lo que sea que está ahí afuera acaba de matar a un policía, así que es peligroso y no debés contenerte para atacar. Tu gran ventaja es que hay una sola puerta de entrada.
+# next
+{
   - magia > fuerza and magia > conocimiento:
     # play_sfx:magia_oscura
-    Dibujas un símbolo de dolor puro frente a la puerta con sangre residual.
+    La magia de combate generalmente es improvisada. Uno debe trabajar con lo que tiene. Pero estás en una morgue así que lo que tenés es sangre, muertos y partes de cuerpos. Cosas bastante potentes para improvisar.
+    Hacés un símbolo justo delante de la puerta; quien entre y lo pise sufrirá una dosis pura de dolor.
   - fuerza > magia and fuerza > conocimiento:
     # play_sfx:clic_arma
-    Preparás una trampa con tu escopeta directa a la cara de quien entre.
+    Tirás al piso tu bolso de armas y te despedís de tu fiel escopeta. Te toma cinco minutos de bricolaje para preparar todo pero dejás armada una trampa tan básica como letal.
+    Quien abra el mecanismo recibirá directo en la cara un disparo calibre 12/70. Suficiente para que termine con el cerebro en un frasco aparte.
   - else:
-    Electrificás la manija de la puerta con un puente eléctrico improvisado. 
+    Rebuscás entre las cosas que tenés en tu morral. Cables, pinzas y demás elementos para hacer un puente eléctrico. Conectás la manija de la puerta a la corriente eléctrica; quien ponga la mano ahí va a recibir inmediatamente 220 voltios.
 }
-
-# play_sfx:puerta_destruida
-La entidad entra. Es masiva, ojos negros, mandíbula de tiburón. Tu trampa lo golpea de lleno, pero apenas lo detiene. No es humano.
+# next
+# play_sfx:puerta_destruida # shake
+El ser que entra es masivo, algo más de dos metros y con extremidades más gruesas que tu torso. Su piel es gris, sus ojos negros y sin expresión y sus dedos terminan en garras.
+Su boca es demasiado grande, con un mentón extendido hacia adelante, y aparenta tener una joroba.
+Hay dos cosas que aprendés. Eso no es humano y tiene una anormal resistencia al dolor. Tu trampa meramente lo aturdió.
 # inv:add:descripcion_profundo
 ~ tiene_descripcion = true
-+ [Huir aprovechando la distracción] -> final_morgue_escape
-+ [Atacar con todo lo que tengo] -> pelea_monstruo
+
++ [Aprovecho que está distraído y huyo] -> final_morgue_escape
++ [Quien golpea primero golpea dos veces. A tirarle con todo] -> pelea_monstruo
 
 === pelea_monstruo ===
-Vacías el cargador y cargás con un hacha. La piel del ser es dura como el cemento. El hacha se quiebra al tercer golpe.
-{ 
+Atacás con toda tu furia. Una vez que vaciás el cargador de la pistola tomás un hacha de tu mochila, una mole con un mango pesado de madera y un filo de metal que promete violencia. Cargás mientras de tu garganta sale un grito primal de combate.
+# next
+La piel de la entidad es más dura que el cemento. Las balas rebotaron peligrosamente y el hacha se quebró con el tercer golpe. Eso ni intentó cubrirse, solo sigue tus movimientos con la vista como quien está intentando matar a una mosca molesta.
+# next
+Esa cosa viene leyendo tus movimientos y te tira un zarpazo. Cada uno de sus dedos es tan afilado como un bisturí y es curvo, para clavarse en la carne y llevarse un pedazo.
+{
   - fuerza >= 25:
     # stat:hp:-25 # flash_red # shake
-    Recibís un zarpazo que te destroza la guardia. Lográs rodar hacia atrás pero tu brazo sangra profusamente.
-    -> final_morgue_escape
+    Tu guardia se ve destrozada. Es increíble que algo tan grande se mueva tan rápido. De puro reflejo te tirás para atrás. Tu brazo izquierdo cede, ya sin fuerza, mientras a tus pies ves un chorro de tu sangre.
   - else:
     # stat:hp:-50 # flash_red # shake
-    El golpe te manda al piso. Un corte profundo va del hombro a la cintura. El dolor es insoportable.
-    -> final_morgue_escape
+    El golpe te sorprende, de repente estás tirado en el piso. Primero sentís algo húmedo que se expande por tu pecho. Luego tu pecho libera una dosis de dolor que se escapa como un grito por tu garganta. El corte va de tu hombro izquierdo a tu cintura derecha. Te levantás con las piernas temblando y una sensación de levedad en tu cuerpo.
 }
+# next
+Todavía no estás a la altura de este enemigo. En este contexto sobrevivir es una victoria. Tal vez si juntás más información, la próxima vez sepas su punto débil. Al fin y al cabo todo tiene un punto débil, ¿no es verdad?
+
++ [Mejor huir y prepararme para la siguiente batalla] -> final_morgue_escape
++ [Cargo con un cuchillo directo a su ojo] -> pelea_final_cuchillo
+
+=== pelea_final_cuchillo ===
+# flash_red # shake
+El ataque es épico. El ataque es valiente. Pero el ataque es inútil. La entidad es más alta que vos, retrocede un poco y sube la cabeza, haciendo que tu ataque rebote contra su mejilla.
+# next
+Entonces te muerde. Durante unos segundos el mundo es un borrón de imágenes y velocidad. Todo tu torso explota de dolor.
+Luego se calma y te encontrás en el piso. Todo está húmedo y sentís lentamente cómo tu cuerpo se empieza a sentir frío y ajeno, como algo sobre lo cual ya no tenés control.
+Estás muriendo. Y en tu primera misión de campo. Deberías sentir vergüenza o indignación pero ya no tenés energías como para sentir algo. Solo sueño…
+# next
+FIN DE TU HISTORIA.
+-> END
 
 === encuentro_monstruo ===
 La entidad te encuentra antes de que puedas escapar. Sus ojos negros se clavan en vos.
@@ -702,25 +873,69 @@ La entidad te encuentra antes de que puedas escapar. Sus ojos negros se clavan e
 + [Intentar huir desesperadamente] -> final_morgue_escape
 
 === final_morgue_escape ===
-Corrés por los pasillos. Te resbalás con los restos del policía (ahora carne picada). El miedo te da alas. 
-{ 
+Con la poca energía que te queda amagás para un lado y rápidamente cambiás de dirección. Corrés por el pasillo de entrada a la morgue, a los metros te caés de cara al piso.
+# next
+Ves a tus pies, te resbalaste con el cadáver del oficial de policía que cuidaba la morgue. Su cuerpo ahora es una masa de carne picada, sangre y horror. Solo se distingue que fue un hombre por los jirones de su uniforme.
+El miedo te funciona como combustible, salís huyendo. Primero animalmente, en cuatro patas, y luego en dos como corresponde.
+# next
+El Palacio de Justicia es gigante pero está vacío. Sabés que en un lugar giraste mal, pero no importa, escuchás atrás a la entidad que te persigue. Cada uno de sus pasos retumba como un bombo.
+Ya no es posible retroceder. Hay que seguir corriendo, nada más importa. Ganarle al cansancio y seguir. Un minuto de vida más, un paso más. Todo es precioso.
+# next
+{
   - fuerza >= 25:
-    Llegás a tu auto. La garra del ser roza el vidrio trasero mientras arrancás a toda velocidad. -> final_morgue_exito
+    Llegás a la puerta y corrés hasta tu auto. Estás arrancando cuando el ser arranca la puerta del edificio.
+    Arrancás a toda velocidad cuando carga hacia el vehículo, el vidrio trasero explota en un millón de pedazos pero su garra roza el vacío.
+    Te dirigís a El Faro a toda velocidad. Cuando te fijás por tu espejo retrovisor, la entidad se quedó en mitad de la calle, desafiante.
+    -> final_morgue_exito
   - else:
     # stat:hp:-10
-    Te perdés en el laberinto. Lográs esconderte en un vestuario hasta que el ser se retira con el cuerpo del NN. Salís temblando hacia el Faro. -> final_morgue_exito
+    Nunca le vas a ganar, estás muy herido y vas dejando un rastro de sangre. Abrís una puerta y el azar te premia. Un vestuario con una serie de taquillas contra la pared. Con la poca energía que tenés te arrastrás dentro de una.
+    # next
+    // TODO: minijuego de escondite
+    La entidad recorre el pasillo. Escuchás sus pasos pesados acercarse... y alejarse. Cuando el silencio vuelve, salís temblando y te arrastrás hasta tu auto. Te dirigís al Faro.
+    -> final_morgue_exito
 }
 
 === final_morgue_exito ===
 # music:misterio_ambient
-De regreso en El Faro, dejas la mano del NN sobre el escritorio de Enríquez. Ella te mira, rocía desinfectante y te manda arriba.
+Entraste al edificio de El Faro y la Sra. Enríquez continuaba sentada en su escritorio tipeando en la máquina de escribir. Dejás la mano del NN sobre su escritorio, que estaba en una bolsa marrón que fue adquiriendo un tono negruzco.
+Enríquez te mira, mira al bulto apestoso que dejaste en su escritorio, y comienza a tipear con más fuerza la máquina de escribir.
 # next
-- Felicitaciones - El Profesor te da un abrazo que huele a tabaco eterno - volver es una victoria. 
-{ tiene_fotos: Le mostras las fotos. }
-- Sin duda era un Profundo. Seres de otros planos que viven en el fondo marino. Híbridos, embajadores de una secta. 
-- Si te vuelves a encontrar con uno, intenta que abra la boca. Son débiles por dentro.
+— El Profesor te espera en su despacho — te dice con el mismo tono entrecortado con el cual golpea las teclas.
+Mientras subís a hablar con El Profesor, escuchás cómo tira un poco de desinfectante sobre su escritorio.
 # next
-Volvés a tu casa agotado. Sospechás que esto es el principio de algo más grande. Tarde o temprano te volverás a encontrar con esa entidad. Pero eso es problema del {nombre_personaje} del futuro. Ahora te toca dormir.
+— ¡Felicitaciones! — El Profesor te sorprende con un abrazo de oso que impregna tu ropa de un olor a tabaco que sospechás que nunca vas a poder sacar — Volver de una misión de campo siempre es una victoria. Me gustaría escuchar tu reporte de la misión mientras todavía lo tenés fresco.
+
++ [Dar un informe frío y profesional]
+    El Profesor te escucha atentamente mientras fuma su pipa.
+    — Sí, suena a una primera misión de campo — es su balance una vez que terminás.
++ [Aprovechar para tirarte flores. Si yo no hablo bien de mí nadie más lo va a hacer]
+    El Profesor te escucha atentamente mientras fuma su pipa.
+    — Sí, suena a una primera misión de campo — es su balance una vez que terminás.
++ [Llorar desconsoladamente]
+    El Profesor te escucha atentamente mientras fuma su pipa.
+    — Sí, suena a una primera misión de campo — es su balance una vez que terminás.
+
+- # next
+El Profesor se para dejando en claro que la reunión ha terminado.
+— La mano fue una buena idea, vamos a poner a todos nuestros profesionales a buscar información sobre la posible víctima. Con lo poco que sabemos de las víctimas seguramente nos va a dar una punta para trabajar.
+{ tiene_fotos or tiene_descripcion:
+    # next
+    — Profesor, ¿qué me puede decir de la criatura que me encontré? Es claro que la enviaron por el cuerpo y podría volver a encontrarla.
+    — Sin duda era un Profundo — cuando El Profesor nota que esa respuesta por sí sola no basta decide continuar la explicación.
+    # next
+    — Existen lugares donde la frontera entre nuestro mundo y otros planos es más frágil. Lugares donde, con un poco de fuerza, se puede trasladar las barreras de la realidad. La mayoría de esos lugares fueron destruidos, sea de forma consciente o por la voracidad humana de extenderse en todas direcciones. Algunos pocos fueron contenidos, o al menos están vigilados.
+    # next
+    — El fondo del mar, por ser un clima altamente hostil, es uno de los pocos lugares donde esas barreras no están controladas. Los Profundos son seres de otros planos que pasaron esa barrera y viven en nuestro fondo marino. Durante generaciones se cruzaron, de forma voluntaria o no, con los humanos generando unos híbridos que pueden actuar en la superficie como sus embajadores, agentes y campeones.
+    Atento al tipo de ritual, sospecho que los sacrificios humanos están relacionados con una secta que los adora o, al menos, busca algo de ellos.
+    # next
+    — Si te volvés a encontrar con una entidad así, intentá que abra la boca. Es imposible atravesar su piel pero, si le disparás dentro de la boca, son tan débiles como mojarritas.
+}
+# next
+Volvés a tu casa agotado pero... ¿feliz? Sobreviviste tu primera misión de campo y de forma exitosa. Pero sospechás que estás en el principio de algo más grande. Todavía no sabés la identidad del NN ni tenés ningún dato sobre la secta que está detrás de los sacrificios humanos.
+Un escalofrío de terror entra en tu mente, algo dentro tuyo sabe que tarde o temprano te vas a volver a enfrentar a la entidad que te cruzaste en la morgue.
+# next
+Pero esos son problemas para el {nombre_personaje} del futuro. Ahora te toca dormir.
 # next
 -> intermision_1
 
@@ -729,56 +944,1151 @@ Volvés a tu casa agotado. Sospechás que esto es el principio de algo más gran
 // =========================================================
 
 === intermision_1 ===
+~ capitulo_actual = "Intermisión 1"
 # music:ciudad_ambient
-Te despertás a las tres de la mañana con un olor a salitre en la nariz. Hace días que te acosa una pesadilla de ahogo en un mar de sangre.
-Ya que no podés dormir, decidís aprovechar el tiempo.
-¿Qué querés hacer antes de tu próxima misión?
+Te despertás a las tres de la mañana. Hace un par de días te acosa una pesadilla donde te estás ahogando en un mar de sangre y sentís, rozando tus pies, que una gran entidad marina está dando vueltas. Jugando con vos, esperando el momento para atacar.
+Ya que tu psiquis se niega a dejarte dormir, decidís verlo como una mejora y hacer más cosas. Tu departamento nunca estuvo tan limpio. Aprovechás para hacer ejercicio, meditar para centrar tu mente y leer todos los libros que pudiste pedir prestados de la sede de El Faro.
+# next
+En tu pasada misión pudiste entregar la mano de un cadáver que había sido usado como sacrificio humano. Esperabas que con ese elemento, un concilio de científicos y magos pueda rastrear a la secta que está detrás de todo en un extraño pacto con seres que habitan en el fondo del mar.
+Sea lo que sea que los genios de El Faro decidan hacer, iba a tomar tiempo. Sin duda vas a tener algunas otras misiones urgentes para entretenerte hasta que haya una nueva pista sobre la secta.
+# next
+Abrís la ventana de tu departamento y entra un poco de aire acompañado por el olor a sal del agua salada. El viento atrae unos gritos de diversión y alegría.
+Te queda un poco de tiempo para tu siguiente misión. Tal vez podés hacer algo antes de ir.
+¿Qué querés hacer?
 
-+ [Bajar a la playa a despejarte] -> inter_playa
-+ [Visitar a la Tarotista de las afueras] -> inter_tarot
-+ [Ayudar a Jesús "El Jaguar" en los muelles] -> inter_jesus
-+ [Ir a la enfermería con Mary Shelley] -> inter_enfermeria
-+ [Ir directo al Faro por una nueva misión] -> inter_misiones
++ [Bajar a la playa. Disfrutar un poco de la vida normal que estoy protegiendo] -> inter_playa
++ [Recorrer el filo entre lo normal y lo sobrenatural] -> inter_tarot
++ [Ayudar a otro Guardián en los muelles] -> inter_jesus
+{ salud < 100:
+    + [Ir a la enfermería con Mary Shelley] -> inter_enfermeria
+}
++ [No hay razón para dar vueltas. Ir directo a mi siguiente misión] -> inter_misiones
 
 === inter_playa ===
-Crees ver un cadáver en la orilla, pero es solo un tronco con algas. Tu salud mental está en juego.
-# stat:hp:+5
+El mar está picado hoy y lo acompaña una garúa. La mayoría de las personas en la playa son turistas que, a pesar del clima, quieren hacer valer su dinero y vienen a sentir un poco de arena entre los dedos de los pies.
+# next
+A cincuenta metros notás que el mar devolvió algo. Tu visión se vuelve de túnel y lo notás. Otro cuerpo con las horribles marcas de tortura y la extraña escritura que acompaña a los sacrificios humanos. ¿Cómo puede ser que nadie está gritando? ¿Llamando a la policía? Una pareja camina a su lado como si nada, un par de niños está corriendo atrás de un vendedor de churros...
+# shake
+¡¿ESTÁN TODOS CIEGOS?!
+# next
+Te refregás los ojos durante unos minutos y volvés a ver bien. Es solo un tronco con un poco de algas marinas.
+Este trabajo está empezando a afectar tu salud mental.
 -> inter_misiones
 
 === inter_tarot ===
-Una anciana elegante te tira las cartas. - Te voy a dar un consejo: usa los símbolos antiguos si la situación se pone pesada.
+Salís a caminar y te dejás llevar, por el flujo de energías, por las pequeñas señales que hay en todas las ciudades. Cuando hay una bifurcación basta lanzar una moneda al aire para saber por dónde seguir.
+Antes de darte cuenta, estás en la periferia de la ciudad.
+# next
+Es de noche pero la mayoría de las farolas de la calle no funcionan, solo una en la esquina está parpadeando. Vas hacia ella y mirás el camino. De nuevo, otra farola parpadeando a lo lejos. Seguís el circuito y terminás frente a una casa pintada de un verde loro, con la puerta abierta. Al lado hay una pizarra que dice "Tarot. Lectura de Cartas. Adivine su futuro".
+De las entrañas de la casa se siente fluir, pesado y electrificante, un poco de poder real.
+# next
+En el fondo hay una anciana esperándote detrás de una mesa con una baraja de cartas en la mano. Con una sola mirada te das cuenta de que en un pasado ella fue hermosa pero, aún más importante, aprendió cómo ser elegante en su vejez. Un pañuelo con arabescos adorna su cabeza, dejando escapar una larga melena canosa que parece platinada.
+Sus ojos, verdes como joyas, están encuadrados con un delineado pronunciado que se alarga hacia las sienes. Cada movimiento que hace es acompañado por el tintineo de cientos de collares, pulseras y cadenas plateadas que decoran todo su cuerpo.
+# next
+Nunca te habían tirado las cartas antes. Raro. Ella se pasa un momento largo pasando su mirada entre las cartas y vos.
+— Te voy a dar un consejo, gurí. Pasaron dos mil años desde que el Nazareno recorrió estas tierras, pero sus símbolos tienen poder todavía. Si la situación se pone pesada, no dudes en usarlo.
+# next
+Salís a la calle con más dudas que respuestas. Pensando si lo que te dijo la tarotista te va a servir de verdad.
 -> inter_misiones
 
 === inter_jesus ===
-Te encontrás con Jesús, un hombre jaguar ("Aba"). Te pide ayuda con un vampiro que tiene secuestrada a una mujer.
-+ [Ataque frontal con Jesús]
-    La mujer muere en la pelea. Jesús está decepcionado.
-    -> inter_misiones
-+ [Generar una distracción estratégica]
-    Lográs salvar a la mujer. Jesús te lo agradece.
-    # stat:conocimiento:+5
-    -> inter_misiones
-+ [Sigilo absoluto]
-    Inmovilizás a la mujer mientras Jesús termina con el vampiro. Queda viva aunque con abstinencia.
-    # stat:fuerza:+5
-    -> inter_misiones
+Te llega un mensaje de que un Guardián está con una misión complicada y podría necesitar una mano. Te subís a tu auto y manejás hasta los puertos de la ciudad a toda la velocidad posible, esperando que El Faro tenga una ayuda monetaria para pagar las multas de tránsito adquiridas en el ejercicio del deber.
+# next
+El Guardián está apoyado contra una pared. La luz de la luna ilumina su piel cobriza aunque su rostro está escondido detrás de una maraña de pelo oscuro. A pesar de que la noche trajo un viento frío del mar, el Guardián está en cuero y descalzo, usando solamente un pantalón corto de fútbol.
+# next
+— El Faro me envía, soy {nombre_personaje}.
+— Un gusto, soy Jesús.
+— ¿Jesús?
+— El mismo.
+— Perdona, pero vi muchas cosas raras en el último tiempo, así que tengo que preguntarlo...
+— No, no, no soy ese Jesús. Solamente tenía una madre muy religiosa.
+# next
+Jesús rápidamente te explica la situación. En el galpón del frente hay un vampiro que hace tiempo viene rastreando. El problema es que también está con un humano, una pobre persona sometida a su control mental y adicta a la sensación excitante que genera la mordida de vampiro.
+{ conocimiento >= 20:
+    Sabés que esa es una respuesta evolutiva de los vampiros para asegurar el sometimiento de su presa y, en caso de querer esconder el ataque, el humano relaciona la sensación de placer que recibe con un acto sexual ilícito y no hace más preguntas.
+}
+Como si fuese poco, la persona es la madre de dos hijos que la están esperando. Jesús les prometió que iba a tomar todas las medidas necesarias para que su madre regrese.
+# next
+— El problema Guardián, es que la sutileza no es mi fuerte.
+Cuando termina de decir esta frase Jesús deja caer su pantalón con un simple movimiento y su cuerpo comienza a cambiar.
+Su piel se rasga y quiebra ante el crecimiento de la masa muscular que esconde. Su altura de repente superó los dos metros. De su cabeza surgió un ruido de "crack" (que por lo general no pronostica nada bueno) mientras sus ojos se movían a los costados de la cabeza para dar pie a un hocico.
+Antes de darte cuenta su nueva masa muscular ya se estaba cubriendo con una fina y hermosa capa de pelo dorado con manchas negras.
+# next
+— Eres un hombre jaguar, un Yaguareté Abá — decís marcando lo obvio. Toda la respuesta que recibís es un leve ronroneo.
+De un salto Jesús se sube al techo de una casa y empieza a acercarse al galpón por los techos.
+Parece que te toca a vos elegir el enfoque del ataque.
+
++ [Ataque frontal. Jesús por el techo y yo por la puerta] -> jesus_frontal
++ [La fuerza no siempre es la respuesta. Toco el timbre y genero una distracción] -> jesus_distraccion
++ [Sigilo. Darle la vuelta al galpón y buscar otra entrada] -> jesus_sigilo
+
+=== jesus_frontal ===
+Cargás contra la puerta del galpón. Abajo tuyo una sombra pasa volando, Jesús saltando de un techo directo al techo del galpón. Le das una patada fuerte a la puerta esperando sacarla volando pero tiembla en su lugar, haciendo un ruido seco que hace eco por toda la manzana. Creo que acabás de anunciar tu llegada.
+# next
+Forcejeás con la puerta intentando abrirla, de adentro del galpón se escucha el ruido de vidrios rotos y pelea. Después de unos segundos que parecen eternos la puerta cede un poco, lo cual te da espacio para hacer palanca y abrirla definitivamente.
+# next
+En el piso notás el cadáver de una mujer de unos treinta años, su garganta desgarrada, la típica señal de un vampiro que decidió dejar seca a una persona sin ninguna sutileza. En mitad del galpón, entre la nube de polvo que dejaron los escombros de la pelea, ves al Yaguareté Abá arrancando la cabeza del vampiro de una mordida.
+# next
+Jesús vuelve a su forma humana y mira decepcionado el cadáver a tus pies.
+— Creo que pudimos hacer eso mucho mejor — hay amargura y crítica en sus palabras y, a pesar de que usa el plural, sabés que van dirigidas a vos.
+-> inter_misiones
+
+=== jesus_distraccion ===
+Caminás directo a la puerta del galpón, con paso firme, querés que el vampiro sepa que estás viniendo. Que no te considere una amenaza. De ser posible, que te piense como un delivery de comida a domicilio.
+Tocás el timbre al lado de la puerta y esperás.
+# next
+La puerta se entreabre y ves la cara de una mujer de unos treinta años. Sus ojos están vidriosos y enmarcados por las ojeras correspondientes. Su piel estaba reseca y quebradiza. Los signos claros de una persona que había sufrido repetidas mordidas de un vampiro.
+— ¿Qué... necesitás? — su voz era quebradiza y le resultaba complicado sacar dos palabras por la garganta.
+# next
+Nunca mentiste tanto y tan rápido. Tu coche se había quedado sin batería. También tu celular. Necesitabas ayuda de un buen samaritano y ella parecía la persona indicada (esa era la mayor mentira, esa parecía alguien que necesitaba una buena comida y una semana de sueño).
+En algún momento del discurso, notás por el rabillo del ojo cómo una sombra cae dentro del galpón.
+# next
+Un rugido y ruidos de combate. La mujer deja la puerta para ir a ayudar a su vampiro. En menos de un minuto Jesús, de nuevo en forma humana, te está abriendo la puerta.
+El vampiro es una montaña de polvo en una esquina del galpón (notás que también hay un poco de polvo en los labios de Jesús, preferís no profundizar eso).
+La mujer está sentada contra una de las paredes, con un poco de sangre brotando de una herida superficial de un brazo.
+— Bueno, pudo haber salido mejor, pero pudo haber salido mucho peor. Muchas gracias compañero.
+# stat:conocimiento:+5 # stat:amistad_jesus:+1
+-> inter_misiones
+
+=== jesus_sigilo ===
+Te agachás y buscás las sombras para acercarte sin ser visto. Por suerte el destino ayuda a tu misión y unas nubes tapan la luna oscureciendo la calle.
+Llegás al galpón, colocás tu mano contra la pared y empezás a darle la vuelta buscando una entrada secundaria.
+# next
+La mayoría de las ventanas están tapadas con hojas de periódico pero notás una que se encuentra entreabierta, seguramente para que pase un poco de aire, y más que suficiente para que espíes adentro.
+El vampiro se encuentra de espaldas, sentado sobre una silla gamer que funciona como trono, rodeado de pilas de cosas robadas. Ropa, zapatillas, electrodomésticos. La mujer está dando vueltas acomodando las cosas.
+Te preguntás si Jesús está cerca y, en ese mismo momento, escuchás un leve maullido proveniente del techo del galpón.
+# next
+Esperás varios minutos, suficiente para que tu pantorrilla se queje. Pero ves que la mujer se aleja del vampiro. Tal vez a buscar más cosas, tal vez a hacer sus necesidades. Lo importante es que es una oportunidad. Abrís un poco más la ventana y te estrujás para entrar.
+Esperás que Jesús entienda lo que hay que hacer y avanzás hacia donde se fue la mujer.
+# next
+La mujer grita cuando la tackleás e inmovilizás en el suelo. Atrás tuyo se escucha un rugido y un ruido de pelea que dura unos segundos.
+La mujer patalea, llora y te araña. Te promete la muerte de formas horribles mientras se retuerce en su llanto. El síndrome de abstinencia va a ser horrible pero está viva. Y eso siempre es una promesa de futuro.
+— Lo logramos — Jesús aparece atrás tuyo de forma humana — gracias Guardián, nunca olvidaré esto.
+# stat:fuerza:+5 # stat:amistad_jesus:+2
+-> inter_misiones
 
 === inter_enfermeria ===
-Mary Shelley te cura las heridas. - Lindo cuerpo. Si morís, intentá mantener las extremidades pegadas al torso para que sea más fácil revivirte.
+Mary Shelley da un gritito de alegría cuando pasás a verla a El Faro. Siendo la médica oficial (y también chamán y científica loca) le toca a ella realizarte las curaciones necesarias.
+Utiliza una mezcla de medicina occidental junto con hierbas, cantos y rituales extraños.
+— Lindo cuerpo — dice para sí misma mientras te sutura una herida — si morís intentá por favor mantener las extremidades pegadas al torso que es un tedio volver a conectar los nervios y las venas.
+— ¿Eso significa que si muero me pueden revivir? — preguntás. Toda la respuesta que recibís es una risa que no te da mucha seguridad.
 # stat:hp:+20
+# next
 -> inter_misiones
 
 === inter_misiones ===
 # music:misterio_ambient
-El Faro te ha asignado dos casos urgentes. Debes elegir uno:
+El Faro te informó de dos situaciones que se están dando y sería conveniente que un Guardián se ponga a investigar. Aun así, el tiempo es tirano y es imposible hacer las dos misiones a la vez. Vas a tener que elegir qué es más importante.
 
-+ [Casos: PEQUEÑOS INOCENTES (Orfanato)] -> prox_mision_1
-+ [Casos: EL NUEVO AMANECER (Asesinato familiar)] -> prox_mision_2
++ [PEQUEÑOS INOCENTES — Ir a un orfanato donde desaparecieron dos niños] -> prox_mision_1
++ [EL NUEVO AMANECER — Una familia asesinada con marcas de ritual] -> prox_mision_2
 
 === prox_mision_1 ===
 Te dirigís al orfanato. El destino de esos niños depende de vos.
--> END
+-> capitulo_2a
 
 === prox_mision_2 ===
 Vas a la escena del crimen. Algo huele a ritual desde aquí.
+// TODO: Capítulo 2B - El Nuevo Amanecer
+-> END
+
+// =========================================================
+// CAPÍTULO 2A: PEQUEÑOS INOCENTES
+// =========================================================
+
+=== capitulo_2a ===
+~ capitulo_actual = "Cap. 2 — Pequeños inocentes"
+# music:campo_ambient
+Manejaste más de tres horas. A esta distancia el ruido y las luces de la ciudad son un espejismo lejano. El olor salado del mar fue cambiado por la frangancia de eucaliptos (y, vamos a confesarlo, por el pesado olor a bosta de vaca). Cada tanto, a lo lejos, se ve la silueta de un peón rural haciendo alguna tarea. Pero sin duda la población de ganado supera ampliamente a la humana.
+Haces una parada en una estación de servicio al costado de la ruta, alrededor de tuyo hay una gran nada verde, hectáreas y hectáreas de tierras de cultivo.
+# next
+Desayunas en la estación de servicio, unas facturas ricas y una sustancia oscura que se empecinan en llamar café. Mientras tanto meditas sobre la última misión que te asignó El Faro. A unos kilómetros te vas a cruzar con un camino rural que lleva al Orfanato "Santa Inés", hace quince días había desaparecido un niño en su predio. Anoche había desaparecido el segundo. Vos estabas yendo para asegúrate que no desaparezca el tercero.
+# next
+Mientras tomas el ¿café? pensas en el panorama general. El Faro todavía no consiguió información sobre el NN que fue víctima de un sacrificio humano y no esperabas volver a estar en una misión de campo tan rápidamente. Aparte la situación te llegó de improviso así que no tuviste mucho tiempo para prepararte.
+Por suerte, antes de salir a la ruta, tomaste una decisión acertada.
+
+* [Pedí que me junten toda la información que tenían sobre la propiedad] -> cap2_prep_info
+* [Tuve una última sesión de entrenamiento con Cabral] -> cap2_prep_fuerza
+* [Seguí leyendo los manuales y regulaciones que me brinda Enriquez] -> cap2_prep_conocimiento
+* [Hice una visita al laboratorio de Mary Shelley] -> cap2_prep_magia
+* [Pedí que informen mi visita al cura a cargo de la institución] -> cap2_prep_cura
+
+=== cap2_prep_info ===
+El Faro todavía es reacio a informatizarse así que te terminan dando una carpeta gruesa con más de trescientos páginas. Parece que el orfanato funciona en ese predio hace solo 20 años.
+Antes fue una institución psiquiátrica y, si retrocedemos en el tiempo, en la década del cincuenta fue un emprendimiento turístico: una estancia para vender una versión empaquetada de 48 horas de la vida que tenía la oligarquía argentina.
+# next
+En la carpeta había un par de notas periodistas sobre desapariciones. La prensa en su momento se había hecho un festín especulando sobre una red de tráfico de órganos que desaparecía a los internos del psiquiátrico para vender sus retinas. No era necesario leer mucho entre líneas para saber que el emprendimiento turístico había cerrado por razones parecidas.
+Sea lo que sea que estaba pasando, ocurrió de forma cíclica en ese terreno.
+-> frente_orfanato
+
+=== cap2_prep_fuerza ===
+Cabral sonrió cuando me vio entrar al mat. Y luego paso las siguientes horas intentando matarme de las formas más originales que se le ocurrieron. Hubo espadas, hubo golpes bajos. En un momento creo que tiró tierra en mis ojos.
+\- Nunca vas a estar realmente listo para lo que viene, pero simplemente porque es imposible estar listo para todo. Lo mejor a lo que podes aspirar es a estar listo para la sorpresa e improvisar en el acto – Una vez terminado su discurso, Cabral me invitó a las típicas cervezas post entrenamiento.
+# stat:fuerza:+5
+-> frente_orfanato
+
+=== cap2_prep_conocimiento ===
+Enriquez volvió a tirar un libro grueso sobre su escritorio. Esta vez la letra era la F, lo cual me hacía dudar mucho sobre el mecanismo organizativo del El Faro.
+Pero aun así había nutrida información sobre como falsificar documentos, hacer fotografías y, por alguna razón, un anexo entero sobre los hongos llamdo "Fungi" (que al parecer habían estado cerca de controlar el mundo en 1367 y 1865).
+\- Siempre es importan leer sobre las acciones de los Guardianes más importantes de la antigüedad. Debería mentirte y decirte que, tal vez un día vos puedas poner tu propia entrada en el manual, pero no me parece correcto decir mentiras.
+# stat:conocimiento:+5
+-> frente_orfanato
+
+=== cap2_prep_magia ===
+En cuanto entre al laboratorio de Mary Shelley encontré la cabeza de un carnero negro colocada sobre una mesa, dentro de un pentagrama, y con una vela roja en su cabeza. Por alguna razón la cabeza estaba cantando "La Marsellesa" (con un mejor francés que el mio) y tenía una serie de electrodos pegados a su cabeza. Seguí el cableado con la vista y encontré a Mary Shelley muy interesada viendo los datos de un electroencefalograma en la pantalla.
+La mire a ella, al experimento, y de nuevo a ella.
+\- Te juro que todo esto es muy necesario – Dijo la Doctora con la voz de una niña atrapada en una travesura.
+\- Prefiero no saber.
+Aun así, se tomó un par de horas para profundizar mis conocimientos del mundo sobrenatural. Es increíble lo que se puede hacer con unos movimientos precisos, las palabras correctas y un poco de ayuda. Solo fue frustrante que la cabeza del carnero no dejó de cantar durante todo el proceso.
+# stat:magia:+5
+-> frente_orfanato
+
+=== cap2_prep_cura ===
+~ visito_cura = true
+La tarea bajó por la cadena de mando de El Faro hasta llegar al encargado de hacer llamadas (por suerte yo ya no tenía que hacer eso). Un Guardián joven me informó que ya estaban avisados de mi llegada. Me esperaba un cura llamado Miguel Ponsatti.
+-> frente_orfanato
+
+// =========================================================
+// FRENTE AL ORFANATO
+// =========================================================
+
+=== frente_orfanato ===
+# music:orfanato_ambient
+El predio del Orfanato era gigante, rodeado por un muro de más de dos metros. Si bien no era tan sorprendente para mí, sin duda era una barrera infranqueable para un niño.
+Al lado de la reja robusta, protegida por una fuerte cadena con un candado del tamaño de mi puño, había una estatua de una santa abrazada a un cordero.
+Santa Inés (la placa a los pies me desasnó) era la santa patrona de la pureza, los jóvenes….y por alguna razón también de los jardineros, lo cual parecía una inteligente expansión del mercado.
+# next
+Espié entre las rejas. El predio era gigante. Calculé que era equivalente a diez manzanas. Sin duda había una medición más adecuada en hectáreas, pero era un chico de ciudad.
+La mayoría del terreno era un bosque espeso, dejando despejado un pequeña terreno entre la puerta donde se encontraban los dos edificios principales. Una capilla y una casona gigante.
+De chico hubiese matado por tener un bosque así para jugar.
+# next
+Toqué timbre y a los minutos una figura oscura se acercó a la reja. Al principio la figura oscura avanzando por el bosque me generó un reflejo de miedo. Luego vi que se trataba de una monja con un pesado hábito y una cadena con un juego de llaves atado a la cintura.
+Cuando se acercó a la reja y note su rostro, seco como una pasa y con la impresión de nunca haber producido una sonrisa, tuve la impresión que mi reflejo de miedo no estuvo tan erróneo.
+# next
+\- Buen día hermana…
+\- Madre – corrigió ella
+\- Perdón – dije avergonzando por el error, maldita culpa cristiana en la que fui criado – Madre. Soy {nombre_personaje}, ¿Usted es?
+\- La Madre Alegría – Dijo con un tono de voz gélido. La persona que le había puesto ese nombre tenia un sentido del humor muy morboso.
+\- Me envían de El Faro para…
+\- Si si. Ya se para lo que viene – comenzó a buscar una llave en el manojo que llevaba atado al cinto – una pérdida de su tiempo y del mío si me preguntan. La mayoría de estos chicos son casi salvajes, muchos nacidos del pecado, sin duda se fugaron a la ciudad.
+\- Claro, Pero aun así…
+\- Son las sobras. Esta mal decirlo en estos tiempos modernos, pero acá tenemos a los chicos de entre 8 y 14 años. Ya no son chicos y saben que nadie los va a adoptar.
+\- Entiendo… – y deje la palabra en el aire sabiendo que la Madre Alegría igual me iba a interrumpir para continuar con su monologo
+\- El último chico que desapareció, Juan, era un verdadero diablillo. Y eso que intente disciplinarlo varias veces – La Madre Alegría terminó este comentario con un movimiento en el aire similar a golpear a alguien con una regla, lo cual me hizo empatizar mucho con el chico.
+# next
+Durante el recorrido la Madrea Alegría me bajo la información principal. En el orfanato vivían unos cincuenta chicos, mitad mujeres y mitad varones. El último chico desaparecido era Juan y el anterior se llama Darío y ambos eran terribles (aunque sospecho que para la Madrea Alegría todos los chicos eran terribles).
+Actualmente solo había tres adultos en el predio, ella, la Hermana Paciencia y el Cura Miguel Ponsatti, aunque los días de semana venían docentes de Costa Alegre a dar clases en el edificio.
+
+{ visito_cura:
+    -> cap2_con_cura
+- else:
+    -> cap2_sin_cura
+}
+
+// =========================================================
+// CAMINO CON CURA
+// =========================================================
+
+=== cap2_con_cura ===
+# next
+La Madre Alegría te deja en la puerta de la Capilla. Se excusa mientras dice que el Padre Ponsatti te espera adentro.
+En cuanto abrís la puerta, lo primero que notas es la energía que está recorriendo el aire. Si bien es desorganizada (silvestre es la palabra que te viene a la cabeza) te hace recordar un poco a la red de conjuros defensivos que hay en El Faro.
+Con algunos espacios de adoración pasa estas cosas, o tal vez esta Capilla tiene la particularidad de tener una de las pocas reliquias reales en un mar de falsificaciones, pero lo importante es que es un lugar seguro
+# next
+La Capilla era una modesta construcción de piedra, con la típica sucesión de doble blancos de iglesia. En los costados, debajo de los clásicos mosaicos del vía crucis, se notaban una centenar de dibujos de niños de santos, vírgenes y Jesús. Tierno hasta que uno se daba cuenta que la mitad de ellos había sido comido por leones, hervido o decapitado.
+\- Veo que se quedó mirando la obra de nuestros artistas locales. Tengo fe que alguno de esos chicos la pegue en grande – La voz del cura sonó atrás tuya, con un tono alegre.
+# next
+\- Le agradezco mucho por venir – El Cura te da la mano e invita a sentar en uno de los bancos de la Capilla – Estamos superados por este problema. Y eso que nuestros niños tienen problema, pero no sabemos cómo actuar ante algo así
+\- ¿Y no contactaron a la policía?
+\- Para lo policía es fácil, los chicos escaparon y se deben haber ido a Costa Alegre. Creo que buscaban una excusa para archivar el caso y poder ir a dormir la siesta. Dios los perdones
+\- ¿Usted cree que los niños no escaparon? Perdone que sea tan brusco pero, después de conocer a la Madrea Alegría entiendo que un pre adolescente prefiera escapar.
+\- La Madrea Alegría ladra más de lo que muerde. Y yo me aseguro de limitar su estilo pedagógico más arcaico.
+\- Claro – dije sin mucha certeza – ¿Qué me puede decir de los chicos desaparecidos?
+# next
+\- A Dario sus compañeros les había apodado Tarzan – el Cura se perdió un rato en sus recuerdos antes de seguir – Pasaba la mayoría de su tiempo en el bosque que rodea los edificios. Tenía problemas para relacionarse con sus compañeros. Yo había iniciado un juego con él para integrarlo, donde si encontraba alguna planta u hongo que le llame la atención podría venir a la Capilla y yo le daba una clase de Ciencias Naturales.
+\- ¿Y Juan? ¿El chico que desapareció ayer?
+\- Inteligente, divertido, medio contestón pero es normal en los chicos inteligentes. Si quieres saber más sobre él te recomiendo que hables con Belén, esa niña es su mejor amiga.
+\- Gracias Padre.
+\- Aparte esto para usted – El Cura te pasa dos fotos pequeñas, como las de documento.
+Pasa siempre lo mismo cuando uno tiene fotos de gente desaparecida, uno busca un dato en sus facciones, un secreto oculto atrás de sus pupilas que te permita descubrir dónde están, pero la foto nunca responde. Termine con las fotos de dos niños, Dario era cacheton y llevaba una gorra amarilla aun en la foto; Juan tenía un rostro anguloso y unos ojos claros que contrastaban con su piel oscura.
+\- Intente que vuelven a casa, por favor – terminó el Cura antes de pararse para dar por terminada la reunión.
+-> hall_orfanato
+
+// =========================================================
+// CAMINO SIN CURA
+// =========================================================
+
+=== cap2_sin_cura ===
+# next
+La Madre Alegría te hace entrar al hall central del edificio principal. En una esquina te observa una estatua gigante de Santa Inés mientras en las cerámicas del piso se forma el rostro de Jesús. La composición tan cristiana es cortada por pequeños detalles que delatan la presencia de niños, un par de juguetes repartidos por el piso, un dibujo infantil pegado al lado de la estatua. Por alguna razón alguien decidió atar una remera al pasamos de la escalera que lleva al primer piso.
+# next
+\- En el piso superior están las aulas, ahora cerradas, y así como los cuartos de las niñas y los niños. Si quiere puede subir y hacerles preguntas. Los castigue para que se queden en su habitación después de la broma que realizó Juan – La Madre Alegría señala la escalera.
+\- Al fondo está el comedor y la cocina donde ahora se encuentra trabajando La Hermana Paciencia, a la derecha están los baños y las duchas y a la izquierda está mi oficina. Intente no molestarme mientras trabajo – Como punto final, ella se da vuelta y se dirige a su oficina, se escucha como pasa la llave.
+-> hall_orfanato
+
+// =========================================================
+// HUB DE INVESTIGACIÓN
+// =========================================================
+
+=== hall_orfanato ===
+{ hall_orfanato > 1:
+    # next
+}
+Estas solo en el hall central. ¿Cómo continuas tu investigación?
+
++ [Subo al cuarto de los niños] -> cuarto_ninos
++ [Subo al cuarto de las niñas] -> cuarto_ninas
++ [Voy al Comedor a hablar con la Hermana Paciencia] -> comedor_orfanato
++ {tiene_machete or tiene_info_demoniaca} [Voy al bosque a buscar la guarida] -> bosque_opciones
++ {not tiene_machete and not tiene_info_demoniaca} [Voy al bosque] -> bosque_sin_pistas
++ [Golpeo la puerta de la Capilla] -> capilla_cerrada
++ [Reviso los baños y las duchas] -> banos_opciones
++ [Voy a la oficina de la Madre Alegría] -> oficina_madre_opciones
+
+// =========================================================
+// CUARTO DE NIÑOS
+// =========================================================
+
+=== cuarto_ninos ===
+Subís por la escalera hasta el primer piso. De un lado se ven un par de puertas abiertas que dan a unos salones de aulas improvisados. Del otro encontrás las puertas a los dos dormitorios. Con una completa falta de imaginación alguien decoró la puerta del cuarto de varones con una pelota azul.
+Abrís la puerta y te encontrás en un cuarto con una decena de camas cucheta y una pila de chicos amontonados en una esquina. Están formados en un semi circulo y algo en el medio les llama la atención.
+Por suerte parecen no haber notado tu presencia.
+
+* [Mejor atraparlos con las manos en la masa. Te acercas con sigilo] -> ninos_sigilo
+* [Seria irrespetuoso no hacer notar tu presencia. Al fin de cuentas, es su pieza] -> ninos_anunciarse
+
+=== ninos_sigilo ===
+Los chicos están absortos en lo suyo y no te notan llegar. Por encima de sus cabezas notas que armaron un coliseo improvisado. Alguien atrapó una araña (bastante grande, casi del tamaño de una mano) y la esta haciendo pelear con un escorpión. Parece que uno de los chicos levantó apuestas usando un sistema de tapas de botellas.
+Repudiable, pero también muestra un gran espíritu emprendedor.
+# next
+Los chicos se dan vuelta y cierran fila tapando su juego. Saludas, te presentas e intentar usar todas tus habilidades para interactuar con niños. Por respuesta solo recibís miradas al piso, monosílabos y risas burlonas.
+Tal vez no les gusto que los espíes. Y estas seguro que la Madre Alegría hizo todo lo posible para que no confíen en ningún adulto.
+Antes de retirarte notas como la araña le ganó sin problema al escorpión, aprovechando su mayor envergadura atrapó a su rival y le inyectó una mordida letal en su cuerpo.
+-> hall_orfanato
+
+=== ninos_anunciarse ===
+Los chicos se dan vuelta en cuestión de cinco minutos y forman una pared humana entre vos y lo que sea que estaban viendo. Saludas, te presentas e intentar usar todas tus habilidades para interactuar con niños. Por respuesta solo recibís miradas al piso, monosílabos y risas burlonas.
+Son un grupo cerrado y están acostumbrados a desconfiar del mundo adulto. Y vos no hiciste nada para ganarte su lealtad o su aprecio.
+Sin más opciones, no te queda más opción que salir y continuar tu investigación por otro lado.
+-> hall_orfanato
+
+// =========================================================
+// CUARTO DE NIÑAS
+// =========================================================
+
+=== cuarto_ninas ===
+Subís por la escalera hasta el primer piso. De un lado se ven un par de puertas abiertas que dan a unos salones de aulas improvisados. Del otro encontrás las puertas a los dos dormitorios. El cuarto de mujeres esta individualizado por una corona rosa (aunque no entendés la relación entre las chicas y apoyar posturas opresivas que fueron dejadas de lado hace más de dos siglos).
+Al entrar te encontrás con una un caos organizado. Un par de camas cuchetas se utilizaron como paredes para construir un fuerte. Cuatro chicas están recorriendo el lugar jugando un juego que, desde afuera, parece centrarse en hacer mucho ruido y correr peligrosamente cerca de los objetos con bordes filosos.
+Otras juegan a saltar la soga, el elástico o saltar sobre la cama. Todo esta escena te pone serias dudas sobre la viabilidad de la paternidad.
+# next
+Te presentas y de repente tenes medio centenar de ojos observándote y un silencio que es más amenazador que el ruido anterior. En cuanto contás quien sos y que estas haciendo da un paso adelante una chica. Tiene dos cotilas, pero están a diferente altura y apuntando en direcciones diferentes, aun así el aspecto logra que el aspecto parezca rebelde en lugar de desprolijo.
+\- ¿Usted viene a buscar a Juan? – Te da una sonrisa que con un par de "ventanas" fruto de la caída de dientes de leches
+\- Si, voy a hacer todo lo posible para que vuelva a casa. ¿Como te llamas petisa?
+\- Belén, soy amiga de Juan
+# next
+Todas las chicas comienzas a reírse y la señalan mientras cantan "tiene novio, tiene novio". Raro, en un par de años van a estar dispuestos a sacarse los ojos para conseguir pareja. Aun así el canto no inhibe a Belén, quien se da vuelta al grito de "solo es mi amigo" mientras mueve la cabeza en todas las direcciones, rotando sus colitas como si fuesen nunchakus.
+En menos de cinco minutos perdiste el control de la situación.
+
+* [Se van a cansar. Es solo cuestión de esperar] -> ninas_esperar
+* [Debo ganarme la confianza de Belén. Le doy una golosina] -> ninas_golosina
+
+=== ninas_esperar ===
+Tarde o temprano las chicas se cansan, solamente que toma más tiempo del que esperabas. Mucho mas tiempo del que esperabas,
+Pero lentamente todas vuelven a sus juegos y te dejan hablar tranquilo con Belén.
+-> en_privado_belen
+
+=== ninas_golosina ===
+\- Toma Belén – digo mientras le doy un caramelo que tenia guardado en el bolsillo.
+\- La Madrea Alegria me dice que nunca acepte caramelos de extraños
+\- Yo soy {nombre_personaje}, no soy un extraño.
+\- ¿Y eso no me dice nada? Aparte es un nombre muy extraño si me preguntan – Belén cruza los brazos y resulta ser mas inteligente de lo que esperabas.
+-> en_privado_belen
+
+=== en_privado_belen ===
+~ tiene_info_belen = true
+# next
+Te llevas a la chica a un costado. Le sonreís, principalmente por que no vienen a tu cabeza palabras que sirvan en este momento. Tal vez después de esta misión puedas escribir un capitulo en los instructivos de El Faro respecto a cómo interactuar con niños y tener un enfoque pedagógico.
+Le das espacio y la dejas hablar.
+# next
+\- Hay algo en el bosque señor – ella hace la típica pausa antes de decir "algo", es lo suficientemente grande para saber que nadie la va a tomar en serio si dice que hay "monstruos". Nadie salvo vos
+\- Contame, que vieron con los chicos en el bosque
+\- No sabemos. Es grande, grande como un colectivo, y rápido. Pero se mueve sin hacer ruido. A veces la vemos a lo lejos al atardecer, antes que la Madrea Alegría nos mande a dormir, ojos oscuros que nos observa entre los árboles, muchos ojos – Mientras habla las lágrimas se empiezan a amontonar en el costado de sus ojos, aun asi se mantiene valiente.
+\- Tranquila, yo estoy acá exactamente para encargarme de eso. No me importa cuántos ojos tengan – Omitís decirle que te preocupa más que la cosa parece ser gigante, pero bueno, ella ya está suficientemente asustada por los dos
+# next
+\- Juan estaba seguro que eso se llevó a Darío, él siempre estaba en el bosque y una noche simplemente no volvió. Nosotros nos quejamos pero la Madre Alegría no quiso salir a buscarlos – la joven se lleva la mano a la mejilla – me pegó con una regla dado que le dije una mala palabra, pero estaba enojada. No lo dije a propósito, solo quería que salgamos a buscar a Darío.
+\- ¿Así que Juan decidió ir a buscarlo el mismo? – Mierda que era valiente Juan, es más digno de ser un Guardián que muchos.
+\- Si, pero lo pensó bien, estuvo recorriendo el bosque buscando donde está el escondido de…de ese animal. Cuando estuvo seguro, se metió a la cocina y le robó un cuchillo a la Hermana Esperanza – Belén puso la hermana en forma de O al darse cuenta lo que había confesado.
+\- Te prometo que no solo voy a traer a Juan, sino que voy a traer también el cuchillo de la Hermana Esperanza asi le pide perdón y se lo devuelven.
+# next
+\- Por favor Señor, traiga a Juan de nuevo. Por favor – las lágrimas que se habían juntado en la esquina de sus ojos empezaron a escaparse.
+\- Antes de salir, ¿Juan te dijo dónde estaba esta guarida?
+\- No me dijo dónde estaba la guarida, pero me dejó un machete con el recorrido que hizo para llegar – Una sonrisa apareció empujando a las lágrimas.
+
+* [Quedate tranquila, voy a hacer todo lo posible para traer a Juan de vuelta. Y también al cuchillo de la Hermana Esperanza] -> belen_respuesta
+* [La próxima vez no tienen que hacer esto solo. Este es el numero de El Faro, si tienen problema, no duden en llamar] -> belen_respuesta
+* [Ya paso mucho tiempo. No tengo confianza en que podamos encontrar a tu amigo con vida. Lo siento.] -> belen_respuesta
+
+=== belen_respuesta ===
+~ tiene_machete = true
+Las lágrimas que venía conteniendo se liberaron completamente y ella rompió en llanto.
+Miras el machete que te dio con el recorrido para llegar a la guarida del monstruo. La letra del chico es una mezcla entre imprenta mayúscula y cursiva, y está llena de referencias como "a la derecha del árbol con forma de mano" y "seguir directo hasta la roca con forma de culo". Tal vez seguir estas instrucciones no va a ser tan fácil como parecía.
+# inv:add:machete_bosque
+-> hall_orfanato
+
+// =========================================================
+// COMEDOR
+// =========================================================
+
+=== comedor_orfanato ===
+El comedor es un cuarto gigante con unas 6 mesas donde entran diez personas en cada una. Los chicos le dieron un aire a hogar poniendo un montón de dibujos en las paredes.
+Te acercas a verlos, en la mayoría se ven a ellos jugando, en muchos en compañía del Padre Ponsatti o la Hermana Paciencia. Para sorpresa de nadie, no hay ni un dibujo de ellos jugando con la Madre Alegría.
+Al final del cuarto se encuentra la barra, que conecta con la cocina. Miras por arriba y se ve una monja fortachona que está vaciando todos los cajones y poniendo su contenido sobre la barra, como si se tratará de la autopsia de un bazar
+Te acercas, siguiendo de paso el camino de un olor de comida deliciosa que solo se logra cuando tenes en la cocina alguien que ostenta el título de abuela.
+# next
+\- Buenos días, soy {nombre_personaje}
+\- Bienvenido – del fondo de la barra asoma la cabeza una Monja, tiene las mejillas coloradas por culpa del esfuerzo
+\- ¿Hermana Paciencia no? – La Monja deja escapar una risita que te hace pensar que el nombre Alegría le correspondía más a ella
+\- Si Si, y usted es la persona que vino a solucionar su problema. Por favor, tráigalos a casa. Lo de Juan paso ayer, estoy seguro que lo va a poder encontrar.
+\- Le puedo preguntar hermana ¿Qué está haciendo?
+\- Perdí uno de mis mejores cuchillos, estoy seguro que hace un par de días lo había guardado en el cajón de siempre.
+\- Veo que no puedo descartar duendes entonces – dije riendo
+\- Completamente no – contesta la Hermana Paciencia completamente seria.
+# next
+Le haces el interrogatorio de rigor. No parece darte mucha información sobre los niños. Darío, el primer niño que desapareció, era medio solitario y pasaba la mayoría del tiempo solo en el bosque. También era fanático del arroz con atún, aunque no sabes mucho como ese dato te va a ayudar en la investigación.
+Juan en cambio es un chico bonachón, que muchas veces la ayudaba a lavar los platos a cambio de algún dulce, pero parece que no se los comía sino que se los regalaba a una amiga llamada Belén
+# next
+\- Antes de irse ¿Le puedo ofrecer un poco del guiso que estoy preparando para el almuerzo? – La Hermana Paciencia saca la tapa de una olla y la habitación se inunda de un olor que solo podes describir como olor a infancia y seguridad.
+\- No sería justo, estaría sacándole la comida a uno de los niños.
+\- Está buscando a los niños, le vendría bien la energía extra – La Hermana Paciencia mira para abajo y hablar en un susurro – aparte hice voto de ayuno mientras dure la investigación así que sobra comida.
+
+* [No confió en la Hermana Paciencia. Prefiero no ingerir ningún alimento que no haya preparado yo mismo.] -> comedor_no_comer
+* [¡Comida gratis!. Si algo aprendí es que nunca se le dice que no a la comida gratis] -> comedor_comer
+
+=== comedor_no_comer ===
+Ella pone el cucharon en la olla y saca una sustancia amarillenta con un pedazo de carne de origen desconocido. Preferís decir no.
+\- Una lástima – La Hermana Paciencia se ve frustrada – la comida esta tan deliciosa
+\- Recuerde sus votos de ayuno hermana
+\- Si, la próxima vez voy a hacer votos de silencio – Contesta mientras arroja el contenido del cucharon de nuevo a la olla.
+-> hall_orfanato
+
+=== comedor_comer ===
+Ella pone el cucharon en la olla y te lo pasa. Te pones en la boca el guiso, del cual sobresale un jugoso pedazo de carne, e inmediatamente tu boca se llena de sabores deliciosos.
+Hacer comida de verdad (no calentar una olla con agua para tirar algún producto comprado en un supermercado) requiere tiempo y esfuerzo. Son de las dos cosas más importantes que uno le puede regalar a la otra persona. Las energías se tienden a trasmitir a las cosas, y sin duda la Hermana Paciencia sabia como trasmitir esas energías a su comida.
+Sentís como una oleada calor y energía se extiende desde tu estomago por el resto de tu cuerpo, preparándote para la tarea que tenes por delante.
+# stat:hp:+5
+-> hall_orfanato
+
+// =========================================================
+// BOSQUE
+// =========================================================
+
+=== bosque_sin_pistas ===
+El Orfanato está rodeado por un bosque gigante. El terreno es espeso y al norte se vuelve levemente montañoso, aparte no parece haber ningún sendero que podría darte una pista.
+Das un par de vueltas intentando buscar alguna pista pero te terminas perdiéndote por unos minutos, podes encontrar el regreso de nuevo solamente porque entre las ramas se logra ver la cruz que decorada el techo de la capilla.
+Sin duda sos un chico de ciudad.
+Necesitas más pistas para saber qué camino tomar en el bosque. Volves al Orfanato esperando buscar más información que te diga en qué dirección podrían haber ido los chicos.
+-> hall_orfanato
+
+=== bosque_opciones ===
++ {tiene_machete} [Seguir el camino que te dio Belén] -> bosque_belen
++ {tiene_info_demoniaca and magia >= 20} [Rastrear la energía demoníaca con magia] -> bosque_magia
++ [Volver al orfanato] -> hall_orfanato
+
+=== bosque_belen ===
+El machete que te dio Belén está lleno de referencias que, a primer momento, parecen no tener ningún tipo de sentido. Caminas lentamente desde la puerta del Orfanato e intentas verlo todo desde los ojos de un niño. Ves el bosque desde otra perspectiva, todo es más grande y peligroso, pero a la vez más divertido y lleno de posibilidades.
+# next
+{ conocimiento < 20:
+    ~ llego_a_tiempo = false
+    Los niños te exasperan. Pasas veinte minutos buscando algo que en el itinerario de Juan aparece nombrado como "la asamblea de los enanos" hasta que encuentras un valle donde hay un montón de pequeñas piedras colocadas en lo que más o menos parece un círculo. La idea es medio descabellada pero decides que puede ser correcta. Y es así con cada marca en el itinerario, es obtusa, simbólica y te genera extremada desconfianza.
+- else:
+    ~ llego_a_tiempo = true
+    Los niños son geniales. No podes dejar de reírte cuando encontrás lo que en el machete Juan llamó "los arboles amigos". Adelante tuyo hay dos árboles que crecieron tan cerca que sus ramas se mezclaron entre sí, dando la impresión que se están dando un abrazo. Sin duda adentro de cada joven hay un artista que luego se ahoga en un mar de hormonas durante la pubertad. En el camino te dispersas un poco, empezás a ver las cosas con los ojos de un niño y le pones vos también nombres graciosos a los accidentes del terreno.
+}
+Pero llegas. Parece una herida al costado de una loma, como si un gigante hubiese apuñado a la tierra. En su cima hay un sauce llorón y sus hojas, largas y caídas, tapan la entrada simple vista. Pero tu pelota de luz no se deja engañar.
+En la entrada la luz se vuelva cada vez más intensa mientras la pelota pierde su forma, como si fuerzas invisibles la tirarían desde cada extremo. Antes de desaparecer en un fogonazo de luz, se convierte en una flecha que te señala hacia adentro.
+-> cueva_entrada
+
+=== bosque_magia ===
+Los demonios no pertenecen a este plano, son un cuerpo ajeno. Infeccioso. Al igual que con una enfermedad, nuestra realidad pone a actuar un sistema inmunológico que permite detectarlos. Muchas de las señales son tan conocidas que ya forman parte del folclore natural como que la madera se pudra de forma repentina, el vuelo descoordinado de aves, o que los fuegos tomen una tonalidad verdosa.
+La mayoría de esos signos requieren una larga presencia de los demonios en este plano pero, para quien está más en sintonía con el mundo espiritual, puede detectar señales más sutiles. Como seguir un mal olor en la cocina
+# next
+Durante el Concilio de Nicea también se llevó a cabo otro Concilio, secreto, para evaluar los nuevos dogmas para combatir los seres sobrenaturales en el marco de la nueva fe cristiana. Algunos Obispos creían que los demonios debían ser combatidos únicamente con rezos y reliquias sagradas (sospechosamente todos los que adhirieron a esta postura murieron en menos de una década refutándose a sí mismos entre rezos inútiles y reliquias falsas). Otros creían que los demonios no podían venir del infierno ya que el sacrificio de Jesus en la Cruz debería impedir esto. El Obispo de Córdoba insinuó que los demonios vienen de otros planos más allá del control de Dios, postura que le valió ser tildado de hereje por el Obispo de Cartago, quien le terminó rajando la cara con una navaja. Todos sabemos lo tensa que pueden ponerse los debates teológicos.
+# next
+Lo importante es que, después de rajas un par de caras y tildarse de herejes mutuamente, llegaron a un consenso. Un simple hechizo que es una de las primeras cosas que se enseña cuando uno tiene una educación más o menos formal.
+Solo necesitas centrarte en vos mismos. El ritmo de tu respiración, la circulación de la sangre por tu cuerpo, las pequeñas sensaciones sobre tu piel (ese maldito pedazo de carne entre los dientes que te está volviendo loco).
+El cuerpo es una representación pura de nuestro plano, hecho a la imagen de Dios, por lo tanto debería confrontar directamente con una entidad de otra realidad.
+Una vez que sos uno con tu cuerpo, solo necesitas proyectar esa imagen mental en forma de energía y dejarla ir, para que busque lo que no corresponde.
+# next
+Te frustra un poco que la imagen mental que sale de ser uno con tu cuerpo sea una pelota de luz amarillenta, de bordes indefinidos, que flota de forma torpe a la altura de tu pecho.
+Esperabas algo más agraciado. Al menos más humanoide. Tal vez si necesitas esas sesiones de psicoanálisis.
+Con un pensamiento dejas ir a la pelota de luz, que empieza a flotar por el bosque buscando algo que no encaje.
+# next
+{ magia < 25:
+    ~ llego_a_tiempo = false
+    La pelota recorre el bosque de forma indecisa, cambia de dirección y velocidad de forma azarosa. En un momento te hice dar dos vueltas alrededor del mismo Jacaranda y en otro pegó un giro repentino que te hace resbalar y caer de frente contra un charco de barro.
+    Parece que tu pelota tiene muy mal sentido de orientación, o en una parte de tu árbol genealógico se cruzó un perro ansioso que salió a corretear por el bosque.
+    Seguís avanzando atrás de ella mientras, en el cielo, ves como lentamente el Sol sigue su curso y los minutos se conviertan en horas.
+- else:
+    ~ llego_a_tiempo = true
+    La pelota se dispara como un tiro. Para ser una representación energética de tu interior, tiene mucho mejor estado físico que el tuyo. Cuando hagas el informe de esto vas a omitir que caso te matas cuando una rama se cruzó entre tus pies.
+    Pero es rápida, eso es lo que importa, hay un niño desaparecido y cada minuto cuenta. De alguna forma lograste trasladar a la pelota esa necesidad y está actuando acorde, con un vuelo tan feroz que levanta hojas y tuerza ramas en su camino.
+    Después de unos minutos tus pulmones parecen estar en llamas, tu corazón golpea tu pecho como si intentara escapar y tu estomago lamenta que hayas comido algo.
+}
+Pero llegas. Parece una herida al costado de una loma, como si un gigante hubiese apuñado a la tierra. En su cima hay un sauce llorón y sus hojas, largas y caídas, tapan la entrada simple vista. Pero tu pelota de luz no se deja engañar.
+En la entrada la luz se vuelva cada vez más intensa mientras la pelota pierde su forma, como si fuerzas invisibles la tirarían desde cada extremo. Antes de desaparecer en un fogonazo de luz, se convierte en una flecha que te señala hacia adentro.
+-> cueva_entrada
+
+// =========================================================
+// CAPILLA (CERRADA)
+// =========================================================
+
+=== capilla_cerrada ===
+Intentas abrir a puerta de la Capilla, el edificio vecino al Edificio Principal, pero está cerrado. Hay algo que te parece muy erróneo de tener la puerta de una iglesia cerrada, debería estar abierta todo el tiempo por si uno tiene una ¿urgencia religiosa?.
+Golpeas durante un tiempo la puerta pero nadie respodne. Te da la impresión que no vas a lograr entrar.
+-> hall_orfanato
+
+// =========================================================
+// BAÑOS
+// =========================================================
+
+=== banos_opciones ===
+El baño esta antecedido por un cuarto gigante, el cual el orfanato usa medio como depósito y zona de guardado. Te sorprende un poco que desperdicien un espacio tan grande y no le hayan dado un uso más útil.
+Los dos baños son gigantes, más propios de un club o un gimnasio que de una casa. Pero es entendible si se tiene en consideración que lo tienen que usar 25 chicos a la vez.
+
++ [Reviso a fondo el baño de varones] -> bano_varones
++ [Reviso a fondo el baño de mujeres] -> bano_mujeres
++ [Hay algo raro en el cuarto que antecede a los baños. Quiero revisarlo mejor] -> banos_deposito
++ [Son baños. No todo tiene un significado oculto] -> banos_nada
+
+=== bano_varones ===
+El baño no tiene muchas sorpresas. Duchas al fondo, privados a los costados, un gran espejo con varias bachas al frente. Te agrada notar que al menos hay jabón y papel higiénico.
+Notas que una de las ventanas está abierta. Raro porque el año está entrando en una época de clima mas frio. Te basta darle una mirada a la ventana para darte cuenta que un niño puede fácilmente trepar y pasar por ahí.
+Ambos niños eran varones, tiene sentido.
+La pregunta que debes hacerte es ¿Se escaparon por ahí? ¿O algo entro y se los llevó?
+-> hall_orfanato
+
+=== bano_mujeres ===
+El baño no tiene muchas sorpresas. Duchas al fondo, privados a los costados, un gran espejo con varias bachas al frente. Te agrada notar que al menos hay jabón y papel higiénico.
+Tocas las paredes, revisas las ventanas, inclusive tirar el botón.
+Aca no hay nada
+-> hall_orfanato
+
+=== banos_deposito ===
+Es un cuarto demasiado grande para ser un mero depósito. Viviste en monoambientes más chicos que esto. Moves un par de cajas. Buscas mecanismos en las paredes. Como buen descubrimiento, viene un poco por azar.
+Recorriendo el lugar te das cuenta que en un rincón el piso sede un poco. Tomas tu cuchillo y cortas la cortina (era horriblemente de mal gusto, contaba como un monstruo).
+Una trampilla que lleva a un sótano, cerrada por una fuerte cadena con un candado. Todo tiene un aspecto vetusto y oxidado, te da la impresión de ser inclusive anterior al Orfanato
+
+* [Bueno, me tocará ver si encuentro una llave] -> sotano_buscar_llave
+* {conocimiento >= 25} [Esto no podes abrirlo con una ganzúa, pero si con un poco de ácido] -> sotano_acido
+
+=== sotano_buscar_llave ===
+Lo importante es que, si vos no podes abrir esa trampilla, menos un chico. Aparte la cadena esta puesta de este lado asi que nada se pudo meter por ahí.
+Hay que seguir investigando y estar atento a ver si encontras unas llaves
+-> hall_orfanato
+
+=== sotano_acido ===
+Te tiemblan un poco las manos mientras sacas el frasco donde va el ácido. Respiras, te relajas y pones unas gotas en el mecanismo del candado.
+Un olor potente e industrial inunda el ambiente, por suerte estas cerca de los baños y nadie se va a preguntar por olores extraños.
+Dejas pasar unos minutos y forzas con un elemento el candado. Con el mecanismo carcomido, basta un simple empujón y se abre.
+Cuando abrís la trampilla entra una ráfaga de aire estancado. Nadie estuvo acá en mucho tiempo. Pero no es solo aire viciado y polvo lo que hay, notas cierta energía residual. Pesada, oscura y filosa, como caminar descalzo sobre un lugar donde sabes que hay vidrio roto.
+Alguien estuvo realizando magia oscura ahí abajo.
+# next
+La trampilla dejaba al descubierto una escalera caracol de piedra, la misma se sentía húmeda al tacto, como infecta de humedad….o sudor.
+Una red extensa de telas de arañas dificultaba el camino. A medida que las arrancaban tus manos se ponían cada vez más ásperas.
+El descenso a la oscuridad, más largo de lo que esperaba, terminaba en una pequeña sala circular. Era difícil distinguir cuánto de ella era fruto del trabajo humano y cuánto una formación natural.
+# next
+En el centro de la sala había un pozo, un agujero oscuro y ominoso. Los primeros pasos casi te hacen trastabillar, es así cuando notas que toda la habitación está ligeramente desnivelada apuntando hacia el pozo. De repente te parece más oscuro, profundo y peligroso que antes.
+Pero lo que más llama la atención no es el pozo sino las cuatro estatuas que están en cada uno de los puntos cardinales.
+Cuando la luz de tu celular pasa por su silueta notas que su aspecto es extraño. Cómo si el escultor tendría solamente una idea aproximada y de oída de la anatomía humana
+Cuellos demasiados largos. Dedos torcidos de forma peculiar. Torso con protuberancias. Enfocas los rostros con la linterna pero todos han sido vandalizados. Totalmente destruidos hasta dejar la cara convertida en una masa deforme de piedras
+# next
+Todo el lugar parece viejo. Más viejo que el orfanato, el psiquiátrico y el centro turístico. De la época de la colonia inclusive.
+Tal vez uno de los niños lo encontró. Mientras miras al pozo, preferís no pensar en la otra opción posible.
+
++ [Estudio las estatuas para ver si hay más información] -> sotano_estatuas
++ [Me acerco, con mucho cuidado, al pozo] -> sotano_pozo
++ [Ya vi todo lo que necesitaba ver. Vuelvo arriba] -> hall_orfanato
+
+=== sotano_estatuas ===
+Una atenta mirada te permite notar que cada estatua está sobre un pedestal donde, en una época, estuvieron grabados nombres. Sea quien sea que vandalizó esto, también se encargó de destruir la piedra
+{ conocimiento >= 25:
+    Pero los nombre, si bien son importantes, no son todo. Muchas veces la forma de las estatuas no busca representar la realidad, sino repetir simbolismos que trasmiten información.
+    Una lectura de los rasgos de las estatuas te da una pista. Se trata de los cuatro obispos del 7mo círculo del infierno. Si estamos ante esto, sin duda un demonio fue invocado a nuestra dimensión.
+    La trama de complica
+    ~ tiene_info_demoniaca = true
+    # inv:add:info_invocacion_demoniaca
+}
+-> sotano_acido_hub
+
+=== sotano_pozo ===
+Te acercas con respeto al pozo. Más cerca estas más notas la leve inclinación del terreno que te lleva hacia el mismo. Uno de los bordes del pozo presenta una mancha oscura descolorida, tal vez sea humedad. Esperas que sea humedad, las otras opciones te gustan menos.
+
+* [Acercarse más] -> pozo_acercarse
+* [Ya no tengo nada mas que hacer acá. Retrocedo] -> sotano_acido_hub
+
+=== pozo_acercarse ===
+El pozo genera una atracción casi hipnótica. Si bien avanzas mirando atentamente donde pisas por temor a resbalarte, te aseguras de estar siempre con la imagen del pozo en la borde de tu campo de visión. Sus bordes desnivelados, como unos dientes chuecos, y la oscuridad de su interior lo hacen parecer un animal a punto de atacar.
+Empezás a tener la inquietante idea de que, si dejas de mirarlo, el pozo va a saltar y te va a devorar.
+Llegas lo más cerca del borde que te permite tu coraje. Plantas los pies bien firme y te asomas para ver. La oscuridad es impenetrable. Tiras una moneda y la caída parece eterna pero, después de unos segundos, se escucha el leve tintineo.
+
+* [No hay nada mas que hacer aca arriba. Cuelgo una soga a una de las estatuas y bajo por el pozo] -> pozo_bajar
+* [Retrocedo] -> sotano_acido_hub
+
+=== pozo_bajar ===
+Te preparas para bajar al pozo, en lo cual puede ser una de las peores decisiones de tu vida. Te cercioras tres veces que el nudo que ata la soga a la estatua este bien ajustado. Es muy curioso que toda una vida pueda depender de algo tan pequeño.
+Con mucho esfuerzo le das la espalda al pozo. Se te erizan los pelos de la nuca y durante unos segundos esperas que el pozo se estire como la trompa de un animal gigante y te engulla. Pero no pasa nada. Retrocedes unos pasos hasta llegar al borde del pozo y comenzás a bajar
+# next
+Durante unos metros el pozo no es tan profundo, tus piernas tocan sin problema una de las paredes del pozo y sentís como si estarías caminando por la pared. Intentas llevar la cuenta para notar cuanto bajas. En tu cabeza los números se escuchan de forma clara y pausada "uno, dos, tres"
+En un momento el pozo se ensancha y tus pies patalean en el aire sin encontrar donde apoyar. Durante unos segundos tus brazos se sienten débiles, sin duda no están preparados para cargar con todo el peso de tu cuerpo. En tu mente explotan todo el tipo de puteadas posibles y perdés cualquier tipo de conteo que venias llevando.
+Solo estas vos, la soga y la oscuridad. Arriba tuyo se ve una pequeña luz que indica la salida de regreso a la habitación anterior, que parece tan lejana como una estrella en el cielo.
+
+* [Esto es demasiado arriesgado. Vuelvo a subir] -> pozo_subir
+* [No es momento para cambiar de opinión. Sigo bajando] -> pozo_seguir
+
+=== pozo_subir ===
+Morir de forma estúpida no va a rescatar a los chicos. Y si el Orfanato está arriba de una gran red de cuevas, sin duda hay una mejor entrada. Es increíble la velocidad con la que reptas por la cuerda pero, antes de darte cuenta, volvés a la cima.
+-> sotano_acido_hub
+
+=== pozo_seguir ===
+# play_sfx:tension
+El ser humano tiene muchas ventajas. La transpiración, ser bípedos, los pulgares opuestos. Casi nadie nos gana como cazadores de resistencia. Pero moverse por una soga en mitad de la oscuridad, eso no es nuestro fuerte.
+Nunca te sentiste tan expuesto y vulnerable, como si la oscuridad fuese una gran presencia que te rodea.
+Entonces notas la luz abajo.
+# next
+...No es una luz, son varias. Ocho en total. De repente todas se prenden y apagan al unisono. Como si parpadearan.
+Entonces lo notas, no son luces. Son ojos. Cada ojo del tamaño de tu cabeza. Haces la cuenta tanto del proporcional y si bien, colgado de una cuerda en la oscuridad, tu matemática no es solida pero lo suficientemente buena como para darte cuenta que lo que hay ahi es gigante.
+Es entonces cuando eso empieza a reptar por la pared para llegar a tu lado
+# shake
+{ fuerza >= 25:
+    -> pozo_escape_exitoso
+- else:
+    -> pozo_muerte
+}
+
+=== pozo_escape_exitoso ===
+La adrenalina responde y tus músculos están preparados. Empezas a trepar a toda velocidad. Es un esfuerzo de todo el cuerpo. Tus brazos te elevan, tus piernas te empujan, tu estomago mantiene el sentido.
+Los ojos te siguen a un costado pero, de alguna forma, logras ser más rápido. Crees que vas a llegar.
+# next
+Es en ese momento donde escuchas un siseo y algo atrapa a la soga. Miras para abajo pero la oscuridad no te deja ver que se trata. La soga de repente se pone tensa y te tira para abajo. Es como nadar contra corriente.
+Por suerte das un par de esfuerzos más y llegas a la boca del túnel, donde el camino se estrecha. Tus piernas logran hacer pie contra una pared y te extendés, hasta que tu espalda choca contra la otra.
+Un tirón más fuerte hace temblar a la cuerda y amenaza con partirla al miedo. Por suerte este flexionado contra las paredes del pozo y tu ascenso ya no depende de ella.
+# next
+Adolorido llegas arriba de todo. Con la ultima energía que tenes soltás la cuerda de la estatua y la tiras al pozo. Calculas que sea lo que sea que esta ahí abajo, es tan grande que no podrá caber por el último tramo del pozo. Pero no queres tomar riesgo
+El entrenamiento valió la pena
+-> sotano_acido_hub
+
+=== pozo_muerte ===
+# shake # flash_red
+Comenzás a trepar por la soga pero no hay forma que le ganes a eso. Te sentís como un gusano en el anzuelo de una caña de pescar. De repente algo sisea y agarra a la soga.
+Basta un tirón a la soga para hacerte perder el agarre.
+# next
+Cerras los ojos de forma instintiva, aun así en la oscuridad no podrías ver nada. Recordás la moneda que tiraste de lo alto del pozo y todo el tiempo que tardó en caer. La caída es lo peor, la velocidad golpea tus sentidos y te da vértigo mientras en tu mente hay una tormenta de idea, desde planes desesperados para salvarte hasta otras decisiones posibles que te hubiesen evitado terminar acá. A lo último solo una idea persiste en tu cabeza "espero morir del golpe, y no quedarme paralitico y a merced de lo que este ahí abajo".
+Por suerte el destino es piadoso y tu cuerpo explota al chocar el cuerpo. Lo que acecha en el fondo esta feliz, comida fresca
+# flash_red
+FIN DEL JUEGO.
+-> capitulo_2a
+
+=== sotano_acido_hub ===
++ [Estudio las estatuas] -> sotano_estatuas
++ [Me acerco al pozo] -> sotano_pozo
++ [Vuelvo arriba] -> hall_orfanato
+
+=== banos_nada ===
+No entendes mucho qué relación tienen los baños con el misterio que estas investigando. Sentís que es tu responsabilidad darle una mirada al lugar pero, una vez complicado, es mejor centrarse en alguna pista que puede llevar a algo útil.
+-> hall_orfanato
+
+// =========================================================
+// OFICINA MADRE ALEGRÍA
+// =========================================================
+
+=== oficina_madre_opciones ===
+Te acercas sigilosamente a la puerta de la oficina de la Madrea Alegría. Apoyas tu oreja contra la puerta y solo escuchas el golpeteo de unos dedos contra el teclado. Quien sabe que podría estar haciendo ¿Enviando un mail a entidades malignas avisando de tu presencia? ¿Poniendo avisos en algún sitio web oscuro de venta de niños?.
+Aunque, tal vez sos vos quien está delirando. No todas las personas odiosas son malas. Y, aun las personas malas, no están metido en cuestiones estrictamente sobrenaturales.
+Apoyas levemente tu mano en la manija de la puerta. Obviamente está cerrada
+
+* [Me doy media vuelta y continuo con mi investigación] -> oficina_ignorar
+* {conocimiento >= 20} [Saco mis ganzúas del bolso y empiezo a trabajar] -> oficina_ganzua
+* {fuerza >= 20} [Le doy una patada a la puerta y listo] -> oficina_patada
+* [Golpeo la puerta hasta que me atiendan] -> oficina_golpear
+
+=== oficina_ignorar ===
+No te cabe duda que la Madrea Alegría debe ser una persona horrible con los chicos. Pero te parece que la misma se maneja dentro de los parámetros normales de una infancia triste en un orfanato. Y vos estas acá porque hay un elemento sobrenatural en juego.
+-> hall_orfanato
+
+=== oficina_ganzua ===
+Eureka. La puerta se abre y esperas encontrar a la Madrea Alegria con las manos en la masa.
+Desde la puerta se puede observar el monitor de su PC (pésimo feng shui). Lees por arriba de su hombro, ignorando su cara de indignación, solo para darte cuenta que estaba escribiendo un mail.
+La Madre Alegria estaba escribiendo un largo mail a una serie de empresarios de la zona, mezclando imploración con amenazas de fuego eterno en el infierno esta solicitando donaciones para….medias. Y ropa en general.
+# next
+\- ¿Qué esperaba exactamente? ¿Qué tenga a los dos niños debajo de mi escritorio?
+\- Disculpe Madre yo…
+\- Usted no tiene idea de lo difícil que es alimentar, vestir y proveer a cincuenta chicos casi sin fondos. Ni cuanto me tengo que arrastrar para conseguir un billete.
+\- Claro yo…
+\- Sin contar que ahora voy a tener que comprar una puerta nueva – Dice ella mientras mira el cerrojo de la puerta.
+\- Le pido perdón yo…
+\- Usted va a salir de aca y ponerse a hacer su trabajo. Y dejarme hacer el mio.
+-> hall_orfanato
+
+=== oficina_patada ===
+Solo necesitas una patada bien puesta. La puerta se abre y esperas encontrar a la Madrea Alegria con las manos en la masa.
+Desde la puerta se puede observar el monitor de su PC (pésimo feng shui). Lees por arriba de su hombro, ignorando su cara de indignación, solo para darte cuenta que estaba escribiendo un mail.
+La Madre Alegria estaba escribiendo un largo mail a una serie de empresarios de la zona, mezclando imploración con amenazas de fuego eterno en el infierno esta solicitando donaciones para….medias. Y ropa en general.
+# next
+\- ¿Qué esperaba exactamente? ¿Qué tenga a los dos niños debajo de mi escritorio?
+\- Disculpe Madre yo…
+\- Usted no tiene idea de lo difícil que es alimentar, vestir y proveer a cincuenta chicos casi sin fondos. Ni cuanto me tengo que arrastrar para conseguir un billete.
+\- Claro yo…
+\- Sin contar que ahora voy a tener que comprar una puerta nueva – Dice ella mientras mira el cerrojo de la puerta.
+\- Le pido perdón yo…
+\- Usted va a salir de aca y ponerse a hacer su trabajo. Y dejarme hacer el mio.
+-> hall_orfanato
+
+=== oficina_golpear ===
+Golpeas. Primero un par de golpes de cortesía. Luego más fuerte. Por último terminas convirtiendo tu mano en una maza contra la puerta, al punto que te llega a doler la mano.
+\- Obviamente, si tendría dos nenes escondidos en mi oficina, ya me hubiese dado cuenta {nombre_personaje} – La voz de la Madre Alegría trasmite el cansancio de quien está agotada de interactuar con gente de poca inteligencia. – Vaya a hacer algo útil y busque a los niños.
+-> hall_orfanato
+
+// =========================================================
+// LA CUEVA
+// =========================================================
+
+=== cueva_entrada ===
+# music:cueva_ambient
+La cueva no fue pensada para seres humanos. El techo es demasiado bajo, por lo que tenes que avanzar en cuclillas a costa del bienestar de tus rodillas. Al llegar al primer doblez las paredes se estrechan obligándote a pasar por un minúsculo agujero del cual solo te llevas un arañazo en tu rodilla y un fuerte sabor a tierra humedad en la boca.
+La presencia de tela de arañas es total, hilos duros y pegajosos que dificultan tu avance y se pegan a tu cuerpo. Sin duda cuando salgas de esta cueva vas a quemar toda tu ropa, sentís que nunca va a poder estar limpia.
+Después del segundo dobles ya no llega más luz al interior de la cueva
+# next
+El techo continuo bajando, te enteras de esto cuando te chocas con una raíz directo en la frente. El golpe te deja de rodillas y simplemente no hay espacio para levantarse. Tenes que avanzar gateando, como un bebe, mientras una mano está ocupada con la linterna del celular que marca el camino.
+Gateas entre un mar de raíces, telarañas y oscuridad, por suerte el camino es solo uno así que tu única preocupación es seguir adelante intentando no golpearte.
+Eso es hasta que llegas a una habitación (dudas que se llame habitación, deberías estudiar más geología) en la cual el camino se bifurca.
+El camino de la izquierda parece bajar de forma serpenteante mientras el camino de la derecha sigue más o menos recto y, en su inicio, observas la media de un niño.
+¿Para dónde vas?
+
+* [Es obvio que Juan uso la media para marcar su camino. Niño inteligente. Hay que ir por ahí] -> cueva_derecha
+* [Es conveniente explorar toda la cueva. Bajas por el camino de la izquierda] -> cueva_izquierda
+* [Me tomo un momento para escuchar y estudiar mi ambiente] -> cueva_escuchar
+
+=== cueva_escuchar ===
+Dejas de pensar en el dolor de tu cuerpo (tus rodillas parecen dos sirenas que mandan constante señales a todo tu cuerpo). Contenes la respiración y tranquilizas tu respiración.
+Algo se mueve. Mierda. Muchas cosas se mueven. Esta lleno en la cueva, arriba y abajo, todo a tu alrededor. Es un sonido suave y punzante, como si algo caminaría en punta de pie. La mayoría del ruido viene por el camino marcado por la media.
+Pero también hay algo que viene atrás tuyo. Mejor estar atento
+~ sabe_algo_sigue = true
+
+* [Sigo por el camino de la derecha, marcado por la media] -> cueva_derecha
+* [Bajo por el camino de la izquierda] -> cueva_izquierda
+
+=== cueva_izquierda ===
+Bajas por el camino de la izquierda, aunque sería más correcto decir que caes de forma más o menos controlada. La red de telaraña hace parecer el lugar más espeso y peligroso. Notas un par de huecos por el que podrías seguir avanzando pero ninguno se encuentra al ras del suelo. Sin duda Juan no siguió para acá, aunque alguno ser que vuele o se pegue a las paredes podría usar esos huecos para moverse.
+
+* [Me tomo unos momentos para dejar unas trampas en esos huecos. Es importante cuidarse la espalda] -> cueva_trampas
+* [Vuelvo lo más rapido y sigo por el otro camino] -> cueva_volver_derecha
+
+=== cueva_trampas ===
+~ puso_trampas = true
+No estás trabajando en las mejores condiciones pero podes hacer una trampa. Algo lo suficientemente letal como para destruir a lo que se meta por ahí y lo suficientemente ruidoso para que lo escuches. Solo esperas no haberse excedido y poner en peligro la integridad de la cueva. O matar a un topo inocente
+-> cueva_derecha
+
+=== cueva_volver_derecha ===
+Subir es más difícil que bajar. Así de cruel es la gravedad. Terminas apagando la linterna del celular para tener libre tus dos manos para agarrarte de las raíces. Logras subir por pura fuerza de voluntad es un par de raspones en las rodillas y tierra bajo todas tus uñas.
+-> cueva_derecha
+
+=== cueva_derecha ===
+Pasas por encima de la media asegurándote de dejarla en su lugar, podría ser necesaria a futuro una marca que te indique por dónde ir. Das cinco pasos y el camino te obliga a realizar un giro angosto a tu derecha.
+Es ahí donde tu pierna deja de responder, miras para abajo y notas que tu pie está atrapado en una red de tela de araña. Por mucha fuerza que haces estos no son los finos hilos que veías hasta ahora, son más gruesos y resistentes, y parecen tener unos pequeños filos que muerden tu zapatilla y amenazan con llegar hasta tu piel.
+# next
+{ sabe_algo_sigue:
+    -> cueva_emboscada_sabe
+- else:
+    -> cueva_emboscada_no_sabe
+}
+
+=== cueva_emboscada_sabe ===
+Estas completamente indefenso, este sería el momento perfecto para que te ataquen. No hay que ser muy inteligente para sospechar que sea lo que sea que te esté siguiendo va a pensar lo mismo.
+Giras todo tu cuerpo y, con un movimiento fluido y puramente instintivo, tenes tu daga en la mano. No llegas a clavársela, todo es demasiado para eso.
+El enemigo estaba saltando, un par de colmillos del tamaño de tu antebrazo y ocho ojos brillantes saliendo de la oscuridad y enfilando directo hacia tu cuello, pero vos llegas a posicionar tu daga antes.
+No se puede decir que lo apuñalaste, simplemente pusiste el filo en el lugar correcto y la fuerza de su salto hizo el resto.
+# next
+Los colmillos para a centímetros de tu brazo, moviéndose frenéticamente mientras rasgan la nada misma. Es una araña gigante, del tamaño de un perro casero. En tu cuerpo conviven el éxtasis de haber ganado el combate y el asco de tener cara a cara a esa cosa horrible, con sus pequeños pelos cortos y sus extremidades torcidas increíblemente largas.
+Haces un pequeño movimiento con la muñeca, dejando la daga baile dentro de sus órganos, y terminas el asunto.
+Su cuerpo afloja el agarre y en un latido está en el piso, con las piernas enroscadas sobre sí mismo. El filo de la daga esta bañado con una sustancia transparente y pegajosa, aunque ahora no tenes suficiente frialdad para pensar en que podría ser importante guardar esa sustancia.
+-> boveda
+
+=== cueva_emboscada_no_sabe ===
+# shake # flash_red
+Obviamente, este es el momento perfecto para una emboscada. Algo se mueve rápidamente atrás tuyo. Intentas girar, lo cual es muy difícil con un pie inmovilizado, y ves ocho ojos negros como la noche y un par de colmillos del tamaño de tu mano dirigiéndose hacia tu cuerpo.
+El celular se te escapa de la mano y todo se vuelve un juego de sombras y movimiento. Sea lo que sea es grande, como un perro casero, y tiene una capa de pelo fino que te da asco.
+Sus extremidades se enganchan a tu cuerpo, tu cerebro se apaga por una mezcla de miedo y asco, la mera idea de que tu piel entre en contacto con eso convierte en líquido tus entrañas y debilita tus rodillas.
+Es en ese momento donde el par de colmillos se clavan en tu brazo. El dolor se expande en oleadas desde la herida, pero lo menos sirve para empujar al miedo y entrar en modo sobrevivencia.
+# next
+Tu cerebro se despersonaliza e intenta ver la situación desde afuera (posiblemente, un efecto secundario de haber jugado tantos juegos en tercera persona). Te está atacando una araña gigante. Aceptado. Y te da mucho asco la mera idea de tocada. Aceptado. Pero debes hacer algo para defenderte.
+Antes de darte cuenta, estas atravesando la cabeza de una araña con una daga larga. Su cuerpo afloja el agarre y en un latido está en el piso, con las piernas enroscadas sobre sí mismo. El filo de la daga esta bañado con una sustancia transparente y pegajosa, aunque ahora no tenes suficiente frialdad para pensar en que podría ser importante guardar esa sustancia.
+# stat:hp:-5
+# next
+Limpias tu daga con tu pantalón y haces un tajo en la manga de tu camisa, donde la araña gigante te mordió. Ya se ven dos pequeños bultos rojos que se sienten calientes y duele al tacto. Crecer con documentales a tu disposición te volvieron paranoico respecto a la mordida de arañas, solo falta encontrarte con arenas venenosas para tener todos los temores de tu niñez juntos.
+
+* [Lo importante es sacar el veneno. Usas la daga para cortar los bultos] -> herida_cortar
+* [Te chupas la herida y escupis el veneno] -> herida_chupar
+* [Limpiar la zona y vendar la herida. Esperemos que basta hasta ver un profesional] -> herida_vendar
+* [Estoy en una cueva llena de enemigos. No es momento de ponerme a jugar a la enfermera] -> herida_ignorar
+
+=== herida_cortar ===
+El corte duele. Duele más que la mordida. Ejerces presión en tu brazo y del corte sale una mezcla de sangre, pus y de una sustancia con olor a aceite que esperas que sea el veneno. Tu herida parece un surtidor, lo cual nunca es bueno. Pero después de apretar un rato (y gritar un poco), solo expulsa sangre. Esperas que eso sea suficiente.
+Aun así, luego de vendar la herida, notas que la movilidad de tu brazo sufrió gravemente por tu intervención.
+# stat:hp:-10
+-> boveda
+
+=== herida_chupar ===
+Girar así resulta complicado. Y cuando te pones los bultos en la boca tu primera reacción es alejar la boca en una mezcla de dolor y asco. Aun así, ser humano es entender la necesidad de ciertas dosis de dolor y sacrificio en aras de un bien mayor. Respirar profundo, te llevas los bultos a la boca y succionas. Decidís imaginar que es helado de frutillar y vainilla.
+Cuando sentís un gusto amargo en la boca, lo que supones que es el veneno, escupís al piso y seguís hasta que solo llega a tu boca el gusto metálico de la sangre.
+# stat:hp:-5
+-> boveda
+
+=== herida_vendar ===
+Sacas de tu bolso el kit básico de primeros auxilios y limpias la herida (acompañado por un par de gritos). Una cueva oscura, manos sucias de tierra, una mordida por una araña que es lo suficientemente grande como para pagar boleto en un colectivo. No son las mejores situaciones pero esperas que funcione durante un tiempo.
+Por lo menos hasta que te pueda atender Mary Shelley. Solo esperas que no decida amputarte el brazo o dejarte en observación para ver si ganas el poder de trepar paredes y tirar telarañas.
+-> boveda
+
+=== herida_ignorar ===
+Puteas por lo bajo. Pateas el cadáver de la araña a tus pies, y decidís seguís adelante ignorando el dolor. Cuando termines tu misión, estas seguro que en El Faro te van a dar la atención médica correspondiente
+# stat:hp:-5
+-> boveda
+
+// =========================================================
+// LA BÓVEDA
+// =========================================================
+
+=== boveda ===
+# music:boveda_ambient
+Avanzas atento. Generalmente una característica de los monstros sobrenaturales que imitan insectos es que forman parte de una gran familia, no te extrañaría enterarte que tiene unos centenares de primos esperando en algún lugar de esta cueva.
+También existe la posibilidad de que un mago haya agrandado de alguna forma arañas normales, crees que no hay ninguna regla mágica que lo prohíbe, aunque confías que hay reglas de buen gusto y sentido común que disuadirían a la gente de hacer algo así.
+# next
+Apuntas la luz del celular para abajo, para no delatar tu presencia. Entras a una bóveda que parece gigante. Por primera vez en mucho tiempo podes volver a pararte erguido (tu espalda y rodillas agradecen). El aire se siente caliente y pesado.
+Pasas rápidamente la luz por el techo. En lugar de un cielo estrellado te encontras con cientos de raíces de los árboles de la superficie, que forman un firmamento retorcido. Entre ellos, una red completa de redes de araña entre la cual cuelga diversos capullos.
+Algunos son pequeños, como un conejo o una rata, pero otros parecen del tamaño perfecto para contener un humano.
+# next
+Corres hacia el capullo del tamaño de un humano. De un niño humano. Corres más rápido que nunca en tu vida, pero a la vez sentís que te moves demasiado lento. Que se joda la sutileza, debes rescatar a ese niño.
+No ibas a dejar que un chico inocente muera. No en tu guardia. Todo tu entrenamiento y conocimiento deja de tener sentido si no sirve para salvar una vida.
+En tu pequeña corrida le rezas a todos los dioses habidos y por haber. Haces amenazas y promesas por igual. Solo importa llegar
+# next
+En tu camino se interpone una pared gruesa y semi trasparente de varias capas de telas de araña. Teniendo en cuenta el tamaño de los bichos que la crean, no tenes ninguna duda de que tranquilamente podrían atraparte.
+Tenes que pasar.
+
+* [El fuego le gana a todo. Prendes fuego las telarañas] -> boveda_pasar
+* [Todavia tengo mi daga en la mano, las corto] -> boveda_pasar
+* {magia >= 20} [Simplemente descargo mi poder contra ellas] -> boveda_pasar_magia
+
+=== boveda_pasar ===
+Lo importante es que logras llegar.
+-> boveda_capullo
+
+=== boveda_pasar_magia ===
+Solo una palabra y un gesto. Sos una fuerza de la naturaleza, como un monzón o un terremoto, las telarañas se tuercen y quiebran dejando un camino para que avances.
+-> boveda_capullo
+
+=== boveda_capullo ===
+Llegas hasta el capullo y de un solo movimiento cortas el hilo que lo ata al techo. A tus pies está el capullo. Te basta una simple mirada para darte cuenta que la forma que esconde es la de un joven. Supones que es tarde para Dario, tal vez sea Juan.
+Sos muy cuidadoso con tu daga, como una caricia, solo usas la punta y la moves despacio para abrir la tela de araña sin lastimar al niño.
+# next
+La cara de Juan se nota consumida, con sus mejillas hundidas y su seño en un perpetuo seño. Buscas sus signos vitales pero la capa de telaraña te impide tocarle el cuello. Te desesperas para despejar la tela de araña para poder colocar tus dedos sobre su yugular, pero solo logras que tus manos se llenen de telas de arañas.
+Perdes minutos vitales usando el poco filo de la tela de araña de tus manos mientras no podes evitar de notar que su pecho no se mueve normalmente.
+# next
+Llegas a la yugular. Nada. El mundo deja de existir a tu alrededor. No te importa la oscuridad de la cueva, las telas de araña ni las decenas (al menos) de monstruos que deben estar a acercándose en la oscuridad. Solo existen vos y este niño.
+Y no vas a dejar que se te muera
+# next
+Dar RCP no es tan fácil. Menos cuando todo el pecho del paciente está tapado por una gruesa capa de telas de araña. Es un esfuerzo físico considerable. Uno textualmente siente como se desgasta su vida para transferirla a la persona que recibe RCP.
+Los minutos dejan de tener sentido y el tiempo se cuenta solamente en las comprensiones que debes realizar y las insuflaciones que llevas adelante para ponerle aire en sus pulmones
+# next
+¿Tal vez deberías rendirte?. El RCP no es magia, no vas a revivir a alguien si ya estaba muerto.
+{ puso_trampas:
+    Te llega el eco de las trampas que pusiste disparándose más alla. Ojala en algún lugar haya tripas y extremidades de arañas regadas por las paredes. Con suerte ganaste tiempo para un par de comprensiones más.
+}
+# next
+{ not llego_a_tiempo:
+    Pero no pasa nada. Llegaste tarde y Juan esta muerto. Por el borde de tus ojos ves brillos entre la oscuridad. Las arañas viéndote fallar. Si bien su forma de pensar debe ser considerablemente alienígena (al fin y al cabo son demonios y eligieron forma de araña), de cierta forma sentís que se burlan de tu fracaso.
+    Te cargas el cuerpo de Juan, te sorprende lo poco que pesa su cuerpo. Frágil y liviano, no entendes como hay gente que le puede hacer daño a los niños. Al menos te vas a asegurar que tenga un entierro decente.
+- else:
+    ~ juan_vive = true
+    Juan toce. Pones su cuerpo de costado y le das ligeros golpes en la espalda. Hace un poco mas de fuerza y escupe una sustancia viscosa y blancuzca que estaba alojada en sus entrañas. Por el borde de tus ojos ves brillos entre la oscuridad. Las arañas te observan. Si bien su forma de pensar debe ser considerablemente alienígena (al fin y al cabo son demonios y eligieron forma de araña), esperas que sientan el fracaso.
+    No hay tiempo para sutilezas, te cargas el cuerpo de Juan y corres hacia la salida.
+}
+# next
+# music:chase_ambient
+La luz del celular rebota por todos lados mientras corres, intentando hacer malabares entre el cuerpo de Juan, tu daga y el celular. Rocas de formas extrañas, raíces retorciadas, telarañas quebradas, la luz solo te da un calidoscopio de imágenes poco prometedoras.
+Pero no la necesitas, tu cuerpo recuerda el camino de forma instintiva y logras seguir el camino correcto y agacharte cuando es adecuado (casi siempre).
+# next
+Atrás tuyo se escucha movimiento. Como si alguien estuviera clavando un centenar de agujas en la tierra. Rápido, mecánico y sin pausa. Es raro que los bichos no griten o aúllen.
+# next
+Saltas por encima de la media que marcaba el camino. Casi estas afueran.
+Entonces las vez. Primero son meramente el reflejo de luz en la oscuridad. El brillo de sus ojos. Dieciséis ojos. Dos arañas. Dejas el cuerpo de Juan en el piso y te preparas para pelear
+
+* {fuerza >= 25} [Nadie me puede detener] -> cueva_pelea_fuerza
+* [Va a ser una pelea dura] -> cueva_pelea_normal
+
+=== cueva_pelea_fuerza ===
+Antes que te des cuenta una sustancia babosa y pegajosa rodea tu muñeca, la inhábil por suerte. Una de las arañas te atrapo con su tela y te tira hacia ella mientras la otra se prepara para flanquearte.
+Sorprendentemente, Cabral te entrenó para situaciones así. En vez de ofrecer resistencia a la araña que te atrapó, cargas contra ella.
+Atrás tuyo notas movimiento, la otra araña saltó hacia donde deberías haber estado. Pero vos ya estas con la daga en la mano.
+La araña no mostró sorpresa o miedo, principalmente dado que su rostro carece de los elementos necesarios para eso, pero tu felicidad bastó para llenar el cupo de emociones. Le clavas la daga diez veces, viente veces, los números no tienen sentido. Solo el dolor en tu brazo.
+# next
+La otra araña duda en cargar hacia vos. Entendible. Estas bañado en sangre traslucida y al lado del cadáver de su compañera.
+Pero esa duda es su error, con toda tu fuerza pateas el cadáver hacia ella. No es una patada digna de un gol, pero basta para confundirla y hacerla ir hacia un costado. Justo donde la esperabas.
+De un corte preciso la abrís al medio. La tierra de la cueva se llena de entrañas mientras la araña cae al piso y sus extremidades se doblan sobre si misma.
+-> regreso_orfanato
+
+=== cueva_pelea_normal ===
+# MINIGAME: type=qte
+-> regreso_orfanato
+
+// =========================================================
+// REGRESO AL ORFANATO - BATALLA FINAL
+// =========================================================
+
+=== regreso_orfanato ===
+# music:chase_ambient
+Corres por el bosque con el cuerpo de Juan en tus brazos. Será por qué es liviano, o el ruido afilado de los enemigos clavando sus extremidades en los árboles ayuda a empujar tu adrenalina, pero avanzas sin bajar el ritmo. No hay raíces que se interpongan en tu camino o ramas que te molesten
+# next
+No necesitas guiarte. Entre las copas de los árboles sobresale la cruz de la capilla vecina al orfanato. Santuario, o "la X marca el lugar", depende tus preferencias teológicas (al menos nadie duda de la existencia de los piratas)
+# next
+La puerta del orfanato te espera abierta, una suerte dado que dudas que la energía te acompañe mucho más. Colocas el cuerpo de Juan en el piso del edificio, sobre la virgen de la institución.
+Los niños empiezan a observar por la escalera, esperando que uno se anime a bajar, mientras la Madre Alegría espera en el umbral de la puerta de su oficina
+# next
+Viene el momento de las preguntas. No te molesta mientras te dejen contestar desde el piso y alguien se digne a traerte un vaso con agua
+# shake
+Es entonces cuando el piso comienza a temblar. Cómo si una maza gigante le estuviera pegando al piso. Te toma un segundo preguntarte si la red de túneles también llega hasta debajo del orfanato.
+Parece que las preguntas se pospusieron.
+# next
+# shake # play_sfx:explosion
+El piso explota, pedazos de las venecianas que forman la imagen de la Virgen salen volando por todos lados. Los chicos gritan, pero se salvan de un impacto gracias al barandal de la escalera. Alrededor de la Madre Alegría vuelan decenas de pedazos de piso, la puerta de su oficina parece golpeada por metralla. Pero ella sigue inmue (parece que un poder superior la cuida al fin de cuentas)
+{ fuerza >= 25:
+    Llegas a tirarte al piso justo en el momento en el que un pedazo de mármol vuela por dónde estabas
+- else:
+    { magia >= 25:
+        Llegas a recordar las palabras y gestos para hacer un escudo protector, contra el cual de pulveriza un pedazo de mármol que iba a tu cabeza
+    - else:
+        Vos no tenes tanta suerte y recibís un golpe de un pedazo de mármol justo en al cara
+        # flash_red
+        # stat:hp:-5
+    }
+}
+# next
+Donde antes estaba la Virgen ahora hay una araña gigante. Sus cuatro extremidades superiores están buscando asidero en lo que queda del piso para subir hasta el orfanato. La cabeza de la Virgen fue remplazada por un ocho ojos arácnido que refleja la luz del ambiente, mientras entre su rostro lleno de pelos asqueroso se mueven un par de colmillos del tamaño de un niño.
+El bicho tiene el tamaño de un colectivo, mientras tanto pequeñas arañas (del tamaño de un perro, las comparaciones son siempre odiosas) comienzan a inundar la habitación
+# next
+Hay que reconocerlo a la Madre Alegría, es valiente. Reacciona antes que vos y avanza hacia la araña gigante con una regla en la mano. No estás seguro si lo hace para proteger a los niños o para castigar a la araña que debe haber roto mil reglas al destruir, con la misma acción, el piso de la habitación y una imagen santa.
+Te das cuenta en cuestión de segundos que las arañas pequeñas (contextualmente pequeñas) la flanquean
+
+* [La ayudas] -> ayudar_madre
+* [Tenes otras cosas más importantes que hacer] -> no_ayudar_madre
+
+=== ayudar_madre ===
+{ fuerza >= 25:
+    Cargas y, en el mismo, la empujas con tu hombro para sacarla del peligro (tal vez un poco más fuerte de lo que querías), descargas un mandoble con la espada que parte en dos a una de las arañas y terminas girando sobre tus tales para enfrentar a las tres arañas que quedan.
+    Corte, esquiva, parada, amague. Clavar. Y clavar de nuevo. En cuestión de segundos convertiste a una de las arañas en una fracción extraña y terminas clavado a la otra al piso con y espada
+    La cuarta araña salta por tu yugular, pero tus reflejos son mejores y se encuentran con el cañón de una escopeta que la pulveriza de un tiro.
+- else:
+    Cargas y, en el mismo, la empujas con tu hombro para sacarla del peligro (tal vez un poco más fuerte de lo que querías), descargas un mandoble con la espada que parte en dos a una de las arañas y terminas girando sobre tus tales para enfrentar a las tres arañas que quedan.
+    Corte, esquiva, parada, amague. Clavar. Y clavar de nuevo. En cuestión de segundos convertiste a una de las arañas en una fracción extraña y terminas clavado a la otra al piso con y espada.
+    La cuarta araña es más rápida y, antes que te des cuenta, llega a clavar sus colmillos en tu rodilla. El dolor recorre todo tu cuerpo pero es golosa y no se retira.
+    Colocas tu revolver sobre su cabeza y le destruido los sesos
+    # stat:hp:-5
+}
+-> ninos_decision
+
+=== no_ayudar_madre ===
+~ madre_alegria_vive = false
+La Madre Alegría grita dia veces, la primera cuando una araña la muerde en la pantorrilla y la segunda cuando el golpe la hace caer de rodillas. Rápidamente es superada. Cuatro arañas les clavan sus colmillos, una en cada extremidad. Las arañas comienzan a moverse y subir por una de las paredes, dejando atrás un rastro de sangre. Aún así la Madre Alegría no grita más, se limita a repetir una plegaria en latín.
+En cuestión de segundos las arañas están caminando por el techo, haciendo colgar su cuerpo en el vacío. De repente todas las arañas de ponen a tirar a la vez.
+# flash_red
+El ruido de carnes desgarrados y huesos rotos es peor que los gritos, pero la Madre Alegría atraviesa su martirio como un verdadero mártir de la iglesia.
+Todo termina cuando las arañas logran llevarse cada una un pedazo de cuero. Si cuerpo cae al piso disparando chorros de sangre en todas direcciones
+# next
+El grito de los niños vuelva a enfocarte, la araña gigante ya casi subió y las pequeñas están empezando a trepar por todo lados. Hay que tomar una decisión
+-> ninos_decision
+
+=== ninos_decision ===
++ [Que suban y se escondan en la pieza] -> ninos_habitacion
++ [En la capilla van a estar seguros] -> ninos_capilla
++ [La cocina parece un buen lugar para atrincherarse] -> ninos_cocina
++ [A la carga. Que se suman a pelear conmigo] -> ninos_pelear
++ [Que huyan por el bosque. Con un poco de suerte van a lograr escapar] -> ninos_huir
+
+=== ninos_habitacion ===
+Basta con un grito y un gesto y los chicos entienden de que se trata. Belén se pone upa a uno de los nenes más pequeños y sube las escaleras. Un grupo de arañas, corriendo por una de las paredes van a por ellos
+Esperas que lleguen a hacer una barricada a tiempo
+-> combate_final
+
+=== ninos_capilla ===
+Siempre es mejor no necesitar ayuda. Pero estas en un orfanato religioso, peleando contra demonios e intentando salvar a unos niños. Si hay un momento donde el de arriba podría dar una mano, es este.
+Das la orden y Belén toma el mando, asegurándose que ninguno se quede detrás.
+Una araña intenta seguirlo, pero basta un disparo para dejarle en claro que si atención debe centrarse en vos
+-> combate_final
+
+=== ninos_cocina ===
+A la par que das la orden, la hermana Paciencia abre la puerta y le rompe la cabeza a una de las arañas con un palo de amasar, que termina bañado en una sustancia viscosa (ojalá que lo lave antes de cocinar). Los niños corren hacia la cocina. En segundo se convierten en un pequeño ejército armado con sartenes, cuchillos y cubiertos que usan como armas arrojadizas.
+-> combate_final
+
+=== ninos_pelear ===
+Das la orden y bajan, armados con cintos, lámparas y muebles. Los más grandes cargan de forma valiente, pero carecen de técnica. Los más chicos corren y gritan, esperando lograr algo, pero se quedan inmóviles en cuanto terminan frente a frente con una araña.
+A tu derecha vez a un niño que, inútilmente, le pega a una araña con una almohada. A tu izquierda una niña cae al piso, sobrepasada por una araña que busca llegar a su yugular.
+-> combate_final
+
+=== ninos_huir ===
+Belén dirige la retirada hacia la puerta de salida. Va adelante al principio, para romper el miedo, y atrás al final, para ayudar a los rezagados.
+Una araña avanza por el techo, intentando llegar a la puerta antes que ellos, pero de un disparo la bajas al piso obligándola dolorosamente a respetar la ley de gravedad.
+Solo queda esperar que no se encuentren más arañas en el largo camino hacia la salida.
+-> combate_final
+
+// =========================================================
+// COMBATE FINAL
+// =========================================================
+
+=== combate_final ===
+# next
+La araña gigante logra clavar una de sus extremidades en la pared y eso le da el punto de apoyo necesario para terminar de salir de la cueva. Ya no tenes más vueltas que dar, te toca ver cómo vencer a eso.
+
+* [Saco la espada y cargo directamente contra eso] -> combate_espada
+* {magia >= 15} [Le lanzo una bola de fuego] -> combate_magia
+* [Disparos precisos a sus extremidades. Tal vez pierde el apoyo y se volverá a caer a la cueva] -> combate_disparos
+* {conocimiento >= 30 and tiene_info_demoniaca} [Es un demonio. Con las palabras correctas puede ser expulsado de este plano] -> combate_exorcismo
+* [Esto es una locura. Mejor huir a la capilla] -> combate_capilla
+* {fuerza >= 30} [Acercarme, cortar, huir antes que me ataque y repetir. Un baile letal] -> combate_fuerza
+
+=== combate_espada ===
+# flash_red
+La sorpresa dura solo unos segundos. La impresión fuerte cuando una de las extremidades atraviesa tu pecho de punta a punta. Cuando empezas a sentir frío y tu ropa mojada (por tu propia sangre) llega la calma. ¿Cómo se te ocurrió que podías cargar directamente contra eso?. Mientras la araña lentamente te acerca hacia sus colmillos, ya nada te importa. Solo esperas que los niños sobrevivan
+MORISTE. FIN DEL JUEGO.
+-> capitulo_2a
+
+=== combate_magia ===
+Concentras toda tu energía, mostras tus palmas a la araña gigante y recitas las palabras correctas. A pesar del miedo y la adrenalina, tu lengua baila pronunciando las palabras correctas sin trabarse y en tu nombre permanece grabada, como corresponde, una imagen de un sol sobre un fondo negro.
+Es entonces cuando el fuego empieza a salir de tus manos
+# next
+# flash_yellow
+Llamarla una bola de fuego es incorrecto, es más parecido a un lanzallamas. Sentís como el aire de calienta, tus brazos empiezan a transpirar pero, a la vez, tu cuerpo se siente cada vez más frío y liviano. Cómo si estaría vaciando tus entrañas para alimentar la llama.
+El fuego es tal que no te dejo ver la llamarada, solo podes ver algunas cosas en los bordes de la llamas. El techo de la habitación que se está derritiendo, una araña pequeña que corre en llamas hacia ningún lado en un costado.
+El resto es un mundo de rojo y amarillo.
+# next
+Te acordás a la primera vez que te pusiste en contacto con tu poder, cuando ibas al colegio, esa sensación de dejarte llevar por algo que está dentro tuyo. Un combustible que puede hacer funcionar máquinas de pesadillas. Generalmente esa sensación es la señal de que tenés que parar, de que estás cerca de perder el control, pero está vez no te importa.
+# next
+Seguís hasta que la energía abandona tu cuerpo. Caes de rodilla mientras de las palmas de tus manos sale humo. Donde estaba la araña gigante hay una pila de cenizas gris (para ser preciso, toda la habitación parece los restos de un asado gigante).
+Un viento entra en la habitación y las cenizas se dispersan perdiendo cualquier forma. Ganaste
+-> despues_combate
+
+=== combate_disparos ===
+# MINIGAME: type=qte
+-> despues_combate
+
+=== combate_exorcismo ===
+Cuando se trata de invitar (o desinvitar) a un demonio no hay que improvisar. Muchas veces se pasan meses preparando la parafernalia, memorizando los movimientos y las palabras.
+Todo eso está muy bien, pero la araña está a unos metros tuyos y dudas que está dispuesta a darte unos meses de pausa.
+# next
+Sacas tu libreta de un bolsillo y empezas a recitar un exorcismo genérico, mientras lo cruzas con oraciones de protección y asistencia a todas la deidades de arañas y naturaleza que se puedan sentir insultadas por la forma que eligió el demonio.
+Es un cambalache pero, al fin y al cabo es una discusión. Cómo toda discusión, la confianza y la autoridad importa más que los argumentos.
+Y vos sos un guardián de El Faro, plantado frente a ella solo con un cuaderno como arma. Es difícil que al proyecte más certeza (o soberbia) que eso.
+# next
+Algo te escucha. Y te da la razón. Un viento empieza a recorrer la habitación. Un tornado que a vos no te mueve un pelo pero que a las arañas pequeñas las hace volar como hojas en otoño.
+La araña más grande se resiste, clava sus extremidades en la pared pero están no resisten. Una extremidad directamente es cercenada por el viento.
+El techo se rasga. La misma realidad hace lugar a otra cosa, de la grieta enana una cacofonia de grItos y olores a descomposición.
+# next
+# shake
+El viento, con tus últimas palabras, eleva a todas las arañas y las empuja atraves de esa grieta
+Entonces todos para. El techo vuelve a ser solo un techo, el viento desaparece, y la única señal de lo que ocurrió (aparte del hueco gigante en el piso) son restos de patas de araña que ya están secándose. Lograste expulsar al demonio de vuelta al pozo infernal de dónde vino.
+-> despues_combate
+
+=== combate_capilla ===
+Te das media vuelta y huis. Por suerte alguien dejo la puerta abierta. Los metros que te separan de la capilla parecen eternos y notas dos arañas a ti costado, saltando de árbol en árbol, que van a llegar primero.
+Una se desliza por un hilo de seda y pone su cuerpo justo para taparte la entrada a la Capilla, pero vos vas a entrar igual. Usas tus últimas energías para imprimir más velocidad y saltas sobre ella.
+# next
+Entras a la capilla y la araña, que se agarro a tu talón, hace lo mismo. En cuanto caen al piso de la capilla, la araña empieza a derretirse como una vela. Intenta avanzar hacia vos (es bueno ver a alguien comprometido, malo que esté comprometido en matarte) pero, en menos de tres pasos termina convertida en una baba traslúcida.
+Parece que el dueño de la casa juega a tu favor.
+# next
+Te paras en el marco de la puerta y vez hacia afuera. La araña gigante y sus (no tan) pequeñas amigas esperan en el bosque. Ninguna se atreve a entrar en la Capilla.
+Esto va a ser muy injusto, para ellas. Tiras tu bolsa en el piso y sacas tu rifle de caza. Te pones en posición, asegurándote de no pasar el umbral de la puerta, y disparas
+# next
+En el piso hay casi 100 casquillos. Cuando te quedaste sin balas en el rifle pásate a la escopeta y se ahí a la pistola. El bosque es un cementerio de arañas explotadas.
+La araña más grande (el blanco más fácil) perdió dos extremidades y desaparecieron la mitad de sus ojos de un buen disparo.
+Preparar tu última bala y, con un certero disparo, acabas con su vida
+-> despues_combate
+
+=== combate_fuerza ===
+El primer hachazo rompe una de las extremidades de la araña y amenaza con hacerla caer por el hueco del cual viene. Pero en ese momento el resto de la arañas carga hacia vos. Es difícil protegerse cuando tus enemigos simplemente pueden caminar por el techo y caer sobre tu cabeza.
+Con mas fuerza que técnica logras abrirte un hueco y huir a la otra punta de la habitación, dejando un par de arañas muertas en el camino
+# next
+Es un trabajo que requiere tiempo y frialdad. Con cada segundo las filas enemigas se van achicando. En un momento, cuando un mandoble perfecto parte al medio a un araña que saltaba para noerdertenel cuello, sentís la euforia apoderarse de vos. La sed de sangre. Justo logras mover tu cabeza para esquivar una tela de araña que pasa a centímetros.
+Debes controlar es sed de sangre. Frío y metódico. Si te dejas llevar vas a cometer un error.
+# next
+Al final todas las pequeñas arañas estás convertidad en fracciones en el piso de la habitación.
+Cargas contra la araña grande. Para confundirla le lanzas con todas tus fuerzas el hacha contra su rostro. Mientras usa su tela de araña para detener ese ataque, vos estás trepando por una de sus piernas hacia su lomo.
+Colocas la escopeta a quemarropa sobre su espalda y disparas.
+# next
+Carne juntos al vacío y la oscuridad de dónde viene. De vuelta a la curva donde encontraste a Juan. Por suerte el grueso del golpe lo amortiguó su cuerpo.
+Bajas, solo te queda tu fiel daga pero notas en sus ojos (los que le quedan) que ya no tiene voluntad de luchar. Eso a vos no te importa.
+Clavas la daga profundo en uno de sus ojos. Tan profundo que hasta tus muñecas entran en su cuerpo.
+No sé levanta mas
+-> despues_combate
+
+// =========================================================
+// DESPUÉS DEL COMBATE
+// =========================================================
+
+=== despues_combate ===
+# music:misterio_ambient
+La adrenalina tarda en salir de tu cuerpo. No te das cuenta pero están teniendo unos temblores involuntarios, la energía sigue activa y está reclamando acción.
+Lo correcto sería llamar a El Faro, informarle de la misión y pedir que envíen un equipo de limpieza (y alguien para que te lleve de vuelta a Costa Alegre, no estás es condición de manejar)
+Pero tenés cosas que hacer
+# next
+Te acercas a Juan
+{ not juan_vive:
+    Su rostro parece estar en paz. Agradeces que tenga los ojos cerrados. No podrías tolerar que te mire.
+    Sentís la culpa, se siente a suciedad, como si hubiera comido mierda con las manos. ¿Podrías hacerlo salvado?¿Deberías haber llegado antes?
+    { madre_alegria_vive:
+        La hermana Alegria se acerca y te da un abrazo para el cual ninguno estaba preparado. Es huesuda y se mantiene rígida. Aún así te susurra "Gracias" y te dice "yo me encargo de atender el cuerpo y darle los ritos que merece".
+        No sabes que decirle, pero está bueno que alguien se encargue de las cosas, vos no querés pensar más
+    }
+- else:
+    Su respiración es regular. Teniendo en consideración todo lo que pasó a su alrededor es un milagro.
+    Te sentas en el piso a su lado y comenzas, con mucho cuidado, a sacarle la tela de araña que sigue pegada a tu cuerpo.
+    La euforia te invade. Salvaste una vida. Hay una persona que va a crecer, amar y tener hijos gracias a vos.
+    Esto es ser un Guardián y es hermoso.
+    { madre_alegria_vive:
+        La hermana Alegria se acerca y te da un abrazo para el cual ninguno estaba preparado. Es huesuda y se mantiene rígida. Aún así te susurra "Gracias" y te dice "yo me encargo. Conozco suficiente de primeros auxilios".
+        No sabes qué decirle, pero está bueno que alguien se encargue de las cosas, vos no querés pensar más
+    }
+}
+# next
+-> despues_combate_ninos
+
+=== despues_combate_ninos ===
+Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tomaron decisiones de último minuto y tenés que averiguar cómo salió todo.
+{ ninos_capilla:
+    Abrís la puerta de la capilla y todos los niños están ahí, sin un rasguño, a los pies de una estatua de Santa Inés. La Capilla funcionó
+    Belén se acerca y te abraza. Luego todos los niños la siguen
+- else:
+    { ninos_habitacion:
+        Cuando subis al primer piso tu corazón da un vuelco. La puerta de una de las habitaciones fue arrancada de su marco, tirada por telas de arañas.
+        Entras y ves a los chicos amontonados en una esquina, llorando. En el centro de la habitación están los cadáveres de 3 arañas…y de más de diez chicos.
+        Los dejaste a su suerte e hicieron lo mejor que pudieron.
+        Belén, en la esquina de la habitación y te mira con odio en la mirada.
+    }
+    { ninos_cocina:
+        Abris la puerta de la cocina, pasando por arriba del cadáver de una araña que ni recordas haber matado.
+        Al abrír la puerta encontrás a la hermana Paciencia en un abrazo mortal con una araña. Ella le logró clavar un afilado cuchillo de cocina en un costado mientras el bicho llegó a clavar sus colmillos en su cuello.
+        Tiras el cadáver del animal al costado, con la misma sutileza que le darías a una bolsa de basura.
+        Los niños salen, ilesos, de sus escondites debajo de las mesas o dentro de los cajones.
+        Belén se acerca y le dan un beso en la frente a la hermana que se sacrificó por ellos. El resto de los chicos la imitan
+    }
+    { ninos_pelear:
+        Recorres el campo de batalla y es un paisaje de pesadilla. Dantesco. Mas allá de cualquier adjetivo.
+        Pedazos de cuerpos de niños juntos a pedazos de arañas, como un rompecabezas morboso. Niños sin cabeza, niños arrastrados por los techos dejando tras de si un rastro de sangre arterial. Ese fue tu ejército
+        Encontrás a Belén casi al final, muerta al lago de y araña a la cual le rompió la cabeza con una lámpara. Al principio dudas, tal vez esta desmayada. No se notan heridas
+        Eso hasta que giras su cuerpo y notas que, donde debería estar la espalda, hay solo sangre y horror.
+    }
+    { ninos_huir:
+        Recorres el bosque. El camino a la puerta de salida está marcado por niños muertos y redes de tela de araña. Fue una masacre. Sus piernitas no le podían ganar nunca a las arañas.
+        Al final, todavía agarrada al portón, está Belén.
+        Le gritas pero no te contesta. Los dedos de su mano están rojos del esfuerzo y, a pesar de que lo intentas, no suelta el portón. No te responde y sus ojos miran sin mirar, perdidos en los horrores que queman su memoria
+    }
+}
+
+FIN DEL EPISODIO.
 -> END

@@ -27,6 +27,10 @@ export function useKeyboardNavigation({
     const handleKeyDown = useCallback((event) => {
         if (disabled) return;
 
+        // Don't intercept keys when user is typing in an input/textarea
+        const tag = event.target.tagName
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
         const key = event.key
 
         // Keys to ignore for "any key" skip

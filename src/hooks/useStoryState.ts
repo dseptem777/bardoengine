@@ -22,6 +22,9 @@ export interface UseStoryStateReturn {
     setGlobalVariable: (varName: string, value: any) => void;
     getGlobalVariable: (varName: string) => any;
     resetStoryState: () => void;
+    spawnAtKnot: (knotName: string, variables?: Record<string, any>) => { text: string; tags: string[] };
+    getKnotList: () => string[];
+    getVariables: () => Record<string, any>;
 }
 
 export function useStoryState(): UseStoryStateReturn {
@@ -184,6 +187,50 @@ export function useStoryState(): UseStoryStateReturn {
         return null
     }, [])
 
+    const spawnAtKnot = useCallback((knotName: string, variables: Record<string, any> = {}) => {
+        const s = storyRef.current
+        if (!s) return { text: '', tags: [] }
+
+        for (const [key, val] of Object.entries(variables)) {
+            try {
+                s.variablesState[key] = val
+            } catch (e) {
+                console.warn(`[DebugSpawn] Could not set variable ${key}:`, e)
+            }
+        }
+
+        s.ChoosePathString(knotName, true)
+        return processStoryLoop(s)
+    }, [processStoryLoop])
+
+    const getKnotList = useCallback((): string[] => {
+        const s = storyRef.current
+        if (!s) return []
+
+        const knots: string[] = []
+        const named = s.mainContentContainer?.namedContent
+        if (named) {
+            for (const [name] of named) {
+                knots.push(name)
+            }
+        }
+        return knots.sort()
+    }, [])
+
+    const getVariables = useCallback((): Record<string, any> => {
+        const s = storyRef.current
+        if (!s) return {}
+
+        const vars: Record<string, any> = {}
+        const globals = (s.variablesState as any)?._globalVariables
+        if (globals) {
+            for (const [key, val] of globals) {
+                vars[key] = (val as any)?.value !== undefined ? (val as any).value : val
+            }
+        }
+        return vars
+    }, [])
+
     const resetStoryState = useCallback(() => {
         setStory(null)
         storyRef.current = null
@@ -208,7 +255,10 @@ export function useStoryState(): UseStoryStateReturn {
         makeChoice,
         setGlobalVariable,
         getGlobalVariable,
-        resetStoryState
+        resetStoryState,
+        spawnAtKnot,
+        getKnotList,
+        getVariables
     }), [
         story,
         text,
@@ -222,6 +272,9 @@ export function useStoryState(): UseStoryStateReturn {
         makeChoice,
         setGlobalVariable,
         getGlobalVariable,
-        resetStoryState
+        resetStoryState,
+        spawnAtKnot,
+        getKnotList,
+        getVariables
     ])
 }

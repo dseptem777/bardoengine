@@ -9,10 +9,12 @@ import HistoryLog from './components/HistoryLog'
 import VFXLayer from './components/VFXLayer'
 import StatsPanel from './components/StatsPanel'
 import InventoryPanel from './components/InventoryPanel'
+import RelationshipsPanel from './components/RelationshipsPanel'
 import ExtrasMenu from './components/ExtrasMenu'
 import AchievementToast from './components/AchievementToast'
 import MinigameOverlay from './components/MinigameOverlay'
 import InputOverlay from './components/InputOverlay'
+import DebugSpawnModal from './components/DebugSpawnModal'
 import HorrorVFXLayer from './components/HorrorVFXLayer'
 import WillpowerMeter from './components/WillpowerMeter'
 import ForcedClickOverlay from './components/ForcedClickOverlay'
@@ -73,10 +75,13 @@ function AppContent({ onStorySelect }) {
     const [optionsOpen, setOptionsOpen] = useState(false)
     const [historyOpen, setHistoryOpen] = useState(false)
     const [inventoryOpen, setInventoryOpen] = useState(false)
+    const [relationshipsOpen, setRelationshipsOpen] = useState(false)
     const [extrasOpen, setExtrasOpen] = useState(false)
     const [showEditor, setShowEditor] = useState(false)
     const [choicesVisible, setChoicesVisible] = useState(false)  // True when Player's typewriter is done
     const [meterRevealed, setMeterRevealed] = useState(false)    // True once bar has been shown for first time
+    const [debugUnlocked, setDebugUnlocked] = useState(false)
+    const [showDebugSpawn, setShowDebugSpawn] = useState(false)
 
     // Story loader with environment detection
     const { stories, isLoading: storyLoading, error: storyError, isProductionMode } = useStoryLoader({
@@ -114,6 +119,11 @@ function AppContent({ onStorySelect }) {
         actions, subsystems, config
     } = engine
     const { audio, vfx, saveSystem, gameSystems, achievementsSystem, minigameController, willpower, spiderInfestation, scrollFriction, bossController, visualDamage, scrollContainerRef } = subsystems
+
+    // Keep debug unlocked in sync with dev mode
+    useEffect(() => {
+        if (!isProductionMode) setDebugUnlocked(true)
+    }, [isProductionMode])
 
     // Track if we've auto-submitted due to zero willpower
     const [hasAutoSubmitted, setHasAutoSubmitted] = useState(false)
@@ -269,6 +279,7 @@ function AppContent({ onStorySelect }) {
     // Keyboard shortcuts
     useEffect(() => {
         const handleKeyDown = (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
             if (e.key.toLowerCase() === 'o') {
                 e.preventDefault()
                 setOptionsOpen(prev => !prev)
@@ -370,6 +381,11 @@ function AppContent({ onStorySelect }) {
                             ? story?.variablesState?.[gameSystems.statsConfig.playerNameVariable] || ''
                             : null
                     }
+                    chapterName={
+                        gameSystems.statsConfig?.chapterVariable
+                            ? story?.variablesState?.[gameSystems.statsConfig.chapterVariable] || ''
+                            : null
+                    }
                     isMobile={isMobile}
                 />
             )}
@@ -382,6 +398,18 @@ function AppContent({ onStorySelect }) {
                     getItemsWithInfo={gameSystems.getItemsWithInfo}
                     isOpen={inventoryOpen}
                     onToggle={() => setInventoryOpen(prev => !prev)}
+                    isMobile={isMobile}
+                    hideToggle={isMobile}
+                />
+            )}
+
+            {/* Relationships Panel */}
+            {showPlayer && (
+                <RelationshipsPanel
+                    stats={gameSystems.stats}
+                    relationshipDefs={gameSystems.statsConfig?.definitions?.filter(d => d.displayType === 'relationship')}
+                    isOpen={relationshipsOpen}
+                    onToggle={() => setRelationshipsOpen(prev => !prev)}
                     isMobile={isMobile}
                     hideToggle={isMobile}
                 />
@@ -435,6 +463,7 @@ function AppContent({ onStorySelect }) {
                     onExtras={() => setExtrasOpen(true)}
                     onOpenEditor={null} // Removed: editor only from main selector
                     onBack={!isProductionMode ? backToStorySelector : null}
+                    onCheatCode={() => setDebugUnlocked(true)}
                 />
             )}
 
@@ -482,6 +511,8 @@ function AppContent({ onStorySelect }) {
                     inventoryEnabled={!!gameSystems.inventoryConfig?.enabled}
                     onToggleInventory={() => setInventoryOpen(prev => !prev)}
                     inventoryItemCount={gameSystems.getItemsWithInfo?.()?.length || 0}
+                    relationshipsEnabled={gameSystems.statsConfig?.definitions?.some(d => d.displayType === 'relationship')}
+                    onToggleRelationships={() => setRelationshipsOpen(prev => !prev)}
                     // Scroll container ref (shared with scroll friction hook)
                     scrollContainerRef={scrollContainerRef}
                     // Boss fight props
@@ -529,6 +560,29 @@ function AppContent({ onStorySelect }) {
                 placeholder={subsystems.input.pendingInput?.placeholder}
                 onCommit={subsystems.input.commitInput}
                 onCancel={() => { }} // Could implement a cancel that just resumes without setting var
+            />
+
+            {/* Debug Spawn Button */}
+            {debugUnlocked && story && (
+                <button
+                    onClick={() => setShowDebugSpawn(true)}
+                    className="fixed bottom-4 right-4 z-50 bg-gray-900/90 border border-bardo-accent/40 text-bardo-accent text-xs font-mono px-3 py-2 rounded hover:bg-bardo-accent/20 hover:border-bardo-accent transition-all"
+                    title="Debug Spawn (jump to any knot)"
+                >
+                    [DEBUG]
+                </button>
+            )}
+
+            {/* Debug Spawn Modal */}
+            <DebugSpawnModal
+                isOpen={showDebugSpawn}
+                onClose={() => setShowDebugSpawn(false)}
+                knots={story ? actions.getKnotList() : []}
+                variables={story ? actions.getVariables() : {}}
+                onSpawn={(knotName, vars) => {
+                    actions.spawnAtKnot(knotName, vars)
+                    setShowDebugSpawn(false)
+                }}
             />
 
             {/* Bardo Editor Overlay - Only visible in Story Selector view */}
