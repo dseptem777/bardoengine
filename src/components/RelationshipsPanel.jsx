@@ -31,7 +31,11 @@ export default function RelationshipsPanel({
 
     if (!relationshipDefs || relationshipDefs.length === 0) return null
 
-    const activeCount = relationshipDefs.filter(r => (stats[r.id] ?? 0) > 0).length
+    // Only show relationships the player has interacted with (value > 0)
+    const visibleDefs = relationshipDefs.filter(r => (stats[r.id] ?? 0) > 0)
+    const activeCount = visibleDefs.length
+
+    if (visibleDefs.length === 0) return null
 
     // Mobile bottom sheet
     if (isMobile) {
@@ -72,7 +76,7 @@ export default function RelationshipsPanel({
                             </div>
 
                             <div className="p-3 max-h-[calc(50vh-80px)] overflow-y-auto space-y-3">
-                                {relationshipDefs.map(def => (
+                                {visibleDefs.map(def => (
                                     <RelationshipRow key={def.id} def={def} value={stats[def.id] ?? 0} />
                                 ))}
                             </div>
