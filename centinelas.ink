@@ -30,6 +30,17 @@ VAR capitulo_actual = ""
 
 -> capitulo_0
 
+// Stat principal del personaje (prioridad en empate: magia > fuerza > conocimiento)
+=== function stat_principal() ===
+{
+- magia >= fuerza and magia >= conocimiento:
+    ~ return "magia"
+- fuerza >= conocimiento:
+    ~ return "fuerza"
+- else:
+    ~ return "conocimiento"
+}
+
 === capitulo_0 ===
 ~ capitulo_actual = "Cap. 0 — Orígenes"
 # music:misterio_ambient
@@ -818,11 +829,11 @@ Al menos recuperaste una mano, mejor ir para El Faro a ver qué pueden hacer con
 Tenés unos minutos para improvisar una emboscada, sea lo que sea que está ahí afuera acaba de matar a un policía, así que es peligroso y no debés contenerte para atacar. Tu gran ventaja es que hay una sola puerta de entrada.
 # next
 {
-  - magia > fuerza and magia > conocimiento:
+  - stat_principal() == "magia":
     # play_sfx:magia_oscura
     La magia de combate generalmente es improvisada. Uno debe trabajar con lo que tiene. Pero estás en una morgue así que lo que tenés es sangre, muertos y partes de cuerpos. Cosas bastante potentes para improvisar.
     Hacés un símbolo justo delante de la puerta; quien entre y lo pise sufrirá una dosis pura de dolor.
-  - fuerza > magia and fuerza > conocimiento:
+  - stat_principal() == "fuerza":
     # play_sfx:clic_arma
     Tirás al piso tu bolso de armas y te despedís de tu fiel escopeta. Te toma cinco minutos de bricolaje para preparar todo pero dejás armada una trampa tan básica como letal.
     Quien abra el mecanismo recibirá directo en la cara un disparo calibre 12/70. Suficiente para que termine con el cerebro en un frasco aparte.
