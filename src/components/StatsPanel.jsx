@@ -88,7 +88,7 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
                             transition={{ delay: 0.2 }}
                         >
                             <div className="text-[10px] uppercase tracking-widest text-bardo-accent/70 mb-1">
-                                Agente
+                                Centinela
                             </div>
                             <div className="text-lg font-bold text-bardo-accent tracking-wide">
                                 {playerName}
