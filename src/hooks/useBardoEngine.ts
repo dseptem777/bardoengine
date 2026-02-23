@@ -426,9 +426,21 @@ export function useBardoEngine({
             console.log('[NG+] Error setting new_game_plus')
         }
 
-        // Load saved game systems
+        // Load saved game systems and sync stats to Ink
         if (savedGameSystems) {
             gameSystems.loadGameSystems(savedGameSystems)
+
+            // Sync saved stats back to Ink variables so conditionals work
+            if (savedGameSystems.stats) {
+                Object.entries(savedGameSystems.stats).forEach(([statId, value]) => {
+                    try {
+                        setGlobalVariable(statId, value as number)
+                        console.log(`[Init] Synced stat ${statId} = ${value} to Ink`)
+                    } catch (e) {
+                        // Variable may not exist in Ink, that's ok
+                    }
+                })
+            }
         }
     }, [initStoryState, setGlobalVariable, achievementsSystem.hasCompletedGame, gameSystems])
 

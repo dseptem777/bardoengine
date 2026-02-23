@@ -509,18 +509,18 @@ No es necesario ser un gran practicante de magia para darse cuenta de la gran ca
 El único ruido proviene del escritorio de la secretaria, la Sra. Enríquez, que está tipeando algo en su máquina de escribir.
 
 + [¿Por qué no pasamos a computadoras?]
-    - — El tiempo no es una construcción social que todos intentamos acatar. En especial cuando se realiza tareas complejas. Y todas las tareas de El Faro son complejas.
+    — El tiempo no es una construcción social que todos intentamos acatar. En especial cuando se realiza tareas complejas. Y todas las tareas de El Faro son complejas.
     Enríquez te da una mirada que te hace sospechar que el título de "secretaria" es menospreciar la totalidad de su capacidad.
     Intentás justificarte pero levanta la mano para callarte. Un gesto simple pero efectivo.
-    — Tal vez la hora de tu llegada era clave y al adelantarte arruinaste todo. Que no se repita, por favor.
     { entrada_temprana:
+        — Tal vez la hora de tu llegada era clave y al adelantarte arruinaste todo. Que no se repita, por favor.
         Y respecto al tema de las computadoras. Yo ya trabajaba acá cuando cualquier mago de todo por dos pesos intentaba mezclar la protección astral con internet. Después del incidente del 2007 pasé a medios totalmente analógicos.
     }
     -> mision_profe
 
 + [Toser un poco hasta que ella se fije en vos]
     Enríquez te mira. Mira el reloj. Y te ignora hasta la hora exacta en la cual fuiste citado.
-    - — Guardián, voy a asegurarme de descontar de su próximo sueldo las sumas necesarias para comprarle un reloj.
+    — Guardián, voy a asegurarme de descontar de su próximo sueldo las sumas necesarias para comprarle un reloj.
     -> mision_profe
 
 === mision_profe ===
@@ -1168,6 +1168,7 @@ La tarea bajó por la cadena de mando de El Faro hasta llegar al encargado de ha
 // =========================================================
 
 === frente_orfanato ===
+# next
 # music:orfanato_ambient
 El predio del Orfanato era gigante, rodeado por un muro de más de dos metros. Si bien no era tan sorprendente para mí, sin duda era una barrera infranqueable para un niño.
 Al lado de la reja robusta, protegida por una fuerte cadena con un candado del tamaño de mi puño, había una estatua de una santa abrazada a un cordero.
@@ -1406,7 +1407,7 @@ Necesitas más pistas para saber qué camino tomar en el bosque. Volves al Orfan
 
 === bosque_opciones ===
 + [Seguir el camino que te dio Belén # REQUIRES: inv:machete_bosque] -> bosque_belen
-+ [Rastrear la energía demoníaca con magia # REQUIRES: inv:info_invocacion_demoniaca, magia >= 20] -> bosque_magia
++ [Rastrear la energía demoníaca con magia # REQUIRES: inv:info_invocacion_demoniaca, magia >= 15] -> bosque_magia
 + [Volver al orfanato] -> hall_orfanato
 
 === bosque_belen ===
