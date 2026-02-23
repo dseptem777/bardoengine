@@ -17,7 +17,8 @@ export default function StartScreen({
     onExtras,
     onOpenEditor = null,
     onBack = null, // For dev mode: back to story selector
-    onCheatCode = null
+    onCheatCode = null,
+    gameVersion = null
 }) {
     // Cheat code listener: typing "fanzine" unlocks debug mode
     const [cheatActivated, setCheatActivated] = useState(false)
@@ -126,7 +127,7 @@ export default function StartScreen({
 
                 {/* Version */}
                 <p className="text-gray-600 text-sm mt-8">
-                    Powered by BardoEngine v1.0
+                    {gameVersion ? `v${gameVersion} — ` : ''}Powered by BardoEngine
                 </p>
 
             {/* Editor Button (Dev) */}

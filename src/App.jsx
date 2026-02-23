@@ -476,6 +476,7 @@ function AppContent({ onStorySelect }) {
                     onOpenEditor={null} // Removed: editor only from main selector
                     onBack={!isProductionMode ? backToStorySelector : null}
                     onCheatCode={() => setDebugUnlocked(true)}
+                    gameVersion={config.gameVersion}
                 />
             )}
 

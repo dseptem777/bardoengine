@@ -641,11 +641,14 @@ export function useBardoEngine({
         scrollFriction, bossController.state, bossController.actions, handleBossPhaseComplete, handleBossPlayerDeath, visualDamage
     ])
 
+    const gameVersion = gameSystems.config?.version || '0.0.0'
+
     const configRef = useMemo(() => ({
         extrasConfig,
         hasExtras,
         achievementDefs,
-    }), [extrasConfig, hasExtras, achievementDefs])
+        gameVersion,
+    }), [extrasConfig, hasExtras, achievementDefs, gameVersion])
 
     const settingsHelpers = useMemo(() => ({
         getTypewriterDelay,
