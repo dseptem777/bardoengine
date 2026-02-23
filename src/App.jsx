@@ -489,6 +489,8 @@ function AppContent({ onStorySelect }) {
                     onRestart={actions.restart}
                     onFinish={actions.finishGame}
                     onBack={backToStartScreen}
+                    onContinueFromSave={saveSystem.hasContinue ? handleContinue : null}
+                    onLoadSave={() => setSaveModalMode('load')}
                     onSave={() => setSaveModalMode('save')}
                     onLoad={() => setSaveModalMode('load')}
                     onContinue={actions.continueStory}

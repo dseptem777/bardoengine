@@ -17,6 +17,8 @@ export default function Player({
     onBack,
     onSave,
     onLoad,
+    onContinueFromSave = null,
+    onLoadSave = null,
     onContinue,
     canContinue,
     onOptions,
@@ -455,17 +457,27 @@ export default function Player({
                                                     onClick={onRestart}
                                                     className="min-w-[140px] px-6 py-3 bg-bardo-accent text-bardo-bg font-mono hover:brightness-110 transition-all rounded text-center"
                                                 >
-                                                    REINICIAR
+                                                    NUEVO JUEGO
                                                 </button>
-                                                <button
-                                                    onClick={onFinish}
-                                                    className="min-w-[140px] px-6 py-3 bg-green-600 text-white font-mono hover:bg-green-500 transition-colors rounded text-center"
-                                                >
-                                                    ✓ FINALIZAR
-                                                </button>
+                                                {onContinueFromSave && (
+                                                    <button
+                                                        onClick={onContinueFromSave}
+                                                        className="min-w-[140px] px-6 py-3 bg-blue-600 text-white font-mono hover:bg-blue-500 transition-colors rounded text-center"
+                                                    >
+                                                        CONTINUAR
+                                                    </button>
+                                                )}
+                                                {onLoadSave && (
+                                                    <button
+                                                        onClick={onLoadSave}
+                                                        className="min-w-[140px] px-6 py-3 border border-bardo-accent text-bardo-accent font-mono hover:bg-bardo-accent hover:text-bardo-bg transition-colors rounded text-center"
+                                                    >
+                                                        CARGAR PARTIDA
+                                                    </button>
+                                                )}
                                                 <button
                                                     onClick={onBack}
-                                                    className="min-w-[140px] px-6 py-3 border border-bardo-accent text-bardo-accent font-mono hover:bg-bardo-accent hover:text-bardo-bg transition-colors rounded text-center"
+                                                    className="min-w-[140px] px-6 py-3 border border-bardo-muted/50 text-bardo-muted font-mono hover:bg-bardo-muted/20 transition-colors rounded text-center"
                                                 >
                                                     MENÚ
                                                 </button>

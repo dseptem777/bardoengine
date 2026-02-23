@@ -391,7 +391,9 @@ export function useBardoEngine({
 
         processTags(tags)
 
-        if (storyId && newText) {
+        // Don't autosave if story just ended (preserves last save before death/ending)
+        const storyEnded = !story.canContinue && story.currentChoices.length === 0
+        if (storyId && newText && !storyEnded) {
             // @ts-ignore
             saveSystem.autoSave(story.state.toJson(), newText, gameSystems.exportGameSystems() || undefined)
         }
@@ -481,7 +483,9 @@ export function useBardoEngine({
 
         processTags(tags)
 
-        if (storyId && newText) {
+        // Don't autosave if story just ended (preserves last save before death/ending)
+        const storyEnded = !story.canContinue && story.currentChoices.length === 0
+        if (storyId && newText && !storyEnded) {
             // @ts-ignore
             saveSystem.autoSave(story.state.toJson(), newText, gameSystems.exportGameSystems() || undefined)
         }

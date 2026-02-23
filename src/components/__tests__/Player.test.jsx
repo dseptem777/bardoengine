@@ -133,17 +133,17 @@ describe('Player', () => {
             const textArea = screen.getByText('Welcome to the adventure.').closest('div')
             fireEvent.click(textArea)
 
-            // The FIN text uses em-dashes, check for REINICIAR button which is more reliable
-            expect(screen.getByText('REINICIAR')).toBeInTheDocument()
+            // The FIN text uses em-dashes, check for NUEVO JUEGO button which is more reliable
+            expect(screen.getByText('NUEVO JUEGO')).toBeInTheDocument()
         })
 
-        it('should show REINICIAR button when story ended', () => {
+        it('should show NUEVO JUEGO button when story ended', () => {
             render(<Player {...defaultProps} isEnded={true} typewriterDelay={0} />)
 
             const textArea = screen.getByText('Welcome to the adventure.').closest('div')
             fireEvent.click(textArea)
 
-            expect(screen.getByText('REINICIAR')).toBeInTheDocument()
+            expect(screen.getByText('NUEVO JUEGO')).toBeInTheDocument()
         })
     })
 

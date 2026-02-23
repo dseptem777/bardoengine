@@ -1590,7 +1590,7 @@ Cerras los ojos de forma instintiva, aun así en la oscuridad no podrías ver na
 Por suerte el destino es piadoso y tu cuerpo explota al chocar el cuerpo. Lo que acecha en el fondo esta feliz, comida fresca
 # flash_red
 FIN DEL JUEGO.
--> capitulo_2a
+-> END
 
 === sotano_acido_hub ===
 + [Estudio las estatuas] -> sotano_estatuas
@@ -1961,7 +1961,7 @@ La araña gigante logra clavar una de sus extremidades en la pared y eso le da e
 # flash_red
 La sorpresa dura solo unos segundos. La impresión fuerte cuando una de las extremidades atraviesa tu pecho de punta a punta. Cuando empezas a sentir frío y tu ropa mojada (por tu propia sangre) llega la calma. ¿Cómo se te ocurrió que podías cargar directamente contra eso?. Mientras la araña lentamente te acerca hacia sus colmillos, ya nada te importa. Solo esperas que los niños sobrevivan
 MORISTE. FIN DEL JUEGO.
--> capitulo_2a
+-> END
 
 === combate_magia ===
 Concentras toda tu energía, mostras tus palmas a la araña gigante y recitas las palabras correctas. A pesar del miedo y la adrenalina, tu lengua baila pronunciando las palabras correctas sin trabarse y en tu nombre permanece grabada, como corresponde, una imagen de un sol sobre un fondo negro.
