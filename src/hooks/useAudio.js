@@ -153,37 +153,35 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
             return
         }
 
-        // Stop current music with fade
-        if (musicRef.current) {
-            const oldMusic = musicRef.current
-            oldMusic.fade(oldMusic.volume(), 0, FADE_DURATION)
-            setTimeout(() => oldMusic.unload(), FADE_DURATION)
-        }
+        const musicSrc = MUSIC[id] || `/music/${id}.mp3`
+        const oldMusic = musicRef.current
 
-        if (!MUSIC[id]) {
-            console.warn(`[Audio] Unknown Music ID: ${id}`)
-            return
-        }
-
-        // Create new music instance
-        musicRef.current = new Howl({
-            src: [MUSIC[id]],
+        // Create new music instance — only kill old track once new one loads
+        const newMusic = new Howl({
+            src: [musicSrc],
             volume: fadeIn ? 0 : musicVolumeRef.current,
             loop: true,
+            onload: () => {
+                // New track loaded OK — now fade out the old one
+                if (oldMusic) {
+                    oldMusic.fade(oldMusic.volume(), 0, FADE_DURATION)
+                    setTimeout(() => oldMusic.unload(), FADE_DURATION)
+                }
+                musicRef.current = newMusic
+                currentTrackRef.current = id
+                newMusic.play()
+                if (fadeIn) {
+                    newMusic.fade(0, musicVolumeRef.current, FADE_DURATION)
+                }
+            },
             onloaderror: (soundId, error) => {
-                console.error(`[Audio] Failed to load music ${id}:`, error)
+                console.warn(`[Audio] Failed to load music ${id}, keeping current track:`, error)
+                newMusic.unload()
             },
             onplayerror: (soundId, error) => {
                 console.error(`[Audio] Failed to play music ${id}:`, error)
             }
         })
-
-        currentTrackRef.current = id
-        musicRef.current.play()
-
-        if (fadeIn) {
-            musicRef.current.fade(0, musicVolumeRef.current, FADE_DURATION)
-        }
     }, [])
 
     const stopMusic = useCallback((fadeOut = true) => {
