@@ -27,6 +27,7 @@ VAR madre_alegria_vive = true
 VAR juan_vive = false
 VAR rapido_morgue = false
 VAR capitulo_actual = ""
+VAR misiones_completadas = 0
 
 -> capitulo_0
 
@@ -447,9 +448,9 @@ Te queda un poco de tiempo para tu próxima reunión en el Ministerio. Tal vez p
 ¿Qué querés hacer?
 
 * [Bajar a la playa. Me merezco descansar un poco y disfrutar de la vida normal que estoy protegiendo.] -> intermision_playa
-* [Recorrer el filo entre lo normal y lo sobrenatural. Con un poco de suerte voy a conseguir información sobre mi próxima misión.] -> intermision_bloqueada
-* [Podría ver qué están haciendo los otros agentes de "El Faro". Tal vez necesiten que los ayude un poco.] -> intermision_bloqueada
-* [¿Estás jodiendo? Necesito ver a un buen médico. O al menos descansar, no voy a ayudar a nadie con estas heridas.] -> intermision_bloqueada
+* [Recorrer el filo entre lo normal y lo sobrenatural. Con un poco de suerte voy a conseguir información sobre mi próxima misión. # REQUIRES: misiones_completadas >= 1] -> intermision_bloqueada
+* [Podría ver qué están haciendo los otros agentes de "El Faro". Tal vez necesiten que los ayude un poco. # REQUIRES: misiones_completadas >= 1] -> intermision_bloqueada
+* [¿Estás jodiendo? Necesito ver a un buen médico. O al menos descansar, no voy a ayudar a nadie con estas heridas. # REQUIRES: misiones_completadas >= 1] -> intermision_bloqueada
 * [No hay razón para dar vueltas. Voy directo a la sede de "El Faro" a tomar mi siguiente misión.] -> intermision_faro
 
 === intermision_playa ===
@@ -952,6 +953,7 @@ Un escalofrío de terror entra en tu mente, algo dentro tuyo sabe que tarde o te
 # next
 Pero esos son problemas para el {nombre_personaje} del futuro. Ahora te toca dormir.
 # next
+~ misiones_completadas = misiones_completadas + 1
 -> intermision_1
 
 // =========================================================
@@ -1062,7 +1064,7 @@ Un rugido y ruidos de combate. La mujer deja la puerta para ir a ayudar a su vam
 El vampiro es una montaña de polvo en una esquina del galpón (notás que también hay un poco de polvo en los labios de Jesús, preferís no profundizar eso).
 La mujer está sentada contra una de las paredes, con un poco de sangre brotando de una herida superficial de un brazo.
 — Bueno, pudo haber salido mejor, pero pudo haber salido mucho peor. Muchas gracias compañero.
-# stat:conocimiento:+5 # stat:amistad_jesus:+1
+# stat:amistad_jesus:+1
 -> inter_misiones
 
 === jesus_sigilo ===
@@ -1079,7 +1081,7 @@ Esperás que Jesús entienda lo que hay que hacer y avanzás hacia donde se fue 
 La mujer grita cuando la tackleás e inmovilizás en el suelo. Atrás tuyo se escucha un rugido y un ruido de pelea que dura unos segundos.
 La mujer patalea, llora y te araña. Te promete la muerte de formas horribles mientras se retuerce en su llanto. El síndrome de abstinencia va a ser horrible pero está viva. Y eso siempre es una promesa de futuro.
 — Lo logramos — Jesús aparece atrás tuyo de forma humana — gracias Guardián, nunca olvidaré esto.
-# stat:fuerza:+5 # stat:amistad_jesus:+2
+# stat:amistad_jesus:+2
 -> inter_misiones
 
 === inter_enfermeria ===
@@ -1963,7 +1965,7 @@ Solo queda esperar que no se encuentren más arañas en el largo camino hacia la
 La araña gigante logra clavar una de sus extremidades en la pared y eso le da el punto de apoyo necesario para terminar de salir de la cueva. Ya no tenes más vueltas que dar, te toca ver cómo vencer a eso.
 
 * [Saco la espada y cargo directamente contra eso] -> combate_espada
-* [Le lanzo una bola de fuego # REQUIRES: magia >= 15] -> combate_magia
+* [Le lanzo una bola de fuego # REQUIRES: magia >= 30] -> combate_magia
 * [Disparos precisos a sus extremidades. Tal vez pierde el apoyo y se volverá a caer a la cueva] -> combate_disparos
 * [Es un demonio. Con las palabras correctas puede ser expulsado de este plano # REQUIRES: conocimiento >= 30, inv:info_invocacion_demoniaca] -> combate_exorcismo
 * [Esto es una locura. Mejor huir a la capilla] -> combate_capilla
