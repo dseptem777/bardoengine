@@ -73,6 +73,14 @@
                 "initial": 0
             },
             {
+                "id": "misiones_completadas",
+                "label": "Misiones",
+                "displayType": "hidden",
+                "min": 0,
+                "max": 99,
+                "initial": 0
+            },
+            {
                 "id": "amistad_jesus",
                 "label": "Jesús",
                 "icon": "🐆",

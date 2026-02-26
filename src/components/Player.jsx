@@ -407,11 +407,12 @@ export default function Player({
                                 {choices.map((choice, index) => {
                                     const lockResult = checkLocked ? checkLocked(choice) : null
                                     const isLocked = lockResult?.locked ?? false
+                                    const cleanText = choice.text?.replace(/\s*#\s*REQUIRES:.*$/i, '') ?? ''
                                     return (
                                         <ChoiceButton
                                             key={index}
                                             ref={(el) => { choiceButtonRefs.current[index] = el }}
-                                            text={choice.text}
+                                            text={cleanText}
                                             index={index}
                                             onClick={() => handleChoice(index)}
                                             disabled={checkBurned ? checkBurned(choice) : false}

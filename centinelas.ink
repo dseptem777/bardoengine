@@ -461,26 +461,17 @@ Te queda un poco de tiempo para tu siguiente misión. Tal vez podés hacer algo 
 
 + [Bajar a la playa] -> intermision_playa
 
-{ misiones_completadas >= 1:
-    + [Recorrer el filo entre lo normal y lo sobrenatural]
-    {
-    - misiones_completadas == 1: -> inter_tarot
-    }
-    + [Ayudar a un aliado]
-    {
-    - misiones_completadas == 1: -> inter_jesus
-    }
-}
-{ salud < 100 and misiones_completadas >= 1:
-    + [Ir a la enfermería con Mary Shelley] -> inter_enfermeria
++ [Recorrer el filo entre lo normal y lo sobrenatural # REQUIRES: misiones_completadas >= 1]
+{
+- misiones_completadas == 1: -> inter_tarot
 }
 
-// Opciones tachadas en intermisión 0
-{ misiones_completadas == 0:
-    + [Recorrer el filo entre lo normal y lo sobrenatural # REQUIRES: misiones_completadas >= 1] -> intermision
-    + [Ayudar a un aliado # REQUIRES: misiones_completadas >= 1] -> intermision
-    + [Ir a la enfermería # REQUIRES: misiones_completadas >= 1] -> intermision
++ [Ayudar a un aliado # REQUIRES: misiones_completadas >= 1]
+{
+- misiones_completadas == 1: -> inter_jesus
 }
+
++ [Ir a la enfermería # REQUIRES: misiones_completadas >= 1] -> inter_enfermeria
 
 + [No hay razón para dar vueltas. Ir directo a mi siguiente misión]
 {
@@ -990,7 +981,7 @@ Un escalofrío de terror entra en tu mente, algo dentro tuyo sabe que tarde o te
 # next
 Pero esos son problemas para el {nombre_personaje} del futuro. Ahora te toca dormir.
 # next
-~ misiones_completadas = misiones_completadas + 1
+# stat:misiones_completadas:+1
 -> intermision
 
 === inter_tarot ===

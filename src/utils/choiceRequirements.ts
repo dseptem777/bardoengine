@@ -120,15 +120,25 @@ export function formatRequirement(req: Requirement, gameSystems: GameSystems): s
  * Returns { locked: false, displayText: null } if no REQUIRES tag found.
  */
 export function processChoiceRequirements(
-    choice: { tags?: string[] | null },
+    choice: { tags?: string[] | null, text?: string },
     gameSystems: GameSystems
 ): RequirementResult {
-    if (!choice.tags) return { locked: false, displayText: null }
+    // Try choice.tags first (inkjs tag system)
+    let requiresTag: string | undefined
+    if (choice.tags) {
+        requiresTag = choice.tags.find(
+            (t: string) => t.trim().toUpperCase().startsWith('REQUIRES:')
+        )
+    }
 
-    // Find the REQUIRES tag
-    const requiresTag = choice.tags.find(
-        (t: string) => t.trim().toUpperCase().startsWith('REQUIRES:')
-    )
+    // Fallback: parse REQUIRES from choice text (inkjs may embed tags in text)
+    if (!requiresTag && choice.text) {
+        const textMatch = choice.text.match(/#\s*(REQUIRES:\s*.+)$/i)
+        if (textMatch) {
+            requiresTag = textMatch[1]
+        }
+    }
+
     if (!requiresTag) return { locked: false, displayText: null }
 
     const tagValue = requiresTag.trim().substring('REQUIRES:'.length).trim()
