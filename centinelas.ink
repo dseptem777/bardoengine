@@ -155,7 +155,7 @@ El Faro me había encontrado.
 
 ~ apodo_personaje = "Chispa"
 # stat:magia:+20 # stat:fuerza:+10 # stat:conocimiento:+10
--> intermision_0
+-> intermision
 
 // =========================================================
 // ORIGEN 2: COMBATE IMPOSIBLE
@@ -249,7 +249,7 @@ Me levanté con una misión. Yo sería quien llegaría siempre una hora antes.
 
 ~ apodo_personaje = "Madrugador"
 # stat:magia:+10 # stat:fuerza:+20 # stat:conocimiento:+10
--> intermision_0
+-> intermision
 
 // =========================================================
 // ORIGEN 3: CONOCIMIENTO PROHIBIDO
@@ -421,63 +421,100 @@ Ellos te ofrecieron un trabajo y una nueva oportunidad y no pensás desperdiciar
 
 ~ apodo_personaje = "Ratoncito"
 # stat:magia:+10 # stat:fuerza:+10 # stat:conocimiento:+20
--> intermision_0
+-> intermision
 
 // =========================================================
 // INTERMISIÓN 0: HUB DE COSTA ALEGRE
 // =========================================================
 
-=== intermision_0 ===
-~ capitulo_actual = "Intermisión 0"
+=== intermision ===
+~ capitulo_actual = "Intermisión"
 # music:ciudad_ambient
-Costa Alegre es una importante ciudad con costas al Atlántico Sur. Durante el verano es un centro vacacional importante pero, durante el resto del año, la industria pesquera y la presencia de una Universidad garantiza que se mantenga poblada.
+
+// ---- Texto contextual según progreso ----
+{
+- misiones_completadas == 0:
+    Costa Alegre es una importante ciudad con costas al Atlántico Sur. Durante el verano es un centro vacacional importante pero, durante el resto del año, la industria pesquera y la presencia de una Universidad garantiza que se mantenga poblada.
+    # next
+    En esta ciudad, haciéndose pasar por un olvidado edificio administrativo en el fondo del campus universitario (ahí donde el pasto bien cortado deja espacio a la maleza) se encuentra uno de los cuarteles de "El Faro".
+
+    "Marcando un camino seguro para la humanidad", ese es su lema. En igual parte estudiosos y milicia, "El Faro" se encarga de monitorear todas las amenazas sobrenaturales que se ciernan sobre la humanidad y, cuando se vuelven muy peligrosas, asegurar que lleguen a un final.
+
+    Sus agentes son de los más variopintos, desde intelectuales que son la personificación de "la curiosidad mató al gato" hasta víctimas de seres sobrenaturales que están cobrando su venganza. Algunos son verdaderos monstruos buscando la redención.
+    # next
+    # next
+    Y, claro, también estás vos.
+- misiones_completadas == 1:
+    Te despertás a las tres de la mañana. Hace un par de días te acosa una pesadilla donde te estás ahogando en un mar de sangre y sentís, rozando tus pies, que una gran entidad marina está dando vueltas. Jugando con vos, esperando el momento para atacar.
+    Ya que tu psiquis se niega a dejarte dormir, decidís verlo como una mejora y hacer más cosas. Tu departamento nunca estuvo tan limpio. Aprovechás para hacer ejercicio, meditar para centrar tu mente y leer todos los libros que pudiste pedir prestados de la sede de El Faro.
+    # next
+    En tu pasada misión pudiste entregar la mano de un cadáver que había sido usado como sacrificio humano. Esperabas que con ese elemento, un concilio de científicos y magos pueda rastrear a la secta que está detrás de todo en un extraño pacto con seres que habitan en el fondo del mar.
+    Sea lo que sea que los genios de El Faro decidan hacer, iba a tomar tiempo. Sin duda vas a tener algunas otras misiones urgentes para entretenerte hasta que haya una nueva pista sobre la secta.
+}
+
 # next
-En esta ciudad, haciéndose pasar por un olvidado edificio administrativo en el fondo del campus universitario (ahí donde el pasto bien cortado deja espacio a la maleza) se encuentra uno de los cuarteles de "El Faro".
-
-"Marcando un camino seguro para la humanidad", ese es su lema. En igual parte estudiosos y milicia, "El Faro" se encarga de monitorear todas las amenazas sobrenaturales que se ciernan sobre la humanidad y, cuando se vuelven muy peligrosas, asegurar que lleguen a un final.
-
-Sus agentes son de los más variopintos, desde intelectuales que son la personificación de "la curiosidad mató al gato" hasta víctimas de seres sobrenaturales que están cobrando su venganza. Algunos son verdaderos monstruos buscando la redención.
-# next
-# next
-Y, claro, también estás vos.
-
-Abrís la ventana de tu departamento y entra un poco de aire acompañado por el olor de sal del agua salada. El viento trae unos gritos de diversión y alegría.
-
-Te queda un poco de tiempo para tu próxima reunión en el Ministerio. Tal vez podés hacer algo antes de ir a la sede de "El Faro".
-
+Abrís la ventana de tu departamento y entra un poco de aire acompañado por el olor a sal del agua salada. El viento trae unos gritos de diversión y alegría.
+Te queda un poco de tiempo para tu siguiente misión. Tal vez podés hacer algo antes de ir.
 ¿Qué querés hacer?
 
-* [Bajar a la playa. Me merezco descansar un poco y disfrutar de la vida normal que estoy protegiendo.] -> intermision_playa
-* [Recorrer el filo entre lo normal y lo sobrenatural. Con un poco de suerte voy a conseguir información sobre mi próxima misión. # REQUIRES: misiones_completadas >= 1] -> intermision_bloqueada
-* [Podría ver qué están haciendo los otros agentes de "El Faro". Tal vez necesiten que los ayude un poco. # REQUIRES: misiones_completadas >= 1] -> intermision_bloqueada
-* [¿Estás jodiendo? Necesito ver a un buen médico. O al menos descansar, no voy a ayudar a nadie con estas heridas. # REQUIRES: misiones_completadas >= 1] -> intermision_bloqueada
-* [No hay razón para dar vueltas. Voy directo a la sede de "El Faro" a tomar mi siguiente misión.] -> intermision_faro
+// ---- Opciones del hub ----
+
++ [Bajar a la playa] -> intermision_playa
+
+{ misiones_completadas >= 1:
+    + [Recorrer el filo entre lo normal y lo sobrenatural]
+    {
+    - misiones_completadas == 1: -> inter_tarot
+    }
+    + [Ayudar a un aliado]
+    {
+    - misiones_completadas == 1: -> inter_jesus
+    }
+}
+{ salud < 100 and misiones_completadas >= 1:
+    + [Ir a la enfermería con Mary Shelley] -> inter_enfermeria
+}
+
+// Opciones tachadas en intermisión 0
+{ misiones_completadas == 0:
+    + [Recorrer el filo entre lo normal y lo sobrenatural # REQUIRES: misiones_completadas >= 1] -> intermision
+    + [Ayudar a un aliado # REQUIRES: misiones_completadas >= 1] -> intermision
+    + [Ir a la enfermería # REQUIRES: misiones_completadas >= 1] -> intermision
+}
+
++ [No hay razón para dar vueltas. Ir directo a mi siguiente misión]
+{
+- misiones_completadas == 0: -> capitulo_1
+- misiones_completadas >= 1: -> inter_misiones
+}
 
 === intermision_playa ===
 # music:playa_ambient
-Bajás a la playa y disfrutás un poco del sol golpeando tu cuerpo. Cuando el calor se vuelve insoportable podés ir al mar a refrescarte un poco.
+{
+- misiones_completadas == 0:
+    Bajás a la playa y disfrutás un poco del sol golpeando tu cuerpo. Cuando el calor se vuelve insoportable podés ir al mar a refrescarte un poco.
 
-Te sumás con un par de desconocidos a jugar un partido de volley en la arena y terminás la jornada tomando un trago en la barra de un bar costero viendo el horizonte.
+    Te sumás con un par de desconocidos a jugar un partido de volley en la arena y terminás la jornada tomando un trago en la barra de un bar costero viendo el horizonte.
 
-La vida es buena. Pero no podés ignorar que a lo lejos se ven, amenazantes, un frente de nubes de tormentas.
-
--> intermision_faro
-
-=== intermision_bloqueada ===
-Esta opción no está disponible en este momento.
-
--> intermision_0
-
-=== intermision_faro ===
-# music:misterio_ambient
-Es hora de ponerse a trabajar.
-
-Te dirigís hacia la sede de "El Faro" para recibir tu siguiente misión.
-
--> capitulo_1
+    La vida es buena. Pero no podés ignorar que a lo lejos se ven, amenazantes, un frente de nubes de tormentas.
+- misiones_completadas == 1:
+    El mar está picado hoy y lo acompaña una garúa. La mayoría de las personas en la playa son turistas que, a pesar del clima, quieren hacer valer su dinero y vienen a sentir un poco de arena entre los dedos de los pies.
+    # next
+    A cincuenta metros notás que el mar devolvió algo. Tu visión se vuelve de túnel y lo notás. Otro cuerpo con las horribles marcas de tortura y la extraña escritura que acompaña a los sacrificios humanos. ¿Cómo puede ser que nadie está gritando? ¿Llamando a la policía? Una pareja camina a su lado como si nada, un par de niños está corriendo atrás de un vendedor de churros...
+    # shake
+    ¡¿ESTÁN TODOS CIEGOS?!
+    # next
+    Te refregás los ojos durante unos minutos y volvés a ver bien. Es solo un tronco con un poco de algas marinas.
+    Este trabajo está empezando a afectar tu salud mental.
+}
+{
+- misiones_completadas == 0: -> capitulo_1
+- misiones_completadas >= 1: -> inter_misiones
+}
 
 === capitulo_1 ===
 ~ capitulo_actual = "Cap. 1 — Un cadáver sin nombre"
+# inv:clear_mission
 # music:misterio_ambient
 La sede de "El Faro" estaba en el fondo de un predio universitario. A esa hora de la noche era un mundo aparte. A lo lejos se escuchaban los ruidos de algunos universitarios, festejando haber aprobado alguna materia o pensando a qué fiesta ir más tarde.
 
@@ -954,43 +991,7 @@ Un escalofrío de terror entra en tu mente, algo dentro tuyo sabe que tarde o te
 Pero esos son problemas para el {nombre_personaje} del futuro. Ahora te toca dormir.
 # next
 ~ misiones_completadas = misiones_completadas + 1
--> intermision_1
-
-// =========================================================
-// INTERMISIÓN 1: PESADILLAS Y PISTAS
-// =========================================================
-
-=== intermision_1 ===
-~ capitulo_actual = "Intermisión 1"
-# music:ciudad_ambient
-Te despertás a las tres de la mañana. Hace un par de días te acosa una pesadilla donde te estás ahogando en un mar de sangre y sentís, rozando tus pies, que una gran entidad marina está dando vueltas. Jugando con vos, esperando el momento para atacar.
-Ya que tu psiquis se niega a dejarte dormir, decidís verlo como una mejora y hacer más cosas. Tu departamento nunca estuvo tan limpio. Aprovechás para hacer ejercicio, meditar para centrar tu mente y leer todos los libros que pudiste pedir prestados de la sede de El Faro.
-# next
-En tu pasada misión pudiste entregar la mano de un cadáver que había sido usado como sacrificio humano. Esperabas que con ese elemento, un concilio de científicos y magos pueda rastrear a la secta que está detrás de todo en un extraño pacto con seres que habitan en el fondo del mar.
-Sea lo que sea que los genios de El Faro decidan hacer, iba a tomar tiempo. Sin duda vas a tener algunas otras misiones urgentes para entretenerte hasta que haya una nueva pista sobre la secta.
-# next
-Abrís la ventana de tu departamento y entra un poco de aire acompañado por el olor a sal del agua salada. El viento atrae unos gritos de diversión y alegría.
-Te queda un poco de tiempo para tu siguiente misión. Tal vez podés hacer algo antes de ir.
-¿Qué querés hacer?
-
-+ [Bajar a la playa. Disfrutar un poco de la vida normal que estoy protegiendo] -> inter_playa
-+ [Recorrer el filo entre lo normal y lo sobrenatural] -> inter_tarot
-+ [Ayudar a otro Guardián en los muelles] -> inter_jesus
-{ salud < 100:
-    + [Ir a la enfermería con Mary Shelley] -> inter_enfermeria
-}
-+ [No hay razón para dar vueltas. Ir directo a mi siguiente misión] -> inter_misiones
-
-=== inter_playa ===
-El mar está picado hoy y lo acompaña una garúa. La mayoría de las personas en la playa son turistas que, a pesar del clima, quieren hacer valer su dinero y vienen a sentir un poco de arena entre los dedos de los pies.
-# next
-A cincuenta metros notás que el mar devolvió algo. Tu visión se vuelve de túnel y lo notás. Otro cuerpo con las horribles marcas de tortura y la extraña escritura que acompaña a los sacrificios humanos. ¿Cómo puede ser que nadie está gritando? ¿Llamando a la policía? Una pareja camina a su lado como si nada, un par de niños está corriendo atrás de un vendedor de churros...
-# shake
-¡¿ESTÁN TODOS CIEGOS?!
-# next
-Te refregás los ojos durante unos minutos y volvés a ver bien. Es solo un tronco con un poco de algas marinas.
-Este trabajo está empezando a afectar tu salud mental.
--> inter_misiones
+-> intermision
 
 === inter_tarot ===
 Salís a caminar y te dejás llevar, por el flujo de energías, por las pequeñas señales que hay en todas las ciudades. Cuando hay una bifurcación basta lanzar una moneda al aire para saber por dónde seguir.
@@ -1115,6 +1116,7 @@ Vas a la escena del crimen. Algo huele a ritual desde aquí.
 
 === capitulo_2a ===
 ~ capitulo_actual = "Cap. 2 — Pequeños inocentes"
+# inv:clear_mission
 # music:campo_ambient
 Manejaste más de tres horas. A esta distancia el ruido y las luces de la ciudad son un espejismo lejano. El olor salado del mar fue cambiado por la frangancia de eucaliptos (y, vamos a confesarlo, por el pesado olor a bosta de vaca). Cada tanto, a lo lejos, se ve la silueta de un peón rural haciendo alguna tarea. Pero sin duda la población de ganado supera ampliamente a la humana.
 Haces una parada en una estación de servicio al costado de la ruta, alrededor de tuyo hay una gran nada verde, hectáreas y hectáreas de tierras de cultivo.
@@ -1496,7 +1498,7 @@ Es un cuarto demasiado grande para ser un mero depósito. Viviste en monoambient
 Recorriendo el lugar te das cuenta que en un rincón el piso sede un poco. Tomas tu cuchillo y cortas la cortina (era horriblemente de mal gusto, contaba como un monstruo).
 Una trampilla que lleva a un sótano, cerrada por una fuerte cadena con un candado. Todo tiene un aspecto vetusto y oxidado, te da la impresión de ser inclusive anterior al Orfanato
 
-* [Bueno, me tocará ver si encuentro una llave] -> sotano_buscar_llave
++ [Bueno, me tocará ver si encuentro una llave] -> sotano_buscar_llave
 * [Esto no podes abrirlo con una ganzúa, pero si con un poco de ácido # REQUIRES: conocimiento >= 25] -> sotano_acido
 
 === sotano_buscar_llave ===
