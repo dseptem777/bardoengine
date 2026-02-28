@@ -56,24 +56,23 @@ global.ResizeObserver = class ResizeObserver {
 // ============================================
 beforeEach(() => {
     localStorage.clear()
-    vi.clearAllMocks()
 })
 
 // ============================================
 // Audio Mock (Howler.js)
 // ============================================
 vi.mock('howler', () => {
-    // Create a proper mock constructor
-    const MockHowl = vi.fn().mockImplementation(() => ({
-        play: vi.fn(),
-        pause: vi.fn(),
-        stop: vi.fn(),
-        fade: vi.fn(),
-        volume: vi.fn().mockReturnValue(0.5),
-        unload: vi.fn(),
-        on: vi.fn(),
-        playing: vi.fn().mockReturnValue(false)
-    }))
+    // Must use regular function (not arrow) so it can be called with `new`
+    const MockHowl = vi.fn(function () {
+        this.play = vi.fn()
+        this.pause = vi.fn()
+        this.stop = vi.fn()
+        this.fade = vi.fn()
+        this.volume = vi.fn().mockReturnValue(0.5)
+        this.unload = vi.fn()
+        this.on = vi.fn()
+        this.playing = vi.fn().mockReturnValue(false)
+    })
 
     return {
         Howl: MockHowl,

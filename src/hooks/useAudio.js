@@ -50,6 +50,7 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
     const soundsRef = useRef({})
     const musicRef = useRef(null)
     const currentTrackRef = useRef(null)
+    const pendingMusicRef = useRef(null)
     const audioUnlockedRef = useRef(false)
 
     // Store current volumes in refs for real-time updates
@@ -107,6 +108,23 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
         }
     }, [unlockAudio])
 
+    // Cleanup all Howl instances on unmount to prevent memory leaks
+    useEffect(() => {
+        return () => {
+            Object.values(soundsRef.current).forEach(sound => sound.unload())
+            soundsRef.current = {}
+            if (pendingMusicRef.current) {
+                pendingMusicRef.current.unload()
+                pendingMusicRef.current = null
+            }
+            if (musicRef.current) {
+                musicRef.current.unload()
+                musicRef.current = null
+            }
+            currentTrackRef.current = null
+        }
+    }, [])
+
     // ==================
     // SFX Functions
     // ==================
@@ -153,8 +171,13 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
             return
         }
 
+        // Cancel any pending load to prevent orphaned Howl instances
+        if (pendingMusicRef.current) {
+            pendingMusicRef.current.unload()
+            pendingMusicRef.current = null
+        }
+
         const musicSrc = MUSIC[id] || `/music/${id}.mp3`
-        const oldMusic = musicRef.current
 
         // Create new music instance — only kill old track once new one loads
         const newMusic = new Howl({
@@ -162,7 +185,9 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
             volume: fadeIn ? 0 : musicVolumeRef.current,
             loop: true,
             onload: () => {
+                pendingMusicRef.current = null
                 // New track loaded OK — now fade out the old one
+                const oldMusic = musicRef.current
                 if (oldMusic) {
                     oldMusic.fade(oldMusic.volume(), 0, FADE_DURATION)
                     setTimeout(() => oldMusic.unload(), FADE_DURATION)
@@ -176,12 +201,14 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
             },
             onloaderror: (soundId, error) => {
                 console.warn(`[Audio] Failed to load music ${id}, keeping current track:`, error)
+                pendingMusicRef.current = null
                 newMusic.unload()
             },
             onplayerror: (soundId, error) => {
                 console.error(`[Audio] Failed to play music ${id}:`, error)
             }
         })
+        pendingMusicRef.current = newMusic
     }, [])
 
     const stopMusic = useCallback((fadeOut = true) => {

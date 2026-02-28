@@ -20,6 +20,8 @@ export default function ArkanoidGame({ params = [], onFinish }) {
     const paddleX = useRef((400 - PADDLE_WIDTH) / 2)
     const bricks = useRef([])
     const frameId = useRef()
+    const lastFrameTime = useRef(null)
+    const TARGET_FRAME_MS = 1000 / 60 // normalize to 60fps
 
     // Initialize bricks
     useEffect(() => {
@@ -42,10 +44,16 @@ export default function ArkanoidGame({ params = [], onFinish }) {
         onFinish(success ? 1 : 0)
     }, [gameState, onFinish])
 
-    const draw = useCallback(() => {
+    const draw = useCallback((timestamp) => {
         const canvas = canvasRef.current
         if (!canvas) return
         const ctx = canvas.getContext('2d')
+
+        // Delta-time: normalize speed to 60fps regardless of refresh rate
+        if (lastFrameTime.current === null) lastFrameTime.current = timestamp
+        const deltaMs = Math.min(timestamp - lastFrameTime.current, 50) // cap at 50ms to prevent spiral
+        lastFrameTime.current = timestamp
+        const dtScale = deltaMs / TARGET_FRAME_MS
         const brickWidth = (400 - (BRICK_OFFSET_LEFT * 2) - (BRICK_PADDING * (BRICK_COLS - 1))) / BRICK_COLS
         const brickHeight = 20
 
@@ -107,31 +115,40 @@ export default function ArkanoidGame({ params = [], onFinish }) {
         }
 
         // Collision detection - Walls
-        if (ballPos.current.x + ballVel.current.x > canvas.width - BALL_RADIUS || ballPos.current.x + ballVel.current.x < BALL_RADIUS) {
+        const dx = ballVel.current.x * dtScale
+        const dy = ballVel.current.y * dtScale
+        const nextX = ballPos.current.x + dx
+        const nextY = ballPos.current.y + dy
+
+        if (nextX > canvas.width - BALL_RADIUS || nextX < BALL_RADIUS) {
             ballVel.current.x = -ballVel.current.x
         }
-        if (ballPos.current.y + ballVel.current.y < BALL_RADIUS) {
+        if (nextY < BALL_RADIUS) {
             ballVel.current.y = -ballVel.current.y
-        } else if (ballPos.current.y + ballVel.current.y > canvas.height - BALL_RADIUS - PADDLE_HEIGHT - 10) {
+        } else if (nextY > canvas.height - BALL_RADIUS - PADDLE_HEIGHT - 10) {
             if (ballPos.current.x > paddleX.current && ballPos.current.x < paddleX.current + PADDLE_WIDTH) {
                 ballVel.current.y = -ballVel.current.y
-                // Add some angle based on where it hit the paddle
+                // Add some angle based on where it hit the paddle, preserving total speed
                 const hitPoint = (ballPos.current.x - (paddleX.current + PADDLE_WIDTH / 2)) / (PADDLE_WIDTH / 2)
-                ballVel.current.x = hitPoint * 3
+                const speed = Math.sqrt(ballVel.current.x ** 2 + ballVel.current.y ** 2)
+                const angle = hitPoint * (Math.PI / 3) // max ±60 degrees
+                ballVel.current.x = speed * Math.sin(angle)
+                ballVel.current.y = -speed * Math.abs(Math.cos(angle))
             } else {
                 finish(false)
                 return
             }
         }
 
-        ballPos.current.x += ballVel.current.x
-        ballPos.current.y += ballVel.current.y
+        ballPos.current.x += ballVel.current.x * dtScale
+        ballPos.current.y += ballVel.current.y * dtScale
 
         frameId.current = requestAnimationFrame(draw)
     }, [BRICK_COLS, BRICK_ROWS, finish])
 
     useEffect(() => {
         if (gameState === 'playing') {
+            lastFrameTime.current = null
             frameId.current = requestAnimationFrame(draw)
         }
         return () => cancelAnimationFrame(frameId.current)

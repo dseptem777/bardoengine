@@ -12,16 +12,17 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 // We need to mock howler at the module level for this specific test file
 // to ensure the constructor works properly
 vi.mock('howler', () => {
-    const MockHowl = vi.fn().mockImplementation(() => ({
-        play: vi.fn(),
-        pause: vi.fn(),
-        stop: vi.fn(),
-        fade: vi.fn(),
-        volume: vi.fn().mockReturnValue(0.5),
-        unload: vi.fn(),
-        on: vi.fn(),
-        playing: vi.fn().mockReturnValue(false)
-    }))
+    // Must use regular function (not arrow) so it can be called with `new`
+    const MockHowl = vi.fn(function () {
+        this.play = vi.fn()
+        this.pause = vi.fn()
+        this.stop = vi.fn()
+        this.fade = vi.fn()
+        this.volume = vi.fn().mockReturnValue(0.5)
+        this.unload = vi.fn()
+        this.on = vi.fn()
+        this.playing = vi.fn().mockReturnValue(false)
+    })
 
     return {
         Howl: MockHowl,
@@ -32,11 +33,14 @@ vi.mock('howler', () => {
 })
 
 // Import after mock
+import { Howl } from 'howler'
 import { useAudio } from '../useAudio'
 
 describe('useAudio', () => {
     beforeEach(() => {
-        vi.clearAllMocks()
+        // Only clear call history, NOT implementations — clearAllMocks wipes mockImplementation
+        // which breaks the Howl constructor mock
+        Howl.mockClear()
     })
 
     describe('initialization', () => {
@@ -82,16 +86,17 @@ describe('useAudio', () => {
     })
 
     describe('playMusic', () => {
-        it('should warn for unknown music track', () => {
-            const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => { })
+        it('should use dynamic fallback path for tracks not in registry', () => {
             const { result } = renderHook(() => useAudio())
 
             act(() => {
                 result.current.playMusic('nonexistent_track')
             })
 
-            expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Unknown Music ID'))
-            warnSpy.mockRestore()
+            // Code falls back to /music/{id}.mp3 for unknown tracks
+            expect(Howl).toHaveBeenCalledWith(
+                expect.objectContaining({ src: ['/music/nonexistent_track.mp3'] })
+            )
         })
     })
 
