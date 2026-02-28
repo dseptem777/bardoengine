@@ -21,6 +21,7 @@ export default function Player({
     onLoadSave = null,
     onContinue,
     canContinue,
+    continueLabel = null,
     onOptions,
     onToggleHistory,
     // Settings props
@@ -438,7 +439,7 @@ export default function Player({
                                             className="group relative flex items-center justify-center gap-3 px-8 py-4 bg-bardo-accent/10 border border-bardo-accent text-bardo-accent font-mono text-lg hover:bg-bardo-accent hover:text-bardo-bg transition-all duration-300 rounded overflow-hidden"
                                         >
                                             <span className="relative z-10 tracking-widest uppercase">
-                                                {hasPendingMinigame ? 'Comenzar Juego' : 'Siguiente'}
+                                                {hasPendingMinigame ? 'Comenzar Juego' : (continueLabel || 'Siguiente')}
                                             </span>
                                             <span className="relative z-10 text-xl group-hover:translate-x-1 transition-transform duration-300">
                                                 {hasPendingMinigame ? '◈' : '❱'}

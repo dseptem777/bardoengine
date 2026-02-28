@@ -51,6 +51,7 @@ export function useBardoEngine({
         text,
         choices,
         canContinue,
+        continueLabel,
         isEnded,
         history,
         initStory: initStoryState,
@@ -674,6 +675,7 @@ export function useBardoEngine({
         text,
         choices,
         canContinue,
+        continueLabel,
         isEnded,
         history,
         isThemeReady,
@@ -683,7 +685,7 @@ export function useBardoEngine({
         config: configRef,
         settingsHelpers
     }), [
-        story, text, choices, canContinue, isEnded, history, isThemeReady,
+        story, text, choices, canContinue, continueLabel, isEnded, history, isThemeReady,
         actions, subsystems, configRef, settingsHelpers
     ])
 }

@@ -116,7 +116,7 @@ function AppContent({ onStorySelect }) {
 
     // Destructure for convenience
     const {
-        story, text, choices, canContinue, isEnded, history,
+        story, text, choices, canContinue, continueLabel, isEnded, history,
         actions, subsystems, config
     } = engine
     const { audio, vfx, saveSystem, gameSystems, achievementsSystem, minigameController, willpower, spiderInfestation, scrollFriction, bossController, visualDamage, scrollContainerRef } = subsystems
@@ -496,6 +496,7 @@ function AppContent({ onStorySelect }) {
                     onLoad={() => setSaveModalMode('load')}
                     onContinue={actions.continueStory}
                     canContinue={canContinue}
+                    continueLabel={continueLabel}
                     onOptions={() => setOptionsOpen(true)}
                     onToggleHistory={() => setHistoryOpen(prev => !prev)}
                     // Settings
