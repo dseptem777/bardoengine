@@ -17,6 +17,7 @@ export default function LockpickGame({ params = [], onFinish }) {
 
     const requestRef = useRef()
     const startTimeRef = useRef()
+    const positionRef = useRef(0)
 
     const animate = useCallback(time => {
         if (gameState !== 'playing') return
@@ -25,6 +26,7 @@ export default function LockpickGame({ params = [], onFinish }) {
         const progress = (time - startTimeRef.current) / 1000
         const newPos = (Math.sin(progress * speed) + 1) * 50 // Oscilla between 0 and 100
 
+        positionRef.current = newPos
         setPosition(newPos)
         requestRef.current = requestAnimationFrame(animate)
     }, [gameState, speed])
@@ -37,11 +39,12 @@ export default function LockpickGame({ params = [], onFinish }) {
     const handleAction = useCallback(() => {
         if (gameState !== 'playing') return
 
-        const isSuccess = position >= zoneStart && position <= (zoneStart + zoneSize)
+        const currentPos = positionRef.current
+        const isSuccess = currentPos >= zoneStart && currentPos <= (zoneStart + zoneSize)
         setGameState(isSuccess ? 'win' : 'lose')
 
         onFinish(isSuccess ? 1 : 0)
-    }, [gameState, position, zoneStart, zoneSize, onFinish])
+    }, [gameState, zoneStart, zoneSize, onFinish])
 
     useEffect(() => {
         const handleKeyDown = (e) => {
