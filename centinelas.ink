@@ -990,7 +990,7 @@ Antes de darte cuenta, estás en la periferia de la ciudad.
 # next
 Es de noche pero la mayoría de las farolas de la calle no funcionan, solo una en la esquina está parpadeando. Vas hacia ella y mirás el camino. De nuevo, otra farola parpadeando a lo lejos. Seguís el circuito y terminás frente a una casa pintada de un verde loro, con la puerta abierta. Al lado hay una pizarra que dice "Tarot. Lectura de Cartas. Adivine su futuro".
 De las entrañas de la casa se siente fluir, pesado y electrificante, un poco de poder real.
-# next
+# next: Entrás en la casa
 En el fondo hay una anciana esperándote detrás de una mesa con una baraja de cartas en la mano. Con una sola mirada te das cuenta de que en un pasado ella fue hermosa pero, aún más importante, aprendió cómo ser elegante en su vejez. Un pañuelo con arabescos adorna su cabeza, dejando escapar una larga melena canosa que parece platinada.
 Sus ojos, verdes como joyas, están encuadrados con un delineado pronunciado que se alarga hacia las sienes. Cada movimiento que hace es acompañado por el tintineo de cientos de collares, pulseras y cadenas plateadas que decoran todo su cuerpo.
 # next
