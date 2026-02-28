@@ -32,6 +32,7 @@ export function useStoryState(): UseStoryStateReturn {
     const [text, setText] = useState('')
     const [choices, setChoices] = useState<any[]>([])
     const [canContinue, setCanContinue] = useState(false)
+    const [continueLabel, setContinueLabel] = useState<string | null>(null)
     const [isEnded, setIsEnded] = useState(false)
     const [history, setHistory] = useState<StoryHistoryEntry[]>([])
     const [currentTags, setCurrentTags] = useState<string[]>([])
@@ -42,6 +43,7 @@ export function useStoryState(): UseStoryStateReturn {
     const processStoryLoop = useCallback((currentStory: Story) => {
         let fullText = ""
         const allTags: string[] = []
+        setContinueLabel(null)
 
         try {
             while (currentStory.canContinue) {
@@ -51,11 +53,17 @@ export function useStoryState(): UseStoryStateReturn {
                 fullText += nextBatch + '\n\n'
                 allTags.push(...tags)
 
-                // Break for pagination
-                if (tags.some((t: string) => {
+                // Break for pagination (supports optional label: # next: Open the door)
+                const paginationTag = tags.find((t: string) => {
                     const tag = t.trim().toLowerCase()
-                    return tag === 'next' || tag === 'page'
-                })) break
+                    return tag === 'next' || tag === 'page' || tag.startsWith('next:') || tag.startsWith('page:')
+                })
+                if (paginationTag) {
+                    const colonIdx = paginationTag.indexOf(':')
+                    const label = colonIdx !== -1 ? paginationTag.substring(colonIdx + 1).trim() : null
+                    setContinueLabel(label || null)
+                    break
+                }
 
                 // Break for minigame - Orchestrator handles the actual game start, but we must pause text generation
                 if (tags.some((t: string) => t.trim().toLowerCase().startsWith('minigame:'))) break
@@ -247,6 +255,7 @@ export function useStoryState(): UseStoryStateReturn {
         text,
         choices,
         canContinue,
+        continueLabel,
         isEnded,
         history,
         currentTags,
@@ -264,6 +273,7 @@ export function useStoryState(): UseStoryStateReturn {
         text,
         choices,
         canContinue,
+        continueLabel,
         isEnded,
         history,
         currentTags,
