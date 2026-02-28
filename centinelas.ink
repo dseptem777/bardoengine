@@ -1163,7 +1163,7 @@ La tarea bajó por la cadena de mando de El Faro hasta llegar al encargado de ha
 // =========================================================
 
 === frente_orfanato ===
-# next
+# next: Frente a la entrada del orfanato
 # music:orfanato_ambient
 El predio del Orfanato era gigante, rodeado por un muro de más de dos metros. Si bien no era tan sorprendente para mí, sin duda era una barrera infranqueable para un niño.
 Al lado de la reja robusta, protegida por una fuerte cadena con un candado del tamaño de mi puño, había una estatua de una santa abrazada a un cordero.
@@ -1243,7 +1243,7 @@ La Madre Alegría te hace entrar al hall central del edificio principal. En una 
 
 === hall_orfanato ===
 { hall_orfanato > 1:
-    # next
+    # next: Volvés al Hall Central
 }
 Estas solo en el hall central. ¿Cómo continuas tu investigación?
 
@@ -1317,7 +1317,7 @@ Pero lentamente todas vuelven a sus juegos y te dejan hablar tranquilo con Belé
 
 === en_privado_belen ===
 ~ tiene_info_belen = true
-# next
+# next: En privado con Belén
 Te llevas a la chica a un costado. Le sonreís, principalmente por que no vienen a tu cabeza palabras que sirvan en este momento. Tal vez después de esta misión puedas escribir un capitulo en los instructivos de El Faro respecto a cómo interactuar con niños y tener un enfoque pedagógico.
 Le das espacio y la dejas hablar.
 # next
@@ -1417,6 +1417,7 @@ El machete que te dio Belén está lleno de referencias que, a primer momento, p
 }
 Pero llegas. Parece una herida al costado de una loma, como si un gigante hubiese apuñado a la tierra. En su cima hay un sauce llorón y sus hojas, largas y caídas, tapan la entrada simple vista. Pero tu pelota de luz no se deja engañar.
 En la entrada la luz se vuelva cada vez más intensa mientras la pelota pierde su forma, como si fuerzas invisibles la tirarían desde cada extremo. Antes de desaparecer en un fogonazo de luz, se convierte en una flecha que te señala hacia adentro.
+# next: Te adentras en la oscuridad
 -> cueva_entrada
 
 === bosque_magia ===
@@ -1433,7 +1434,7 @@ Una vez que sos uno con tu cuerpo, solo necesitas proyectar esa imagen mental en
 Te frustra un poco que la imagen mental que sale de ser uno con tu cuerpo sea una pelota de luz amarillenta, de bordes indefinidos, que flota de forma torpe a la altura de tu pecho.
 Esperabas algo más agraciado. Al menos más humanoide. Tal vez si necesitas esas sesiones de psicoanálisis.
 Con un pensamiento dejas ir a la pelota de luz, que empieza a flotar por el bosque buscando algo que no encaje.
-# next
+# next: Comienza la cacería
 { magia < 25:
     ~ llego_a_tiempo = false
     La pelota recorre el bosque de forma indecisa, cambia de dirección y velocidad de forma azarosa. En un momento te hice dar dos vueltas alrededor del mismo Jacaranda y en otro pegó un giro repentino que te hace resbalar y caer de frente contra un charco de barro.
@@ -1447,6 +1448,7 @@ Con un pensamiento dejas ir a la pelota de luz, que empieza a flotar por el bosq
 }
 Pero llegas. Parece una herida al costado de una loma, como si un gigante hubiese apuñado a la tierra. En su cima hay un sauce llorón y sus hojas, largas y caídas, tapan la entrada simple vista. Pero tu pelota de luz no se deja engañar.
 En la entrada la luz se vuelva cada vez más intensa mientras la pelota pierde su forma, como si fuerzas invisibles la tirarían desde cada extremo. Antes de desaparecer en un fogonazo de luz, se convierte en una flecha que te señala hacia adentro.
+# next: Te adentras en la oscuridad
 -> cueva_entrada
 
 // =========================================================
@@ -1503,7 +1505,7 @@ Un olor potente e industrial inunda el ambiente, por suerte estas cerca de los b
 Dejas pasar unos minutos y forzas con un elemento el candado. Con el mecanismo carcomido, basta un simple empujón y se abre.
 Cuando abrís la trampilla entra una ráfaga de aire estancado. Nadie estuvo acá en mucho tiempo. Pero no es solo aire viciado y polvo lo que hay, notas cierta energía residual. Pesada, oscura y filosa, como caminar descalzo sobre un lugar donde sabes que hay vidrio roto.
 Alguien estuvo realizando magia oscura ahí abajo.
-# next
+# next: Te adentras en el sótano
 La trampilla dejaba al descubierto una escalera caracol de piedra, la misma se sentía húmeda al tacto, como infecta de humedad….o sudor.
 Una red extensa de telas de arañas dificultaba el camino. A medida que las arrancaban tus manos se ponían cada vez más ásperas.
 El descenso a la oscuridad, más largo de lo que esperaba, terminaba en una pequeña sala circular. Era difícil distinguir cuánto de ella era fruto del trabajo humano y cuánto una formación natural.
@@ -1548,7 +1550,7 @@ Llegas lo más cerca del borde que te permite tu coraje. Plantas los pies bien f
 === pozo_bajar ===
 Te preparas para bajar al pozo, en lo cual puede ser una de las peores decisiones de tu vida. Te cercioras tres veces que el nudo que ata la soga a la estatua este bien ajustado. Es muy curioso que toda una vida pueda depender de algo tan pequeño.
 Con mucho esfuerzo le das la espalda al pozo. Se te erizan los pelos de la nuca y durante unos segundos esperas que el pozo se estire como la trompa de un animal gigante y te engulla. Pero no pasa nada. Retrocedes unos pasos hasta llegar al borde del pozo y comenzás a bajar
-# next
+# next: Bajando
 Durante unos metros el pozo no es tan profundo, tus piernas tocan sin problema una de las paredes del pozo y sentís como si estarías caminando por la pared. Intentas llevar la cuenta para notar cuanto bajas. En tu cabeza los números se escuchan de forma clara y pausada "uno, dos, tres"
 En un momento el pozo se ensancha y tus pies patalean en el aire sin encontrar donde apoyar. Durante unos segundos tus brazos se sienten débiles, sin duda no están preparados para cargar con todo el peso de tu cuerpo. En tu mente explotan todo el tipo de puteadas posibles y perdés cualquier tipo de conteo que venias llevando.
 Solo estas vos, la soga y la oscuridad. Arriba tuyo se ve una pequeña luz que indica la salida de regreso a la habitación anterior, que parece tan lejana como una estrella en el cielo.
@@ -1565,11 +1567,12 @@ Morir de forma estúpida no va a rescatar a los chicos. Y si el Orfanato está a
 El ser humano tiene muchas ventajas. La transpiración, ser bípedos, los pulgares opuestos. Casi nadie nos gana como cazadores de resistencia. Pero moverse por una soga en mitad de la oscuridad, eso no es nuestro fuerte.
 Nunca te sentiste tan expuesto y vulnerable, como si la oscuridad fuese una gran presencia que te rodea.
 Entonces notas la luz abajo.
-# next
+# next: Pero no está sola…
 ...No es una luz, son varias. Ocho en total. De repente todas se prenden y apagan al unisono. Como si parpadearan.
 Entonces lo notas, no son luces. Son ojos. Cada ojo del tamaño de tu cabeza. Haces la cuenta tanto del proporcional y si bien, colgado de una cuerda en la oscuridad, tu matemática no es solida pero lo suficientemente buena como para darte cuenta que lo que hay ahi es gigante.
 Es entonces cuando eso empieza a reptar por la pared para llegar a tu lado
 # shake
+# next: Subir desesperadamente
 { fuerza >= 25:
     -> pozo_escape_exitoso
 - else:
@@ -1769,6 +1772,7 @@ Puteas por lo bajo. Pateas el cadáver de la araña a tus pies, y decidís segu�
 // =========================================================
 
 === boveda ===
+# next: Llegas a una gran bóveda
 # music:boveda_ambient
 Avanzas atento. Generalmente una característica de los monstros sobrenaturales que imitan insectos es que forman parte de una gran familia, no te extrañaría enterarte que tiene unos centenares de primos esperando en algún lugar de esta cueva.
 También existe la posibilidad de que un mago haya agrandado de alguna forma arañas normales, crees que no hay ninguna regla mágica que lo prohíbe, aunque confías que hay reglas de buen gusto y sentido común que disuadirían a la gente de hacer algo así.
@@ -1805,7 +1809,7 @@ Perdes minutos vitales usando el poco filo de la tela de araña de tus manos mie
 # next
 Llegas a la yugular. Nada. El mundo deja de existir a tu alrededor. No te importa la oscuridad de la cueva, las telas de araña ni las decenas (al menos) de monstruos que deben estar a acercándose en la oscuridad. Solo existen vos y este niño.
 Y no vas a dejar que se te muera
-# next
+# next: Comenzás a darle RCP
 Dar RCP no es tan fácil. Menos cuando todo el pecho del paciente está tapado por una gruesa capa de telas de araña. Es un esfuerzo físico considerable. Uno textualmente siente como se desgasta su vida para transferirla a la persona que recibe RCP.
 Los minutos dejan de tener sentido y el tiempo se cuenta solamente en las comprensiones que debes realizar y las insuflaciones que llevas adelante para ponerle aire en sus pulmones
 # next
@@ -2043,6 +2047,7 @@ No sé levanta mas
 // =========================================================
 
 === despues_combate ===
+# next: Después del combate
 # music:misterio_ambient
 La adrenalina tarda en salir de tu cuerpo. No te das cuenta pero están teniendo unos temblores involuntarios, la energía sigue activa y está reclamando acción.
 Lo correcto sería llamar a El Faro, informarle de la misión y pedir que envíen un equipo de limpieza (y alguien para que te lleve de vuelta a Costa Alegre, no estás es condición de manejar)
