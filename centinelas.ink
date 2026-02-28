@@ -118,21 +118,21 @@ Defensa arriba. Mentón abajo. Eso era todo el entrenamiento que tenía para el 
 El primer golpe pasó directo entre mis brazos y chocó en mi rostro. Dolor, humillación, el mundo se sentía como una calesita borracha.
 
 ¿En qué momento terminé en el piso?
-
+# next: Te golpean
 -> magia_confrontacion
 
 === magia_confrontacion ===
 # shake # flash_red # play_sfx:golpe
 Intenté ponerme en posición fetal. No sirvió. Cada golpe era una explosión de dolor que se expandía por todo mi ser. Mi cuerpo temblaba, todo su cableado estaba mal, la adrenalina me sobrecargaba pero no podía pelear ni tenía adónde correr. La única opción que me quedaba era seguir tirado en el piso esperando que todo termine rápido.
-
+# next: Otro golpe
 # shake # flash_red # play_sfx:golpe
 ¿De nuevo de pie? ¿Por qué? Solo escucho un pitido en un oído y de fondo los gritos roncos de mis compañeros de clase. Quieren sangre, son como animales carroñeros desesperados por alimentarse de mi dolor, de las sobras que les deje Jorge.
 
 Entre el mar de rostros está Julieta, llorando. Debería hacer algo.
-# next
+# next: No te distraigas
 # flash_red
 Mi sangre en el piso. Esperaba más, y más roja, menos espesa. Creo que estoy disociando pero está bien. Debo escapar de mi cuerpo. Mi cuerpo es para que Jorge haga lo que quiera.
-
+# next: Enojate. Deja de ser tan cobarde.
 Creo que fue un grito de Julieta lo que me devolvió a mi cuerpo. Que se vaya todo a la mierda, me voy a ir con gloria al menos.
 
 Extendí mi mano hacia Jorge en un intento de ¿parar sus golpes? ¿ahorcarlo? ¿mostrar que tenía espíritu de lucha?
@@ -173,7 +173,7 @@ Intento limpiarme la sangre en el pantalón pero no sirve para nada, solo logré
 Pasos arriba. Pesados. Irregulares.
 # next
 Dios, es… es…
-# next
+# next: No pienses en eso
 * [Debo subir por las llaves. Estoy casi seguro que están en la habitación de María y Esteban.] -> combate_subir
 * [Que se joda todo, yo solo quiero salir. Voy a saltar por una de las ventanas.] -> combate_ventana
 
@@ -190,9 +190,9 @@ Pero llego arriba de todo.
 
 # flash_red
 Lo veo por el rabillo del ojo. Su piel verdosa para camuflarse con el musgo y los tentáculos, húmedos y fuertes, abrazando el cadáver de lo que fue mi amigo.
-
+# next: Cierra los ojos
 PorfavorPorFavorPorFavor. No Quiero Morir.
-
+# next: Abrí los ojos y avanza
 Él está ahí pero no quiero mirarlo. Temo mirarlo y que sienta mis ojos recorriendo su cuerpo. Avanzo lentamente por el pasillo, como un ratón, como una presa. Amortigua mi avance el ruido de alimentación. De esa cosa comiéndose a mi amigo.
 # next
 Pero llego al cuarto de María y Esteban. Por suerte la puerta está abierta, esperándome.
@@ -234,12 +234,12 @@ Pero no importa. Mi corrida no tenía lógica. Era una huida hacia la nada. Atr�
 
 # shake
 Una raíz casi me hace perder el equilibrio. Trastabillo y siento sus ¿tentáculos? rozando el borde de mi camisa. Debo seguir. Puro instinto. Debo correr rápido.
-
+# next: Corre rápido!
 # shake # flash_red
 Pero no fue suficiente. Antes de darme cuenta estaba con la cabeza en el piso sufriendo una oleada de dolor que superó a la carga de adrenalina en mi cuerpo.
 
 Recordaba los gritos de dolor de mi amigo muriendo en el piso de arriba de la cabaña. Le temía a la muerte, le temía más al dolor. Pero simplemente no podía más.
-
+// TODO: crudo label "RUIDO DE DISPARO" — agregar SFX de disparo como evento al click
 # play_sfx:disparo # flash_yellow
 El ruido hizo eco por todo el bosque. La… cosa… chilló atrás mío. Sonó como estática de radio a todo volumen, como el ruido original del universo. Y sentí la tierra temblar abajo mío cuando su cuerpo cayó al piso.
 
@@ -278,7 +278,7 @@ En su biblioteca estaba "La Última Colección", donde se recopilaban las profec
 Bueno, dejemos de dar vueltas y pasemos a la acción.
 
 Entre las dos terrazas había una distancia de cinco metros. Llevábamos meses practicando para saltar esa distancia. Pero las prácticas habían sido sobre tierra, en cambio ahora teníamos una caída de 50 metros que hacía ver todo más real.
-
+# next: Tomar carrera y saltar
 # shake # play_sfx:aterrizaje
 Caí haciendo un escándalo sobre el techo. Julieta a mi lado lo hizo con un mayor nivel de gracia. Mientras yo era una bolsa de papas ella era una felina.
 
@@ -323,13 +323,13 @@ Esta habitación denota dinero. Dinero viejo, el que viene con estilo y reglas d
 \- Siempre decís lo mismo – su risa rebota por el lugar y te da temor que alguien la escuche.
 
 Mientras la parte racional de tu cerebro intenta forzar la caja fuerte, el resto empieza a pensar cómo gastar el dinero que todavía no conseguiste. Te imaginás tomando un daiquiri en algún lugar con arena blanca y aguas cristalinas mientras Julieta, por puro hábito, intenta estafar a algún turista gringo gordo y tonto.
-
+# next: A hacerse rico
 # play_sfx:caja_fuerte
 Una vez abierta la caja fuerte no te encontrás con oro o pilas de dólares. Solamente hay un paquete con (considerable) cantidad de cocaína, una pistola (agradecés tener guantes para no dejar tus huellas digitales en lo que seguramente es un arma asesina) y un pequeño relicario con la foto de quien suponés que es la madre del dueño de la mansión.
 
 # play_sfx:puerta
 Entonces escuchás la puerta abriéndose detrás de ti.
-
+# next: Te das vuelta
 -> conocimiento_confrontacion
 
 === conocimiento_biblioteca ===
@@ -351,7 +351,7 @@ Acto seguido empieza a sacar todos los libros de ese estante hasta que, a la par
 
 # play_sfx:puerta_secreta
 Un estante se mueve unos centímetros y deja una puerta al descubierto.
-
+# next: Misión completa
 La habitación es pequeña. Solo contiene un pequeño atril en el cual está colocada "La Última Colección" donde se recopilaban las profecías nunca publicadas de Solari Parravicini.
 
 El cuarto pequeño y de madera te hace acordar a un ataúd. Instintivamente te colocás delante de Julieta mientras pensás en la necesidad de buscar por trampas o alarmas secretas.
@@ -389,7 +389,7 @@ Estás encerrado en tu cuerpo, con tu miedo como único compañero de celda.
 Ayacucho Olavarría sale de tu campo de visión, ni siquiera podés mover tu ojo para ver adónde va. Tu vista está clavada en el marco de la puerta, ahora vacía, y en la nuca de Julieta.
 
 Lo escuchás caminar, canturrear algo, un poco de ruido de vidrio. La incertidumbre te vuelve loco, estás completamente consciente de que estás totalmente a su merced.
-
+# next
 -> conocimiento_final
 
 === conocimiento_final ===
@@ -402,17 +402,17 @@ Da una vuelta alrededor de Julieta, apreciándola como quien analiza comprar un 
 Luego se da vuelta y te mira con el mismo desprecio que se guarda para algo que se tira a la basura.
 
 \- Para ella se me ocurren un par de usos, pero vos no me aportás nada realmente…
-
+# next
 # play_sfx:magia_oscura
 De nuevo, sus manos hacen un firulete en el aire mientras sus labios se mueven. Las palabras no son procesadas por tu cerebro consciente, pero generan su efecto.
-
+// TODO: crudo label "EFECTO DE CAIDA / ROTURA / CRASHEO" — revisar VFX como evento al click
 # shake # flash_dark # play_sfx:crasheo
 Luego todo, simplemente… se rompe.
-
+# next
 No recordás mucho de lo que pasó después. Durante la mayor parte de un año estuviste ocupado volviendo a aprender cosas básicas. Como caminar y como hablar.
 
 Hasta tuvieron que volver a enseñarte cómo usar tus esfínteres.
-
+# next
 De Julieta no tuviste más noticias. En cuanto pudiste volver a usar tus dedos intentaste ponerte en contacto con amigos en común pero ella se desvaneció del mapa.
 
 Parece que los agentes de "El Faro" recorren rutinariamente los neuropsiquiátricos. A veces hay poca diferencia entre una esquizofrenia y haber corrido la cortina para ver el mundo sobrenatural que se esconde detrás.
