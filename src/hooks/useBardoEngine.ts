@@ -180,9 +180,11 @@ export function useBardoEngine({
         return willpowerActions.checkWillpower(threshold)
     }, [willpowerActions])
 
+    const willpowerValueRef = useRef(willpowerState.value)
+    willpowerValueRef.current = willpowerState.value
     const getWillpowerValue = useCallback((): number => {
-        return willpowerState.value
-    }, [willpowerState.value])
+        return willpowerValueRef.current
+    }, [])
 
     // ==================
     // Spider Infestation System (Non-blocking)
@@ -210,11 +212,12 @@ export function useBardoEngine({
             }
         }
         // Auto-select gate choice 0 after brief delay (Ink timing fix)
-        setTimeout(() => {
+        const tid = setTimeout(() => {
             if (makeChoiceRef.current) {
                 makeChoiceRef.current(0)
             }
         }, 2000)
+        pendingTimersRef.current.push(tid)
     }, [spiderInfestation.actions])
 
     const handleSpiderDifficulty = useCallback((difficulty: string) => {
@@ -288,26 +291,31 @@ export function useBardoEngine({
         // Flag: after this gate choice, auto-advance the transition gate too
         bossTransitionPendingRef.current = true
         // Auto-select the current phase's gate choice [→]
-        setTimeout(() => {
+        const tid = setTimeout(() => {
             if (makeChoiceRef.current) {
                 makeChoiceRef.current(0)
             }
         }, 800)
+        pendingTimersRef.current.push(tid)
     }, [bossController.actions, setGlobalVariable])
 
     // Boss phase 3 player death — auto-select gate choice to reach derrota
     const handleBossPlayerDeath = useCallback(() => {
         bossController.actions.playerDied()
         bossTransitionPendingRef.current = true
-        setTimeout(() => {
+        const tid = setTimeout(() => {
             if (makeChoiceRef.current) {
                 makeChoiceRef.current(0)
             }
         }, 1000)
+        pendingTimersRef.current.push(tid)
     }, [bossController.actions])
 
     // Track whether we're waiting for a transition gate auto-advance
     const bossTransitionPendingRef = useRef(false)
+
+    // Track pending auto-choice timeouts so they can be cleared on restart/unmount
+    const pendingTimersRef = useRef<ReturnType<typeof setTimeout>[]>([])
 
     // Auto-select gate choices [→] that appear in transition knots AFTER a phase completes.
     // We set bossTransitionPendingRef=true in handleBossPhaseComplete/handleBossPlayerDeath,
@@ -509,6 +517,8 @@ export function useBardoEngine({
 
     const restart = useCallback(() => {
         if (storyData && storyId) {
+            pendingTimersRef.current.forEach(clearTimeout)
+            pendingTimersRef.current = []
             clearVFX()
             stopMusic(false)
             gameSystems.resetGameSystems()
@@ -522,6 +532,8 @@ export function useBardoEngine({
     }, [storyData, storyId, clearVFX, stopMusic, gameSystems, willpowerActions, spiderInfestation.actions, handleArrebatadosStop, bossController.actions, resetStoryState, initStory])
 
     const backToStart = useCallback(() => {
+        pendingTimersRef.current.forEach(clearTimeout)
+        pendingTimersRef.current = []
         resetStoryState()
         clearVFX()
         stopMusic()

@@ -15,8 +15,6 @@ export default function OptionsModal({ isOpen, onClose }) {
         resetSettings,
     } = useSettings()
 
-    if (!isOpen) return null
-
     return (
         <AnimatePresence>
             {isOpen && (

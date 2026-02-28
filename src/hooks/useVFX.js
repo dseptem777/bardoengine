@@ -1,8 +1,21 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { parseVFXTag, VFX_TYPES } from '../config/vfxRegistry'
 
 export function useVFX(audioCallbacks = {}, vfxEnabled = true) {
     const { playSfx = null, playMusic = null, stopMusic = null } = audioCallbacks
+
+    const shakeTimerRef = useRef(null)
+    const flashTimerRef = useRef(null)
+    const flashIntervalRef = useRef(null)
+
+    // Cleanup all timers on unmount
+    useEffect(() => {
+        return () => {
+            if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current)
+            if (flashTimerRef.current) clearTimeout(flashTimerRef.current)
+            if (flashIntervalRef.current) clearInterval(flashIntervalRef.current)
+        }
+    }, [])
 
     const [vfxState, setVfxState] = useState({
         shake: false,
@@ -20,8 +33,9 @@ export function useVFX(audioCallbacks = {}, vfxEnabled = true) {
         switch (effect.type) {
             case VFX_TYPES.SHAKE:
                 if (vfxEnabled) {
+                    if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current)
                     setVfxState(prev => ({ ...prev, shake: true }))
-                    setTimeout(() => {
+                    shakeTimerRef.current = setTimeout(() => {
                         setVfxState(prev => ({ ...prev, shake: false }))
                     }, 500)
                 }
@@ -31,22 +45,25 @@ export function useVFX(audioCallbacks = {}, vfxEnabled = true) {
                 if (vfxEnabled) {
                     const { color } = effect
 
+                    // Clear any previous flash timers
+                    if (flashTimerRef.current) clearTimeout(flashTimerRef.current)
+                    if (flashIntervalRef.current) clearInterval(flashIntervalRef.current)
+
                     if (color === 'multi') {
-                        // Special multi-color flash sequence
                         const colors = ['red', 'blue', 'yellow', 'purple', 'green']
                         let i = 0
-                        const interval = setInterval(() => {
+                        flashIntervalRef.current = setInterval(() => {
                             setVfxState(prev => ({ ...prev, flash: colors[i % colors.length] }))
                             i++
                             if (i >= 5) {
-                                clearInterval(interval)
+                                clearInterval(flashIntervalRef.current)
+                                flashIntervalRef.current = null
                                 setVfxState(prev => ({ ...prev, flash: null }))
                             }
                         }, 100)
                     } else {
-                        // Single color flash
                         setVfxState(prev => ({ ...prev, flash: color }))
-                        setTimeout(() => {
+                        flashTimerRef.current = setTimeout(() => {
                             setVfxState(prev => ({ ...prev, flash: null }))
                         }, 400)
                     }

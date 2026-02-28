@@ -111,20 +111,23 @@ export default function BossPhaseOverlay({
 
         // Timer — 25 seconds to find the errata
         setErrataTimer(100)
+        const onDeathRef = onPlayerDeath
         errataTimerRef.current = setInterval(() => {
             setErrataTimer(prev => {
-                if (prev <= 0) {
+                const next = prev - (100 / 250) // 100% over 25 seconds at 100ms intervals
+                if (next <= 0) {
                     clearInterval(errataTimerRef.current)
+                    onDeathRef?.()
                     return 0
                 }
-                return prev - (100 / 250) // 100% over 25 seconds at 100ms intervals
+                return next
             })
         }, 100)
 
         return () => {
             if (errataTimerRef.current) clearInterval(errataTimerRef.current)
         }
-    }, [phase])
+    }, [phase, onPlayerDeath])
 
     // Infinite scroll: append more lines when near bottom
     const handleCorridorScroll = useCallback(() => {
@@ -169,6 +172,7 @@ export default function BossPhaseOverlay({
     const portalSpawnTimerRef = useRef(null)
     const portalMoveTimerRef = useRef(null)
     const portalIdRef = useRef(0)
+    const victoryFiredRef = useRef(false)
     const [damageFlash, setDamageFlash] = useState(false)
     const [missFlash, setMissFlash] = useState(false)
     const [collapseShake, setCollapseShake] = useState(false)
@@ -263,17 +267,24 @@ export default function BossPhaseOverlay({
         }
     }, [phase, phase3Ready, onPlayerDeath])
 
+    // Reset victory guard when entering phase 3
+    useEffect(() => {
+        if (phase === 'phase_3') victoryFiredRef.current = false
+    }, [phase])
+
     // Victory check
     useEffect(() => {
         if (phase !== 'phase_3') return
-        if (effectiveBossHp <= 0) {
-            clearInterval(viewportTimerRef.current)
-            clearInterval(portalSpawnTimerRef.current)
-            clearInterval(portalMoveTimerRef.current)
-            setTimeout(() => {
-                onPhaseComplete?.(portalsDamageDealt)
-            }, 300)
-        }
+        if (effectiveBossHp > 0 || victoryFiredRef.current) return
+
+        victoryFiredRef.current = true
+        clearInterval(viewportTimerRef.current)
+        clearInterval(portalSpawnTimerRef.current)
+        clearInterval(portalMoveTimerRef.current)
+        const tid = setTimeout(() => {
+            onPhaseComplete?.(portalsDamageDealt)
+        }, 300)
+        return () => clearTimeout(tid)
     }, [phase, effectiveBossHp, portalsDamageDealt, onPhaseComplete])
 
     const handlePortalClick = useCallback((e, portalId, top, left) => {
