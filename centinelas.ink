@@ -628,7 +628,7 @@ También notás que todas las recomendaciones en ese manual son de palabras que 
 # next
 Leés sobre la sabiduría de los anteriores Guardianes de El Faro. Aprendés mucho de sus aciertos y forma de hacer las cosas. Aprendés más de las notas al pie que dan cuenta de sus errores.
 # stat:conocimiento:+5
-# next
+# next: En la morgue
 -> en_la_morgue
 
 === ayuda_cabral ===
@@ -644,7 +644,7 @@ Es difícil. Eso es lo que pensás la tercera vez que Cabral te tira al piso. Pa
 # next
 Cabral te somete a una sesión de entrenamiento completa. Practican un par de golpes y terminan con una pequeña visita al campo de tiro. Te sentís más preparado para enfrentarte a lo que sea.
 # stat:fuerza:+5
-# next
+# next: En la morgue
 -> en_la_morgue
 
 === ayuda_shelley ===
@@ -661,7 +661,7 @@ Mary Shelley te clava una aguja llena de una sustancia de un verde antinatural q
 # next
 Luego del mareo inicial te sentís mejor que nunca. Tus sentidos se sienten más despejados y estás plenamente consciente de todo rincón de tu cuerpo. Te da la impresión de que toda tu vida estabas cargando un peso extra invisible y ya no está.
 # stat:magia:+5
-# next
+# next: A la morgue
 -> en_la_morgue
 
 === en_la_morgue ===
@@ -751,15 +751,15 @@ Aparte, esperás que en algún momento tengas la posibilidad de devolverle una p
 }
 # next
 Girás para irte y notás, sobre una de las camillas, una sierra médica. Una idea llega a tu cabeza. Con una mano se pueden hacer muchas cosas: El Faro tiene acceso a bases de datos donde tal vez encontraría información para identificar al NN. Y los Guardianes con mayor talento sobrenatural también podrían hacer algo. Si bien no sirve para una Mano de Gloria (la persona no fue ahorcada) tal vez se puede convocar al espíritu para obtener cierta información.
-# next
+# next: Tomas la sierra
 Agarrás fuerte la mano y empezás a serruchar. Por suerte no hay sangre ni gritos, pero la carne resulta más dura de lo que esperabas.
-# next
+# next: Corta, corta. Corta
 Estás por la mitad del camino, el hueso ya se asoma entre la carne. Tu camisa está completamente transpirada, resultó ser más trabajo del que esperabas.
 { not rapido:
     # play_sfx:disparos_escopeta # shake
     En el pasillo se escuchan tiros. Dos disparos de escopeta. Una pausa y un tercer disparo. No querés saber qué sobrevive a dos disparos de escopeta. Lo último que escuchás es al oficial de policía gritando y un ruido sordo. A pesar de que nunca lo viviste antes, algo animal dentro tuyo te dice que es el ruido de un cuerpo cayendo al piso. Los problemas se acercan.
 }
-# next
+# next: Un corte más
 Usás tu peso para darle más poder a la sierra y seguís cortando. El hueso cede (esperás nunca enfrentarte a alguien que use esta arma) y la mano está, valga la redundancia, en tu mano.
 Esperás que en El Faro puedan hacer algo con esto.
 # inv:add:mano_nn
@@ -779,7 +779,7 @@ Trepás por tu obra arquitectónica. Casi cuando estás por rozar la entrada al 
 # next
 Pero resiste. Un poco. Lo suficiente para que saques la rejilla del ducto y te metas por este. En cuanto la mitad de tu cuerpo ya está ahí, la pirámide colapsa en un montón de pedazos que se reparten por el piso de la morgue.
 Tus piernas quedan colgando, insitamente pataleando en el aire buscando dónde hacer pie.
-# next
+# next: Fuerza de brazo
 Clavás tus dedos en una pequeña grieta y hacés fuerza. Fuerza con tus brazos, fuerza con tu estómago. Toda la energía posible para meterte dentro del ducto. Transpirás y todo tu cuerpo tiembla por el shock de adrenalina.
 Pero lo lográs.
 # play_sfx:disparos_escopeta # shake
@@ -818,12 +818,12 @@ Con la mayor cautela que podés, sacás un par de fotos del ser mientras avanza 
 Dás una vuelta por la morgue pero no hay muchos lugares para esconderse. Abajo del escritorio parecía muy infantil.
 La idea llega condimentada con una pizca de ironía, el mejor lugar para esconderse es en los privados donde guardan los cadáveres.
 Solo esperás que no sea premonitorio.
-# next
+# next: Entras a uno
 El lugar es frío e incómodo, apenas tenés espacio para mover el cuerpo. "Seguramente los cadáveres no se quejan". Tenés que hacer fuerza para controlar una risa morbosa. Seguro es tu cerebro intentando bajarle la gravedad a la situación.
 # play_sfx:puerta_destruida
 # shake
 Alguien patea la puerta de la morgue y la manda volando contra el escritorio que se parte al medio. El monitor de la computadora cae de frente y emite un quejido electrónico. Qué suerte que no elegiste ese escondite.
-# next
+# next: Esperas
 Dejaste la puerta de tu escondite entreabierta. Intentás mirar qué es lo que entró a la morgue, qué cosa sobrevivió a unos tiros de escopeta. Por la rendija obtenés poca información. Es gigante (más de dos metros) y parece más robusto que un jugador de rugby, su espalda esconde algún tipo de joroba y sus manos no son humanas. Una piel gris y dura que termina en garras negras en lugar de dedos.
 # inv:add:descripcion_profundo
 ~ tiene_descripcion = true
@@ -856,7 +856,7 @@ Al menos recuperaste una mano, mejor ir para El Faro a ver qué pueden hacer con
 
 === escape_trampa ===
 Tenés unos minutos para improvisar una emboscada, sea lo que sea que está ahí afuera acaba de matar a un policía, así que es peligroso y no debés contenerte para atacar. Tu gran ventaja es que hay una sola puerta de entrada.
-# next
+# next: Preparas tu trampa
 {
   - stat_principal() == "magia":
     # play_sfx:magia_oscura
@@ -869,7 +869,7 @@ Tenés unos minutos para improvisar una emboscada, sea lo que sea que está ahí
   - else:
     Rebuscás entre las cosas que tenés en tu morral. Cables, pinzas y demás elementos para hacer un puente eléctrico. Conectás la manija de la puerta a la corriente eléctrica; quien ponga la mano ahí va a recibir inmediatamente 220 voltios.
 }
-# next
+# next: Se abre la puerta
 # play_sfx:puerta_destruida # shake
 El ser que entra es masivo, algo más de dos metros y con extremidades más gruesas que tu torso. Su piel es gris, sus ojos negros y sin expresión y sus dedos terminan en garras.
 Su boca es demasiado grande, con un mentón extendido hacia adelante, y aparenta tener una joroba.
@@ -944,7 +944,7 @@ Ya no es posible retroceder. Hay que seguir corriendo, nada más importa. Ganarl
 # music:misterio_ambient
 Entraste al edificio de El Faro y la Sra. Enríquez continuaba sentada en su escritorio tipeando en la máquina de escribir. Dejás la mano del NN sobre su escritorio, que estaba en una bolsa marrón que fue adquiriendo un tono negruzco.
 Enríquez te mira, mira al bulto apestoso que dejaste en su escritorio, y comienza a tipear con más fuerza la máquina de escribir.
-# next
+# next: De vuelta en El Faro
 — El Profesor te espera en su despacho — te dice con el mismo tono entrecortado con el cual golpea las teclas.
 Mientras subís a hablar con El Profesor, escuchás cómo tira un poco de desinfectante sobre su escritorio.
 # next
@@ -960,19 +960,19 @@ Mientras subís a hablar con El Profesor, escuchás cómo tira un poco de desinf
     El Profesor te escucha atentamente mientras fuma su pipa.
     — Sí, suena a una primera misión de campo — es su balance una vez que terminás.
 
-- # next
+- # next: Terminando la reunión
 El Profesor se para dejando en claro que la reunión ha terminado.
 — La mano fue una buena idea, vamos a poner a todos nuestros profesionales a buscar información sobre la posible víctima. Con lo poco que sabemos de las víctimas seguramente nos va a dar una punta para trabajar.
 { tiene_fotos or tiene_descripcion:
     # next
     — Profesor, ¿qué me puede decir de la criatura que me encontré? Es claro que la enviaron por el cuerpo y podría volver a encontrarla.
     — Sin duda era un Profundo — cuando El Profesor nota que esa respuesta por sí sola no basta decide continuar la explicación.
-    # next
+    # next: El Profesor se explaya
     — Existen lugares donde la frontera entre nuestro mundo y otros planos es más frágil. Lugares donde, con un poco de fuerza, se puede trasladar las barreras de la realidad. La mayoría de esos lugares fueron destruidos, sea de forma consciente o por la voracidad humana de extenderse en todas direcciones. Algunos pocos fueron contenidos, o al menos están vigilados.
-    # next
+    # next: Continúa monologando
     — El fondo del mar, por ser un clima altamente hostil, es uno de los pocos lugares donde esas barreras no están controladas. Los Profundos son seres de otros planos que pasaron esa barrera y viven en nuestro fondo marino. Durante generaciones se cruzaron, de forma voluntaria o no, con los humanos generando unos híbridos que pueden actuar en la superficie como sus embajadores, agentes y campeones.
     Atento al tipo de ritual, sospecho que los sacrificios humanos están relacionados con una secta que los adora o, al menos, busca algo de ellos.
-    # next
+    # next: Un consejo
     — Si te volvés a encontrar con una entidad así, intentá que abra la boca. Es imposible atravesar su piel pero, si le disparás dentro de la boca, son tan débiles como mojarritas.
 }
 # next
