@@ -28,6 +28,7 @@ export default function ApneaGame({ params = {}, onFinish }) {
 
     const gameLoopRef = useRef(null)
     const lastTimeRef = useRef(0)
+    const finishedRef = useRef(false)
 
     // Balance constants
     const O2_DRAIN = 14      // % per second while holding
@@ -52,6 +53,8 @@ export default function ApneaGame({ params = {}, onFinish }) {
     ]
 
     const finish = useCallback((success) => {
+        if (finishedRef.current) return
+        finishedRef.current = true
         setGameState(success ? 'win' : 'lose')
         cancelAnimationFrame(gameLoopRef.current)
         onFinish(success ? 1 : 0)

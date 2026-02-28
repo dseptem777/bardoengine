@@ -116,11 +116,13 @@ export default function Player({
     // Setup resize observer for auto-scrolling
     // Disabled during scroll friction — player must scroll manually
     const scrollFrictionActive = scrollFriction?.isActive
+    const scrollFrictionActiveRef = useRef(scrollFrictionActive)
+    scrollFrictionActiveRef.current = scrollFrictionActive
     useEffect(() => {
         if (!contentRef.current || !scrollContainerRef.current) return
 
         const resizeObserver = new ResizeObserver(() => {
-            if (scrollFrictionActive) return
+            if (scrollFrictionActiveRef.current) return
             if (isStickyRef.current && scrollContainerRef.current) {
                 scrollContainerRef.current.scrollTo({
                     top: scrollContainerRef.current.scrollHeight,

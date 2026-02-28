@@ -54,8 +54,6 @@ export default function SaveLoadModal({
         }
     }, [isOpen, activeTab])
 
-    if (!isOpen) return null
-
     const handleSave = () => {
         if (!saveName.trim()) return
         onSave(saveName.trim())
@@ -87,7 +85,9 @@ export default function SaveLoadModal({
 
     return (
         <AnimatePresence>
+            {isOpen && (
             <motion.div
+                key="save-load-backdrop"
                 className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -225,6 +225,7 @@ export default function SaveLoadModal({
                     </div>
                 </motion.div>
             </motion.div>
+            )}
         </AnimatePresence>
     )
 }

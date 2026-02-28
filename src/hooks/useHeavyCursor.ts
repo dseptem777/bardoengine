@@ -54,6 +54,7 @@ export function useHeavyCursor(config: HeavyCursorConfig) {
     // Animation state
     const animFrameRef = useRef<number | null>(null)
     const [isStraining, setIsStraining] = useState(false)
+    const isStratiningRef = useRef(false)
 
     // Create cursor element on mount
     useEffect(() => {
@@ -148,7 +149,8 @@ export function useHeavyCursor(config: HeavyCursorConfig) {
             // Detect straining (player fighting the resistance)
             const strainMagnitude = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
             const newIsStraining = strainMagnitude > 50 && resistanceLevel !== 'none'
-            if (newIsStraining !== isStraining) {
+            if (newIsStraining !== isStratiningRef.current) {
+                isStratiningRef.current = newIsStraining
                 setIsStraining(newIsStraining)
             }
 
@@ -189,7 +191,7 @@ export function useHeavyCursor(config: HeavyCursorConfig) {
                 cancelAnimationFrame(animFrameRef.current)
             }
         }
-    }, [enabled, resistanceLevel, magnetTarget, magnetStrength, handleMouseMove, isStraining])
+    }, [enabled, resistanceLevel, magnetTarget, magnetStrength, handleMouseMove])
 
     return {
         virtualPos,

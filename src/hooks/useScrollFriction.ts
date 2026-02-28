@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback, RefObject } from 'react'
+import { useEffect, useMemo, useCallback, useRef, RefObject } from 'react'
 
 /**
  * useScrollFriction - "Horda de Scroll" mechanic
@@ -63,7 +63,7 @@ export function useScrollFriction(config: ScrollFrictionConfig): ScrollFrictionR
     }, [isActive, arrebatadosCount])
 
     // Wheel event handler with friction applied + occasional pushback
-    const pushbackAccum = { current: 0 }
+    const pushbackAccum = useRef(0)
     const handleWheel = useCallback(
         (e: WheelEvent) => {
             e.preventDefault()

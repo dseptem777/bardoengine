@@ -374,22 +374,19 @@ export function useTagProcessor({
             const handled = gameSystems.processGameTag(tag)
 
             // Sync stat changes back to Ink variables so Ink conditionals work
+            // Read the actual clamped value from the stats hook (not re-parsed)
             if (handled && tag.trim().startsWith('stat:') && storyRef?.current) {
                 const parts = tag.trim().split(':')
                 if (parts.length >= 3) {
                     const statId = parts[1]
-                    const valueStr = parts[2]
-                    const delta = parseInt(valueStr, 10)
-                    if (!isNaN(delta)) {
-                        try {
-                            const currentInkValue = storyRef.current.variablesState[statId] ?? 0
-                            const isDelta = valueStr.startsWith('+') || valueStr.startsWith('-')
-                            const newValue = isDelta ? currentInkValue + delta : delta
-                            storyRef.current.variablesState[statId] = newValue
-                            console.log(`[Tags] Synced stat ${statId} = ${newValue} to Ink`)
-                        } catch (e) {
-                            console.warn(`[Tags] Could not sync stat ${statId} to Ink:`, e)
+                    try {
+                        const statInfo = gameSystems.getStatInfo(statId)
+                        if (statInfo) {
+                            storyRef.current.variablesState[statId] = statInfo.current
+                            console.log(`[Tags] Synced stat ${statId} = ${statInfo.current} to Ink`)
                         }
+                    } catch (e) {
+                        console.warn(`[Tags] Could not sync stat ${statId} to Ink:`, e)
                     }
                 }
             }

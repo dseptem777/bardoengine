@@ -5,7 +5,8 @@ export function generateInk(nodes, edges) {
     const getConnections = (sourceId) => {
         return edges
             .filter(e => e.source === sourceId)
-            .map(e => nodes.find(n => n.id === e.target));
+            .map(e => nodes.find(n => n.id === e.target))
+            .filter(Boolean);
     };
 
     nodes.forEach(node => {

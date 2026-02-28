@@ -20,8 +20,6 @@ const DIFFICULTY = {
     extreme: { interval: 700, speed: 90, webSpitInterval: 1200 },
 }
 
-let _spiderId = 0
-
 export function useSpiderInfestation() {
     // State
     const [active, setActive] = useState(false)
@@ -44,6 +42,8 @@ export function useSpiderInfestation() {
     const animFrameRef = useRef(null)
     const lastTimeRef = useRef(0)
     const statsRef = useRef({ fuerza: 0, magia: 0, sabiduria: 0 })
+    const spiderIdRef = useRef(0)
+    const pendingTimeoutsRef = useRef([])
 
     useEffect(() => { activeRef.current = active }, [active])
     useEffect(() => { spidersRef.current = spiders }, [spiders])
@@ -55,7 +55,7 @@ export function useSpiderInfestation() {
     // Spider Factory
     // ============================
     const createSpider = useCallback(() => {
-        _spiderId++
+        spiderIdRef.current++
         const vw = window.innerWidth
         const vh = window.innerHeight
 
@@ -75,7 +75,7 @@ export function useSpiderInfestation() {
         const size = sizeRoll < 0.4 ? 'small' : sizeRoll < 0.8 ? 'medium' : 'large'
 
         return {
-            id: _spiderId,
+            id: spiderIdRef.current,
             x, y,
             targetX: vw / 2,
             targetY: vh / 2,
@@ -166,7 +166,7 @@ export function useSpiderInfestation() {
                 spider.reachedTarget = true
                 updated = true
 
-                setTimeout(() => {
+                const tid = setTimeout(() => {
                     if (!activeRef.current) return
                     setSpiders(prev => prev.map(s => {
                         if (s.id === spider.id && s.alive) {
@@ -175,6 +175,7 @@ export function useSpiderInfestation() {
                         return s
                     }))
                 }, 1000 + Math.random() * 1500)
+                pendingTimeoutsRef.current.push(tid)
             }
         }
 
@@ -222,7 +223,10 @@ export function useSpiderInfestation() {
         const diff = config.difficulty || 'normal'
         console.log(`[Spider] START: difficulty=${diff}`)
 
-        _spiderId = 0
+        // Clear any orphaned timeouts from previous run
+        pendingTimeoutsRef.current.forEach(clearTimeout)
+        pendingTimeoutsRef.current = []
+        spiderIdRef.current = 0
         setDifficulty(diff)
         setSpiders([])
         setWebs([])
@@ -246,13 +250,16 @@ export function useSpiderInfestation() {
 
     const stopInfestation = useCallback(() => {
         console.log(`[Spider] STOP. Final kills: ${killCountRef.current}`)
+        pendingTimeoutsRef.current.forEach(clearTimeout)
+        pendingTimeoutsRef.current = []
         setActive(false)
         setShowingResult(false)
         setPhaseResult(null)
-        setTimeout(() => {
+        const tid = setTimeout(() => {
             setSpiders([])
             setWebs([])
         }, 500)
+        pendingTimeoutsRef.current.push(tid)
     }, [])
 
     const checkKills = useCallback((thresh) => {
@@ -266,11 +273,12 @@ export function useSpiderInfestation() {
         setActive(false)
 
         // Clear result after flash
-        setTimeout(() => {
+        const tid = setTimeout(() => {
             setShowingResult(false)
             setSpiders([])
             setWebs([])
         }, 1800)
+        pendingTimeoutsRef.current.push(tid)
 
         return survived
     }, [])
