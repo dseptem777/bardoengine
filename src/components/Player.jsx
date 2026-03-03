@@ -6,6 +6,7 @@ import { HeaderStats } from './StatsPanel'
 import BossHPIndicator from './BossHPIndicator'
 import ScrollGrabOverlay from './ScrollGrabOverlay'
 import BossPhaseOverlay from './BossPhaseOverlay'
+import { version as engineVersion } from '../../package.json'
 
 export default function Player({
     text,
@@ -295,7 +296,7 @@ export default function Player({
                             className="text-bardo-accent text-sm tracking-wider shrink-0"
                             style={{ fontFamily: 'var(--bardo-font-mono)' }}
                         >
-                            {isMobile ? 'BARDO' : 'BARDO ENGINE v0.9.0'}
+                            {isMobile ? 'BARDO' : `BARDO ENGINE v${engineVersion}`}
                         </h1>
                         {/* Mobile: value stats inline in header */}
                         {isMobile && headerStatsProps && (

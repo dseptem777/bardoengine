@@ -1,3 +1,5 @@
+import { version as engineVersion } from '../../package.json'
+
 export default function StorySelector({ stories, onSelect, hasSave, onOpenEditor }) {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-4 relative">
@@ -7,7 +9,7 @@ export default function StorySelector({ stories, onSelect, hasSave, onOpenEditor
                     BARDO<span className="text-bardo-text">ENGINE</span>
                 </h1>
                 <p className="font-mono text-bardo-muted text-sm">
-                    Motor de Aventuras Interactivas v1.0
+                    Motor de Aventuras Interactivas v{engineVersion}
                 </p>
             </div>
 
