@@ -181,6 +181,9 @@ export function HeaderStats({ stats, statsConfig, getAllStatsInfo }) {
                         <span className="font-bold" style={{ color }}>
                             {isKarmaStyle ? displayValue : value}
                         </span>
+                        {!isKarmaStyle && stat.max != null && (
+                            <span className="text-gray-600">/{stat.max}</span>
+                        )}
                     </span>
                 )
             })}
@@ -263,6 +266,9 @@ function StatValue({ stat, value }) {
             >
                 {isKarmaStyle ? displayValue : value}
             </span>
+            {!isKarmaStyle && stat.max != null && (
+                <span className="font-mono text-gray-600 text-xs">/{stat.max}</span>
+            )}
         </motion.div>
     )
 }
