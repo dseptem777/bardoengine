@@ -415,7 +415,38 @@ export function useBardoEngine({
         clearVFX()
         const { tags } = rawSpawnAtKnot(knotName, variables)
         processTags(tags)
-    }, [story, clearVFX, rawSpawnAtKnot, processTags])
+
+        // Sync any stat variables back to React state
+        syncStatsFromVariables(variables)
+    }, [story, clearVFX, rawSpawnAtKnot, processTags, gameSystems])
+
+    // Debug: set variables without spawning — updates Ink + syncs stats visually
+    const debugSetVariables = useCallback((variables: Record<string, any>) => {
+        if (!story) return
+
+        for (const [key, val] of Object.entries(variables)) {
+            try {
+                setGlobalVariable(key, val)
+            } catch (e) {
+                console.warn(`[Debug] Could not set variable ${key}:`, e)
+            }
+        }
+
+        syncStatsFromVariables(variables)
+    }, [story, setGlobalVariable, gameSystems])
+
+    // Helper: sync changed variables to useStats React state if they match stat IDs
+    function syncStatsFromVariables(variables: Record<string, any>) {
+        if (!gameSystems.statsEnabled) return
+        const statDefs = gameSystems.statsConfig?.definitions || []
+        const statIds = new Set(statDefs.map((d: any) => d.id))
+
+        for (const [key, val] of Object.entries(variables)) {
+            if (statIds.has(key) && typeof val === 'number') {
+                gameSystems.setStat(key, val)
+            }
+        }
+    }
 
     // Keep refs updated
     continueStoryRef.current = continueStory
@@ -614,12 +645,13 @@ export function useBardoEngine({
         commitInput,
         // Debug
         spawnAtKnot,
+        debugSetVariables,
         getKnotList,
         getVariables,
     }), [
         initStory, continueStory, makeChoice, restart, backToStart, finishGame,
         newGame, continueGame, loadSave, manualSave, handleMinigameStart, commitInput,
-        spawnAtKnot, getKnotList, getVariables
+        spawnAtKnot, debugSetVariables, getKnotList, getVariables
     ])
 
     const subsystems = useMemo(() => ({

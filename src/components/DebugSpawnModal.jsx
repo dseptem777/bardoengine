@@ -9,7 +9,8 @@ export default function DebugSpawnModal({
     onClose,
     knots = [],
     variables = {},
-    onSpawn
+    onSpawn,
+    onSaveVariables
 }) {
     const [search, setSearch] = useState('')
     const [selectedKnot, setSelectedKnot] = useState('')
@@ -46,18 +47,28 @@ export default function DebugSpawnModal({
         setEditedVars(prev => ({ ...prev, [key]: parsed }))
     }
 
-    const handleSpawn = () => {
-        if (!selectedKnot) return
-
-        // Only send variables that were changed
+    const getChangedVars = () => {
         const changedVars = {}
         for (const [key, val] of Object.entries(editedVars)) {
             if (val !== variables[key]) {
                 changedVars[key] = val
             }
         }
+        return changedVars
+    }
 
-        onSpawn(selectedKnot, changedVars)
+    const hasChangedVars = Object.keys(getChangedVars()).length > 0
+
+    const handleSpawn = () => {
+        if (!selectedKnot) return
+        onSpawn(selectedKnot, getChangedVars())
+        onClose()
+    }
+
+    const handleSaveVars = () => {
+        const changed = getChangedVars()
+        if (Object.keys(changed).length === 0) return
+        onSaveVariables?.(changed)
         onClose()
     }
 
@@ -205,6 +216,19 @@ export default function DebugSpawnModal({
                                     className="px-4 py-2 text-sm font-mono text-gray-400 hover:text-white transition-colors"
                                 >
                                     Cancelar
+                                </button>
+                                <button
+                                    onClick={handleSaveVars}
+                                    disabled={!hasChangedVars}
+                                    className={`
+                                        px-5 py-2 text-sm font-mono font-bold tracking-wider border-2 rounded transition-all
+                                        ${hasChangedVars
+                                            ? 'border-emerald-500 text-emerald-400 hover:bg-emerald-500 hover:text-black'
+                                            : 'border-gray-700 text-gray-600 cursor-not-allowed'
+                                        }
+                                    `}
+                                >
+                                    GUARDAR
                                 </button>
                                 <button
                                     onClick={handleSpawn}

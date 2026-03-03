@@ -600,6 +600,9 @@ function AppContent({ onStorySelect }) {
                     actions.spawnAtKnot(knotName, vars)
                     setShowDebugSpawn(false)
                 }}
+                onSaveVariables={(vars) => {
+                    actions.debugSetVariables(vars)
+                }}
             />
 
             {/* Bardo Editor Overlay - Only visible in Story Selector view */}
