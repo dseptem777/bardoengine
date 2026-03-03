@@ -452,6 +452,25 @@ export function useBardoEngine({
     continueStoryRef.current = continueStory
 
     // ==================
+    // Bidirectional stat sync: React stats → Ink variables
+    // ==================
+    useEffect(() => {
+        if (!story || !gameSystems.statsEnabled) return
+
+        const statDefs = gameSystems.statsConfig?.definitions || []
+        for (const def of statDefs) {
+            const value = gameSystems.stats[def.id]
+            if (value !== undefined) {
+                try {
+                    setGlobalVariable(def.id, value)
+                } catch (e) {
+                    // Variable may not exist in Ink, that's ok
+                }
+            }
+        }
+    }, [story, gameSystems.stats, gameSystems.statsEnabled, gameSystems.statsConfig, setGlobalVariable])
+
+    // ==================
     // Story Initialization Wrapper
     // ==================
 
