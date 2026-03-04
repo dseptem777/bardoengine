@@ -17,6 +17,12 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
     const [history, setHistory] = useState([]);
     const [compileError, setCompileError] = useState(null);
 
+    // Variable Inspector state
+    const [showVarPanel, setShowVarPanel] = useState(false);
+    const [inkVariables, setInkVariables] = useState({});
+    const [changedVars, setChangedVars] = useState(new Set());
+    const prevVarsRef = useRef({});
+
     // Use ref for processTagsForNode to avoid stale closures in callbacks
     const processTagsRef = useRef(null);
     const autoStartedRef = useRef(false);
@@ -27,6 +33,43 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
         playMusic: (id) => console.log('[Preview Music]', id),
         stopMusic: () => console.log('[Preview Stop Music]')
     });
+
+    // Read all variables from the inkjs story and detect changes
+    const snapshotVariables = useCallback((story) => {
+        if (!story?.variablesState) return;
+        const vars = {};
+        try {
+            // Enumerate all global variables from the internal map
+            const globalVars = story.variablesState._globalVariables;
+            if (globalVars && typeof globalVars.forEach === 'function') {
+                globalVars.forEach((value, name) => {
+                    // Read through the public accessor to get the JS value
+                    vars[name] = story.variablesState[name];
+                });
+            }
+        } catch (e) {
+            console.warn('[Preview] Could not read variables:', e.message);
+            return;
+        }
+
+        // Detect which variables changed
+        const prev = prevVarsRef.current;
+        const changed = new Set();
+        for (const key of Object.keys(vars)) {
+            if (prev[key] !== vars[key]) {
+                changed.add(key);
+            }
+        }
+
+        prevVarsRef.current = vars;
+        setInkVariables(vars);
+        setChangedVars(changed);
+
+        // Clear change highlights after animation duration
+        if (changed.size > 0) {
+            setTimeout(() => setChangedVars(new Set()), 1200);
+        }
+    }, []);
 
     // Minigame result handler — uses ref to avoid stale closure
     const handleMinigameResult = useCallback((result) => {
@@ -51,8 +94,9 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
             setCanContinue(story.canContinue);
             setIsEnded(!story.canContinue && story.currentChoices.length === 0);
             setHistory(prev => [...prev, { text: nextText, type: 'text' }]);
+            snapshotVariables(story);
         }
-    }, []);
+    }, [snapshotVariables]);
 
     // Minigame Controller
     const minigameController = useMinigameController(handleMinigameResult);
@@ -155,11 +199,13 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
             setText(firstText);
             syncSimState(story);
             setHistory([{ text: firstText, type: 'text' }]);
+            prevVarsRef.current = {};
+            snapshotVariables(story);
         } catch (err) {
             setCompileError(err.message || 'Failed to compile Ink');
             simulatorRef.current = null;
         }
-    }, [nodes, edges, variables, processTagsForNode, minigameController, syncSimState, drainText]);
+    }, [nodes, edges, variables, processTagsForNode, minigameController, syncSimState, drainText, snapshotVariables]);
 
     useEffect(() => {
         initStory();
@@ -175,7 +221,8 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
         setText(nextText);
         syncSimState(story);
         setHistory(prev => [...prev, { text: nextText, type: 'text' }]);
-    }, [processTagsForNode, clearVFX, minigameController.isPlaying, syncSimState, drainText]);
+        snapshotVariables(story);
+    }, [processTagsForNode, clearVFX, minigameController.isPlaying, syncSimState, drainText, snapshotVariables]);
 
     const handleChoice = useCallback((index) => {
         const story = simulatorRef.current;
@@ -194,7 +241,8 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
             { text: `> ${choiceText}`, type: 'choice' },
             { text: nextText, type: 'text' }
         ]);
-    }, [choices, processTagsForNode, clearVFX, minigameController.isPlaying, syncSimState, drainText]);
+        snapshotVariables(story);
+    }, [choices, processTagsForNode, clearVFX, minigameController.isPlaying, syncSimState, drainText, snapshotVariables]);
 
     const handleBack = useCallback(() => {
         const story = simulatorRef.current;
@@ -212,7 +260,8 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
             setText(restoredText);
         }
         syncSimState(story);
-    }, [processTagsForNode, clearVFX, minigameController.isPlaying, syncSimState, drainText]);
+        snapshotVariables(story);
+    }, [processTagsForNode, clearVFX, minigameController.isPlaying, syncSimState, drainText, snapshotVariables]);
 
     // Compile error view
     if (compileError) {
@@ -293,12 +342,26 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
                     </button>
                 </div>
 
-                <button
-                    onClick={onClose}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#282e39] text-[#9da6b9] hover:text-white hover:bg-red-500/20 hover:text-red-500 transition-all"
-                >
-                    <span className="material-symbols-outlined">close</span>
-                </button>
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => setShowVarPanel(prev => !prev)}
+                        className={`h-8 px-3 flex items-center gap-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
+                            showVarPanel
+                                ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                                : 'bg-[#282e39] text-[#9da6b9] hover:text-white'
+                        }`}
+                        title="Toggle variable inspector"
+                    >
+                        <span className="material-symbols-outlined text-sm">data_object</span>
+                        <span className="text-[10px]">Vars</span>
+                    </button>
+                    <button
+                        onClick={onClose}
+                        className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#282e39] text-[#9da6b9] hover:text-white hover:bg-red-500/20 hover:text-red-500 transition-all"
+                    >
+                        <span className="material-symbols-outlined">close</span>
+                    </button>
+                </div>
             </div>
 
             {/* Flash Overlay */}
@@ -318,19 +381,77 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
                 showResultScreen={true}
             />
 
-            {/* Simulated Player */}
-            <div className={`flex-1 relative overflow-hidden transition-transform ${vfxState.shake ? 'animate-shake' : ''}`}>
-                <Player
-                    text={text}
-                    choices={choices}
-                    canContinue={canContinue}
-                    isEnded={isEnded}
-                    onContinue={handleContinue}
-                    onChoice={handleChoice}
-                    onRestart={initStory}
-                    onBack={onClose}
-                    typewriterDelay={20}
-                />
+            {/* Main content area: Player + Variable Inspector */}
+            <div className="flex-1 flex relative overflow-hidden">
+                {/* Simulated Player */}
+                <div className={`flex-1 relative overflow-hidden transition-transform ${vfxState.shake ? 'animate-shake' : ''}`}>
+                    <Player
+                        text={text}
+                        choices={choices}
+                        canContinue={canContinue}
+                        isEnded={isEnded}
+                        onContinue={handleContinue}
+                        onChoice={handleChoice}
+                        onRestart={initStory}
+                        onBack={onClose}
+                        typewriterDelay={20}
+                    />
+                </div>
+
+                {/* Variable Inspector Sidebar */}
+                {showVarPanel && (
+                    <div className="w-64 bg-[#101622] border-l border-[#282e39] flex flex-col shrink-0 overflow-hidden">
+                        <div className="h-10 bg-[#1c1f27] border-b border-[#282e39] flex items-center justify-between px-3 shrink-0">
+                            <span className="text-[#9da6b9] text-[10px] font-bold uppercase tracking-wider">Variables</span>
+                            <span className="text-[#565e70] text-[10px]">
+                                {Object.keys(inkVariables).length}
+                            </span>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-2">
+                            {Object.keys(inkVariables).length === 0 ? (
+                                <div className="text-[#565e70] text-xs text-center mt-8">
+                                    No variables defined
+                                </div>
+                            ) : (
+                                <div className="space-y-0.5">
+                                    {Object.entries(inkVariables)
+                                        .sort(([a], [b]) => a.localeCompare(b))
+                                        .map(([name, value]) => {
+                                            const isChanged = changedVars.has(name);
+                                            const valueType = typeof value;
+                                            // Color by type: numbers=cyan, strings=green, booleans=amber
+                                            let valueColorClass = 'text-[#9da6b9]';
+                                            if (valueType === 'number') valueColorClass = 'text-cyan-400';
+                                            else if (valueType === 'string') valueColorClass = 'text-green-400';
+                                            else if (valueType === 'boolean') valueColorClass = 'text-amber-400';
+
+                                            // Format display value
+                                            let displayValue = String(value);
+                                            if (valueType === 'boolean') displayValue = value ? 'true' : 'false';
+                                            else if (valueType === 'string') displayValue = `"${value}"`;
+
+                                            return (
+                                                <div
+                                                    key={name}
+                                                    className="flex items-center justify-between px-2 py-1 rounded text-xs font-mono transition-colors duration-1000"
+                                                    style={{
+                                                        backgroundColor: isChanged ? 'rgba(250, 204, 21, 0.15)' : 'transparent',
+                                                    }}
+                                                >
+                                                    <span className="text-[#9da6b9] truncate mr-2" title={name}>
+                                                        {name}
+                                                    </span>
+                                                    <span className={`${valueColorClass} shrink-0 font-semibold`} title={displayValue}>
+                                                        {displayValue}
+                                                    </span>
+                                                </div>
+                                            );
+                                        })}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
