@@ -22,6 +22,7 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
     const [inkVariables, setInkVariables] = useState({});
     const [changedVars, setChangedVars] = useState(new Set());
     const prevVarsRef = useRef({});
+    const highlightTimerRef = useRef(null);
 
     // Use ref for processTagsForNode to avoid stale closures in callbacks
     const processTagsRef = useRef(null);
@@ -67,7 +68,8 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
 
         // Clear change highlights after animation duration
         if (changed.size > 0) {
-            setTimeout(() => setChangedVars(new Set()), 1200);
+            clearTimeout(highlightTimerRef.current);
+            highlightTimerRef.current = setTimeout(() => setChangedVars(new Set()), 1200);
         }
     }, []);
 
@@ -102,6 +104,11 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
     const minigameController = useMinigameController(handleMinigameResult);
 
     // Auto-start minigame when queued with autoStart (guarded against double-fire)
+    // Cleanup highlight timer on unmount
+    useEffect(() => {
+        return () => clearTimeout(highlightTimerRef.current);
+    }, []);
+
     useEffect(() => {
         if (minigameController.isPending && minigameController.config?.autoStart && !autoStartedRef.current) {
             autoStartedRef.current = true;
