@@ -12,6 +12,7 @@ import VariablesPanel from './components/VariablesPanel';
 import ConfigPanel from './components/ConfigPanel';
 import { generateInk, generateHubRegistry, validateGraph } from './utils/generateInk';
 import { useEditorState } from './hooks/useEditorState';
+import ContextMenu from './components/ContextMenu';
 
 // Node ID counter for new nodes
 let idCounter = Date.now();
@@ -41,6 +42,7 @@ export default function BardoEditor({ onClose }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [chapterFilter, setChapterFilter] = useState(''); // '' = show all
     const [showWarnings, setShowWarnings] = useState(false);
+    const [contextMenu, setContextMenu] = useState(null); // { x, y, type, nodeId?, nodeType?, edgeId? }
 
     // Graph validation warnings (debounced via useMemo)
     const graphWarnings = useMemo(() => {
@@ -249,6 +251,31 @@ export default function BardoEditor({ onClose }) {
         setSelectedEdgeId(null);
     }, []);
 
+    // Duplicate a node (Ctrl+D or context menu) — must be before keyboard shortcuts effect
+    const handleDuplicateNode = useCallback((nodeId) => {
+        const targetId = nodeId || selectedNodeId;
+        if (!targetId) return;
+        const original = nodes.find(n => n.id === targetId);
+        if (!original) return;
+
+        const newId = getId();
+        const newNode = {
+            id: newId,
+            type: 'passage',
+            position: { x: original.position.x + 50, y: original.position.y + 50 },
+            data: {
+                ...original.data,
+                label: (original.data.label || 'Untitled') + ' (copy)',
+                isBurned: undefined,
+            },
+        };
+        if (original.data.choices) {
+            newNode.data.choices = original.data.choices.map(c => ({ ...c }));
+        }
+        setNodes(nds => nds.concat(newNode));
+        setSelectedNodeId(newId);
+    }, [selectedNodeId, nodes, setNodes]);
+
     // Keyboard shortcuts
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -271,6 +298,9 @@ export default function BardoEditor({ onClose }) {
                 e.preventDefault();
                 setSearchOpen(prev => !prev);
                 setSearchQuery('');
+            } else if (e.ctrlKey && e.key === 'd') {
+                e.preventDefault();
+                handleDuplicateNode();
             } else if ((e.key === 'Delete' || e.key === 'Backspace') && selectedEdgeId) {
                 e.preventDefault();
                 handleDeleteEdge();
@@ -279,7 +309,7 @@ export default function BardoEditor({ onClose }) {
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [undo, redo, saveProject, selectedEdgeId, handleDeleteEdge]);
+    }, [undo, redo, saveProject, selectedEdgeId, handleDeleteEdge, handleDuplicateNode]);
 
     // Close export menu on outside click
     useEffect(() => {
@@ -383,6 +413,66 @@ export default function BardoEditor({ onClose }) {
         setEdges((eds) => eds.filter((edge) => edge.source !== selectedNodeId && edge.target !== selectedNodeId));
         setSelectedNodeId(null);
     }, [selectedNodeId, setNodes, setEdges]);
+
+    // Convert node type (hub <-> knot)
+    const handleConvertType = useCallback((nodeId, newType) => {
+        setNodes(nds => nds.map(n => {
+            if (n.id === nodeId) {
+                return { ...n, data: { ...n.data, type: newType } };
+            }
+            return n;
+        }));
+    }, [setNodes]);
+
+    // Insert a node template at position
+    const handleInsertTemplate = useCallback((template, position) => {
+        const { nodes: tplNodes, edges: tplEdges } = template.build(position);
+        setNodes(nds => [...nds, ...tplNodes]);
+        setEdges(eds => [...eds, ...tplEdges]);
+    }, [setNodes, setEdges]);
+
+    // Context menu handlers
+    const handleNodeContextMenu = useCallback((event, node) => {
+        event.preventDefault();
+        setContextMenu({ x: event.clientX, y: event.clientY, type: 'node', nodeId: node.id, nodeType: node.data?.type || 'knot' });
+    }, []);
+
+    const handleEdgeContextMenu = useCallback((event, edge) => {
+        event.preventDefault();
+        setContextMenu({ x: event.clientX, y: event.clientY, type: 'edge', edgeId: edge.id });
+    }, []);
+
+    const handlePaneContextMenu = useCallback((event) => {
+        event.preventDefault();
+        setContextMenu({ x: event.clientX, y: event.clientY, type: 'pane' });
+    }, []);
+
+    const screenToFlow = useCallback((pos) => {
+        if (!rfInstance) return { x: 400, y: 400 };
+        return rfInstance.project(pos);
+    }, [rfInstance]);
+
+    // Edit node by simulating double-click (context menu "Edit")
+    const handleEditNode = useCallback((nodeId) => {
+        const nodeEl = document.querySelector(`[data-id="${nodeId}"]`);
+        if (nodeEl) {
+            const event = new MouseEvent('dblclick', { bubbles: true });
+            nodeEl.dispatchEvent(event);
+        }
+    }, []);
+
+    // Delete specific node by ID (context menu)
+    const handleDeleteSpecificNode = useCallback((nodeId) => {
+        setNodes(nds => nds.filter(n => n.id !== nodeId));
+        setEdges(eds => eds.filter(e => e.source !== nodeId && e.target !== nodeId));
+        if (selectedNodeId === nodeId) setSelectedNodeId(null);
+    }, [setNodes, setEdges, selectedNodeId]);
+
+    // Delete specific edge by ID (context menu)
+    const handleDeleteSpecificEdge = useCallback((edgeId) => {
+        setEdges(eds => eds.filter(e => e.id !== edgeId));
+        if (selectedEdgeId === edgeId) setSelectedEdgeId(null);
+    }, [setEdges, selectedEdgeId]);
 
     const handleImportFile = async (e) => {
         const file = e.target.files?.[0];
@@ -717,9 +807,12 @@ export default function BardoEditor({ onClose }) {
                         onConnectEnd={onConnectEnd}
                         onSelectionChange={handleSelectionChange}
                         onEdgeClick={handleEdgeClick}
-                        onPaneClick={handlePaneClick}
+                        onPaneClick={(e) => { handlePaneClick(e); setContextMenu(null); }}
                         onInit={setRfInstance}
                         onDoubleClick={handlePaneDoubleClick}
+                        onNodeContextMenu={handleNodeContextMenu}
+                        onEdgeContextMenu={handleEdgeContextMenu}
+                        onPaneContextMenu={handlePaneContextMenu}
                         nodeTypes={nodeTypes}
                         fitView
                         minZoom={0.05}
@@ -758,6 +851,22 @@ export default function BardoEditor({ onClose }) {
                             maskColor="rgba(16, 22, 34, 0.8)"
                         />
                     </ReactFlow>
+
+                    {/* Context Menu */}
+                    {contextMenu && (
+                        <ContextMenu
+                            {...contextMenu}
+                            onClose={() => setContextMenu(null)}
+                            onEdit={handleEditNode}
+                            onDuplicate={handleDuplicateNode}
+                            onDelete={handleDeleteSpecificNode}
+                            onDeleteEdge={handleDeleteSpecificEdge}
+                            onConvertType={handleConvertType}
+                            onAddNode={handleAddNode}
+                            onInsertTemplate={handleInsertTemplate}
+                            screenToFlow={screenToFlow}
+                        />
+                    )}
 
                     {/* Floating Info */}
                     <div className="absolute top-8 left-1/2 -translate-x-1/2 text-center pointer-events-none opacity-50">
