@@ -13,6 +13,7 @@ import ConfigPanel from './components/ConfigPanel';
 import { generateInk, generateHubRegistry, validateGraph } from './utils/generateInk';
 import { useEditorState } from './hooks/useEditorState';
 import ContextMenu from './components/ContextMenu';
+import { EXAMPLE_PROJECT } from './utils/exampleProject';
 
 // Node ID counter for new nodes
 let idCounter = Date.now();
@@ -486,6 +487,15 @@ export default function BardoEditor({ onClose }) {
         e.target.value = '';
     };
 
+    const handleLoadExample = useCallback(() => {
+        if (isDirty && !confirm('You have unsaved changes. Load example anyway?')) return;
+        setStoryTitle(EXAMPLE_PROJECT.title);
+        setNodes(EXAMPLE_PROJECT.nodes);
+        setEdges(EXAMPLE_PROJECT.edges);
+        setVariables(EXAMPLE_PROJECT.variables || []);
+        setProjectConfig(EXAMPLE_PROJECT.config);
+    }, [isDirty, setNodes, setEdges, setStoryTitle, setVariables, setProjectConfig]);
+
     const handleCopyInk = async () => {
         await copyInk();
         setCopyFeedback(true);
@@ -650,6 +660,11 @@ export default function BardoEditor({ onClose }) {
                     {/* Import */}
                     <button onClick={() => fileInputRef.current?.click()} className="flex items-center gap-2 rounded-lg h-9 px-3 bg-[#1c1f27] text-[#9da6b9] hover:text-white hover:bg-[#282e39] border border-[#282e39] transition-all text-sm" title="Import Project">
                         <span className="material-symbols-outlined text-sm">upload_file</span>
+                    </button>
+
+                    {/* Load Example */}
+                    <button onClick={handleLoadExample} className="flex items-center gap-2 rounded-lg h-9 px-3 bg-[#1c1f27] text-[#9da6b9] hover:text-white hover:bg-[#282e39] border border-[#282e39] transition-all text-sm" title="Load Example Project (The Haunted Mansion)">
+                        <span className="material-symbols-outlined text-sm">menu_book</span>
                     </button>
 
                     {/* Undo */}
@@ -1068,26 +1083,6 @@ export default function BardoEditor({ onClose }) {
                                     knot
                                 </button>
                             </div>
-
-                            {/* Hub Rules */}
-                            {selectedNode.data.type === 'hub' && (
-                                <div className="bg-red-500/5 p-3 rounded-xl border border-red-500/20">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <span className="material-symbols-outlined text-red-500 text-sm">local_fire_department</span>
-                                        <span className="text-red-500 text-[10px] font-bold uppercase">Exclusion Logic</span>
-                                    </div>
-                                    <textarea
-                                        className="w-full bg-[#0b0c10] border border-[#282e39] rounded-lg p-2 text-xs font-mono text-green-400 focus:outline-none focus:border-red-500/50 min-h-[80px]"
-                                        value={JSON.stringify(selectedNode.data.burnRules || [], null, 2)}
-                                        onChange={(e) => {
-                                            try {
-                                                const rules = JSON.parse(e.target.value);
-                                                updateNodeData('burnRules', rules);
-                                            } catch (e) { }
-                                        }}
-                                    />
-                                </div>
-                            )}
 
                             {/* Toggle Burned (For Knots) */}
                             {selectedNode.data.type !== 'hub' && (
