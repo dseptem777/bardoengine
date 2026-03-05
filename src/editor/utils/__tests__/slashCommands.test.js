@@ -74,3 +74,36 @@ describe('SLASH_COMMANDS', () => {
         expect(SLASH_COMMANDS.length).toBeGreaterThanOrEqual(30);
     });
 });
+
+describe('SLASH_COMMANDS templates', () => {
+    it('minigame commands include all default params', () => {
+        const qte = SLASH_COMMANDS.find(c => c.cmd === 'minigame_qte');
+        expect(qte.tag).toContain('key=');
+        expect(qte.tag).toContain('timeout=');
+        expect(qte.tag).toContain('autostart=');
+    });
+
+    it('willpower_start includes speed default', () => {
+        const wp = SLASH_COMMANDS.find(c => c.cmd === 'willpower_start');
+        expect(wp.tag).toContain('normal');
+        expect(wp.hasValue).toBe(false);
+    });
+
+    it('keymash includes target default', () => {
+        const km = SLASH_COMMANDS.find(c => c.cmd === 'keymash');
+        expect(km.tag).toContain('30');
+        expect(km.hasValue).toBe(false);
+    });
+
+    it('spider_start includes difficulty default', () => {
+        const sp = SLASH_COMMANDS.find(c => c.cmd === 'spider_start');
+        expect(sp.tag).toContain('difficulty=normal');
+        expect(sp.hasValue).toBe(false);
+    });
+
+    it('bg includes placeholder value', () => {
+        const bg = SLASH_COMMANDS.find(c => c.cmd === 'bg');
+        expect(bg.tag).toBe('#bg:forest');
+        expect(bg.hasValue).toBe(false);
+    });
+});
