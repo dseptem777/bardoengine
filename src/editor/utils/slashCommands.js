@@ -45,6 +45,10 @@ export const SLASH_COMMANDS = [
     { cmd: 'wait',              tag: '#wait:2',                     desc: 'Pauses the story for N seconds before continuing',                                             category: 'Game',     hasValue: false },
     { cmd: 'clear',             tag: '#clear',                      desc: 'Clears all text from the screen',                                                              category: 'Game',     hasValue: false },
     { cmd: 'next',              tag: '#next',                       desc: 'Auto-continues to the next beat without waiting for player',                                   category: 'Game',     hasValue: false },
+    // Logic
+    { cmd: 'if',       tag: '{variable == value: text shown when true}',                                           desc: 'Conditional text. Complex: {hp > 0 and has_key: text}. Nesting: {a: {b: deep}}',  category: 'Logic', hasValue: false },
+    { cmd: 'ifelse',   tag: '{variable == value: text when true | text when false}',                                desc: 'If/else conditional. Shown text depends on variable check',                       category: 'Logic', hasValue: false },
+    { cmd: 'ifelseif', tag: '{variable == value: text | variable2 == value2: other text | fallback text}',          desc: 'Multi-branch conditional. First matching condition wins, last is fallback',        category: 'Logic', hasValue: false },
 ];
 
 /**
@@ -76,12 +80,140 @@ export function insertTag(text, cursorPos, query, tag) {
 }
 
 /**
- * Filter SLASH_COMMANDS by query string. Returns at most 8 results.
+ * System variables auto-set by the engine, always available for conditionals.
  */
-export function filterCommands(query) {
+const SYSTEM_VARIABLES = [
+    { id: 'minigame_result', type: 'result', desc: 'Last minigame result (1=win, 0=lose)' },
+    { id: 'willpower_passed', type: 'result', desc: 'Last willpower check (1=pass, 0=fail)' },
+    { id: 'spider_survived', type: 'result', desc: 'Last spider check (1=survived, 0=failed)' },
+    { id: 'boss_defeated', type: 'result', desc: 'Boss defeated status (1=yes, 0=no)' },
+];
+
+/**
+ * Generate contextual sub-commands from project config.
+ */
+function generateSubCommands(parentCmd, config) {
+    if (!config) return [];
+    const subs = [];
+
+    if (parentCmd === 'stat' && config.stats?.definitions) {
+        for (const stat of config.stats.definitions) {
+            subs.push({
+                cmd: `stat:${stat.id}`,
+                tag: `#stat:${stat.id}:+0`,
+                desc: `${stat.label || stat.id}${stat.max ? ` (max: ${stat.max})` : ''}`,
+                category: 'Game',
+                hasValue: false,
+            });
+        }
+    }
+
+    if (parentCmd === 'inventory_add' && config.inventory?.categories) {
+        for (const cat of config.inventory.categories) {
+            for (const item of (cat.items || [])) {
+                subs.push({
+                    cmd: `inventory_add:${item.id}`,
+                    tag: `#inv:add:${item.id}`,
+                    desc: item.name || item.id,
+                    category: 'Game',
+                    hasValue: false,
+                });
+            }
+        }
+    }
+
+    if (parentCmd === 'inventory_remove' && config.inventory?.categories) {
+        for (const cat of config.inventory.categories) {
+            for (const item of (cat.items || [])) {
+                subs.push({
+                    cmd: `inventory_remove:${item.id}`,
+                    tag: `#inv:remove:${item.id}`,
+                    desc: item.name || item.id,
+                    category: 'Game',
+                    hasValue: false,
+                });
+            }
+        }
+    }
+
+    if (parentCmd === 'achievement' && config.achievements) {
+        for (const ach of config.achievements) {
+            subs.push({
+                cmd: `achievement:${ach.id}`,
+                tag: `#achievement:unlock:${ach.id}`,
+                desc: ach.title || ach.id,
+                category: 'Game',
+                hasValue: false,
+            });
+        }
+    }
+
+    if (parentCmd === 'if' || parentCmd === 'ifelse' || parentCmd === 'ifelseif') {
+        if (config.stats?.definitions) {
+            for (const stat of config.stats.definitions) {
+                subs.push({
+                    cmd: `${parentCmd}:${stat.id}`,
+                    tag: `{${stat.id} > 0: text}`,
+                    desc: `Condition on ${stat.label || stat.id} (number)`,
+                    category: 'Logic',
+                    hasValue: false,
+                });
+            }
+        }
+        for (const sv of SYSTEM_VARIABLES) {
+            subs.push({
+                cmd: `${parentCmd}:${sv.id}`,
+                tag: `{${sv.id} == 1: text}`,
+                desc: sv.desc,
+                category: 'Logic',
+                hasValue: false,
+            });
+        }
+    }
+
+    return subs;
+}
+
+/** Commands that support contextual sub-commands */
+const CONTEXTUAL_PARENTS = new Set(['stat', 'inventory_add', 'inventory_remove', 'achievement', 'if', 'ifelse', 'ifelseif']);
+
+/**
+ * Filter SLASH_COMMANDS by query string, with optional config for contextual sub-commands.
+ * Returns at most 8 results.
+ *
+ * When query exactly matches a contextual parent (e.g. "stat"), returns parent + sub-commands.
+ * When query contains ":" (e.g. "stat:h"), filters sub-commands by the part after colon.
+ */
+export function filterCommands(query, config) {
     if (query === null) return [];
     const q = query.toLowerCase();
-    return SLASH_COMMANDS.filter(c =>
+
+    // Check if query targets a contextual parent via colon (e.g., "stat:hp")
+    const colonIdx = q.indexOf(':');
+    if (colonIdx > 0) {
+        const parentQuery = q.slice(0, colonIdx);
+        const subQuery = q.slice(colonIdx + 1);
+        const parentCmd = SLASH_COMMANDS.find(c => c.cmd === parentQuery);
+        if (parentCmd && CONTEXTUAL_PARENTS.has(parentCmd.cmd)) {
+            const subs = generateSubCommands(parentCmd.cmd, config);
+            return subs.filter(s => {
+                const subPart = s.cmd.slice(s.cmd.indexOf(':') + 1);
+                return subPart.includes(subQuery);
+            }).slice(0, 8);
+        }
+    }
+
+    // Standard filtering
+    const baseResults = SLASH_COMMANDS.filter(c =>
         c.cmd.includes(q) || c.desc.toLowerCase().includes(q)
-    ).slice(0, 8);
+    );
+
+    // If query exactly matches a contextual parent, inject sub-commands
+    const exactParent = SLASH_COMMANDS.find(c => c.cmd === q && CONTEXTUAL_PARENTS.has(c.cmd));
+    if (exactParent && config) {
+        const subs = generateSubCommands(exactParent.cmd, config);
+        return [exactParent, ...subs].slice(0, 8);
+    }
+
+    return baseResults.slice(0, 8);
 }

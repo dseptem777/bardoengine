@@ -148,7 +148,7 @@ export default memo(({ id, data, selected }) => {
     const [slashQuery, setSlashQuery] = useState(null);
     const [slashActiveIdx, setSlashActiveIdx] = useState(0);
 
-    const filteredCommands = useMemo(() => filterCommands(slashQuery), [slashQuery]);
+    const filteredCommands = useMemo(() => filterCommands(slashQuery, data._config), [slashQuery, data._config]);
     const textareaRef = useRef(null);
     const editContainerRef = useRef(null);
 

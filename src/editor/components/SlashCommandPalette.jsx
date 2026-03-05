@@ -6,6 +6,7 @@ const CATEGORY_COLORS = {
     Horror:   'text-red-400',
     Combat:   'text-orange-400',
     Game:     'text-cyan-400',
+    Logic:    'text-blue-400',
 };
 
 /**

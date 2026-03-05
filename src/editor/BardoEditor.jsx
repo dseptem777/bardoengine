@@ -153,12 +153,13 @@ export default function BardoEditor({ onClose }) {
                         onQuickCreate: handleQuickCreate,
                         _filtered: isFiltered,
                         _chapterColorIdx: chapter ? (chapterColorMap[chapter] ?? -1) : -1,
+                        _config: projectConfig,
                     },
                 };
             }
             return n;
         });
-    }, [nodes, handleNodeContentChange, handleNodeChoicesChange, handleQuickCreate, chapterFilter, chapterColorMap]);
+    }, [nodes, handleNodeContentChange, handleNodeChoicesChange, handleQuickCreate, chapterFilter, chapterColorMap, projectConfig]);
 
     // Register custom node types
     const nodeTypes = useMemo(() => ({
