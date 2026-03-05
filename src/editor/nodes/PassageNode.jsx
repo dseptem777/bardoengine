@@ -446,10 +446,17 @@ export default memo(({ id, data, selected }) => {
                                 </div>
                             )}
 
-                            <div className="flex items-center gap-2 mt-2 text-[10px] text-[#4b5563]">
-                                <span>Esc to close</span>
+                            <div className="flex items-center gap-2 mt-2">
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); commitEdit(); }}
+                                    onMouseDown={(e) => e.stopPropagation()}
+                                    className="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-medium rounded transition-colors"
+                                >
+                                    Done
+                                </button>
+                                <span className="text-[10px] text-[#4b5563]">Esc to close</span>
                                 <span className="text-[#282e39]">|</span>
-                                <span>#tags for effects</span>
+                                <span className="text-[10px] text-[#4b5563]">#tags for effects</span>
                             </div>
                         </div>
                     ) : (
