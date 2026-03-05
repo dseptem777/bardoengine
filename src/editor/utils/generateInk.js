@@ -165,12 +165,25 @@ function findEntryNode(nodes, edges) {
  * Validate the graph for common issues before export.
  * @param {Array} nodes - ReactFlow nodes
  * @param {Array} edges - ReactFlow edges
- * @returns {Array} Array of { type: 'warning'|'error', nodeId, message }
+ * @param {Object} [config] - Optional project config for tag validation
+ * @returns {Array} Array of { type: 'error'|'warning'|'info', nodeId, message }
  */
-export function validateGraph(nodes, edges) {
+export function validateGraph(nodes, edges, config) {
     const warnings = [];
     const usedIds = new Set();
     const idMap = new Map();
+
+    // No entry point
+    if (nodes.length > 0) {
+        const entryNode = findEntryNode(nodes, edges);
+        if (!entryNode) {
+            warnings.push({
+                type: 'error',
+                nodeId: null,
+                message: 'No entry point found — add a node named "start" or a hub node',
+            });
+        }
+    }
 
     // Build sanitized ID map and check for collisions
     const sanitizedCount = new Map();
@@ -182,8 +195,7 @@ export function validateGraph(nodes, edges) {
         sanitizedCount.get(base).push(n.id);
     });
 
-    // ID collision detection: check if any node got a deduped name (meaning collision occurred)
-    const seenSanitized = new Map();
+    // ID collision detection
     const usedIds2 = new Set();
     nodes.forEach(n => {
         const clean = sanitizeId(n.id);
@@ -197,13 +209,45 @@ export function validateGraph(nodes, edges) {
         usedIds2.add(clean);
     });
 
-    // Find entry node
+    // Config-aware tag validation
+    const configStats = config?.stats?.definitions?.map(s => s.id) || [];
+    const configAchievements = config?.achievements?.map(a => a.id) || [];
+
     const entryNode = findEntryNode(nodes, edges);
     const incomingTargets = new Set(edges.map(e => e.target));
 
     nodes.forEach(node => {
         const outEdges = getOutgoingEdges(node.id, edges);
         const inlineChoices = node.data.choices || [];
+        const content = node.data.content || node.data.text || '';
+
+        // Empty content
+        if (!content.trim()) {
+            warnings.push({
+                type: 'info',
+                nodeId: node.id,
+                message: 'Node has no content — consider adding narrative text or tags',
+            });
+        }
+
+        // Long passages (>500 words)
+        const wordCount = content.split(/\s+/).filter(w => w && !w.startsWith('#')).length;
+        if (wordCount > 500) {
+            warnings.push({
+                type: 'info',
+                nodeId: node.id,
+                message: `Long passage (${wordCount} words) — consider splitting into multiple nodes`,
+            });
+        }
+
+        // Dead-end detection (no outgoing edges and no choices)
+        if (inlineChoices.length === 0 && outEdges.length === 0) {
+            warnings.push({
+                type: 'warning',
+                nodeId: node.id,
+                message: 'Dead-end: node has no outgoing edges — will divert to END',
+            });
+        }
 
         // Multi-edge without choices
         if (inlineChoices.length === 0 && outEdges.length > 1) {
@@ -219,7 +263,7 @@ export function validateGraph(nodes, edges) {
             warnings.push({
                 type: 'warning',
                 nodeId: node.id,
-                message: `Orphan node: not reachable from any other node`,
+                message: 'Orphan node: not reachable from any other node',
             });
         }
 
@@ -236,6 +280,34 @@ export function validateGraph(nodes, edges) {
                     });
                 }
             });
+        }
+
+        // Validate tags against config (if config provided)
+        if (config && content) {
+            const lines = content.split('\n');
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (!trimmed.startsWith('#')) continue;
+                const tagRaw = trimmed.slice(1);
+                // Check stat references
+                const statMatch = tagRaw.match(/^stat:(\w+):/);
+                if (statMatch && configStats.length > 0 && !configStats.includes(statMatch[1])) {
+                    warnings.push({
+                        type: 'warning',
+                        nodeId: node.id,
+                        message: `Stat "${statMatch[1]}" not found in project config`,
+                    });
+                }
+                // Check achievement references
+                const achMatch = tagRaw.match(/^achievement:unlock:(\w+)/);
+                if (achMatch && configAchievements.length > 0 && !configAchievements.includes(achMatch[1])) {
+                    warnings.push({
+                        type: 'warning',
+                        nodeId: node.id,
+                        message: `Achievement "${achMatch[1]}" not found in project config`,
+                    });
+                }
+            }
         }
     });
 

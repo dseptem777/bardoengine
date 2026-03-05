@@ -250,7 +250,7 @@ describe('generateInk', () => {
 });
 
 describe('validateGraph', () => {
-    it('should return empty array for a clean graph', () => {
+    it('should return no errors for a clean graph', () => {
         const nodes = [
             { id: 'start', data: { type: 'knot', content: 'Begin.' } },
             { id: 'end', data: { type: 'knot', content: 'End.' } },
@@ -259,7 +259,8 @@ describe('validateGraph', () => {
             { id: 'e1', source: 'start', target: 'end' },
         ];
         const warnings = validateGraph(nodes, edges);
-        expect(warnings).toHaveLength(0);
+        const errors = warnings.filter(w => w.type === 'error');
+        expect(errors).toHaveLength(0);
     });
 
     it('should return error for multi-edge node without choices', () => {

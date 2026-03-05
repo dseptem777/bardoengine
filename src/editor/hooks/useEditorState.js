@@ -69,7 +69,7 @@ export function useEditorState() {
     const [isDirty, setIsDirty] = useState(false);
 
     // Undo/redo
-    const { canUndo, canRedo, pushSnapshot, undo: undoStep, redo: redoStep, initHistory } = useUndoRedo();
+    const { canUndo, canRedo, pushSnapshot, undo: undoStep, redo: redoStep, initHistory, getHistory, jumpTo: jumpToStep } = useUndoRedo();
     const isRestoringRef = useRef(false);
 
     // Track dirty state (includes title changes)
@@ -104,6 +104,16 @@ export function useEditorState() {
             requestAnimationFrame(() => { isRestoringRef.current = false; });
         }
     }, [redoStep, setNodes, setEdges]);
+
+    const jumpToHistory = useCallback((index) => {
+        const snapshot = jumpToStep(index);
+        if (snapshot) {
+            isRestoringRef.current = true;
+            setNodes(snapshot.nodes);
+            setEdges(snapshot.edges);
+            requestAnimationFrame(() => { isRestoringRef.current = false; });
+        }
+    }, [jumpToStep, setNodes, setEdges]);
 
     /**
      * Save project to localStorage
@@ -378,6 +388,8 @@ export function useEditorState() {
         redo,
         canUndo,
         canRedo,
+        getHistory,
+        jumpToHistory,
 
         // Project actions
         saveProject,
@@ -392,7 +404,7 @@ export function useEditorState() {
         nodes, edges, storyTitle, projectConfig, variables, isDirty,
         onNodesChange, onEdgesChange, setNodes, setEdges,
         setStoryTitle, setProjectConfig, setVariables,
-        undo, redo, canUndo, canRedo,
+        undo, redo, canUndo, canRedo, getHistory, jumpToHistory,
         saveProject, loadProject, exportProject, exportInk, copyInk, exportConfig, importProject, newProject,
     ]);
 }

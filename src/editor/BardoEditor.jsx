@@ -10,10 +10,15 @@ import PassageNode, { getDominantTagCategory, TAG_CATEGORY_COLORS, CHAPTER_COLOR
 import PreviewPanel from './components/PreviewPanel';
 import VariablesPanel from './components/VariablesPanel';
 import ConfigPanel from './components/ConfigPanel';
+import NodeEditOverlay from './components/NodeEditOverlay';
+import ValidationPanel from './components/ValidationPanel';
+import SearchReplace from './components/SearchReplace';
+import HistoryPanel from './components/HistoryPanel';
 import { generateInk, generateHubRegistry, validateGraph } from './utils/generateInk';
 import { useEditorState } from './hooks/useEditorState';
 import ContextMenu from './components/ContextMenu';
 import { EXAMPLE_PROJECT } from './utils/exampleProject';
+import { useFirstUseGuides } from './hooks/useFirstUseGuides';
 
 // Node ID counter for new nodes
 let idCounter = Date.now();
@@ -29,6 +34,7 @@ export default function BardoEditor({ onClose }) {
         saveProject, loadProject, exportProject, importProject, newProject,
         exportInk, copyInk, exportConfig,
         undo, redo, canUndo, canRedo,
+        getHistory, jumpToHistory,
     } = useEditorState();
 
     const [selectedNodeId, setSelectedNodeId] = useState(null);
@@ -44,11 +50,17 @@ export default function BardoEditor({ onClose }) {
     const [chapterFilter, setChapterFilter] = useState(''); // '' = show all
     const [showWarnings, setShowWarnings] = useState(false);
     const [contextMenu, setContextMenu] = useState(null); // { x, y, type, nodeId?, nodeType?, edgeId? }
+    const [editingNodeId, setEditingNodeId] = useState(null);
+    const [searchReplaceOpen, setSearchReplaceOpen] = useState(false);
+    const [historyOpen, setHistoryOpen] = useState(false);
+
+    // First-use guides
+    const { showWelcome, showFirstEdit, showFirstChoice, dismiss: dismissGuide, resetAll: resetGuides } = useFirstUseGuides();
 
     // Graph validation warnings (debounced via useMemo)
     const graphWarnings = useMemo(() => {
-        return validateGraph(nodes, edges);
-    }, [nodes, edges]);
+        return validateGraph(nodes, edges, projectConfig);
+    }, [nodes, edges, projectConfig]);
 
     // ReactFlow instance to project coordinates
     const [rfInstance, setRfInstance] = useState(null);
@@ -141,6 +153,24 @@ export default function BardoEditor({ onClose }) {
 
     const uniqueChapters = useMemo(() => Object.keys(chapterColorMap), [chapterColorMap]);
 
+    // Edit node — open full-screen overlay
+    const handleEditNode = useCallback((nodeId) => {
+        setEditingNodeId(nodeId);
+    }, []);
+
+    // Generic node data updater (used by NodeEditOverlay)
+    const handleNodeDataChange = useCallback((nodeId, key, value) => {
+        setNodes(nds => nds.map(node => {
+            if (node.id === nodeId) {
+                const newData = { ...node.data, [key]: value };
+                if (key === 'content') newData.text = value;
+                if (key === 'text') newData.content = value;
+                return { ...node, data: newData };
+            }
+            return node;
+        }));
+    }, [setNodes]);
+
     // Inject callbacks + chapter/filter data into all passage nodes
     const nodesWithCallbacks = useMemo(() => {
         return nodes.map(n => {
@@ -154,6 +184,7 @@ export default function BardoEditor({ onClose }) {
                         onContentChange: handleNodeContentChange,
                         onChoicesChange: handleNodeChoicesChange,
                         onQuickCreate: handleQuickCreate,
+                        onEditNode: handleEditNode,
                         _filtered: isFiltered,
                         _chapterColorIdx: chapter ? (chapterColorMap[chapter] ?? -1) : -1,
                         _config: projectConfig,
@@ -162,7 +193,7 @@ export default function BardoEditor({ onClose }) {
             }
             return n;
         });
-    }, [nodes, handleNodeContentChange, handleNodeChoicesChange, handleQuickCreate, chapterFilter, chapterColorMap, projectConfig]);
+    }, [nodes, handleNodeContentChange, handleNodeChoicesChange, handleQuickCreate, handleEditNode, chapterFilter, chapterColorMap, projectConfig]);
 
     // Register custom node types
     const nodeTypes = useMemo(() => ({
@@ -299,6 +330,9 @@ export default function BardoEditor({ onClose }) {
                 e.preventDefault();
                 setSearchOpen(prev => !prev);
                 setSearchQuery('');
+            } else if (e.ctrlKey && e.key === 'h') {
+                e.preventDefault();
+                setSearchReplaceOpen(prev => !prev);
             } else if (e.ctrlKey && e.key === 'd') {
                 e.preventDefault();
                 handleDuplicateNode();
@@ -453,15 +487,6 @@ export default function BardoEditor({ onClose }) {
         return rfInstance.project(pos);
     }, [rfInstance]);
 
-    // Edit node by simulating double-click (context menu "Edit")
-    const handleEditNode = useCallback((nodeId) => {
-        const nodeEl = document.querySelector(`[data-id="${nodeId}"]`);
-        if (nodeEl) {
-            const event = new MouseEvent('dblclick', { bubbles: true });
-            nodeEl.dispatchEvent(event);
-        }
-    }, []);
-
     // Delete specific node by ID (context menu)
     const handleDeleteSpecificNode = useCallback((nodeId) => {
         setNodes(nds => nds.filter(n => n.id !== nodeId));
@@ -502,6 +527,38 @@ export default function BardoEditor({ onClose }) {
         setTimeout(() => setCopyFeedback(false), 2000);
         setShowExportMenu(false);
     };
+
+    // Search & Replace handlers
+    const handleReplaceInNode = useCallback((nodeId, find, replace, caseSensitive) => {
+        setNodes(nds => nds.map(node => {
+            if (node.id !== nodeId) return node;
+            const content = node.data.content || node.data.text || '';
+            let newContent;
+            if (caseSensitive) {
+                newContent = content.replace(find, replace);
+            } else {
+                newContent = content.replace(new RegExp(find.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'), replace);
+            }
+            return { ...node, data: { ...node.data, content: newContent, text: newContent } };
+        }));
+    }, [setNodes]);
+
+    const handleReplaceAll = useCallback((find, replace, caseSensitive) => {
+        let count = 0;
+        const flags = caseSensitive ? 'g' : 'gi';
+        const escaped = find.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(escaped, flags);
+
+        setNodes(nds => nds.map(node => {
+            const content = node.data.content || node.data.text || '';
+            const matches = content.match(regex);
+            if (!matches) return node;
+            count += matches.length;
+            const newContent = content.replace(regex, replace);
+            return { ...node, data: { ...node.data, content: newContent, text: newContent } };
+        }));
+        return count;
+    }, [setNodes]);
 
     // Search results (filtered nodes)
     const searchResults = useMemo(() => {
@@ -605,6 +662,37 @@ export default function BardoEditor({ onClose }) {
                 background-size: 40px 40px;
             }
             .material-symbols-outlined { font-variation-settings: 'FILL' 1; }
+
+            /* ReactFlow controls visibility */
+            .react-flow__controls button {
+                width: 32px !important;
+                height: 32px !important;
+            }
+            .react-flow__controls button svg {
+                max-width: 16px;
+                max-height: 16px;
+            }
+
+            /* CSS-only tooltips */
+            [data-tooltip] { position: relative; }
+            [data-tooltip]:hover::after {
+                content: attr(data-tooltip);
+                position: absolute;
+                left: calc(100% + 8px);
+                top: 50%;
+                transform: translateY(-50%);
+                background: #1c1f27;
+                border: 1px solid #282e39;
+                color: #e2e8f0;
+                font-size: 11px;
+                font-weight: 500;
+                padding: 4px 10px;
+                border-radius: 6px;
+                white-space: nowrap;
+                z-index: 100;
+                pointer-events: none;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            }
             `}
             </style>
 
@@ -633,9 +721,9 @@ export default function BardoEditor({ onClose }) {
 
                 <div className="flex items-center gap-4">
                     <div className="flex items-center bg-[#1c1f27] rounded-lg h-9 px-3 border border-[#282e39]">
-                        <span className="material-symbols-outlined text-[#9da6b9] text-sm mr-2">search</span>
+                        <span className="material-symbols-outlined text-[#9da6b9] text-sm mr-2">auto_stories</span>
                         <input
-                            className="bg-transparent border-none text-white text-sm focus:outline-none w-32 placeholder-[#4b5563]"
+                            className="bg-transparent border-none text-white text-sm font-medium focus:outline-none w-48 placeholder-[#4b5563]"
                             value={storyTitle}
                             onChange={(e) => setStoryTitle(e.target.value)}
                             onKeyDown={(e) => e.stopPropagation()}
@@ -701,20 +789,11 @@ export default function BardoEditor({ onClose }) {
                     <div className="relative" ref={exportMenuRef}>
                         <button
                             onClick={() => setShowExportMenu(!showExportMenu)}
-                            className="flex items-center gap-2 rounded-lg h-9 px-4 bg-[#2b6cee] text-white text-sm font-bold hover:bg-blue-600 transition-all shadow-lg shadow-blue-500/20 relative"
+                            className="flex items-center gap-2 rounded-lg h-9 px-4 bg-[#2b6cee] text-white text-sm font-bold hover:bg-blue-600 transition-all shadow-lg shadow-blue-500/20"
                         >
                             <span className="material-symbols-outlined text-sm">download</span>
                             Export
                             <span className="material-symbols-outlined text-sm">expand_more</span>
-                            {graphWarnings.length > 0 && (
-                                <span
-                                    className="absolute -top-2 -right-2 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[10px] font-bold bg-red-500 text-white cursor-pointer border-2 border-[#101622]"
-                                    onClick={(e) => { e.stopPropagation(); setShowWarnings(true); }}
-                                    title={`${graphWarnings.length} issue${graphWarnings.length !== 1 ? 's' : ''} found`}
-                                >
-                                    {graphWarnings.length}
-                                </span>
-                            )}
                         </button>
 
                         {showExportMenu && (
@@ -780,6 +859,20 @@ export default function BardoEditor({ onClose }) {
                 />
             )}
 
+            {editingNodeId && (() => {
+                const editNode = nodes.find(n => n.id === editingNodeId);
+                return editNode ? (
+                    <NodeEditOverlay
+                        node={editNode}
+                        config={projectConfig}
+                        onClose={() => setEditingNodeId(null)}
+                        onContentChange={handleNodeContentChange}
+                        onChoicesChange={handleNodeChoicesChange}
+                        onNodeDataChange={handleNodeDataChange}
+                    />
+                ) : null;
+            })()}
+
             <div className="flex-1 w-full relative canvas-grid bg-[#0b0c10] overflow-hidden flex font-display">
                 {/* Side Navigation (Floating Tool Palette) */}
                 <aside className="absolute left-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-4 bg-[#101622]/80 backdrop-blur-xl border border-[#282e39] p-3 rounded-2xl z-40 shadow-2xl">
@@ -787,14 +880,14 @@ export default function BardoEditor({ onClose }) {
                         <button
                             onClick={() => handleAddNode('hub')}
                             className="group relative flex items-center justify-center w-12 h-12 rounded-xl bg-[#1c1f27] text-[#9da6b9] hover:bg-[#2b6cee] hover:text-white transition-all border border-[#282e39] hover:border-[#2b6cee]"
-                            title="Add Hub"
+                            data-tooltip="Add Hub"
                         >
                             <span className="material-symbols-outlined">castle</span>
                         </button>
                         <button
                             onClick={() => handleAddNode('knot')}
                             className="group relative flex items-center justify-center w-12 h-12 rounded-xl bg-[#1c1f27] text-[#9da6b9] hover:bg-yellow-500 hover:text-white transition-all border border-[#282e39] hover:border-yellow-500"
-                            title="Add Knot"
+                            data-tooltip="Add Knot"
                         >
                             <span className="material-symbols-outlined">radio_button_checked</span>
                         </button>
@@ -804,9 +897,36 @@ export default function BardoEditor({ onClose }) {
                         onClick={selectedEdgeId ? handleDeleteEdge : handleDeleteNode}
                         disabled={!selectedNodeId && !selectedEdgeId}
                         className={`group relative flex items-center justify-center w-12 h-12 rounded-xl border transition-all ${!selectedNodeId && !selectedEdgeId ? 'opacity-50 cursor-not-allowed bg-[#1c1f27] border-[#282e39] text-[#9da6b9]' : 'bg-[#1c1f27] border-[#282e39] text-[#9da6b9] hover:bg-red-500/20 hover:text-red-500 hover:border-red-500'}`}
-                        title={selectedEdgeId ? "Delete Selected Edge" : "Delete Selected Node"}
+                        data-tooltip={selectedEdgeId ? "Delete Edge" : "Delete Node"}
                     >
                         <span className="material-symbols-outlined">{selectedEdgeId ? 'link_off' : 'delete'}</span>
+                    </button>
+                    <div className="h-px w-8 bg-[#282e39] my-1"></div>
+                    <button
+                        onClick={() => setSearchReplaceOpen(prev => !prev)}
+                        className={`group relative flex items-center justify-center w-12 h-12 rounded-xl border transition-all ${searchReplaceOpen ? 'bg-[#2b6cee]/20 border-[#2b6cee] text-[#2b6cee]' : 'bg-[#1c1f27] border-[#282e39] text-[#9da6b9] hover:bg-[#282e39] hover:text-white'}`}
+                        data-tooltip="Search & Replace"
+                    >
+                        <span className="material-symbols-outlined">find_replace</span>
+                    </button>
+                    <button
+                        onClick={() => setHistoryOpen(prev => !prev)}
+                        className={`group relative flex items-center justify-center w-12 h-12 rounded-xl border transition-all ${historyOpen ? 'bg-[#2b6cee]/20 border-[#2b6cee] text-[#2b6cee]' : 'bg-[#1c1f27] border-[#282e39] text-[#9da6b9] hover:bg-[#282e39] hover:text-white'}`}
+                        data-tooltip="History"
+                    >
+                        <span className="material-symbols-outlined">history</span>
+                    </button>
+                    <button
+                        onClick={() => setShowWarnings(prev => !prev)}
+                        className={`group relative flex items-center justify-center w-12 h-12 rounded-xl border transition-all ${showWarnings ? 'bg-[#2b6cee]/20 border-[#2b6cee] text-[#2b6cee]' : graphWarnings.length > 0 ? 'bg-[#1c1f27] border-[#282e39] text-yellow-400 hover:bg-yellow-500/10 hover:border-yellow-500' : 'bg-[#1c1f27] border-[#282e39] text-[#9da6b9] hover:bg-[#282e39] hover:text-white'}`}
+                        data-tooltip="Validation"
+                    >
+                        <span className="material-symbols-outlined">checklist</span>
+                        {graphWarnings.length > 0 && (
+                            <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] flex items-center justify-center rounded-full text-[9px] font-bold bg-red-500 text-white border-2 border-[#101622]">
+                                {graphWarnings.length}
+                            </span>
+                        )}
                     </button>
                 </aside>
 
@@ -835,7 +955,7 @@ export default function BardoEditor({ onClose }) {
                         className="bg-transparent"
                         deleteKeyCode={['Backspace', 'Delete']}
                     >
-                        <Controls className="!bg-[#1c1f27] !border-[#282e39] !fill-white [&>button]:!border-b-[#282e39] hover:[&>button]:!bg-[#282e39]" />
+                        <Controls className="!bg-[#1c1f27] !border-[#282e39] !rounded-xl !shadow-xl [&>button]:!border-b-[#282e39] [&>button]:!bg-[#1c1f27] [&>button]:!fill-[#9da6b9] hover:[&>button]:!bg-[#282e39] hover:[&>button]:!fill-white" />
                         <MiniMap
                             style={{ width: 240, height: 160 }}
                             className="!bg-[#1c1f27] !border-[#282e39] !rounded-lg overflow-hidden"
@@ -899,44 +1019,13 @@ export default function BardoEditor({ onClose }) {
                         Auto-layout
                     </button>
 
-                    {/* Warnings panel */}
-                    {showWarnings && graphWarnings.length > 0 && (
-                        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 w-[480px]">
-                            <div className="bg-[#101622] border border-red-500/50 rounded-xl shadow-2xl shadow-red-500/10 overflow-hidden">
-                                <div className="flex items-center justify-between px-4 py-3 border-b border-[#282e39]">
-                                    <div className="flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-red-400 text-sm">warning</span>
-                                        <span className="text-white text-sm font-bold">{graphWarnings.length} Issue{graphWarnings.length !== 1 ? 's' : ''} Found</span>
-                                    </div>
-                                    <button
-                                        onClick={() => setShowWarnings(false)}
-                                        className="text-[#9da6b9] hover:text-white transition-colors"
-                                    >
-                                        <span className="material-symbols-outlined text-sm">close</span>
-                                    </button>
-                                </div>
-                                <div className="max-h-64 overflow-y-auto">
-                                    {graphWarnings.map((w, i) => (
-                                        <button
-                                            key={i}
-                                            onClick={() => { jumpToNode(w.nodeId); setShowWarnings(false); }}
-                                            className="w-full px-4 py-2.5 text-left hover:bg-[#1c1f27] transition-colors flex items-start gap-3 border-b border-[#282e39]/50 last:border-b-0"
-                                        >
-                                            <span className={`material-symbols-outlined text-sm mt-0.5 shrink-0 ${w.type === 'error' ? 'text-red-400' : 'text-yellow-400'}`}>
-                                                {w.type === 'error' ? 'error' : 'warning'}
-                                            </span>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="text-white text-xs">{w.message}</p>
-                                                <p className="text-[#4b5563] text-[10px] font-mono mt-0.5">{w.nodeId}</p>
-                                            </div>
-                                            <span className={`shrink-0 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${w.type === 'error' ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
-                                                {w.type}
-                                            </span>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
+                    {/* Validation panel */}
+                    {showWarnings && (
+                        <ValidationPanel
+                            warnings={graphWarnings}
+                            onClose={() => setShowWarnings(false)}
+                            onJumpTo={(nodeId) => { jumpToNode(nodeId); setShowWarnings(false); }}
+                        />
                     )}
 
                     {/* Search overlay (Ctrl+P) */}
@@ -985,7 +1074,30 @@ export default function BardoEditor({ onClose }) {
                             </div>
                         </div>
                     )}
+                    {/* Search & Replace (Ctrl+H) */}
+                    {searchReplaceOpen && (
+                        <SearchReplace
+                            nodes={nodes}
+                            onClose={() => setSearchReplaceOpen(false)}
+                            onJumpTo={(nodeId) => { jumpToNode(nodeId); }}
+                            onReplace={handleReplaceInNode}
+                            onReplaceAll={handleReplaceAll}
+                        />
+                    )}
                 </div>
+
+                {/* History Panel */}
+                {historyOpen && (
+                    <HistoryPanel
+                        history={getHistory()}
+                        onJumpTo={jumpToHistory}
+                        canUndo={canUndo}
+                        canRedo={canRedo}
+                        undo={undo}
+                        redo={redo}
+                        onClose={() => setHistoryOpen(false)}
+                    />
+                )}
 
                 {/* Right Panel: Project View or Node Properties */}
                 {activeNav === 'project' && (
@@ -1117,7 +1229,11 @@ export default function BardoEditor({ onClose }) {
                                 ['Ctrl + Z', 'Undo'],
                                 ['Ctrl + Shift + Z', 'Redo'],
                                 ['Ctrl + S', 'Save to Browser'],
-                                ['Delete / Backspace', 'Delete selected node'],
+                                ['Ctrl + P', 'Quick jump to node'],
+                                ['Ctrl + H', 'Search & Replace'],
+                                ['Ctrl + D', 'Duplicate node'],
+                                ['Double-click', 'Edit node / Create node'],
+                                ['Delete / Backspace', 'Delete selected'],
                             ].map(([key, desc]) => (
                                 <div key={key} className="flex items-center justify-between">
                                     <span className="text-[#9da6b9]">{desc}</span>
@@ -1125,9 +1241,45 @@ export default function BardoEditor({ onClose }) {
                                 </div>
                             ))}
                         </div>
+                        <div className="mt-5 pt-4 border-t border-[#282e39]">
+                            <button
+                                onClick={() => { resetGuides(); setShowShortcuts(false); }}
+                                className="text-xs text-[#4b5563] hover:text-[#9da6b9] transition-colors flex items-center gap-2"
+                            >
+                                <span className="material-symbols-outlined text-sm">restart_alt</span>
+                                Reset first-use tips
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
+
+            {/* First-use guide banner — only one at a time, priority order */}
+            {(() => {
+                if (editingNodeId) return null;
+                const guide = showWelcome && nodes.length === 0
+                    ? { id: 'welcome', icon: 'waving_hand', hex: '#2b6cee', title: 'Welcome to The Loom!', text: 'Double-click the canvas to create your first passage, or use the toolbar on the left.' }
+                    : showFirstEdit && nodes.length > 0
+                    ? { id: 'firstEdit', icon: 'edit', hex: '#facc15', title: 'Double-click a node to edit', text: 'Type / inside the editor to insert tags like shake, music, or minigames.' }
+                    : showFirstChoice && nodes.length > 2
+                    ? { id: 'firstChoice', icon: 'call_split', hex: '#f59e0b', title: 'Add choices to branch your story', text: 'Click "Add choice" on any node, then drag from the choice handle to connect.' }
+                    : null;
+                if (!guide) return null;
+                return (
+                    <div className="absolute bottom-14 left-1/2 -translate-x-1/2 z-30 max-w-lg">
+                        <div className="rounded-xl px-5 py-3 flex items-center gap-4 backdrop-blur-sm" style={{ background: guide.hex + '15', border: `1px solid ${guide.hex}40` }}>
+                            <span className="material-symbols-outlined text-xl" style={{ color: guide.hex }}>{guide.icon}</span>
+                            <div className="flex-1">
+                                <p className="text-white text-sm font-medium">{guide.title}</p>
+                                <p className="text-[#9da6b9] text-xs mt-0.5">{guide.text}</p>
+                            </div>
+                            <button onClick={() => dismissGuide(guide.id)} className="text-[#9da6b9] hover:text-white shrink-0">
+                                <span className="material-symbols-outlined text-sm">close</span>
+                            </button>
+                        </div>
+                    </div>
+                );
+            })()}
 
             {/* Footer Status Bar */}
             <footer className="h-8 bg-[#0b0c10] border-t border-[#282e39] flex items-center justify-between px-6 text-[10px] text-[#4b5563] z-50 font-display">
@@ -1171,6 +1323,14 @@ export default function BardoEditor({ onClose }) {
                     )}
                 </div>
                 <div className="flex items-center gap-4">
+                    <button
+                        onClick={resetGuides}
+                        className="text-[#4b5563] hover:text-[#9da6b9] cursor-pointer transition-colors flex items-center gap-1"
+                    >
+                        <span className="material-symbols-outlined text-xs" style={{ fontSize: '12px' }}>restart_alt</span>
+                        Reset tips
+                    </button>
+                    <div className="w-px h-3 bg-[#282e39]"></div>
                     <button
                         onClick={() => setShowShortcuts(true)}
                         className="text-[#9da6b9] hover:text-white cursor-pointer transition-colors"
