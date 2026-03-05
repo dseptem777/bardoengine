@@ -31,7 +31,12 @@ export default function SlashCommandPalette({ commands, activeIndex, onSelect, o
     if (commands.length === 0) return null;
 
     return (
-        <div className="absolute left-0 right-0 top-full mt-1 z-50 bg-[#101622] border border-[#2b6cee]/50 rounded-lg shadow-2xl shadow-[#2b6cee]/10 overflow-hidden max-h-52 overflow-y-auto">
+        <div
+            className="absolute left-0 right-0 top-full mt-1 z-50 bg-[#101622] border border-[#2b6cee]/50 rounded-lg shadow-2xl shadow-[#2b6cee]/10 overflow-hidden max-h-72 overflow-y-auto"
+            style={{ overscrollBehavior: 'contain' }}
+            onWheel={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+        >
             {commands.map((cmd, i) => (
                 <button
                     key={cmd.cmd}
