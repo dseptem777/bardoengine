@@ -46,6 +46,7 @@ export const SLASH_COMMANDS = [
     { cmd: 'clear',             tag: '#clear',                      desc: 'Clears all text from the screen',                                                              category: 'Game',     hasValue: false },
     { cmd: 'next',              tag: '#next',                       desc: 'Auto-continues to the next beat without waiting for player',                                   category: 'Game',     hasValue: false },
     // Logic
+    { cmd: 'set',      tag: '~ variable = value',                                                                  desc: 'Sets a variable. Examples: ~ has_key = true, ~ hp = 100, ~ name = "Juan"',       category: 'Logic', hasValue: false },
     { cmd: 'if',       tag: '{variable == value: text shown when true}',                                           desc: 'Conditional text. Complex: {hp > 0 and has_key: text}. Nesting: {a: {b: deep}}',  category: 'Logic', hasValue: false },
     { cmd: 'ifelse',   tag: '{variable == value: text when true | text when false}',                                desc: 'If/else conditional. Shown text depends on variable check',                       category: 'Logic', hasValue: false },
     { cmd: 'ifelseif', tag: '{variable == value: text | variable2 == value2: other text | fallback text}',          desc: 'Multi-branch conditional. First matching condition wins, last is fallback',        category: 'Logic', hasValue: false },
