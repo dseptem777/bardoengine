@@ -41,8 +41,8 @@ describe('filterCommands', () => {
     it('returns empty array for null query', () => {
         expect(filterCommands(null)).toHaveLength(0);
     });
-    it('returns all commands for empty query (capped at 8)', () => {
-        expect(filterCommands('')).toHaveLength(8);
+    it('returns all commands for empty query (no cap)', () => {
+        expect(filterCommands('')).toHaveLength(SLASH_COMMANDS.length);
     });
     it('filters by cmd substring', () => {
         const results = filterCommands('shake');
@@ -52,8 +52,8 @@ describe('filterCommands', () => {
         const results = filterCommands('screen');
         expect(results.length).toBeGreaterThan(0);
     });
-    it('caps results at 8', () => {
-        expect(filterCommands('').length).toBeLessThanOrEqual(8);
+    it('caps filtered results at 12', () => {
+        expect(filterCommands('a').length).toBeLessThanOrEqual(12);
     });
     it('is case-insensitive', () => {
         expect(filterCommands('SHAKE').some(c => c.cmd === 'shake')).toBe(true);

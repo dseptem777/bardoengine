@@ -199,7 +199,7 @@ export function filterCommands(query, config) {
             return subs.filter(s => {
                 const subPart = s.cmd.slice(s.cmd.indexOf(':') + 1);
                 return subPart.includes(subQuery);
-            }).slice(0, 8);
+            }).slice(0, 12);
         }
     }
 
@@ -212,8 +212,10 @@ export function filterCommands(query, config) {
     const exactParent = SLASH_COMMANDS.find(c => c.cmd === q && CONTEXTUAL_PARENTS.has(c.cmd));
     if (exactParent && config) {
         const subs = generateSubCommands(exactParent.cmd, config);
-        return [exactParent, ...subs].slice(0, 8);
+        return [exactParent, ...subs].slice(0, 12);
     }
 
-    return baseResults.slice(0, 8);
+    // Show all when browsing (empty query), cap at 12 when filtering
+    const limit = q === '' ? baseResults.length : 12;
+    return baseResults.slice(0, limit);
 }
