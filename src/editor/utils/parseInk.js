@@ -13,7 +13,7 @@
  * Does NOT handle: stitches (= name), tunnels (->->), threads (<-), INCLUDE.
  */
 
-const dagre = require('@dagrejs/dagre');
+import dagre from '@dagrejs/dagre';
 
 /**
  * Parse Ink source into editor-compatible format.
@@ -78,11 +78,14 @@ export function parseInk(inkSource) {
         knots.push(finalizeKnot(currentKnot));
     }
 
-    // Build edges from choices and trailing diverts
+    // Build edges from choices and all detected diverts
     const edges = [];
     const knotIds = new Set(knots.map(k => k.id));
 
     knots.forEach(knot => {
+        const edgedTargets = new Set(); // avoid duplicate edges to same target
+
+        // Edges from choices
         knot.choices.forEach((choice, i) => {
             if (choice.target && knotIds.has(choice.target)) {
                 edges.push({
@@ -93,18 +96,23 @@ export function parseInk(inkSource) {
                     targetHandle: null,
                     label: choice.text,
                 });
+                edgedTargets.add(choice.target);
             }
         });
 
-        if (knot.trailingDivert && knot.choices.length === 0 && knotIds.has(knot.trailingDivert)) {
-            edges.push({
-                id: `e_${knot.id}_divert_${knot.trailingDivert}`,
-                source: knot.id,
-                target: knot.trailingDivert,
-                sourceHandle: null,
-                targetHandle: null,
-            });
-        }
+        // Edges from all other diverts found in content (conditionals, inline, etc.)
+        knot.allDiverts.forEach(target => {
+            if (knotIds.has(target) && !edgedTargets.has(target) && target !== knot.id) {
+                edges.push({
+                    id: `e_${knot.id}_divert_${target}`,
+                    source: knot.id,
+                    target: target,
+                    sourceHandle: null,
+                    targetHandle: null,
+                });
+                edgedTargets.add(target);
+            }
+        });
     });
 
     // Layout with Dagre
@@ -157,7 +165,8 @@ function finalizeKnot(knot) {
     const choices = [];
     let trailingDivert = null;
 
-    // Scan lines for choices and diverts (for edge-building only)
+    // Scan ALL lines for choices and ANY diverts (for edge-building only)
+    const allDiverts = new Set();
     for (const line of knot.rawLines) {
         const trimmed = line.trim();
 
@@ -170,10 +179,21 @@ function finalizeKnot(knot) {
                 target: choiceMatch[4] || null,
                 sticky: choiceMatch[1] === '+',
             });
+            if (choiceMatch[4]) allDiverts.add(choiceMatch[4]);
+            continue;
+        }
+
+        // Any divert anywhere in the line: -> target (not -> END, -> DONE)
+        const divertMatches = trimmed.matchAll(/->\s*(\w+)/g);
+        for (const m of divertMatches) {
+            const target = m[1];
+            if (target !== 'END' && target !== 'DONE') {
+                allDiverts.add(target);
+            }
         }
     }
 
-    // Find trailing divert (last non-empty, non-comment line)
+    // Trailing divert for backward compat (used when no choices exist)
     for (let i = knot.rawLines.length - 1; i >= 0; i--) {
         const trimmed = knot.rawLines[i].trim();
         if (!trimmed || trimmed.startsWith('//')) continue;
@@ -181,7 +201,7 @@ function finalizeKnot(knot) {
         if (divertMatch) {
             trailingDivert = divertMatch[1];
         }
-        break; // Only check the last meaningful line
+        break;
     }
 
     // Content = ALL raw lines joined, verbatim
@@ -194,6 +214,7 @@ function finalizeKnot(knot) {
         content,
         choices,
         trailingDivert,
+        allDiverts: Array.from(allDiverts),
     };
 }
 

@@ -611,10 +611,11 @@ export default function BardoEditor({ onClose }) {
     }, [nodes, rfInstance]);
 
     // Auto-layout using Dagre (directed acyclic graph layout)
-    const handleAutoLayout = useCallback(() => {
+    const handleAutoLayout = useCallback(async () => {
         if (nodes.length === 0) return;
 
-        const dagre = require('@dagrejs/dagre');
+        const dagreModule = await import('@dagrejs/dagre');
+        const dagre = dagreModule.default || dagreModule;
         const g = new dagre.graphlib.Graph();
         g.setDefaultEdgeLabel(() => ({}));
         g.setGraph({ rankdir: 'LR', nodesep: 60, ranksep: 120, edgesep: 30 });
