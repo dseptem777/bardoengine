@@ -91,7 +91,14 @@ export function generateInk(nodes, edges, variables = []) {
     // 3. Generate knots for each node
     nodes.forEach(node => {
         const knotId = idMap.get(node.id);
-        lines.push(`=== ${knotId} ===`);
+        const params = node.data.knotParams || '';
+        if (node.data.isFunction) {
+            lines.push(`=== function ${knotId}${params || '()'} ===`);
+        } else if (params) {
+            lines.push(`=== ${knotId}${params} ===`);
+        } else {
+            lines.push(`=== ${knotId} ===`);
+        }
 
         // Emit content lines
         const content = node.data.content || node.data.text || '';
@@ -99,6 +106,14 @@ export function generateInk(nodes, edges, variables = []) {
             content.split('\n').forEach(line => {
                 lines.push(line);
             });
+        }
+
+        // Check if the raw content already contains its own flow control
+        // (choices, diverts, or return statements). If so, trust it verbatim
+        // and don't append generated choices/diverts.
+        if (contentHasFlowControl(content)) {
+            lines.push('');
+            return;
         }
 
         // Check outgoing edges
@@ -135,6 +150,25 @@ export function generateInk(nodes, edges, variables = []) {
     });
 
     return lines.join('\n');
+}
+
+/**
+ * Check if raw content already contains Ink flow control (choices, diverts, returns).
+ * When content has its own flow, generateInk should not append additional choices/diverts.
+ */
+function contentHasFlowControl(content) {
+    if (!content) return false;
+    const lines = content.split('\n');
+    for (const line of lines) {
+        const trimmed = line.trim();
+        // Choice lines
+        if (/^[+*]\s*(\{[^}]*\}\s*)?\[/.test(trimmed)) return true;
+        // Standalone divert (-> target, -> END, -> DONE, -> target(args))
+        if (/^->\s*\w+/.test(trimmed)) return true;
+        // Return statement
+        if (/^~\s*return\b/.test(trimmed)) return true;
+    }
+    return false;
 }
 
 /**
@@ -324,6 +358,19 @@ export function validateGraph(nodes, edges, config) {
     });
 
     return warnings;
+}
+
+/**
+ * Build a mapping of original node IDs to sanitized Ink knot names.
+ * Used by PreviewPanel to resolve node IDs for ChoosePathString().
+ */
+export function buildIdMap(nodes) {
+    const idMap = new Map();
+    const usedIds = new Set();
+    nodes.forEach(n => {
+        idMap.set(n.id, sanitizeId(n.id, usedIds));
+    });
+    return idMap;
 }
 
 /**

@@ -1,24 +1,31 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Player from '../../components/Player';
-import { Compiler } from 'inkjs/compiler/Compiler';
 import { Story } from 'inkjs';
-import { generateInk } from '../utils/generateInk';
+import { generateInk, buildIdMap } from '../utils/generateInk';
 import { useVFX } from '../../hooks/useVFX';
 import { useMinigameController, parseMinigameTag } from '../../hooks/useMinigameController';
 import MinigameOverlay from '../../components/MinigameOverlay';
 
-export default function PreviewPanel({ nodes, edges, variables = [], onClose }) {
+export default function PreviewPanel({ nodes, edges, variables = [], onClose, startAtNodeId = null }) {
     const simulatorRef = useRef(null);
     const stateStackRef = useRef([]);
+    const idMapRef = useRef(new Map());
     const [text, setText] = useState('');
     const [choices, setChoices] = useState([]);
     const [canContinue, setCanContinue] = useState(false);
     const [isEnded, setIsEnded] = useState(false);
     const [history, setHistory] = useState([]);
     const [compileError, setCompileError] = useState(null);
+    const [isCompiling, setIsCompiling] = useState(true);
+
+    // Knot warp state
+    const [currentKnotName, setCurrentKnotName] = useState('');
+    const [selectedWarpKnot, setSelectedWarpKnot] = useState('');
+    const [knotList, setKnotList] = useState([]);
 
     // Variable Inspector state
     const [showVarPanel, setShowVarPanel] = useState(false);
+    const [vfxEnabled, setVfxEnabled] = useState(false);
     const [inkVariables, setInkVariables] = useState({});
     const [changedVars, setChangedVars] = useState(new Set());
     const prevVarsRef = useRef({});
@@ -151,10 +158,12 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
                 return;
             }
 
-            // Everything else goes to VFX
-            triggerVFX(tag);
+            // VFX — only if enabled
+            if (vfxEnabled) {
+                triggerVFX(tag);
+            }
         });
-    }, [triggerVFX, minigameController]);
+    }, [triggerVFX, minigameController, vfxEnabled]);
 
     // Keep ref in sync so handleMinigameResult can use it without stale closure
     useEffect(() => {
@@ -168,30 +177,92 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
         setIsEnded(!story.canContinue && story.currentChoices.length === 0);
     }, []);
 
-    // Collect all text from canContinue until choices or end
+    // Extract current knot name from story path
+    const getCurrentKnot = useCallback((story) => {
+        try {
+            const path = story.state.currentPathString;
+            if (path) return path.split('.')[0];
+        } catch (e) { /* ignore */ }
+        return '';
+    }, []);
+
+    // Collect text from canContinue until choices, end, or a "next" tag.
+    // Saves ONE undo snapshot before draining, then updates currentKnotName.
     const drainText = useCallback((story) => {
+        stateStackRef.current.push(story.state.toJson());
+
         let fullText = '';
         const allTags = [];
         while (story.canContinue) {
-            stateStackRef.current.push(story.state.toJson());
             const line = story.Continue();
             if (line.trim()) {
                 fullText += (fullText ? '\n' : '') + line;
             }
             if (story.currentTags.length > 0) {
                 allTags.push(...story.currentTags);
+
+                const hasNext = story.currentTags.some(t => t.trim().toLowerCase().startsWith('next'));
+                if (hasNext && story.canContinue) {
+                    break;
+                }
             }
         }
+        setCurrentKnotName(getCurrentKnot(story));
         return { text: fullText, tags: allTags };
-    }, []);
+    }, [getCurrentKnot]);
+
+    // Warp to a specific knot by name
+    const warpToKnot = useCallback((knotName) => {
+        const story = simulatorRef.current;
+        if (!story || !knotName) return;
+        clearVFX();
+        stateStackRef.current.push(story.state.toJson());
+        try {
+            story.ChoosePathString(knotName, true);
+        } catch (e) {
+            console.warn('[Preview] Warp failed:', e.message);
+            return;
+        }
+
+        let fullText = '';
+        const allTags = [];
+        while (story.canContinue) {
+            const line = story.Continue();
+            if (line.trim()) fullText += (fullText ? '\n' : '') + line;
+            if (story.currentTags.length > 0) {
+                allTags.push(...story.currentTags);
+                const hasNext = story.currentTags.some(t => t.trim().toLowerCase().startsWith('next'));
+                if (hasNext && story.canContinue) break;
+            }
+        }
+        processTagsRef.current?.(allTags);
+        setText(fullText);
+        syncSimState(story);
+        setHistory([{ text: `>> Warped to ${knotName}`, type: 'system' }, { text: fullText, type: 'text' }]);
+        snapshotVariables(story);
+        setCurrentKnotName(knotName);
+    }, [clearVFX, syncSimState, snapshotVariables]);
 
     // Initialize/Restart with real Ink compilation
-    const initStory = useCallback(() => {
+    const initStory = useCallback(async (overrideStartNodeId = null) => {
         minigameController.reset();
         setCompileError(null);
+        setIsCompiling(true);
 
         try {
+            // Build ID map for node-to-knot resolution
+            const idMap = buildIdMap(nodes);
+            idMapRef.current = idMap;
+            const knots = Array.from(idMap.values()).sort();
+            setKnotList(knots);
+            if (knots.length > 0) setSelectedWarpKnot(knots[0]);
+
             const inkSource = generateInk(nodes, edges, variables);
+
+            // Yield to UI before heavy compilation
+            await new Promise(r => setTimeout(r, 0));
+
+            const { Compiler } = await import('inkjs/compiler/Compiler');
             const compiler = new Compiler(inkSource);
             const compiled = compiler.Compile();
             const jsonStr = compiled.ToJson();
@@ -199,6 +270,20 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
 
             simulatorRef.current = story;
             stateStackRef.current = [];
+
+            // If starting at a specific node, warp there
+            const targetNodeId = overrideStartNodeId || startAtNodeId;
+            if (targetNodeId) {
+                const knotName = idMap.get(targetNodeId);
+                if (knotName) {
+                    try {
+                        story.ChoosePathString(knotName, true);
+                        setCurrentKnotName(knotName);
+                    } catch (e) {
+                        console.warn('[Preview] Start-at warp failed:', e.message);
+                    }
+                }
+            }
 
             // Drain initial text
             const { text: firstText, tags } = drainText(story);
@@ -211,8 +296,10 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
         } catch (err) {
             setCompileError(err.message || 'Failed to compile Ink');
             simulatorRef.current = null;
+        } finally {
+            setIsCompiling(false);
         }
-    }, [nodes, edges, variables, processTagsForNode, minigameController, syncSimState, drainText, snapshotVariables]);
+    }, [nodes, edges, variables, startAtNodeId, processTagsForNode, minigameController, syncSimState, drainText, snapshotVariables]);
 
     useEffect(() => {
         initStory();
@@ -269,6 +356,35 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
         syncSimState(story);
         snapshotVariables(story);
     }, [processTagsForNode, clearVFX, minigameController.isPlaying, syncSimState, drainText, snapshotVariables]);
+
+    // Compiling state
+    if (isCompiling) {
+        return (
+            <div className="fixed inset-0 z-[100] bg-[#0b0c10] flex flex-col animate-fade-in">
+                <div className="h-12 bg-[#1c1f27] border-b border-[#282e39] flex items-center justify-between px-6 shrink-0">
+                    <div className="flex items-center gap-2">
+                        <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
+                        </span>
+                        <span className="text-yellow-400 text-xs font-bold uppercase tracking-wider">Compiling</span>
+                    </div>
+                    <button
+                        onClick={onClose}
+                        className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#282e39] text-[#9da6b9] hover:text-white transition-all"
+                    >
+                        <span className="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <div className="flex-1 flex items-center justify-center">
+                    <div className="text-center">
+                        <div className="inline-block w-8 h-8 border-2 border-yellow-400/30 border-t-yellow-400 rounded-full animate-spin mb-4"></div>
+                        <p className="text-[#9da6b9] text-sm">Compiling {nodes.length} knots...</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     // Compile error view
     if (compileError) {
@@ -347,9 +463,54 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
                         <span className="material-symbols-outlined text-sm">arrow_back</span>
                         <span className="text-[10px] uppercase font-bold">Back</span>
                     </button>
+
+                    {/* Knot Warp */}
+                    <div className="w-px h-4 bg-[#282e39]"></div>
+                    <div className="flex items-center gap-1.5">
+                        <select
+                            value={selectedWarpKnot}
+                            onChange={(e) => setSelectedWarpKnot(e.target.value)}
+                            className="h-7 px-2 bg-[#0b0c10] border border-[#282e39] rounded text-[10px] text-[#9da6b9] focus:outline-none focus:border-[#2b6cee] font-mono max-w-[160px]"
+                            title="Select knot to warp to"
+                        >
+                            {knotList.map(k => (
+                                <option key={k} value={k}>{k}</option>
+                            ))}
+                        </select>
+                        <button
+                            onClick={() => warpToKnot(selectedWarpKnot)}
+                            className="text-[#9da6b9] hover:text-yellow-400 flex items-center gap-1 transition-colors"
+                            title="Warp to selected knot"
+                        >
+                            <span className="material-symbols-outlined text-sm">flight</span>
+                            <span className="text-[10px] uppercase font-bold">Warp</span>
+                        </button>
+                    </div>
+
+                    {/* Current knot indicator */}
+                    {currentKnotName && (
+                        <>
+                            <div className="w-px h-4 bg-[#282e39]"></div>
+                            <span className="text-[10px] font-mono text-yellow-400/80 bg-yellow-400/10 px-2 py-0.5 rounded" title="Current knot">
+                                {currentKnotName}
+                            </span>
+                        </>
+                    )}
                 </div>
 
                 <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => setVfxEnabled(prev => !prev)}
+                        className={`h-8 px-3 flex items-center gap-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
+                            vfxEnabled
+                                ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
+                                : 'bg-[#282e39] text-[#9da6b9] hover:text-white'
+                        }`}
+                        title="Toggle VFX (shake, flash, etc.)"
+                    >
+                        <span className="material-symbols-outlined text-sm">auto_awesome</span>
+                        <span className="text-[10px]">VFX</span>
+                    </button>
                     <button
                         onClick={() => setShowVarPanel(prev => !prev)}
                         className={`h-8 px-3 flex items-center gap-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
@@ -371,8 +532,8 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
                 </div>
             </div>
 
-            {/* Flash Overlay */}
-            {vfxState.flash && (
+            {/* Flash Overlay — only when VFX enabled */}
+            {vfxEnabled && vfxState.flash && (
                 <div
                     className="absolute inset-0 z-[200] pointer-events-none animate-flash-fade"
                     style={{ backgroundColor: vfxState.flash }}
@@ -391,7 +552,7 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
             {/* Main content area: Player + Variable Inspector */}
             <div className="flex-1 flex relative overflow-hidden">
                 {/* Simulated Player */}
-                <div className={`flex-1 relative overflow-hidden transition-transform ${vfxState.shake ? 'animate-shake' : ''}`}>
+                <div className={`flex-1 relative overflow-hidden transition-transform ${vfxEnabled && vfxState.shake ? 'animate-shake' : ''}`}>
                     <Player
                         text={text}
                         choices={choices}
@@ -401,7 +562,7 @@ export default function PreviewPanel({ nodes, edges, variables = [], onClose }) 
                         onChoice={handleChoice}
                         onRestart={initStory}
                         onBack={onClose}
-                        typewriterDelay={20}
+                        typewriterDelay={10}
                     />
                 </div>
 

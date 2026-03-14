@@ -636,7 +636,11 @@ function AppContent({ onStorySelect }) {
 
             {/* Bardo Editor Overlay - Only visible in Story Selector view */}
             {showEditor && showStorySelector && (
-                <Suspense fallback={<div className="fixed inset-0 z-[200] bg-black text-white flex items-center justify-center font-mono">LOADING THE LOOM...</div>}>
+                <Suspense fallback={
+                    <div className="fixed inset-0 z-[200] bg-[#0a0a0a] flex items-center justify-center">
+                        <p className="text-yellow-400 text-xl tracking-widest animate-pulse">LOADING BARDOEDITOR...</p>
+                    </div>
+                }>
                     <BardoEditor onClose={() => setShowEditor(false)} />
                 </Suspense>
             )}

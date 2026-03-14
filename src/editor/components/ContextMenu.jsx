@@ -24,6 +24,7 @@ export default function ContextMenu({
     x, y, type, nodeId, nodeType, edgeId,
     onClose, onEdit, onDuplicate, onDelete, onDeleteEdge,
     onConvertType, onAddNode, onInsertTemplate, screenToFlow,
+    onPlayFromHere,
 }) {
     const ref = useRef(null);
     const [showTemplates, setShowTemplates] = React.useState(false);
@@ -72,6 +73,7 @@ export default function ContextMenu({
                 <>
                     <Item icon="edit" label="Edit" onClick={() => onEdit?.(nodeId)} />
                     <Item icon="content_copy" label="Duplicate" onClick={() => onDuplicate?.(nodeId)} />
+                    <Item icon="play_arrow" label="Play from here" onClick={() => onPlayFromHere?.(nodeId)} />
                     <Divider />
                     {nodeType !== 'hub' && (
                         <Item icon="castle" label="Convert to Hub" onClick={() => onConvertType?.(nodeId, 'hub')} />

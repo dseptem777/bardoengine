@@ -26,6 +26,7 @@ tauri-plugin-log = "2"
 tauri-plugin-fs = "2"
 aes-gcm = "0.10"
 base64 = "0.21"
+tauri-plugin-dialog = "2.6.0"
 
 [profile.release]
 strip = true        # Strip debug symbols from binary

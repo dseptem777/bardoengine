@@ -2,6 +2,7 @@
  * useEditorState.js
  * Central state management for BardoEditor.
  * Handles nodes, edges, project metadata, persistence, variables, and exports.
+ * Supports native file save/open via Tauri with browser fallback.
  *
  * Created by: Antigravity
  * For: BardoEditor Lite Phase 1
@@ -13,7 +14,18 @@ import {
     useEdgesState,
 } from 'reactflow';
 import { generateInk } from '../utils/generateInk';
+import { parseInk } from '../utils/parseInk';
 import { useUndoRedo } from './useUndoRedo';
+import {
+    isTauriApp,
+    openFile,
+    saveFileAs,
+    writeToPath,
+    readFromPath,
+    addRecentProject,
+    PROJECT_FILTERS,
+    INK_FILTERS,
+} from '../utils/fileManager';
 
 const STORAGE_KEY = 'bardoeditor_project';
 const PROJECT_VERSION = '1.2.0';
@@ -54,6 +66,34 @@ const createEmptyProject = () => ({
 });
 
 /**
+ * Serialize current project state to a JSON string.
+ */
+function serializeProject(nodes, edges, storyTitle, projectConfig, variables) {
+    return JSON.stringify({
+        version: PROJECT_VERSION,
+        title: storyTitle,
+        nodes: nodes.map(n => ({
+            id: n.id,
+            type: n.type,
+            position: n.position,
+            data: n.data,
+        })),
+        edges: edges.map(e => ({
+            id: e.id,
+            source: e.source,
+            target: e.target,
+            sourceHandle: e.sourceHandle,
+            targetHandle: e.targetHandle,
+            label: e.label,
+            data: e.data,
+        })),
+        variables,
+        config: projectConfig,
+        savedAt: new Date().toISOString(),
+    }, null, 2);
+}
+
+/**
  * Main editor state hook
  * @returns {Object} Editor state and actions
  */
@@ -67,6 +107,10 @@ export function useEditorState() {
     const [projectConfig, setProjectConfig] = useState(createEmptyProject().config);
     const [variables, setVariables] = useState([]);
     const [isDirty, setIsDirty] = useState(false);
+
+    // File management
+    const [currentFilePath, setCurrentFilePath] = useState(null);
+    const [isWelcomeScreen, setIsWelcomeScreen] = useState(true);
 
     // Undo/redo
     const { canUndo, canRedo, pushSnapshot, undo: undoStep, redo: redoStep, initHistory, getHistory, jumpTo: jumpToStep } = useUndoRedo();
@@ -116,34 +160,77 @@ export function useEditorState() {
     }, [jumpToStep, setNodes, setEdges]);
 
     /**
-     * Save project to localStorage
+     * Load a parsed project object into state.
      */
-    const saveProject = useCallback(() => {
-        const project = {
-            version: PROJECT_VERSION,
-            title: storyTitle,
-            nodes: nodes.map(n => ({
-                id: n.id,
-                type: n.type,
-                position: n.position,
-                data: n.data,
-            })),
-            edges: edges.map(e => ({
-                id: e.id,
-                source: e.source,
-                target: e.target,
-                sourceHandle: e.sourceHandle,
-                targetHandle: e.targetHandle,
-                label: e.label,
-                data: e.data,
-            })),
-            variables,
-            config: projectConfig,
-            savedAt: new Date().toISOString(),
-        };
+    const loadProjectData = useCallback((project, filePath = null) => {
+        const migratedNodes = migrateNodes(project.nodes || []);
 
+        isRestoringRef.current = true;
+        setStoryTitle(project.title || 'Untitled Story');
+        setNodes(migratedNodes);
+        setEdges(project.edges || []);
+        setVariables(project.variables || []);
+        setProjectConfig(project.config || createEmptyProject().config);
+        setIsDirty(false);
+        setCurrentFilePath(filePath);
+        setIsWelcomeScreen(false);
+        initHistory(migratedNodes, project.edges || []);
+        requestAnimationFrame(() => { isRestoringRef.current = false; });
+
+        if (filePath) {
+            addRecentProject(filePath, project.title || 'Untitled Story');
+        }
+    }, [setNodes, setEdges, initHistory]);
+
+    /**
+     * Autosave to localStorage (crash recovery)
+     */
+    const autosaveToLocalStorage = useCallback(() => {
         try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(project));
+            const json = serializeProject(nodes, edges, storyTitle, projectConfig, variables);
+            localStorage.setItem(STORAGE_KEY, json);
+        } catch {
+            // Silently fail — localStorage is just crash recovery
+        }
+    }, [nodes, edges, storyTitle, projectConfig, variables]);
+
+    // Autosave on changes (debounced via effect)
+    useEffect(() => {
+        if (!isWelcomeScreen && nodes.length > 0) {
+            const timer = setTimeout(autosaveToLocalStorage, 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [nodes, edges, storyTitle, isWelcomeScreen, autosaveToLocalStorage]);
+
+    /**
+     * Save project — to file if path exists, otherwise saveAs. Falls back to localStorage.
+     */
+    const saveProject = useCallback(async () => {
+        const json = serializeProject(nodes, edges, storyTitle, projectConfig, variables);
+
+        // If we have a current path (Tauri), write directly
+        if (currentFilePath) {
+            try {
+                const wrote = await writeToPath(currentFilePath, json);
+                if (wrote) {
+                    setIsDirty(false);
+                    addRecentProject(currentFilePath, storyTitle);
+                    console.log('[BardoEditor] Saved to', currentFilePath);
+                    return true;
+                }
+            } catch (err) {
+                console.error('[BardoEditor] Failed to save to path:', err);
+            }
+        }
+
+        // No path or not Tauri — try saveAs for Tauri, fall back to localStorage
+        if (isTauriApp()) {
+            return saveProjectAs();
+        }
+
+        // Browser: save to localStorage
+        try {
+            localStorage.setItem(STORAGE_KEY, json);
             setIsDirty(false);
             console.log('[BardoEditor] Project saved to localStorage');
             return true;
@@ -152,10 +239,128 @@ export function useEditorState() {
             alert('Failed to save project: ' + err.message);
             return false;
         }
+    }, [nodes, edges, storyTitle, projectConfig, variables, currentFilePath]);
+
+    /**
+     * Save As — always shows dialog
+     */
+    const saveProjectAs = useCallback(async () => {
+        const json = serializeProject(nodes, edges, storyTitle, projectConfig, variables);
+        const defaultName = `${slugify(storyTitle)}.bardoproject.json`;
+
+        try {
+            const path = await saveFileAs(json, PROJECT_FILTERS, defaultName);
+            if (path) {
+                setCurrentFilePath(path);
+                setIsDirty(false);
+                addRecentProject(path, storyTitle);
+                console.log('[BardoEditor] Saved as', path);
+            }
+            return !!path;
+        } catch (err) {
+            console.error('[BardoEditor] Save As failed:', err);
+            alert('Failed to save: ' + err.message);
+            return false;
+        }
     }, [nodes, edges, storyTitle, projectConfig, variables]);
 
     /**
-     * Load project from localStorage
+     * Open project from native dialog or browser file input
+     */
+    const openProject = useCallback(async () => {
+        if (isDirty && !confirm('You have unsaved changes. Open a different project?')) {
+            return false;
+        }
+
+        try {
+            const result = await openFile(PROJECT_FILTERS);
+            if (!result) return false;
+
+            const project = JSON.parse(result.content);
+            if (!project.nodes || !Array.isArray(project.nodes)) {
+                throw new Error('Invalid project file: missing nodes');
+            }
+
+            loadProjectData(project, result.path);
+            console.log('[BardoEditor] Project opened', result.path || '(browser)');
+            return true;
+        } catch (err) {
+            console.error('[BardoEditor] Failed to open:', err);
+            alert('Failed to open project: ' + err.message);
+            return false;
+        }
+    }, [isDirty, loadProjectData]);
+
+    /**
+     * Open a recent project by path (Tauri only)
+     */
+    const openRecentProject = useCallback(async (path) => {
+        if (isDirty && !confirm('You have unsaved changes. Open a different project?')) {
+            return false;
+        }
+
+        try {
+            const content = await readFromPath(path);
+            if (!content) {
+                alert('Could not read file. It may have been moved or deleted.');
+                return false;
+            }
+
+            const project = JSON.parse(content);
+            if (!project.nodes || !Array.isArray(project.nodes)) {
+                throw new Error('Invalid project file');
+            }
+
+            loadProjectData(project, path);
+            console.log('[BardoEditor] Opened recent project', path);
+            return true;
+        } catch (err) {
+            console.error('[BardoEditor] Failed to open recent:', err);
+            alert('Failed to open project: ' + err.message);
+            return false;
+        }
+    }, [isDirty, loadProjectData]);
+
+    /**
+     * Import an .ink file and convert to editor graph
+     */
+    const importInkFile = useCallback(async () => {
+        if (isDirty && !confirm('You have unsaved changes. Import will replace the current project.')) {
+            return false;
+        }
+
+        try {
+            const result = await openFile(INK_FILTERS);
+            if (!result) return false;
+
+            const { nodes: parsedNodes, edges: parsedEdges, variables: parsedVars } = parseInk(result.content);
+
+            if (parsedNodes.length === 0) {
+                alert('No knots found in the Ink file. Make sure it contains === knot_name === sections.');
+                return false;
+            }
+
+            const project = {
+                ...createEmptyProject(),
+                title: extractTitleFromPath(result.path) || 'Imported Ink',
+                nodes: parsedNodes,
+                edges: parsedEdges,
+                variables: parsedVars,
+            };
+
+            loadProjectData(project, null); // No file path — it's an import, not a save target
+            setIsDirty(true); // Mark dirty since it needs saving
+            console.log(`[BardoEditor] Imported Ink: ${parsedNodes.length} knots, ${parsedEdges.length} edges`);
+            return true;
+        } catch (err) {
+            console.error('[BardoEditor] Failed to import Ink:', err);
+            alert('Failed to import Ink file: ' + err.message);
+            return false;
+        }
+    }, [isDirty, loadProjectData]);
+
+    /**
+     * Load project from localStorage (legacy)
      */
     const loadProject = useCallback(() => {
         try {
@@ -166,21 +371,7 @@ export function useEditorState() {
             }
 
             const project = JSON.parse(saved);
-
-            // Migrate old node types to passage
-            const migratedNodes = migrateNodes(project.nodes || []);
-
-            // Restore state
-            isRestoringRef.current = true;
-            setStoryTitle(project.title || 'Untitled Story');
-            setNodes(migratedNodes);
-            setEdges(project.edges || []);
-            setVariables(project.variables || []);
-            setProjectConfig(project.config || createEmptyProject().config);
-            setIsDirty(false);
-            initHistory(migratedNodes, project.edges || []);
-            requestAnimationFrame(() => { isRestoringRef.current = false; });
-
+            loadProjectData(project, null);
             console.log('[BardoEditor] Project loaded from localStorage');
             return true;
         } catch (err) {
@@ -188,37 +379,16 @@ export function useEditorState() {
             alert('Failed to load project: ' + err.message);
             return false;
         }
-    }, [setNodes, setEdges, initHistory]);
+    }, [loadProjectData]);
 
     /**
      * Export project to JSON file (download)
      */
     const exportProject = useCallback(() => {
-        const project = {
-            version: PROJECT_VERSION,
-            title: storyTitle,
-            nodes: nodes.map(n => ({
-                id: n.id,
-                type: n.type,
-                position: n.position,
-                data: n.data,
-            })),
-            edges: edges.map(e => ({
-                id: e.id,
-                source: e.source,
-                target: e.target,
-                sourceHandle: e.sourceHandle,
-                targetHandle: e.targetHandle,
-                label: e.label,
-                data: e.data,
-            })),
-            variables,
-            config: projectConfig,
-            exportedAt: new Date().toISOString(),
-        };
+        const json = serializeProject(nodes, edges, storyTitle, projectConfig, variables);
 
         downloadFile(
-            JSON.stringify(project, null, 2),
+            json,
             `${slugify(storyTitle)}.bardoproject.json`,
             'application/json'
         );
@@ -273,7 +443,7 @@ export function useEditorState() {
     }, [storyTitle, projectConfig]);
 
     /**
-     * Import project from JSON file
+     * Import project from JSON file (legacy browser-only method)
      */
     const importProject = useCallback((file) => {
         return new Promise((resolve, reject) => {
@@ -288,20 +458,8 @@ export function useEditorState() {
                         throw new Error('Invalid project file: missing nodes');
                     }
 
-                    // Migrate old node types to passage
-                    const migratedNodes = migrateNodes(project.nodes || []);
-
-                    // Restore state
-                    isRestoringRef.current = true;
-                    setStoryTitle(project.title || 'Imported Story');
-                    setNodes(migratedNodes);
-                    setEdges(project.edges || []);
-                    setVariables(project.variables || []);
-                    setProjectConfig(project.config || createEmptyProject().config);
+                    loadProjectData(project, null);
                     setIsDirty(true);
-                    initHistory(migratedNodes, project.edges || []);
-                    requestAnimationFrame(() => { isRestoringRef.current = false; });
-
                     console.log('[BardoEditor] Project imported from file');
                     resolve(true);
                 } catch (err) {
@@ -313,7 +471,7 @@ export function useEditorState() {
             reader.onerror = () => reject(new Error('Failed to read file'));
             reader.readAsText(file);
         });
-    }, [setNodes, setEdges, initHistory]);
+    }, [loadProjectData]);
 
     /**
      * Clear project and start fresh
@@ -331,6 +489,8 @@ export function useEditorState() {
         setVariables([]);
         setProjectConfig(empty.config);
         setIsDirty(false);
+        setCurrentFilePath(null);
+        setIsWelcomeScreen(false);
         initHistory([], []);
         requestAnimationFrame(() => { isRestoringRef.current = false; });
 
@@ -342,7 +502,7 @@ export function useEditorState() {
     }, [isDirty, setNodes, setEdges, initHistory]);
 
     /**
-     * Check if there's a saved project on mount
+     * Check if there's a saved project on mount — show welcome screen or recover
      */
     useEffect(() => {
         const saved = localStorage.getItem(STORAGE_KEY);
@@ -350,18 +510,25 @@ export function useEditorState() {
             try {
                 const project = JSON.parse(saved);
                 if (project.nodes && project.nodes.length > 0) {
-                    const shouldLoad = confirm(
-                        `Found saved project "${project.title}". Load it?`
-                    );
-                    if (shouldLoad) {
-                        loadProject();
-                    }
+                    // Auto-recover crash save but still show welcome
+                    // The welcome screen will offer to load it
+                    setIsWelcomeScreen(true);
                 }
             } catch (e) {
                 // Ignore parse errors
             }
         }
     }, []); // Only on mount
+
+    /**
+     * Get the display name for the current file
+     */
+    const currentFileName = useMemo(() => {
+        if (!currentFilePath) return null;
+        // Extract filename from path
+        const parts = currentFilePath.replace(/\\/g, '/').split('/');
+        return parts[parts.length - 1];
+    }, [currentFilePath]);
 
     return useMemo(() => ({
         // State
@@ -371,6 +538,9 @@ export function useEditorState() {
         projectConfig,
         variables,
         isDirty,
+        currentFilePath,
+        currentFileName,
+        isWelcomeScreen,
 
         // ReactFlow handlers
         onNodesChange,
@@ -382,6 +552,7 @@ export function useEditorState() {
         setStoryTitle,
         setProjectConfig,
         setVariables,
+        setIsWelcomeScreen,
 
         // Undo/redo
         undo,
@@ -393,6 +564,10 @@ export function useEditorState() {
 
         // Project actions
         saveProject,
+        saveProjectAs,
+        openProject,
+        openRecentProject,
+        importInkFile,
         loadProject,
         exportProject,
         exportInk,
@@ -402,10 +577,12 @@ export function useEditorState() {
         newProject,
     }), [
         nodes, edges, storyTitle, projectConfig, variables, isDirty,
+        currentFilePath, currentFileName, isWelcomeScreen,
         onNodesChange, onEdgesChange, setNodes, setEdges,
         setStoryTitle, setProjectConfig, setVariables,
         undo, redo, canUndo, canRedo, getHistory, jumpToHistory,
-        saveProject, loadProject, exportProject, exportInk, copyInk, exportConfig, importProject, newProject,
+        saveProject, saveProjectAs, openProject, openRecentProject, importInkFile,
+        loadProject, exportProject, exportInk, copyInk, exportConfig, importProject, newProject,
     ]);
 }
 
@@ -423,6 +600,16 @@ function downloadFile(content, filename, mimeType) {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+}
+
+/**
+ * Extract a title from a file path (filename without extension).
+ */
+function extractTitleFromPath(filePath) {
+    if (!filePath) return null;
+    const parts = filePath.replace(/\\/g, '/').split('/');
+    const filename = parts[parts.length - 1];
+    return filename.replace(/\.\w+$/, '').replace(/_/g, ' ');
 }
 
 export default useEditorState;
