@@ -23,8 +23,16 @@ describe('BardoEditor', () => {
     it('renders the editor with title and toolbar', () => {
         render(<BardoEditor onClose={vi.fn()} />)
 
-        expect(screen.getByText('The Loom')).toBeInTheDocument()
+        // BardoEditor text appears in both welcome screen and header
+        expect(screen.getAllByText('BardoEditor').length).toBeGreaterThanOrEqual(1)
         expect(screen.getByPlaceholderText('Story Title')).toBeInTheDocument()
-        expect(screen.getByText('Nodes:')).toBeInTheDocument()
+    })
+
+    it('shows welcome screen on initial load', () => {
+        render(<BardoEditor onClose={vi.fn()} />)
+
+        expect(screen.getByText('New Project')).toBeInTheDocument()
+        expect(screen.getByText('Open Project')).toBeInTheDocument()
+        expect(screen.getByText('Import .ink')).toBeInTheDocument()
     })
 })

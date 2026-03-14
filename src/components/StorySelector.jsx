@@ -134,7 +134,7 @@ export default function StorySelector({ stories, onSelect, hasSave, onOpenEditor
                     onClick={onOpenEditor}
                     className="absolute bottom-4 right-4 z-20 text-bardo-accent hover:text-white transition-colors font-mono text-xs uppercase tracking-widest border border-bardo-accent/30 px-3 py-1 rounded hover:bg-bardo-accent/20"
                 >
-                    [The Loom]
+                    [BardoEditor]
                 </button>
             )}
         </div>

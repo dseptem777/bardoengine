@@ -15,6 +15,9 @@
   "permissions": [
     "core:default",
     "fs:allow-read-file",
-    "fs:scope-resource-recursive"
+    "fs:allow-write-text-file",
+    "fs:allow-read-text-file",
+    "fs:scope-resource-recursive",
+    "dialog:default"
   ]
 }

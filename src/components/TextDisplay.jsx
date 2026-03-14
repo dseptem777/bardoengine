@@ -54,28 +54,25 @@ export default function TextDisplay({
         }
 
         const typeChar = () => {
-            if (indexRef.current < text.length) {
-                const currentChar = text[indexRef.current]
-                indexRef.current++
-                const newDisplayed = text.slice(0, indexRef.current)
-                setDisplayedText(newDisplayed)
-
-                // Mark as progressed AFTER setting displayed text
-                // This ensures detection sees the correct state
-                typewriterProgressedRef.current = true
-
-                // Dynamic rhythm logic
-                let dynamicDelay = typewriterDelay
-                if (['.', '?', '!'].includes(currentChar)) {
-                    dynamicDelay = typewriterDelay * 12
-                } else if ([',', ';', ':'].includes(currentChar)) {
-                    dynamicDelay = typewriterDelay * 5
-                }
-
-                timeoutRef.current = setTimeout(typeChar, dynamicDelay)
-            } else {
+            if (indexRef.current >= text.length) {
                 onCompleteRef.current?.()
+                return
             }
+
+            const currentChar = text[indexRef.current]
+            indexRef.current++
+            setDisplayedText(text.slice(0, indexRef.current))
+            typewriterProgressedRef.current = true
+
+            // Dynamic rhythm logic — original timing
+            let dynamicDelay = typewriterDelay
+            if (['.', '?', '!'].includes(currentChar)) {
+                dynamicDelay = typewriterDelay * 12
+            } else if ([',', ';', ':'].includes(currentChar)) {
+                dynamicDelay = typewriterDelay * 5
+            }
+
+            timeoutRef.current = setTimeout(typeChar, dynamicDelay)
         }
 
         // Start typing with a small delay to let React settle
@@ -124,15 +121,27 @@ export default function TextDisplay({
         hasFoundRef.current = false
     }, [text])
 
-    // Auto-scroll logic: scroll the anchor (bottom of text) into view while typing
+    // Auto-scroll logic: throttled to avoid per-character layout thrashing
+    const scrollRafRef = useRef(null)
     useEffect(() => {
         if (isTyping && anchorRef.current && typeof anchorRef.current.scrollIntoView === 'function') {
-            // Using 'block: center' keeps the active typing line near the middle of the screen
-            // providing natural padding at the bottom.
-            anchorRef.current.scrollIntoView({
-                block: 'center',
-                behavior: 'auto'
-            })
+            if (!scrollRafRef.current) {
+                scrollRafRef.current = requestAnimationFrame(() => {
+                    scrollRafRef.current = null
+                    if (anchorRef.current) {
+                        anchorRef.current.scrollIntoView({
+                            block: 'center',
+                            behavior: 'auto'
+                        })
+                    }
+                })
+            }
+        }
+        return () => {
+            if (scrollRafRef.current) {
+                cancelAnimationFrame(scrollRafRef.current)
+                scrollRafRef.current = null
+            }
         }
     }, [displayedText, isTyping])
 

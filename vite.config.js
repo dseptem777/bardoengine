@@ -1,8 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
+import path from 'path'
 
 // Detect Tauri mobile environment
 const isTauriMobile = process.env.TAURI_ENV_PLATFORM === 'android' || process.env.TAURI_ENV_PLATFORM === 'ios'
+const isEditorStandalone = process.env.VITE_EDITOR_STANDALONE === '1'
 
 export default defineConfig({
     plugins: [
@@ -22,6 +24,13 @@ export default defineConfig({
     // Set env prefix for Tauri env vars
     envPrefix: ['VITE_', 'TAURI_ENV_*'],
 
+    // For standalone editor builds, swap main.jsx → editor-main.jsx
+    resolve: isEditorStandalone ? {
+        alias: {
+            '/src/main.jsx': path.resolve(__dirname, 'src/editor-main.jsx')
+        }
+    } : {},
+
     build: {
         // Tauri uses Chromium on Windows/Linux and WebKit on macOS/Android
         // Targeting ES2021 for good mobile browser support
@@ -30,10 +39,12 @@ export default defineConfig({
         sourcemap: !!process.env.TAURI_ENV_DEBUG,
         rollupOptions: {
             output: {
-                manualChunks: {
-                    vendor: ['react', 'react-dom', 'framer-motion', 'howler'],
-                    inkjs: ['inkjs']
-                }
+                manualChunks: isEditorStandalone
+                    ? undefined
+                    : {
+                        vendor: ['react', 'react-dom', 'framer-motion', 'howler'],
+                        inkjs: ['inkjs']
+                    }
             }
         }
     }

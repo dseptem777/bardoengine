@@ -17,6 +17,7 @@ import HistoryPanel from './components/HistoryPanel';
 import { generateInk, generateHubRegistry, validateGraph } from './utils/generateInk';
 import { useEditorState } from './hooks/useEditorState';
 import ContextMenu from './components/ContextMenu';
+import WelcomeScreen from './components/WelcomeScreen';
 import { EXAMPLE_PROJECT } from './utils/exampleProject';
 import { useFirstUseGuides } from './hooks/useFirstUseGuides';
 
@@ -29,9 +30,12 @@ export default function BardoEditor({ onClose }) {
     // Use centralized editor state with persistence
     const {
         nodes, edges, storyTitle, isDirty, projectConfig, variables,
+        currentFilePath, currentFileName, isWelcomeScreen,
         onNodesChange, onEdgesChange,
         setNodes, setEdges, setStoryTitle, setProjectConfig, setVariables,
-        saveProject, loadProject, exportProject, importProject, newProject,
+        setIsWelcomeScreen,
+        saveProject, saveProjectAs, openProject, openRecentProject, importInkFile,
+        loadProject, exportProject, importProject, newProject,
         exportInk, copyInk, exportConfig,
         undo, redo, canUndo, canRedo,
         getHistory, jumpToHistory,
@@ -41,6 +45,7 @@ export default function BardoEditor({ onClose }) {
     const [selectedEdgeId, setSelectedEdgeId] = useState(null);
     const [isContentMaximized, setIsContentMaximized] = useState(false);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+    const [previewStartNodeId, setPreviewStartNodeId] = useState(null);
     const [activeNav, setActiveNav] = useState('editor'); // 'editor' | 'project'
     const [showExportMenu, setShowExportMenu] = useState(false);
     const [showShortcuts, setShowShortcuts] = useState(false);
@@ -53,6 +58,7 @@ export default function BardoEditor({ onClose }) {
     const [editingNodeId, setEditingNodeId] = useState(null);
     const [searchReplaceOpen, setSearchReplaceOpen] = useState(false);
     const [historyOpen, setHistoryOpen] = useState(false);
+    const [showFileMenu, setShowFileMenu] = useState(false);
 
     // First-use guides
     const { showWelcome, showFirstEdit, showFirstChoice, dismiss: dismissGuide, resetAll: resetGuides } = useFirstUseGuides();
@@ -68,6 +74,7 @@ export default function BardoEditor({ onClose }) {
     // File input ref for import
     const fileInputRef = useRef(null);
     const exportMenuRef = useRef(null);
+    const fileMenuRef = useRef(null);
     const connectingRef = useRef(null);
 
     // Callback for inline content editing from PassageNode
@@ -323,9 +330,18 @@ export default function BardoEditor({ onClose }) {
             } else if (e.ctrlKey && (e.key === 'Z' || (e.key === 'z' && e.shiftKey))) {
                 e.preventDefault();
                 redo();
+            } else if (e.ctrlKey && e.shiftKey && e.key === 'S') {
+                e.preventDefault();
+                saveProjectAs();
             } else if (e.ctrlKey && e.key === 's') {
                 e.preventDefault();
                 saveProject();
+            } else if (e.ctrlKey && e.key === 'o') {
+                e.preventDefault();
+                openProject();
+            } else if (e.ctrlKey && e.key === 'n') {
+                e.preventDefault();
+                newProject();
             } else if (e.ctrlKey && e.key === 'p') {
                 e.preventDefault();
                 setSearchOpen(prev => !prev);
@@ -344,7 +360,7 @@ export default function BardoEditor({ onClose }) {
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [undo, redo, saveProject, selectedEdgeId, handleDeleteEdge, handleDuplicateNode]);
+    }, [undo, redo, saveProject, saveProjectAs, openProject, newProject, selectedEdgeId, handleDeleteEdge, handleDuplicateNode]);
 
     // Close export menu on outside click
     useEffect(() => {
@@ -358,6 +374,19 @@ export default function BardoEditor({ onClose }) {
             return () => document.removeEventListener('mousedown', handleClick);
         }
     }, [showExportMenu]);
+
+    // Close file menu on outside click
+    useEffect(() => {
+        const handleClick = (e) => {
+            if (fileMenuRef.current && !fileMenuRef.current.contains(e.target)) {
+                setShowFileMenu(false);
+            }
+        };
+        if (showFileMenu) {
+            document.addEventListener('mousedown', handleClick);
+            return () => document.removeEventListener('mousedown', handleClick);
+        }
+    }, [showFileMenu]);
 
     const selectedNode = nodes.find(n => n.id === selectedNodeId);
 
@@ -519,7 +548,8 @@ export default function BardoEditor({ onClose }) {
         setEdges(EXAMPLE_PROJECT.edges);
         setVariables(EXAMPLE_PROJECT.variables || []);
         setProjectConfig(EXAMPLE_PROJECT.config);
-    }, [isDirty, setNodes, setEdges, setStoryTitle, setVariables, setProjectConfig]);
+        setIsWelcomeScreen(false);
+    }, [isDirty, setNodes, setEdges, setStoryTitle, setVariables, setProjectConfig, setIsWelcomeScreen]);
 
     const handleCopyInk = async () => {
         await copyInk();
@@ -580,71 +610,39 @@ export default function BardoEditor({ onClose }) {
         setSelectedNodeId(nodeId);
     }, [nodes, rfInstance]);
 
-    // Auto-layout: simple left-to-right tree layout
-    const handleAutoLayout = useCallback(() => {
+    // Auto-layout using Dagre (directed acyclic graph layout)
+    const handleAutoLayout = useCallback(async () => {
         if (nodes.length === 0) return;
 
-        const NODE_W = 300;
-        const NODE_H = 160;
-        const GAP_X = 80;
-        const GAP_Y = 40;
+        const dagreModule = await import('@dagrejs/dagre');
+        const dagre = dagreModule.default || dagreModule;
+        const g = new dagre.graphlib.Graph();
+        g.setDefaultEdgeLabel(() => ({}));
+        g.setGraph({ rankdir: 'LR', nodesep: 60, ranksep: 120, edgesep: 30 });
 
-        // Build adjacency and find roots
-        const children = {};
-        const hasParent = new Set();
-        nodes.forEach(n => { children[n.id] = []; });
+        const NODE_W = 280;
+        const NODE_H = 150;
+
+        nodes.forEach(n => {
+            g.setNode(n.id, { width: NODE_W, height: NODE_H });
+        });
         edges.forEach(e => {
-            if (children[e.source]) {
-                children[e.source].push(e.target);
-                hasParent.add(e.target);
-            }
+            g.setEdge(e.source, e.target);
         });
 
-        const roots = nodes.filter(n => !hasParent.has(n.id));
-        if (roots.length === 0) roots.push(nodes[0]);
+        dagre.layout(g);
 
-        // BFS layering
-        const visited = new Set();
-        const layers = [];
-        let queue = roots.map(r => r.id);
-        while (queue.length > 0) {
-            const layer = [];
-            const nextQueue = [];
-            queue.forEach(id => {
-                if (visited.has(id)) return;
-                visited.add(id);
-                layer.push(id);
-                (children[id] || []).forEach(childId => {
-                    if (!visited.has(childId)) nextQueue.push(childId);
-                });
-            });
-            if (layer.length > 0) layers.push(layer);
-            queue = nextQueue;
-        }
+        setNodes(nds => nds.map(n => {
+            const pos = g.node(n.id);
+            return {
+                ...n,
+                position: {
+                    x: pos.x - NODE_W / 2,
+                    y: pos.y - NODE_H / 2,
+                },
+            };
+        }));
 
-        // Add any unvisited nodes as a final layer
-        const orphans = nodes.filter(n => !visited.has(n.id)).map(n => n.id);
-        if (orphans.length > 0) layers.push(orphans);
-
-        // Assign positions
-        const positions = {};
-        layers.forEach((layer, col) => {
-            const totalH = layer.length * NODE_H + (layer.length - 1) * GAP_Y;
-            const startY = -totalH / 2;
-            layer.forEach((id, row) => {
-                positions[id] = {
-                    x: col * (NODE_W + GAP_X),
-                    y: startY + row * (NODE_H + GAP_Y),
-                };
-            });
-        });
-
-        setNodes(nds => nds.map(n => ({
-            ...n,
-            position: positions[n.id] || n.position,
-        })));
-
-        // Fit view after layout
         setTimeout(() => { if (rfInstance) rfInstance.fitView({ padding: 0.2, duration: 400 }); }, 50);
     }, [nodes, edges, setNodes, rfInstance]);
 
@@ -653,9 +651,6 @@ export default function BardoEditor({ onClose }) {
             {/* Inject Styles & Fonts */}
             <style>
                 {`
-            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-            @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
-
             .font-display { font-family: 'Inter', sans-serif; }
             .canvas-grid {
                 background-image: radial-gradient(#282e39 1px, transparent 1px);
@@ -696,12 +691,24 @@ export default function BardoEditor({ onClose }) {
             `}
             </style>
 
+            {/* Welcome Screen */}
+            {isWelcomeScreen && (
+                <WelcomeScreen
+                    onNewProject={newProject}
+                    onOpenProject={openProject}
+                    onImportInk={importInkFile}
+                    onOpenRecent={openRecentProject}
+                    onLoadExample={handleLoadExample}
+                    onRecoverCrashSave={() => { loadProject(); setIsWelcomeScreen(false); }}
+                />
+            )}
+
             {/* Top Navigation Bar */}
             <header className="flex items-center justify-between border-b border-[#282e39] bg-[#101622]/80 backdrop-blur-md px-6 py-3 z-50 font-display">
                 <div className="flex items-center gap-8">
                     <div className="flex items-center gap-3">
                         <span className="material-symbols-outlined text-[#2b6cee] text-3xl">hub</span>
-                        <h2 className="text-white text-lg font-bold leading-tight tracking-tight">The Loom</h2>
+                        <h2 className="text-white text-lg font-bold leading-tight tracking-tight">BardoEditor</h2>
                     </div>
                     <div className="flex items-center gap-6 text-sm font-medium">
                         <button
@@ -720,6 +727,59 @@ export default function BardoEditor({ onClose }) {
                 </div>
 
                 <div className="flex items-center gap-4">
+                    {/* File menu dropdown */}
+                    <div className="relative" ref={fileMenuRef}>
+                        <button
+                            onClick={() => setShowFileMenu(!showFileMenu)}
+                            className="flex items-center gap-2 rounded-lg h-9 px-3 bg-[#1c1f27] text-[#9da6b9] hover:text-white hover:bg-[#282e39] border border-[#282e39] transition-all text-sm"
+                        >
+                            <span className="material-symbols-outlined text-sm">description</span>
+                            File
+                            <span className="material-symbols-outlined text-sm">expand_more</span>
+                        </button>
+
+                        {showFileMenu && (
+                            <div className="absolute left-0 top-full mt-2 w-64 bg-[#1c1f27] border border-[#282e39] rounded-xl shadow-2xl overflow-hidden z-50">
+                                <button onClick={() => { newProject(); setShowFileMenu(false); }} className="w-full px-4 py-2.5 text-sm text-left text-[#9da6b9] hover:text-white hover:bg-[#282e39] flex items-center gap-3 transition-all">
+                                    <span className="material-symbols-outlined text-base text-blue-400">note_add</span>
+                                    New Project
+                                    <span className="ml-auto text-xs text-[#4b5563]">Ctrl+N</span>
+                                </button>
+                                <button onClick={() => { openProject(); setShowFileMenu(false); }} className="w-full px-4 py-2.5 text-sm text-left text-[#9da6b9] hover:text-white hover:bg-[#282e39] flex items-center gap-3 transition-all">
+                                    <span className="material-symbols-outlined text-base text-blue-400">folder_open</span>
+                                    Open Project...
+                                    <span className="ml-auto text-xs text-[#4b5563]">Ctrl+O</span>
+                                </button>
+                                <div className="h-px bg-[#282e39]" />
+                                <button onClick={() => { saveProject(); setShowFileMenu(false); }} className="w-full px-4 py-2.5 text-sm text-left text-[#9da6b9] hover:text-white hover:bg-[#282e39] flex items-center gap-3 transition-all">
+                                    <span className="material-symbols-outlined text-base text-green-400">save</span>
+                                    Save
+                                    <span className="ml-auto text-xs text-[#4b5563]">Ctrl+S</span>
+                                </button>
+                                <button onClick={() => { saveProjectAs(); setShowFileMenu(false); }} className="w-full px-4 py-2.5 text-sm text-left text-[#9da6b9] hover:text-white hover:bg-[#282e39] flex items-center gap-3 transition-all">
+                                    <span className="material-symbols-outlined text-base text-green-400">save_as</span>
+                                    Save As...
+                                    <span className="ml-auto text-xs text-[#4b5563]">Ctrl+Shift+S</span>
+                                </button>
+                                <div className="h-px bg-[#282e39]" />
+                                <button onClick={() => { importInkFile(); setShowFileMenu(false); }} className="w-full px-4 py-2.5 text-sm text-left text-[#9da6b9] hover:text-white hover:bg-[#282e39] flex items-center gap-3 transition-all">
+                                    <span className="material-symbols-outlined text-base text-yellow-400">code</span>
+                                    Import .ink File...
+                                </button>
+                                <button onClick={() => { exportInk(); setShowFileMenu(false); }} className="w-full px-4 py-2.5 text-sm text-left text-[#9da6b9] hover:text-white hover:bg-[#282e39] flex items-center gap-3 transition-all">
+                                    <span className="material-symbols-outlined text-base text-yellow-400">download</span>
+                                    Export as .ink
+                                </button>
+                                <div className="h-px bg-[#282e39]" />
+                                <button onClick={() => { handleLoadExample(); setShowFileMenu(false); }} className="w-full px-4 py-2.5 text-sm text-left text-[#9da6b9] hover:text-white hover:bg-[#282e39] flex items-center gap-3 transition-all">
+                                    <span className="material-symbols-outlined text-base text-purple-400">menu_book</span>
+                                    Load Example Project
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Story title with unsaved indicator */}
                     <div className="flex items-center bg-[#1c1f27] rounded-lg h-9 px-3 border border-[#282e39]">
                         <span className="material-symbols-outlined text-[#9da6b9] text-sm mr-2">auto_stories</span>
                         <input
@@ -729,9 +789,17 @@ export default function BardoEditor({ onClose }) {
                             onKeyDown={(e) => e.stopPropagation()}
                             placeholder="Story Title"
                         />
+                        {isDirty && <span className="w-2 h-2 rounded-full bg-yellow-400 ml-2" title="Unsaved changes" />}
                     </div>
 
-                    {/* Hidden file input for import */}
+                    {/* Current file name */}
+                    {currentFileName && (
+                        <span className="text-xs text-[#4b5563] truncate max-w-[200px]" title={currentFilePath}>
+                            {currentFileName}
+                        </span>
+                    )}
+
+                    {/* Hidden file input for legacy import */}
                     <input
                         ref={fileInputRef}
                         type="file"
@@ -739,21 +807,6 @@ export default function BardoEditor({ onClose }) {
                         onChange={handleImportFile}
                         className="hidden"
                     />
-
-                    {/* New Project */}
-                    <button onClick={newProject} className="flex items-center gap-2 rounded-lg h-9 px-3 bg-[#1c1f27] text-[#9da6b9] hover:text-white hover:bg-[#282e39] border border-[#282e39] transition-all text-sm" title="New Project">
-                        <span className="material-symbols-outlined text-sm">note_add</span>
-                    </button>
-
-                    {/* Import */}
-                    <button onClick={() => fileInputRef.current?.click()} className="flex items-center gap-2 rounded-lg h-9 px-3 bg-[#1c1f27] text-[#9da6b9] hover:text-white hover:bg-[#282e39] border border-[#282e39] transition-all text-sm" title="Import Project">
-                        <span className="material-symbols-outlined text-sm">upload_file</span>
-                    </button>
-
-                    {/* Load Example */}
-                    <button onClick={handleLoadExample} className="flex items-center gap-2 rounded-lg h-9 px-3 bg-[#1c1f27] text-[#9da6b9] hover:text-white hover:bg-[#282e39] border border-[#282e39] transition-all text-sm" title="Load Example Project (The Haunted Mansion)">
-                        <span className="material-symbols-outlined text-sm">menu_book</span>
-                    </button>
 
                     {/* Undo */}
                     <button
@@ -775,14 +828,9 @@ export default function BardoEditor({ onClose }) {
                         <span className="material-symbols-outlined text-sm">redo</span>
                     </button>
 
-                    {/* Save to localStorage */}
-                    <button onClick={saveProject} className={`flex items-center gap-2 rounded-lg h-9 px-3 text-sm border transition-all ${isDirty ? 'bg-yellow-500/20 border-yellow-500/50 text-yellow-400 hover:bg-yellow-500/30' : 'bg-[#1c1f27] border-[#282e39] text-[#9da6b9] hover:text-white hover:bg-[#282e39]'}`} title="Save to Browser (Ctrl+S)">
+                    {/* Save button */}
+                    <button onClick={saveProject} className={`flex items-center gap-2 rounded-lg h-9 px-3 text-sm border transition-all ${isDirty ? 'bg-yellow-500/20 border-yellow-500/50 text-yellow-400 hover:bg-yellow-500/30' : 'bg-[#1c1f27] border-[#282e39] text-[#9da6b9] hover:text-white hover:bg-[#282e39]'}`} title="Save (Ctrl+S)">
                         <span className="material-symbols-outlined text-sm">save</span>
-                    </button>
-
-                    {/* Load from localStorage */}
-                    <button onClick={loadProject} className="flex items-center gap-2 rounded-lg h-9 px-3 bg-[#1c1f27] text-[#9da6b9] hover:text-white hover:bg-[#282e39] border border-[#282e39] transition-all text-sm" title="Load from Browser">
-                        <span className="material-symbols-outlined text-sm">folder_open</span>
                     </button>
 
                     {/* Export dropdown */}
@@ -855,7 +903,8 @@ export default function BardoEditor({ onClose }) {
                     nodes={nodes}
                     edges={edges}
                     variables={variables}
-                    onClose={() => setIsPreviewOpen(false)}
+                    startAtNodeId={previewStartNodeId}
+                    onClose={() => { setIsPreviewOpen(false); setPreviewStartNodeId(null); }}
                 />
             )}
 
@@ -1000,6 +1049,10 @@ export default function BardoEditor({ onClose }) {
                             onAddNode={handleAddNode}
                             onInsertTemplate={handleInsertTemplate}
                             screenToFlow={screenToFlow}
+                            onPlayFromHere={(nodeId) => {
+                                setPreviewStartNodeId(nodeId);
+                                setIsPreviewOpen(true);
+                            }}
                         />
                     )}
 
@@ -1258,7 +1311,7 @@ export default function BardoEditor({ onClose }) {
             {(() => {
                 if (editingNodeId) return null;
                 const guide = showWelcome && nodes.length === 0
-                    ? { id: 'welcome', icon: 'waving_hand', hex: '#2b6cee', title: 'Welcome to The Loom!', text: 'Double-click the canvas to create your first passage, or use the toolbar on the left.' }
+                    ? { id: 'welcome', icon: 'waving_hand', hex: '#2b6cee', title: 'Welcome to BardoEditor!', text: 'Double-click the canvas to create your first passage, or use the toolbar on the left.' }
                     : showFirstEdit && nodes.length > 0
                     ? { id: 'firstEdit', icon: 'edit', hex: '#facc15', title: 'Double-click a node to edit', text: 'Type / inside the editor to insert tags like shake, music, or minigames.' }
                     : showFirstChoice && nodes.length > 2
