@@ -13,9 +13,7 @@
  * Does NOT handle: stitches (= name), tunnels (->->), threads (<-), INCLUDE.
  */
 
-const GRID_X = 350;
-const GRID_Y = 280;
-const COLS = 4;
+const dagre = require('@dagrejs/dagre');
 
 /**
  * Parse Ink source into editor-compatible format.
@@ -80,15 +78,53 @@ export function parseInk(inkSource) {
         knots.push(finalizeKnot(currentKnot));
     }
 
-    // Build nodes with auto-layout
-    const nodes = knots.map((knot, index) => {
-        const col = index % COLS;
-        const row = Math.floor(index / COLS);
+    // Build edges from choices and trailing diverts
+    const edges = [];
+    const knotIds = new Set(knots.map(k => k.id));
 
+    knots.forEach(knot => {
+        knot.choices.forEach((choice, i) => {
+            if (choice.target && knotIds.has(choice.target)) {
+                edges.push({
+                    id: `e_${knot.id}_choice${i}_${choice.target}`,
+                    source: knot.id,
+                    target: choice.target,
+                    sourceHandle: `choice_${i}`,
+                    targetHandle: null,
+                    label: choice.text,
+                });
+            }
+        });
+
+        if (knot.trailingDivert && knot.choices.length === 0 && knotIds.has(knot.trailingDivert)) {
+            edges.push({
+                id: `e_${knot.id}_divert_${knot.trailingDivert}`,
+                source: knot.id,
+                target: knot.trailingDivert,
+                sourceHandle: null,
+                targetHandle: null,
+            });
+        }
+    });
+
+    // Layout with Dagre
+    const NODE_W = 280;
+    const NODE_H = 150;
+    const g = new dagre.graphlib.Graph();
+    g.setDefaultEdgeLabel(() => ({}));
+    g.setGraph({ rankdir: 'LR', nodesep: 60, ranksep: 120, edgesep: 30 });
+
+    knots.forEach(k => g.setNode(k.id, { width: NODE_W, height: NODE_H }));
+    edges.forEach(e => g.setEdge(e.source, e.target));
+
+    dagre.layout(g);
+
+    const nodes = knots.map(knot => {
+        const pos = g.node(knot.id);
         return {
             id: knot.id,
             type: 'passage',
-            position: { x: col * GRID_X + 50, y: row * GRID_Y + 50 },
+            position: { x: pos.x - NODE_W / 2, y: pos.y - NODE_H / 2 },
             data: {
                 label: knot.id,
                 type: knot.id === entryPoint ? 'hub' : 'knot',
@@ -103,37 +139,6 @@ export function parseInk(inkSource) {
                 })),
             },
         };
-    });
-
-    // Build edges from choices and trailing diverts
-    const edges = [];
-    const knotIds = new Set(knots.map(k => k.id));
-
-    knots.forEach(knot => {
-        // Edges from choices
-        knot.choices.forEach((choice, i) => {
-            if (choice.target && knotIds.has(choice.target)) {
-                edges.push({
-                    id: `e_${knot.id}_choice${i}_${choice.target}`,
-                    source: knot.id,
-                    target: choice.target,
-                    sourceHandle: `choice_${i}`,
-                    targetHandle: null,
-                    label: choice.text,
-                });
-            }
-        });
-
-        // Edge from trailing divert (only if no choices)
-        if (knot.trailingDivert && knot.choices.length === 0 && knotIds.has(knot.trailingDivert)) {
-            edges.push({
-                id: `e_${knot.id}_divert_${knot.trailingDivert}`,
-                source: knot.id,
-                target: knot.trailingDivert,
-                sourceHandle: null,
-                targetHandle: null,
-            });
-        }
     });
 
     return { nodes, edges, variables, entryPoint };

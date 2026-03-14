@@ -610,71 +610,38 @@ export default function BardoEditor({ onClose }) {
         setSelectedNodeId(nodeId);
     }, [nodes, rfInstance]);
 
-    // Auto-layout: simple left-to-right tree layout
+    // Auto-layout using Dagre (directed acyclic graph layout)
     const handleAutoLayout = useCallback(() => {
         if (nodes.length === 0) return;
 
-        const NODE_W = 300;
-        const NODE_H = 160;
-        const GAP_X = 80;
-        const GAP_Y = 40;
+        const dagre = require('@dagrejs/dagre');
+        const g = new dagre.graphlib.Graph();
+        g.setDefaultEdgeLabel(() => ({}));
+        g.setGraph({ rankdir: 'LR', nodesep: 60, ranksep: 120, edgesep: 30 });
 
-        // Build adjacency and find roots
-        const children = {};
-        const hasParent = new Set();
-        nodes.forEach(n => { children[n.id] = []; });
+        const NODE_W = 280;
+        const NODE_H = 150;
+
+        nodes.forEach(n => {
+            g.setNode(n.id, { width: NODE_W, height: NODE_H });
+        });
         edges.forEach(e => {
-            if (children[e.source]) {
-                children[e.source].push(e.target);
-                hasParent.add(e.target);
-            }
+            g.setEdge(e.source, e.target);
         });
 
-        const roots = nodes.filter(n => !hasParent.has(n.id));
-        if (roots.length === 0) roots.push(nodes[0]);
+        dagre.layout(g);
 
-        // BFS layering
-        const visited = new Set();
-        const layers = [];
-        let queue = roots.map(r => r.id);
-        while (queue.length > 0) {
-            const layer = [];
-            const nextQueue = [];
-            queue.forEach(id => {
-                if (visited.has(id)) return;
-                visited.add(id);
-                layer.push(id);
-                (children[id] || []).forEach(childId => {
-                    if (!visited.has(childId)) nextQueue.push(childId);
-                });
-            });
-            if (layer.length > 0) layers.push(layer);
-            queue = nextQueue;
-        }
+        setNodes(nds => nds.map(n => {
+            const pos = g.node(n.id);
+            return {
+                ...n,
+                position: {
+                    x: pos.x - NODE_W / 2,
+                    y: pos.y - NODE_H / 2,
+                },
+            };
+        }));
 
-        // Add any unvisited nodes as a final layer
-        const orphans = nodes.filter(n => !visited.has(n.id)).map(n => n.id);
-        if (orphans.length > 0) layers.push(orphans);
-
-        // Assign positions
-        const positions = {};
-        layers.forEach((layer, col) => {
-            const totalH = layer.length * NODE_H + (layer.length - 1) * GAP_Y;
-            const startY = -totalH / 2;
-            layer.forEach((id, row) => {
-                positions[id] = {
-                    x: col * (NODE_W + GAP_X),
-                    y: startY + row * (NODE_H + GAP_Y),
-                };
-            });
-        });
-
-        setNodes(nds => nds.map(n => ({
-            ...n,
-            position: positions[n.id] || n.position,
-        })));
-
-        // Fit view after layout
         setTimeout(() => { if (rfInstance) rfInstance.fitView({ padding: 0.2, duration: 400 }); }, 50);
     }, [nodes, edges, setNodes, rfInstance]);
 
