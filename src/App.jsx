@@ -266,10 +266,17 @@ function AppContent({ onStorySelect }) {
     }, [gameSystems])
 
     // Dev mode: select story
+    // If a compiled import exists in DEV_STORIES, prefer it over the
+    // localStorage copy so that recompiled .ink files are picked up
+    // without having to re-import the story manually.
     const selectStoryDev = useCallback((storyInfo) => {
-        setSelectedStory(storyInfo)
+        const freshData = DEV_STORIES[storyInfo.id]
+        const resolved = freshData
+            ? { ...storyInfo, data: freshData }
+            : storyInfo
+        setSelectedStory(resolved)
         if (onStorySelect) {
-            onStorySelect(storyInfo.id)
+            onStorySelect(resolved.id)
         }
     }, [onStorySelect])
 

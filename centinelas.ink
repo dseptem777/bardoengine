@@ -28,6 +28,20 @@ VAR juan_vive = false
 VAR rapido_morgue = false
 VAR capitulo_actual = ""
 VAR misiones_completadas = 0
+VAR tiene_teoria_vampiros = false
+VAR tiene_favor_tuco = false
+VAR uso_favor_tuco = false
+VAR tiene_cementerio_correcto = false
+VAR tiene_teoria_sacrificio = false
+VAR vampiro_muerto = false
+VAR sin_guardias = false
+VAR todos_guardias_mueren = false
+VAR algunos_guardias_sobreviven = false
+VAR final_con_tuco = false
+VAR traumado = false
+VAR bebe_muerto = false
+VAR paso_tiempo_casa = 0
+VAR llegaste_tarde_2b = 0
 
 -> capitulo_0
 
@@ -1098,8 +1112,7 @@ Te dirigís al orfanato. El destino de esos niños depende de vos.
 
 === prox_mision_2 ===
 Vas a la escena del crimen. Algo huele a ritual desde aquí.
-// TODO: Capítulo 2B - El Nuevo Amanecer
--> END
+-> capitulo_2b
 
 // =========================================================
 // CAPÍTULO 2A: PEQUEÑOS INOCENTES
@@ -2104,6 +2117,1212 @@ Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tom
         Al final, todavía agarrada al portón, está Belén.
         Le gritas pero no te contesta. Los dedos de su mano están rojos del esfuerzo y, a pesar de que lo intentas, no suelta el portón. No te responde y sus ojos miran sin mirar, perdidos en los horrores que queman su memoria
     }
+}
+
+FIN DEL EPISODIO.
+-> END
+
+// =========================================================
+// CAPÍTULO 2B: EL NUEVO AMANECER
+// =========================================================
+
+=== capitulo_2b ===
+~ capitulo_actual = "Cap. 2 — El nuevo amanecer"
+# inv:clear_mission
+# music:city_ambient
+Te encontrás en uno de los barrios periféricos de Costa Alegre. A esta distancia el viento ya no trae el ruido de mar ni el olor a sal. Tranquilamente podrías estar en cualquier lugar de la Provincia. Es un barrio tranquilo, de veredas amplias, calles protegidas por las sombras de grandes árboles y poco tráfico.
+# next
+Ya es de noche, así que las calles están vacías. Solo llega el ruido de televisores y familias cenando desde adentro de las casas. Aunque no te cuesta imaginar que de día esto está lleno de pibes andando en bicicleta y hasta alguna calle cortada por un partido improvisado de fútbol.
+Es por ese clima tan relajado que te permite darte cuenta enseguida cuál es la casa que El Faro te mandó a investigar.
+# next
+La información viene de un Guardián que forma parte de las Fuerzas de Seguridad. Ya es el quinto ataque a una casa que tiene un patrón común. Para no exponer a sus fuentes, El Faro decidió tercerizar el trabajo en vos.
+Pero antes de concurrir esta noche a la casa te preparaste.
+¿Cómo?
+
+* [Leíste el expediente de punta a punta buscando alguna información particular] -> cap2b_prep_expediente
+* [Pasaste a ver a Cabral para reforzar el entrenamiento] -> cap2b_prep_fuerza
+* [Leíste el último tomo que Enriquez tenía para vos] -> cap2b_prep_conocimiento
+* [Le pediste ayuda a la Dra. Mary Shelley para reforzar tu arsenal mágico] -> cap2b_prep_magia
+* [Pediste el contacto del Guardián en las Fuerzas de Seguridad] -> cap2b_prep_tuco
+* [Descansaste. Necesitabas recuperarte para la misión] -> cap2b_prep_descanso
+
+=== cap2b_prep_expediente ===
+El expediente hacía un análisis detallado de los casos anteriores. Incluidas fotos de las víctimas que hubieses preferido no ver. Sus cuerpos parecían secos, como pasas de uva, y no daban cuenta de haber ejercido ningún tipo de resistencia. Es más, hasta se podía notar una ligera sonrisa de placer en sus rostros. Lo cual parece una clara señal de un ataque de un Vampiro Superior.
+# next
+A diferencia de los vampiros inferiores, que parecen murciélagos de tamaño gigante, los Vampiros Superiores mantienen un aspecto humano y tienden a ser superiores a nosotros en todo lo relacionado con las funciones intelectuales, las interacciones sociales y, en ciertos casos, la magia. Lo cual es bastante injusto dado que tienen una eternidad para practicar.
+# next
+Entre su repertorio de habilidades se encuentra la posibilidad de generar placer con su mordida, similar a la heroína. Eso explicaría la sonrisa en los cadáveres. Los estudiosos afirman que es una característica evolutiva para garantizar su alimento (o sea nosotros). El placer garantiza que los humanos no se quejen y, en caso de que el ataque sea interrumpido, la víctima lo racionalice como una noche de jolgorio.
+# next
+Solo hay un pequeño detalle. Los Vampiros Superiores deben ser invitados a entrar a la casa por alguno de sus dueños. En el momento en que alguien duerme en un lugar se genera un límite de protección que el Vampiro Superior no puede romper, ni usando sus poderes. Solo con una invitación libre y voluntaria.
+La lógica dictaba que no entraban en una casa por un bocadillo. Pero aparentemente alguien los había invitado a entrar en todos los casos. ¿Había una relación previa entre la familia y los Vampiros?
+~ tiene_teoria_vampiros = true
+# inv:add:teoria_vampiros
+-> cap2b_llegada_casa
+
+=== cap2b_prep_fuerza ===
+Cabral se encuentra en el campo de tiro, una parte del sótano de El Faro que huele a pólvora. En cuanto llegás te pasa una pistola Bersa 9mm y comenzás a hacer entrenamientos para disparar.
+Practicás pegar dos balas en el pecho y una en la cabeza; con balas inertes en el peine para fingir que el arma se traba, con blancos móviles, y con blancos modificados para tener que disparar en lugares muy particulares.
+\- Recordá que muchos de nuestros enemigos no tienen una anatomía parecida a la nuestra. Disparar al pecho o a la cabeza puede ser básico para una persona, pero también tenés que aprender a disparar a ojos que van a estar a la altura de la rodilla o a la base de los tentáculos.
+# next
+Cuando terminás estás transpirado y con olor a pólvora. Pero más seguro mientras tu cuerpo se acostumbra al shock de disparar un arma.
+Cabral te invita a una cerveza para festejar tus avances y, de yapa, algún sánguche así no salís a la misión con el estómago vacío.
+# stat:fuerza:+5
+-> cap2b_llegada_casa
+
+=== cap2b_prep_conocimiento ===
+Esta vez en el escritorio de Enriquez te estaba esperando la guía con la letra F. Ella solo dejó de tipear con una mano para acercarte el libro. Así que buscaste la silla más cómoda y te pusiste a leer.
+Es curioso que haya una varilla entera de cuestiones tan mundanas como "fregar". Rápidamente te das cuenta que "follar" ocupa casi la mitad del libro.
+# next
+El capítulo está lleno de ilustraciones de súcubos en poses imposibles. Hay que admitir que te sonrojás un poco.
+\- Por favor, las manos donde pueda verlas – dice Enriquez con una mueca en la cara que podría ser una sonrisa.
+La excitación se va cuando las ilustraciones son reemplazadas por fotografías médicas, que te golpean como un baldazo de agua fría. Al parecer hay un montón de seres sobrenaturales que les gusta girar lo que no debe ser girado, penetrar lo que obviamente no es un orificio de entrada y... ¡¿QUÉ PONEN SUS HUEVOS EN DÓNDE?!
+Terminás el tomo con un nuevo aprecio por la abstinencia.
+# stat:conocimiento:+5
+-> cap2b_llegada_casa
+
+=== cap2b_prep_magia ===
+Entraste a la oficina de la Dra. y te encontraste con un cuadro particular. En una mesa ratona se encontraba la Dra. Mary Shelley junto a una cabra negra, que por lo cómoda que estaba sentada parecía no tener problema en moverse en dos patas, y cuya cabeza estaba rapada y con marcas de suturas recientes.
+En el centro de la mesa, un mazo de cartas. Parece que entraste en mitad de una partida de truco (la cabra estaba ganando).
+# next
+\- Me creés si te digo que es parte de un experimento esencial para trasladar la conciencia de los guardianes caídos a otros cuerpos – la Dra. miró al horizonte y cambió el tono de voz, como si le hablase a una audiencia – imaginá una organización donde ningún Guardián muera, donde su consciencia esté siempre segura y su cuerpo sea un mero objeto, como un auto, o un traje que se elige el que mejor se ajusta para cada misión.
+\- Lo peor es que le creo Dra. No necesita explicarme nada.
+Después de perder la partida de truco, la Dra. dedicó su tarde a repasar con vos principios claves de la magia así como cuestiones de anatomía que debés tener en cuenta si no querés lastimarte por canalizar grandes energías.
+# stat:magia:+5
+-> cap2b_llegada_casa
+
+=== cap2b_prep_tuco ===
+Al Profesor no le gusta mucho tu pedido. Hace referencia a un montón de reglamentos (que fingís conocer) respecto a la importancia de centralizar la información y limitar el contacto entre los Guardianes para que, en caso de caer uno, no sea un total caos para la organización.
+Literalmente, lo perseguís desde su despacho, atravesando el Hall Central donde trabaja Enriquez, hasta el estacionamiento de la Universidad donde guarda su coche.
+# next
+Lográs convencerlo cuando le hacés notar que, al ser un caso en el que obviamente va a estar involucrada la policía, tal vez sería necesario el contacto en caso de que te detengan u obstaculicen la investigación.
+Te pasa un número. Cuando te contactás con la persona, un hombre de cincuenta años que se presenta como "Sargento Tuco", la conversación está llena de silencios. Parece que no le gusta que lo hayas contactado, pero dice que si necesitás podría hacerte un favor. Una sola vez. Remarca la unicidad del favor. Con todos los objetivos posibles.
+~ tiene_favor_tuco = true
+# inv:add:favor_tuco
+-> cap2b_llegada_casa
+
+=== cap2b_prep_descanso ===
+Tu cuerpo agradeció un día entero en la cama. Solo saliste para una comida reparadora, de esas que llenan el estómago pero también acarician el alma. Y pasaste toda la tarde jugando a juegos retro sin ninguna relación con tu trabajo, lo necesario para despejar la mente.
+Pero eso te permitió volver a estar afilado para el trabajo.
+# stat:hp:+5
+-> cap2b_llegada_casa
+
+// ---------------------------------------------------------
+// SECCIÓN 2: LLEGAR A LA CASA + ENTRAR
+// ---------------------------------------------------------
+
+=== cap2b_llegada_casa ===
+A unos metros de la esquina se encuentra estacionada una patrulla policial. Justo frente a una casa blanca de un piso, con un pasillo en un costado que delata la existencia de un patio al fondo. En la puerta de la propiedad se encuentra un oficial de la policía, recostado contra la pared. Con solo verlo te das cuenta que su estado físico no es el mejor y, si no estuviera recostado, posiblemente sufriría un infarto si pasa media hora seguida de pie.
+Esperás que sea el mejor tirador, porque en su defecto es un total desperdicio de dinero público.
+# next
+Te acercás a la casa bajo la luz azulada que desprende la patrulla de policía. A simple vista notás la puerta entreabierta (no forzada) y una tira de plástico medio caída que dice "policía - no pasar". Justo lo que pensás ignorar.
+Dás un paso más y el agente de policía, que estaba quemando neuronas con el celular, lleva instintivamente su mano a la pistola que está en su cinto. De repente las dudas sobre su puntería se convierten en un problema muy presente.
+Ambos se miran, como en un western de bajo presupuesto. Hay que tomar una decisión.
+¿Qué hacés para entrar a investigar en la casa?
+-> cap2b_entrar_opciones
+
+=== cap2b_entrar_opciones ===
++ [Te retirás y das la vuelta manzana buscando una entrada por los techos] -> cap2b_entrar_techos
++ {tiene_favor_tuco and not uso_favor_tuco} [Es momento de cobrar tu favor con Tuco] -> cap2b_entrar_tuco
+* [Tenés un billete en el bolsillo. El viejo sobornín siempre funciona] -> cap2b_entrar_soborno
++ [Te hacés invisible para entrar en la casa] -> cap2b_entrar_invisible
++ [Fingís ser un policía para que te deje pasar] -> cap2b_entrar_policia
+
+=== cap2b_entrar_techos ===
+Dás la vuelta a la manzana sin problema, buscando del otro lado cuál puede ser un punto de entrada. Frente a un frondoso árbol hay un comercio cerrado, que tiene pinta de haber sido un kiosco hace un par de crisis económicas. Sospechás que es tu mejor forma de entrar dado que debe ser la única propiedad vacía.
+Trepás al árbol y con un poco de equilibrio, y un mucho de suerte, lográs avanzar por una rama que te acerca al frente del kiosco. De un salto lográs llegar al techo.
+# next
+Las luces del patrullero te sirven como guía. Aun así caminás con cuidado buscando evitar las tejas rotas o los techos de chapa que pueden despertar a algún vecino. Asomado al techo de un vecino encontrás el patio de la casa. Solo es cuestión de descender unos cinco metros.
+{
+    - fuerza < 20:
+        Pero tus brazos no resisten y caés de sopetón al patio. La fuerza del impacto recorre tu cuerpo y hace un crack en tus rodillas. Por lo menos el policía que vigila la calle no escucha tus puteadas.
+        # stat:hp:-5
+    - else:
+        Tus brazos resisten. Quedás colgando del borde en un intento de achicar la caída. Cuando caés lo hacés de forma ordenada, rodando por el piso mientras protegés tu cabeza y distribuís el impacto entre tus extremidades. Lo lograste.
+}
+-> cap2b_dentro_casa
+
+=== cap2b_entrar_tuco ===
+Le mandás un mensaje a Tuco explicándole lo que necesitás, por respuesta solo recibís un emoticón. Te apoyás contra un árbol, fingiendo que sos solamente una persona que salió a disfrutar el aire fresco de la noche.
+No sabés qué hizo Tuco pero fue rápido. La radio del policía empieza a sonar y una voz gritona le recita una serie de códigos y claves. Con una velocidad que creías imposible, el policía corre hacia su patrullero y sale quemando llanta para atender una urgencia que, sospechás, solo existe en la imaginación de Tuco.
+# next
+Con mucho cuidado, para no destruir la cinta policial y dejar rastros de tu entrada, empujás la puerta y entrás en la casa.
+~ uso_favor_tuco = true
+# inv:remove:favor_tuco
+-> cap2b_dentro_casa
+
+=== cap2b_entrar_soborno ===
+Te acercás al policía con el billete de más alta denominación en la palma de tu mano. Lo saludás, asegurándote que en el apretón de manos el billete pase a su sudorosa palma, mientras le sonreís.
+\- Trabajo en el diario "Buenos días Costa Alegre". Vamos a publicar una noticia en la sección criminal y me gustaría sacar unas fotos para la primicia.
+\- No está permitido – te contesta mientras ve el billete que le diste.
+# next
+\- Si no se puede sacar foto tal vez solo podría ver el lugar, como para estar más en tema para escribir la nota.
+\- No está permitido – dice esta vez mientras guarda el billete en su bolsillo trasero.
+\- No entiendo. Te di un billete.
+\- Como un agradecimiento por mi servicio. De otra forma sería un soborno y eso...
+\- Dejame adivinar, no está permitido.
+\- Exactamente.
+# next
+No estás seguro si el policía no entiende el concepto de soborno, o lo entiende demasiado bien, pero te retirás con tu orgullo herido y un poco más pobre.
+-> cap2b_entrar_opciones
+
+=== cap2b_entrar_invisible ===
+# REQUIRES: magia >= 30
+Te alejás hasta doblar la esquina, y perder el campo de visión con el policía. Protegido por las sombras te ponés a recitar el hechizo. Es algo fácil, solo se requiere unas palabras, romper un espejo, quemar unas entrañas de ave y hacerte un corte superficial con un arma blanca nunca usada. Obviamente, son todos objetos que llevás en tu mochila.
+# next
+El hechizo no hace ningún ruido imponente, solamente vas desapareciendo lentamente. Al principio te cuesta un poco caminar. Es raro avanzar cuando no ves tus piernas o calcular por dónde vas sin ver tus brazos, pero te las arreglás.
+Lo que sí, el hechizo no impide que generes sonido. Así que te acercás con cuidado al policía evitando pisar baldosas flojas y hojas secas.
+Al llegar a la puerta contenés la respiración y pasás por debajo de la línea policial en una especie de juego de zamba letal. Pero lo lograste, estás dentro de la casa.
+-> cap2b_dentro_casa
+
+=== cap2b_entrar_policia ===
+Hay un refrán que dice que la clave para entrar en un lugar es fingir que pertenecés. Así que sacás pecho y ponés cara de asco, como si tu lengua hubiese sido reemplazada por un limón.
+Te acercás a paso firme hasta la puerta de la casa.
+\- Buenas agente, soy el teniente García – por una cuestión meramente estadística estás seguro que en toda comisaría hay alguien con el apellido García – vengo a investigar la escena del crimen.
+# next
+Para reforzar tu argumento pasás rápidamente por la cara del policía tu billetera esperando que confunda el carnet de la biblioteca con algún tipo de identificación oficial.
+Por suerte no estás ante el miembro más brillante de las fuerzas de seguridad. Se limita a asentir, dar un paso al costado, y dejarte pasar. Contra todo pronóstico, lo conseguiste.
+-> cap2b_dentro_casa
+
+// ---------------------------------------------------------
+// SECCIÓN 3: INVESTIGACIÓN DE LA CASA — HUB
+// ---------------------------------------------------------
+
+=== cap2b_dentro_casa ===
+{ paso_tiempo_casa >= 3:
+    -> cap2b_araca_la_cana
+}
+Una vez que entrás a la casa te tomás unos segundos para escuchar el ambiente. Parece que, por ahora, no hay ningún agente de la policía en la propiedad. No sabés si eso significa que llegaste tarde o temprano, pero tenés una ventana de tiempo para realizar tu propia investigación con una mirada que receptúe lo sobrenatural.
+# next
+La casa es la típica estructura chorizo. Una puerta al frente que da a la calle y una al fondo que da al patio trasero. Delante de todo hay un zaguán y al fondo una cocina, en el pasillo conector una serie de habitaciones.
+¿Qué hay que ver primero?
+
++ {not cap2b_casa_zaguan} [El zaguán] -> cap2b_casa_zaguan
++ {not cap2b_casa_cocina} [La cocina] -> cap2b_casa_cocina
++ {not cap2b_casa_bano} [El baño] -> cap2b_casa_bano
++ {not cap2b_casa_ninos} [La primera habitación] -> cap2b_casa_ninos
++ {not cap2b_casa_padres} [La segunda habitación] -> cap2b_casa_padres
+
+=== cap2b_casa_zaguan ===
+~ paso_tiempo_casa += 1
+El cuarto es un caos. La puerta a la calle está entreabierta y, con un simple análisis, te das cuenta de que no fue forzada. Sea lo que sea que hizo esto fue invitado a entrar.
+En el medio del cuarto hay un cuerpo chiquito, un niño de no más de 12 años. Sentís el ácido de un vómito subiendo desde tus entrañas y quemando todo a su paso, pero lográs contenerte. El cuerpo está seco, como una pasa de uva, y no muestra signos de una pelea.
+{tiene_teoria_vampiros:
+    # next
+    Te fijás en el cuello y notás dos pequeñas marcas casi invisibles entre los pliegues de la piel reseca. Un ignorante se las confundiría con marcas de agujas pero vos sabés de qué se trata. Colmillos de vampiro. Tu teoría cobra forma.
+}
+# next
+Sobre una mesa había fotos familiares y adornos de vacaciones. Es el único lugar que está destrozado, pero no por una pelea. ¿Los atacantes destruyeron el altar? ¿Con qué fin?
+{conocimiento >= 20:
+    # next
+    Intentás ver las fotos desde la perspectiva del atacante. Tal vez envidiaba la vida de una familia normal o se avergonzaba de lo que vio. Entre las fotos notás la de un joven, con ropa actual, pero con el marco rodeado con un listón negro y una estampilla de la Virgen.
+    ¿Puede ser un muerto reciente en la familia? Alguien que fue convertido para ser usado como caballo de Troya para que le abran la puerta.
+    Sacás una foto y le pedís a Enriquez que busque entre sus fuentes en qué cementerio se encuentra enterrado el joven.
+    ~ tiene_cementerio_correcto = true
+    # inv:add:cementerio_correcto
+}
+Creés que no hay nada más que ver en esta habitación. Debés continuar con tu investigación.
+-> cap2b_dentro_casa
+
+=== cap2b_casa_cocina ===
+~ paso_tiempo_casa += 1
+La cocina es modesta, con una pequeña mesa en el medio para que pueda comer una familia, y cuenta con una salida al patio del fondo.
+El cuerpo se encuentra en el piso, con un brazo estirado hacia la puerta de salida en un vano intento de escape, pero los perseguidores lo alcanzaron antes y lo dejaron clavado al suelo, donde permanece. Cuando lo ves no podés dejar de pensar en una pila de hojas secas en mitad del otoño.
+{tiene_teoria_vampiros:
+    # next
+    Te fijás en el cuello y notás dos pequeñas marcas casi invisibles entre los pliegues de la piel reseca. Un ignorante se las confundiría con marcas de agujas pero vos sabés de qué se trata. Colmillos de vampiro. Tu teoría cobra forma.
+}
+# next
+Hacés una recorrida pero no hay mucho más que ver acá. La familia dejó descongelando unas milanesas, sin duda para cenar esta noche. Es una niñería pero te dan una tristeza infinita.
+-> cap2b_dentro_casa
+
+=== cap2b_casa_bano ===
+~ paso_tiempo_casa += 1
+No hay mucho para ver en el baño. Un botiquín de primeros auxilios normal en el cajón bajo la mesada. Ninguna medicación particular. Un poco de humedad en el techo.
+Lo normal que puede encontrarse en cualquier baño de Costa Alegre, hasta el tuyo. Perdiste tiempo buscando algo escondido en la mochila del inodoro y detrás del bidet que seguramente debió ser invertido de otra forma.
+-> cap2b_dentro_casa
+
+=== cap2b_casa_ninos ===
+~ paso_tiempo_casa += 1
+Un cuarto de niños. En cuanto abrís la puerta y ves que se asoma la cabeza de un juguete (un oso peluche del tamaño de un nene pequeño) sabés que te va a hacer mierda recorrer esta habitación.
+Por suerte no hay cuerpos. No acá al menos. Pero notás algo raro, la habitación está dividida en dos. Una punta tiene una cama de un niño con el caos y los juguetes propios de un preadolescente.
+# next
+Pero del otro lado hay una cuna. Una cuna vacía con una manta apartada a un costado. No necesitás chequear el archivo, tu memoria no te dejaría olvidar un hecho tan mórbido: nadie usó ninguna referencia a cadáveres de bebés.
+{conocimiento >= 25:
+    # next
+    Te dedicás un poco a pensar para qué podrían necesitar un bebé, mientras hacés toda tu fuerza para apartar la respuesta fácil: "un aperitivo para el camino".
+    Existe un hechizo de Vampiros Superiores que implica sacrificar a siete bebés, uno por cada día de la semana. Como toda la magia vampírica implica sangre y dolor pero, en teoría, permitiría a un vampiro salir sin problema a la luz solar.
+    Que sepas, no hay registro exitoso del hechizo, pero si vos lo conocés, no hay razones para que un Vampiro Superior también sepa de su existencia y esté intentando recrear esto.
+    Te sentás en una silla (pequeña) y ves las fotos del expediente: en todas las casas se ven cunas o juguetes de bebés. Tu teoría cobra fuerza.
+    ~ tiene_teoria_sacrificio = true
+    # inv:add:teoria_sacrificio
+}
+-> cap2b_dentro_casa
+
+=== cap2b_casa_padres ===
+~ paso_tiempo_casa += 1
+La cama matrimonial. El cadáver está en la cama, entre sábanas revueltas. En este contexto la cara de éxtasis del cuerpo se torna más macabra cuando la comparás con la piel reseca que sale entre las sábanas.
+{tiene_teoria_vampiros:
+    # next
+    Te fijás en el cuello y notás dos pequeñas marcas casi invisibles entre los pliegues de la piel reseca. Un ignorante se las confundiría con marcas de agujas pero vos sabés de qué se trata. Colmillos de vampiro. Tu teoría cobra forma.
+}
+# next
+Notás, al lado de la cama, un sacaleche y unas mamaderas. ¿También había un bebé en la casa?
+-> cap2b_dentro_casa
+
+// ---------------------------------------------------------
+// SECCIÓN 3B: ARACA LA CANA + ESCAPAR
+// ---------------------------------------------------------
+
+=== cap2b_araca_la_cana ===
+Tus pensamientos son interrumpidos por una serie de ruidos que vienen de la calle. Coches parando en la puerta de la casa y voces de hombres toscas y violentas. Acostumbrados a dar órdenes y respaldar sus palabras con acero. Podrían ser criminales pero al escuchar que se saludan usando rangos, te das cuenta de que es la policía.
+Seguramente están viniendo a profundizar su investigación de la escena de crimen. Tus pesquisas ya terminaron, esperás tener suficiente información para continuar con el caso.
+Ahora lo importante es ver cómo hacer para salir de la casa sin que te vean.
+-> cap2b_escapar_opciones
+
+=== cap2b_escapar_opciones ===
++ [Corrés al patio trasero y trepás por los techos] -> cap2b_escapar_techos
++ [Te hacés invisible] -> cap2b_escapar_invisible
++ [Te escondés en la casa] -> cap2b_escapar_escondite
++ [Salís corriendo por la puerta principal antes que reaccionen] -> cap2b_escapar_correr
+
+=== cap2b_escapar_techos ===
+# REQUIRES: fuerza >= 25
+Vas hacia el fondo de la casa. El patio no tiene un punto de apoyo así que intentás correr con todas tus fuerzas contra la pared y hacer un poco de parkour para lograr empotrarte contra una pequeña abertura.
+Lo lográs, la adrenalina invade tu cuerpo y lamentás que no haya nadie para ver lo que hiciste dado que fue bastante increíble.
+# next
+Ya con tu mano en la primera saliente (e ignorando que todo tu peso está castigando tu muñeca) podés ir buscando otras imperfecciones en la pared para seguir avanzando. En el pasillo se escuchan voces y luces.
+Un poco más. Tus brazos se sienten en llamas pero las voces siguen avanzando hasta el patio.
+A la par que se abre la puerta del patio, lográs subirte al techo. Contenés un suspiro y esperás que los policías se alejen.
+-> cap2b_investigacion
+
+=== cap2b_escapar_invisible ===
+# REQUIRES: magia >= 30
+Elegís una esquina que parece poco importante, y donde esperás que nadie pase, y preparás el hechizo. Es rápido, improvisado y a falta de escenografía que te ayude tenés que apoyarte en fuerza bruta y eso se siente mientras recitás las palabras. Se siente en el dolor punzante en tu cabeza y en las gotas de sangre que empiezan a escaparte de tu nariz.
+# next
+Pero lo lográs, los policías entran y recorren la casa. Uno mira a tu esquina y pasa casualmente la luz de su linterna por donde está tu cuerpo, pero no encuentra nada. Debés contenerte para que los latidos de tu corazón no te delaten pero lo importante es que lo lograste. Una vez que ellos se reparten por la casa para hacer su investigación, aprovechás y avanzás hacia la puerta de la calle con el mayor sigilo posible.
+En el camino te llama la atención que uno de los policías dejó la carpeta de su investigación sobre la mesa.
+
++ [La robás] -> cap2b_escapar_robar_carpeta
++ [Seguís de largo] -> cap2b_investigacion
+
+=== cap2b_escapar_robar_carpeta ===
+La verdad es que, cualquier información que tengan, le vas a sacar más provecho vos que ellos. Ya en la calle hojeás la carpeta: parece que un pariente de la familia murió hace poco. ¿Pudo haber sido convertido en Vampiro y usado como caballo de Troya para que la familia los invite a pasar? Vale la pena investigar el cementerio donde fue enterrado.
+~ tiene_cementerio_correcto = true
+# inv:add:cementerio_correcto
+-> cap2b_investigacion
+
+=== cap2b_escapar_escondite ===
+Escuchás las voces ásperas del otro lado de la puerta. No hay mucho tiempo, sospechás que cuando entren van a dar vuelta la casa buscando cualquier pista posible. Tenés que elegir dónde esconderte.
+
++ [Debajo de la cama de alguna de las habitaciones] -> cap2b_escondite_cama
++ [En el baño, dentro de la bañera] -> cap2b_escondite_banera
++ [Hay unas plantas frondosas en el patio] -> cap2b_escondite_plantas
+
+=== cap2b_escondite_cama ===
+Corrés a la habitación de los padres y te metés bajo la cama. El lugar está oscuro y lleno de polvo pero lo que más aprensión te da es que a centímetros tuyo, del otro lado del colchón, está el cadáver de una de las víctimas. Intentás reconfortarte pensando en que al menos no debe tener sangre, no si el trabajo lo hizo un Vampiro Superior. Pero la línea de insectos avanzando por una de las patas de la cama para hacerse un festín con su carne te revuelve el estómago.
+# next
+Escuchás unos pasos y, en cuestión de segundos, estás enceguecido por la luz de una linterna que apunta directo a tu rostro. El policía te mira con un rostro que mezcla incredulidad y cansancio, y vos no podés evitar sentirte como un niño que fue atrapado en mitad de una travesura. Que te arresten no es tan divertido como lo hacen ver las películas, antes de darte cuenta estás camino a la comisaría más cercana.
+-> cap2b_comisaria
+
+=== cap2b_escondite_banera ===
+Te escondés dentro de la bañera y cerrás la cortina detrás tuyo. Te sentís un poco ridículo y tenés serias sospechas de que la luz del baño trasluce tu sombra. Intentás agacharte para ser menos sospechoso y solo lográs mojarte el pantalón con una capa de agua que lleva días.
+# next
+Escuchás unos pasos y, en cuestión de segundos, estás enceguecido por la luz de una linterna que apunta directo a tu rostro. El policía te mira con un rostro que mezcla incredulidad y cansancio, y vos no podés evitar sentirte como un niño que fue atrapado en mitad de una travesura. Que te arresten no es tan divertido como lo hacen ver las películas, antes de darte cuenta estás camino a la comisaría más cercana.
+-> cap2b_comisaria
+
+=== cap2b_escondite_plantas ===
+Corrés al patio y te escondés entre unas plantas altas. Sabés que los humanos tenemos un pasado cazador pero no estás logrando hacer contacto con los genes de tus ancestros. La pose te parece incómoda y, más te movés intentando buscar una posición correcta, más desarmás las plantas y quedás expuesto. Para colmo de males, la Luna brilla con toda intensidad.
+# next
+Escuchás unos pasos y, en cuestión de segundos, estás enceguecido por la luz de una linterna que apunta directo a tu rostro. El policía te mira con un rostro que mezcla incredulidad y cansancio, y vos no podés evitar sentirte como un niño que fue atrapado en mitad de una travesura. Que te arresten no es tan divertido como lo hacen ver las películas, antes de darte cuenta estás camino a la comisaría más cercana.
+-> cap2b_comisaria
+
+=== cap2b_escapar_correr ===
+Corrés con todas tus fuerzas hacia la puerta principal, notás que está por ser abierta así que te lanzás como un ariete contra ella. El golpe trae dolor, pero por suerte la adrenalina entra a jugar. Antes de darte cuenta estás en la calle, notás por el rabillo del ojo que en tu salida un policía salió volando y golpeó contra un patrullero.
+Corrés con todas tus fuerzas hacia la esquina, con el objetivo de romper el campo de visión de los policías y esconderte en la oscuridad. Atrás tuyo se escuchan puteadas y disparos (por suerte más de los primeros que de los segundos).
+{
+    - fuerza >= 20:
+        # next
+        Por suerte el entrenamiento de la policía es deficiente. Llegás a la esquina sin que una bala haya rozado tu cuerpo, aun así seguís corriendo, zigzagueás por otra esquina hasta llegar a una Avenida. Un colectivo justo está parando y te subís (no importa adónde, solo debe ser lejos de ahí). Es sorprendente que lograste pasar eso sin un rasguño.
+    - else:
+        # next
+        Sentís un picor en tu brazo, como si un insecto te hubiese clavado un aguijón. Te pasás la mano. Sangre y carne. Problemas para preocuparse después, ahora es importante alejarse lo más posible antes de que la pérdida de sangre te haga bajar el ritmo.
+        Por suerte llegás a una Avenida y encontrás un colectivo que está parado. No importa adónde va, alejarse es todo lo importante.
+        # stat:hp:-10
+}
+-> cap2b_investigacion
+
+// ---------------------------------------------------------
+// SECCIÓN 5: COMISARÍA
+// ---------------------------------------------------------
+
+=== cap2b_comisaria ===
+~ llegaste_tarde_2b += 1
+Es verdad que la burocracia es el pilar fundamental del Estado Moderno. Es increíble la cantidad de pasos que tienen que pasar antes de terminar tras las rejas. Primero toman tus huellas digitales, y aparte se toman el trabajo de levantar un acta con todos tus datos, y te dejan esperando esposado en un pasillo vaya a saber qué cosa.
+Sabés que El Faro tiene gente encargada de asegurarse que toda esta información se borre, más que terminar arrestado lo que te da miedo es el reto que te va a dar Enriquez la próxima vez que la veas.
+# next
+Terminás en una celda húmeda respirando un aire viciado que seguramente proviene de los pulmones (esperás) de las personas que estuvieron antes detenidas en este lugar. Tus compañeros son un borracho que, por suerte, está durmiendo y un joven sentado en una esquina.
+Tenés un pequeño cruce de miradas con el joven que está sentado en la esquina. Solo unos segundos, ojos con ojos. Él termina reconociendo que acá vos sos el mayor factor de peligro y se retuerce en su asiento intentando hacerse más chico.
+# next
+Sabés las minucias del proceso legal pero dudás que tu investigación pueda soportar estar detenida durante doce horas en aras del formalismo jurídico.
+¿Qué pensás hacer?
+
++ [Solo resta esperar] -> cap2b_comisaria_esperar
++ {tiene_favor_tuco and not uso_favor_tuco} [Tenés derecho a una llamada. Es la hora de cobrarte el favor con Tuco] -> cap2b_comisaria_tuco
++ [Tenés derecho a una llamada. Tal vez Enriquez pueda ayudarte] -> cap2b_comisaria_enriquez
+
+=== cap2b_comisaria_esperar ===
+~ llegaste_tarde_2b += 1
+Perdés un par de horas que solo te sirven para poner en duda la eficiencia del sistema penal. En lugar de pensar respecto a la gravedad de tu crimen (que en este caso es ser un pésimo jugador de escondidas) te dedicás a disociar completamente y perderte en tu mundo interno.
+# next
+Seguramente El Faro cumple su tarea de soborno, amenazas y sabotaje informático. Sin mucho preámbulo un policía colorado se acerca, abre la celda, y con un gesto de la cabeza te indica que vayas para la calle.
+-> cap2b_en_la_calle
+
+=== cap2b_comisaria_tuco ===
+Pedís tu llamada. Esperás que se nieguen y estás preparando tus argumentos cuando un policía cansado viene a buscarte y, mientras bosteza, te lleva a un pasillo donde hay una verdadera reliquia: un teléfono de línea colgado en la pared. Juntás fuerza y marcás el número de emergencia que te dieron en El Faro. Del otro lado escuchás una tos grave y una sola palabra: "identifíquese".
+# next
+\- Sos un pelotudo – Ese es el único comentario que te dedica el Sargento Tuco cuando le terminás de contar la situación. La frase viene acompañada por un silencio largo que sospechás que lo dedica a decir para adentro todo el resto de los insultos que tiene pensado para vos.
+\- Supongo que a todo Guardián le puede pasar algo así – decís con cierta duda.
+\- Pibe, ¿te das cuenta la cantidad de problemas que me podés traer llamándome desde adentro de la comisaría?
+\- Perdón, de verdad no había pensado en eso.
+\- No, porque sos un pelotudo – Sospechás que "pelotudo" es la palabra favorita del Sargento Tuco.
+\- Tenés razón, pero soy un pelotudo que quiere ser libre. ¿Me vas a sacar?
+\- Dame cinco. No digas nada. Y olvidate este número – El Sargento Tuco cortó en cuanto dijo la "o" con tanta intensidad que sentís el golpe del tubo del teléfono como una cachetada.
+# next
+No pasan ni cinco minutos desde que cortás. En cuanto llegás a la celda ya vienen a buscarte. Sin mucho preámbulo un policía colorado se acerca, abre la celda, y con un gesto de la cabeza te indica que vayas para la calle.
+~ uso_favor_tuco = true
+# inv:remove:favor_tuco
+-> cap2b_en_la_calle
+
+=== cap2b_comisaria_enriquez ===
+Pedís tu llamada. Esperás que se nieguen y estás preparando tus argumentos cuando un policía cansado viene a buscarte y, mientras bosteza, te lleva a un pasillo donde hay una verdadera reliquia: un teléfono de línea colgado en la pared. Juntás fuerza y marcás el número de emergencia que te dieron en El Faro. Del otro lado escuchás la voz de Enriquez.
+# next
+\- Pero, ¿Me estás llamando de la Comisaría? – Es la tercera vez que Enriquez te hace la misma pregunta en sucesión, solamente cambió su tono. De la sorpresa a la ira y de ahí a la burla.
+\- Sí, necesito que arreglen todo para sacarme lo más rápido así puedo continuar con la investigación.
+\- Es sorprendente. Generalmente cuando los Guardianes llaman a este número real están rodeados o en un Hospital. O en la Morgue.
+\- Dudo que alguien te llame de la Morgue – le contestás.
+\- Podrían llamarme de la Morgue, en especial si están avanzando en su investigación sobre Vampiros.
+# next
+\- Te prometo que nunca te voy a llamar desde una Morgue – hablar con Enriquez se siente como hablar con tu madre cuando eras adolescente – Ahora, ¿podés arreglar todo para que me saquen rápido?
+\- Obviamente, más que nada por el honor de El Faro. Es vergonzoso que con tantos monstruos ahí afuera vos hayas terminado atrapado por la policía.
+# next
+No pasan ni cinco minutos desde que cortás. En cuanto llegás a la celda ya vienen a buscarte. Sin mucho preámbulo un policía colorado se acerca, abre la celda, y con un gesto de la cabeza te indica que vayas para la calle.
+-> cap2b_en_la_calle
+
+=== cap2b_en_la_calle ===
+En la calle una ráfaga de viento te trae el olor a mar. Estuviste unas pocas horas encerrado pero aun así estás seguro de que preferís la libertad. Te alejás un par de metros de la puerta de la Comisaría para pensar cómo continuar tu investigación, cuando escuchás un par de pasos atrás tuyo. Girás sobre tus talones y te encontrás con un policía alto, con cara de pocos amigos, y una cabellera pelirroja que llama la atención.
+\- ¿Sargento Tuco? – Arriesgás.
+# next
+\- Mirá si sos pelotudo. No hay nada más fácil que encargarse de Vampiros. Y de alguna forma vos lográs terminar encerrado en una comisaría. Pelotudo.
+Te das cuenta, con escucharlo hablar, que Tuco solo respeta una cosa y si no le ponés un límite te va a tratar mal toda la vida.
+Antes de darte cuenta, le estás contestando.
+
++ [Tan fácil no debe ser, sino lo hubiese solucionado vos solito. Por algo el Faro me mandó a mí a solucionar el problema. Pelotudo.] -> cap2b_tuco_respuesta_1
++ [Tenés razón. Estoy perdido. ¿Qué harías vos a continuación?] -> cap2b_tuco_respuesta_2
++ [Quería hacer la visita turística. Ya me voy.] -> cap2b_tuco_respuesta_3
+
+=== cap2b_tuco_respuesta_1 ===
+Te sentís muy bien con tu respuesta. Tan bien que apenas te llegás a dar cuenta de que la cara del Sargento Tuco se pone tan roja como su pelo. Un puño vuela hacia vos.
+{
+    - fuerza < 25:
+        El golpe te dejó con el culo en el piso y una buena cantidad de sangre en tu remera, sangre que debería estar en tu nariz.
+        # stat:hp:-5
+    - else:
+        Ves el golpe venir y tenés tiempo de esquivarlo. Como buen hombre de uniforme, el Sargento Tuco está acostumbrado a pelear con gente que tiene un temor reverencial a pegarle. Vos no pertenecés a eso pero, para su suerte, tampoco sos tan estúpido para pegarle a un policía en la puerta de la Comisaría.
+        A último momento tu golpe, que salió de puro reflejo, se abre y termina convertido en una bofetada que lastima más el ego que otra cosa. El Sargento Tuco se queda duro, como si lo hubiese reseteado.
+}
+# next
+\- Andá a uno de los cementerios de la ciudad y buscá el nido de los Vampiros Superiores. Rápido y simple. Hasta vos lo vas a poder hacer – Después de tirar esa pieza de información, el Sargento Tuco se da media vuelta y vuelve a entrar en la Comisaría.
+-> cap2b_investigacion
+
+=== cap2b_tuco_respuesta_2 ===
+Te muestra una sonrisa llena de dientes castigados por la nicotina. Le encanta sentirse poderoso.
+\- Andá a uno de los cementerios de la ciudad y buscá el nido de los Vampiros Superiores. Rápido y simple. Hasta vos lo vas a poder hacer – Después de tirar esa pieza de información, el Sargento Tuco se da media vuelta y vuelve a entrar en la Comisaría.
+-> cap2b_investigacion
+
+=== cap2b_tuco_respuesta_3 ===
+Te das media vuelta y lo dejás hablando solo. Durante los primeros segundos sentís una sensación de vértigo atrás tuyo, como si le hubieses dado la espalda a un perro furioso, pero el Sargento Tuco solo se remite a insultarte. Un bis infinito de la palabra "pelotudo".
+\- Andá a uno de los cementerios de la ciudad y buscá el nido de los Vampiros Superiores. Rápido y simple. Hasta vos lo vas a poder hacer – Después de tirar esa pieza de información, el Sargento Tuco se da media vuelta y vuelve a entrar en la Comisaría.
+-> cap2b_investigacion
+
+// ---------------------------------------------------------
+// SECCIÓN 6: ELEGIR CEMENTERIO
+// ---------------------------------------------------------
+
+=== cap2b_investigacion ===
+# music:playa_ambient
+Después de todas tus aventuras dejás que tus piernas te lleven en piloto automático mientras tu cabeza procesa toda la información que tenés. Es de noche y llegás hasta una playa. El mar se ve oscuro y agazapado, como una gran fiera dispuesta a saltar sobre su presa.
+Teniendo en consideración tu último caso, es muy posible que realmente sea eso.
+# next
+Es claro que tenés un problema de Vampiros. Y los Vampiros hacen su nido en la gran mayoría en los cementerios. El único problema es que en Costa Alegre hay tres cementerios diferentes e ir al equivocado puede generar una pérdida de tiempo peligrosa.
+-> cap2b_elegir_cementerio
+
+=== cap2b_elegir_cementerio ===
++ {tiene_cementerio_correcto} [Esperás que te contacte Enriquez a ver si logró obtener información] -> cap2b_cementerio_pista
++ [Voy a "Lomas de Paz". El cementerio más coqueto de la ciudad] -> cap2b_lomas_de_paz
++ [El cementerio "Recuerdo Eterno" es el más grande y más cercano a la ciudad] -> cap2b_cementerio_recuerdo
++ [El "Cementerio Municipal". Sus torres llenas de nichos deben ser perfectas para emboscadas] -> cap2b_cementerio_municipal
+
+=== cap2b_cementerio_pista ===
+El teléfono vibra en tu bolsillo exigiendo atención. Un mensaje de Enriquez. Parece que tu pista tenía algo de valor. Hace menos de una semana un tío de la familia falleció en circunstancias extrañas y fue enterrado en "Lomas de Paz", aparentemente en el pasado la familia había tenido cierto dinero y mantenían una cripta paga.
+# next
+Te tomás un momento para unir los puntos en tu cabeza. Por alguna razón los Vampiros Superiores quieren entrar a una casa así que convierten a un familiar y lo usan como Caballo de Troya para que un pariente, dolido por la pérdida pero sorprendido por el regreso de su ser querido, los invite a pasar.
+Si esa persona es aparte titular de una cómoda cripta, sería muy estúpido no usarla como guarida.
+{tiene_teoria_sacrificio:
+    # next
+    Sin duda lo hacen porque quieren secuestrar a los bebés. Es muy difícil encontrar a un bebé de noche en alguno de los lugares que utilizan los vampiros como coto de caza. Sin duda el jefe de este grupo de vampiros está pensando hacer magia de sangre peligrosa. Tenés que ir a detenerlo.
+}
+Sin pensarlo, te dirigís al Cementerio "Lomas de Paz".
+-> cap2b_lomas_de_paz
+
+=== cap2b_cementerio_recuerdo ===
+~ llegaste_tarde_2b += 1
+El cementerio "Recuerdo Eterno" está rodeado por una pared no muy alta, apenas de dos metros, sus puertas están unidas por una cadena oxidada y pura fuerza de voluntad. Al lado hay un sereno que, para mayor vergüenza, duerme.
+A simple vista, el único servicio que brinda este cementerio es ser un coto de caza perfecto para ladrones de tumbas, estudiantes de medicina que necesitan huesos y vagabundos.
+Sin mucho esfuerzo, lográs entrar.
+# next
+Por dentro el cementerio es una cuadrícula perfecta llena de tumbas al ras del piso de las cuales surgen, como flores de jardín, un montón de cruces. Al igual que un jardín, el amor es clave. Un par de tumbas parecen todavía recibir visitas de parientes y se ven relativamente limpias y con flores, pero el resto está en un estado de franca decadencia. Ves cruces inclinadas, como intentando volver a la tierra, víctimas de los desechos de aves junto a tumbas rotas y desprolijas. Pero por muchas vueltas que das, no encontrás ningún vampiro.
+Solo lográs deprimirte. Sin duda tu objetivo no se esconde acá.
+-> cap2b_elegir_cementerio
+
+=== cap2b_cementerio_municipal ===
+~ llegaste_tarde_2b += 1
+Visto desde afuera, el Cementerio Municipal parece una pesadilla industrial. Cuenta con una pequeña explanada para tumbas pero en el horizonte se ven tres edificios gigantes y oscuros. Dos edificios llenos de nichos y una chimenea gigante del crematorio.
+Das unas vueltas y terminás entrando en los edificios de los nichos, cuentan hasta con ascensor. No podés sacarte la idea macabra de que es un complejo habitacional para cadáveres.
+# next
+Después de un poco de exploración te das cuenta de que la mayoría de los nichos están totalmente cerrados. Pero escuchás ruidos, voces susurrando un piso encima tuyo y una luz que se refleja temblorosa en el umbral de la escalera.
+Te acercás sigilosamente, rozando tu arma con el borde de tus dedos...
+Solo para encontrarte con un grupo de góticos sacándose unas fotos frente a uno de los nichos. Por mucho que les gustaría, estos chicos no son Vampiros Superiores.
+
++ [Te quedás cerca. Si hay Vampiros en la zona, son la víctima perfecta] -> cap2b_municipal_quedarse
++ [Les das un buen susto] -> cap2b_municipal_susto
++ [Te retirás] -> cap2b_municipal_retirar
+
+=== cap2b_municipal_quedarse ===
+Los seguís desde las sombras, viendo cómo hacen chistes, sacan fotos y toman alcohol barato. Perdés un montón de tiempo valioso para darte cuenta de que la única cosa vieja acosándolos sos vos. Tu investigación no va a avanzar por acá.
+-> cap2b_elegir_cementerio
+
+=== cap2b_municipal_susto ===
+Salís de la oscuridad con tu mejor voz de Vincent Price y las manos en alto, imitando garras mientras gritás "¡Sangre nueva para mis huesos viejos!". Antes de darte cuenta los jóvenes están corriendo a los gritos por el cementerio. Vas a tener que llamar a El Faro para avisarle que no manden a ningún guardián a investigar esto.
+-> cap2b_elegir_cementerio
+
+=== cap2b_municipal_retirar ===
+Vos también fuiste un adolescente idiota. Es más, estás seguro de que esas palabras son sinónimos. Mientras no molesten a nadie ni vandalicen el lugar no merece más atención. Lo importante ahora es pensar cómo continuar con tu investigación.
+-> cap2b_elegir_cementerio
+
+// ---------------------------------------------------------
+// SECCIÓN 7: LOMAS DE PAZ — ENTRAR AL CEMENTERIO
+// ---------------------------------------------------------
+
+=== cap2b_lomas_de_paz ===
+# music:terror_ambient
+El cementerio se encuentra sobre una avenida. Un predio gigante rodeado de unos muros altos (más de dos metros) que terminan formando cruces. Ya desde afuera parece más elegante que tu casa. En menos de cinco minutos te das cuenta de que esto va a ser más difícil de lo que pensabas. La entrada está custodiada por una garita donde se observan ahora cuatro guardias que llevan, con la comodidad que solo da la costumbre, unas importantes escopetas.
+# next
+Es entendible que el lugar esté guardado, siendo el cementerio histórico de la oligarquía de Costa Alegre, no te extraña que varias criptas sean verdaderas tumbas egipcias y estén llenas de tesoros.
+Los observás mejor, no tienen la impronta sobrenatural de los Vampiros Superiores (una elegancia fría, como un gato gigante) ni la desesperación y los temblores de los adictos a la sangre. Posiblemente sean humanos.
+Pero, por otro lado, simples humanos con escopetas han dejado una buena cuota de cadáveres durante la historia de la humanidad.
+# next
+Esperás unos minutos. Luego de una larga escena de saludos, tomar un último mate, más saludos, y un mate para el viaje, el grupo se dispersa. La mayoría de los guardias se internan en el cementerio, suponés que para hacer un patrullaje, y solo queda uno en la garita.
+Si vas a hacer algo, es este momento.
+-> cap2b_entrar_lomas
+
+=== cap2b_entrar_lomas ===
++ [Un simple hechizo para dormir va a ser suficiente] -> cap2b_lomas_hechizo
++ [Esas paredes no son tan altas, se puede trepar] -> cap2b_lomas_trepar
++ [La puerta es la entrada fácil, debe haber otra entrada] -> cap2b_lomas_alcantarilla
++ {tiene_favor_tuco and not uso_favor_tuco} [Es la hora de cobrarte el favor con Tuco] -> cap2b_lomas_tuco
++ [Es solo un guardia de seguridad. Calculás que podés ganarle] -> cap2b_lomas_atacar
+* [Podrías intentar fingir que sos su jefe] -> cap2b_lomas_jefe
++ [Tal vez si le decís que venís a ver la tumba de un pariente se apiade] -> cap2b_lomas_abuelita
+
+=== cap2b_lomas_hechizo ===
+# REQUIRES: magia >= 25
+Recitás las palabras y sentís cómo todo el agotamiento de tu cuerpo, el peso de tus extremidades y el dolor en tu cabeza, se empieza a concentrar en tu estómago. El hechizo termina con vos tosiendo, sacando a la fuerza un humo rosado y con olor dulce de tus entrañas.
+El humo repta al ras del piso y, como un animal de caza, salta a la ventana abierta de la garita. En menos de un minuto: intensos ronquidos.
+~ sin_guardias = true
+-> cap2b_entre_criptas
+
+=== cap2b_lomas_trepar ===
+# REQUIRES: fuerza >= 25
+Te ponés a recorrer el perímetro y encontrás un lugar donde la pared tiene una pequeña mueca, suficiente para colocar la punta de tu pie. Con ese punto de apoyo (y las horas de entrenamiento que llevás encima) tenés más que suficiente para poder trepar la pared.
+Un salto, unas gotas de transpiración invertidas, y ya estás adentro.
+-> cap2b_entre_criptas
+
+=== cap2b_lomas_alcantarilla ===
+# REQUIRES: conocimiento >= 25
+Con un celular, y tener acceso a las bases de datos correctas, se pueden conseguir muchas cosas. Tardás unos diez minutos en tener un mapa del cementerio, fácil de conseguir dado que es una atracción turística. El momento eureka viene cuando buscás el plano de las alcantarillas y notás que una de considerable tamaño pasa por debajo del cementerio.
+# next
+Soportás un pequeño momento de espeleología urbana y te metés dentro de una boca de tormenta cercana. Avanzás en la oscuridad, con un líquido hasta tus rodillas (elegís creer que es agua, así como te decís que lo que chilla y se mueve en la oscuridad son hojas) pero después de unos minutos encontrás una escalera que te lleva a una puerta de alcantarilla justo en el centro del Cementerio.
+-> cap2b_entre_criptas
+
+=== cap2b_lomas_tuco ===
+Le explicás la situación a Tuco, una conversación marcada por silencio y el ruido constante de su respiración contra el auricular. Lo único que te dice es "Listo. En cinco minutos andá para la puerta. Y borrá este número".
+Contás seis minutos, principalmente porque dudás de la eficiencia de las fuerzas de seguridad de Costa Alegre, y te acercás a la puerta.
+El guardia abre la puerta y te saluda: "Me avisaron que llegaba Agente, por favor, pase".
+~ uso_favor_tuco = true
+# inv:remove:favor_tuco
+-> cap2b_entre_criptas
+
+=== cap2b_lomas_atacar ===
+Te acercás con el mayor sigilo posible, pero llega un punto donde la luz de la farola ya no deja espacio para esconderte. Así que solo queda una respuesta posible: extrema violencia.
+El guardia no espera un ataque y, antes que logre agarrar la escopeta, ya estás sobre él desmayándolo con una llave asfixiante.
+~ sin_guardias = true
+-> cap2b_entre_criptas
+
+=== cap2b_lomas_jefe ===
+Te acercás a la garita adoptando una actitud desagradable, propia de cargos jerárquicos y nepo baby.
+\- Buenas – te presentás – me manda la gerencia para chequear que todo esté en orden.
+Mientras hablás mirás lo menos posible al guardia, como si su mera presencia te daría asco.
+\- Nadie me avisó nada.
+\- Y eso va a ser problema de su superior – retrucás – ahora, lo que sí sería su problema es obligarme a volver en otro momento. Ese error pesaría en su cabeza.
+# next
+El guardia te mira unos segundos, meditativo, y luego se larga a reír.
+\- Es más probable que me gane la lotería antes que uno de los jefes saque el culo de la silla y venga hasta acá en persona. Y más a esta hora. Rajá ratito.
+-> cap2b_entrar_lomas
+
+=== cap2b_lomas_abuelita ===
+Te acercás a la garita con la cabeza baja y la cara más triste que podés construir. Te acercás mucho a la garita antes de hablarle. Querés convertir tu tristeza (falsa) en algo tangible y personal, que el guardia no pueda ignorar.
+\- Disculpe que lo moleste, mi abuela está enterrada acá, ella fue casi una madre para mí. Me encantaría pasar a dejarle mis respetos pero, por el trabajo se me complica acercarme a otro horario. Sé que lo comprometo pero, ¿podría pasar cinco minutos? Saludo la tumba y me voy.
+# next
+El guardia te mira durante unos segundos mientras contiene una sonrisa triste que amenaza con aparecer en su rostro.
+\- Pasá pibe, pero solo cinco minutos. Y no hagas nada raro.
+Sabías que el argumento de la abuelita no iba a fallar. Todo el mundo ama a las abuelitas.
+-> cap2b_entre_criptas
+
+// ---------------------------------------------------------
+// SECCIÓN 8: ENCUENTRO CON VAMPIRO
+// ---------------------------------------------------------
+
+=== cap2b_entre_criptas ===
+Dentro del cementerio te encontrás en una pequeña ciudad. Calles rectas que forman manzanas llenas de criptas elegantes. Construcciones de mármol y cristal con decoraciones.
+Si bien la mayoría está adornada con cruces y ángeles, la decoración más común debe ser estatuas de mujeres jóvenes. Mujeres jóvenes llorando contra la puerta de la cripta, mujeres jóvenes semidesnudas de la mano con esqueletos, mujeres jóvenes con rostros invadidos por la tristeza.
+No entendés muy bien quién decidió que la parca debía ser tan sensual. Sospechás más que los artistas usaron modelo vivo y prefirieron explorar burdeles antes que morgues.
+# next
+Das un par de vueltas, más propio de un turista que de un investigador. Por suerte los guardias usan fuertes linternas en su recorrido así que, cuando ves que un halo de luz sale entre las criptas (la primera vez casi tenés un infarto), doblás en la primera esquina para asegurar que no te encuentren.
+La solución te la da el destino. En esta caminata ves una silueta a lo lejos. Alta, delgada y algo etérea, tapada con una túnica negra.
+# next
+Un análisis más detallista te permite notar que no está caminando, sino que avanza flotando a unos centímetros del suelo (completamente innecesario, pero seguro si vos pudieras hacer lo mismo levitarías a todo lado).
+Encontraste a un Vampiro Superior. Ahora hay que decidir el siguiente paso.
+-> cap2b_encuentro_vampiro
+
+=== cap2b_encuentro_vampiro ===
++ [El único vampiro bueno es el vampiro muerto. Cargás contra él] -> cap2b_vampiro_atacar
++ [Te acercás a hablarle. Tal vez lográs sacarle algo de información] -> cap2b_vampiro_hablar
++ [Lo seguís con el mayor cuidado posible. Debe estar yendo a su cubil] -> cap2b_vampiro_seguir
++ [Intentás ir por un camino paralelo y poner una trampa] -> cap2b_vampiro_trampa
+
+=== cap2b_vampiro_atacar ===
+El peso de la espada en tu mano te da la confianza que necesitabas. Avanzás hacia la silueta y, cuando estás a unos pasos, cargás con un golpe perfecto directo para cortar la cabeza.
+{
+    - fuerza < 25:
+        La criatura se da vuelta con una velocidad que tu cerebro no puede procesar. Una mano del color del mármol atrapó tu muñeca y empieza a apretar. Se siente como estar atrapado por una prensa industrial.
+        Sus ojos son como un cielo estrellado, hermosos y ajenos. Su rostro no denota ninguna expresión, sin duda no hay sorpresa por tu ataque.
+        Tu mano cede y la espada cae al piso, en el mismo momento que todo tu coraje se desvanece.
+        # stat:hp:-10
+        # MINIGAME: type=qte
+        ~ vampiro_muerto = true
+    - else:
+        En tu cabeza escuchás los consejos de Cabral. Hay bichos que es vital no errar el primer golpe. Principalmente porque no vas a estar vivo para dar el segundo. Los Vampiros Superiores, de noche, son ese caso.
+        Pero tus reflejos son más rápidos (al menos son más rápidos que un enemigo agarrado de sorpresa y por la espalda). La hoja atraviesa el cuello de par en par y sale cubierta en una fina capa de polvo.
+        En cuanto la cabeza se despegó del cuerpo su carne se convierte en polvo y cenizas, dejando atrás de sí solo una túnica y ropa elegante.
+        ~ vampiro_muerto = true
+}
+-> cap2b_frente_cubil
+
+=== cap2b_vampiro_hablar ===
+Salís de entre las criptas y le dirigís la palabra con un tono de voz que sale menos firme de lo que esperabas.
+\- Veo que no soy el único que aprecia la belleza del cementerio bajo la luz de la Luna. ¿Qué cripta pretende ver?
+# next
+El Vampiro gira y te mira con ojos vacíos. Su cabeza un poco caída para el costado, como si confiara en que al recostar la cabeza la gravedad ayudara a que las ideas caigan en el lugar correcto y le expliquen lo que está pasando. No se apura en hablar, te deja seguir.
+\- Si querés yo te puedo mostrar mi cripta favorita – el tono de tu voz va enflaqueciendo a la par que el Vampiro te sigue viendo como una estatua con ojos de infinito – y vos me podrías mostrar la tuya.
+# next
+Sonríe, dejando asomar bajo los labios dos colmillos que son una promesa de dolor. Sin duda apelar a la faceta humana de la bestia no fue la mejor estrategia.
+# MINIGAME: type=qte
+~ vampiro_muerto = true
+-> cap2b_frente_cubil
+
+=== cap2b_vampiro_seguir ===
+El cementerio ofrece una infinidad de lugares para esconderte. No podés dar dos pasos sin encontrar una estatua, el marco de una entrada o un pequeño pasillo entre Criptas donde entra justo tu cuerpo. Aparte el trazado, similar a una ciudad, vuelve fácilmente predecible el camino que va a tomar una persona.
+# next
+Lo que sí, debés ser especialmente cuidadoso con tus pasos. La presencia del Vampiro parece haber acallado el ruido a su alrededor. Ni aves nocturnas o ratas chillando a lo lejos. Hasta los gusanos que se devoran a los cadáveres parecen tomarse un descanso.
+Pero tu estrategia da resultado. Luego de un par de giros el Vampiro llega a la puerta de una cripta donde hay otros como él, con túnica negra y aspecto etéreo. Lo ves, recostado contra la estatua que representa un ángel llevando un bebé en sus brazos, decir unas palabras a sus compañeros que guardan la puerta y entrar al cubil.
+-> cap2b_frente_cubil
+
+=== cap2b_vampiro_trampa ===
+# REQUIRES: conocimiento >= 25
+Te escurrís entre dos criptas y avanzás a paso rápido entre lo que parece ser una calle paralela. Llegás primero a una esquina donde el Vampiro tiene que doblar así que aprovechás los segundos que tenés para trazar un semicírculo de sal y esconderte detrás de una estatua. La idea es que entre dentro de la figura y, cuando esté adentro, tirar una capa más de sal para convertirlo en un círculo y dejarlo encerrado.
+(Sí, en tu mochila hay sal, ajo, mandrágora, amaranta y demás hierbas, suficiente para ser un buen cazador de monstruos o un chef de primer nivel.)
+# next
+El paso del Vampiro sobre el empedrado va al mismo ritmo que tu corazón. Lo escuchás acercarse.
+Y pensás en todo lo que puede salir mal. Que no entre directo al círculo, que note la sal en el piso, que sienta tu presencia, que tus manos tiemblen y no cierren el círculo.
+Muchos posibles caminos que se ramifican, y casi todos terminan con vos muerto. Una metáfora de tu vida.
+# next
+Pero ocurre el mejor final. El Vampiro da un paso corto dentro del semicírculo y, antes del siguiente paso, vos ya saliste de las sombras y cerraste la figura.
+El siguiente ruido que escuchás es el "toc" fuerte de su cara golpeando contra una pared invisible.
+Durante los siguientes segundos el Vampiro abandona su máscara de humanidad. Un borrón de violencia que golpea todos los límites del círculo buscando un escape que no existía.
+# next
+Cuando se volvió a quedar quieto regresó a la máscara de humanidad. Perfecto, ni un pelo fuera de lugar o una marca de transpiración. Giró sobre sus talones y te mira con los ojos vacíos y la cabeza ladeada a un costado.
+\- Felicidades, ganado – su entonación es rara, como si la lengua fuese un ser vivo que apenas tiene bajo su control – me tenés encerrado con esta trampa tan... inventiva. Así que sin duda querés algo de mí. ¿Estás deseoso de ascender en la cadena alimenticia? ¿Querés ser eternamente joven? ¿Fuerte? ¿Carente de miedo?
+# next
+\- Solo quiero saber dónde está su cubil en este Cementerio – a pesar de la pared invisible que ofrece el círculo de sal, tu cuerpo instintivamente te pide que salgas corriendo.
+\- Qué pobre y patética es la imaginación de los mortales. Teniendo un dios delante tuyo me pedís cómo ir a un cubil. ¿No preferís que te mate yo mismo? Sería mucho más rápido y te ahorraría dolor. Salvo que eso sea lo que te gusta – una lengua larga y gorda sale entre sus labios y recorre lascivamente un colmillo.
+\- La locación del cubil. Ya.
+\- No te das cuenta mortal que, para mí, tu apuro no tiene sentido. No manejo el tiempo con tus límites tan finitos.
+\- Tu límite es el amanecer, que sospecho que será muy soleado en mitad de este Cementerio – A pesar de que sus ojos carecen de expresión, sabés que tu argumento ganó.
+# next
+Ya con las señas para llegar a la cripta donde se encuentra el cubil, lo que resta es decidir qué hacer con el Vampiro encerrado en el círculo de sal.
+
++ [Te retirás y dejás que el sol haga su trabajo] -> cap2b_trampa_dejar
++ [Lo liberás. Es demasiado sucio dejar a alguien encerrado esperando la muerte] -> cap2b_trampa_liberar
++ [Sus argumentos son muy buenos. Pedís que te convierta en Vampiro] -> cap2b_trampa_convertirse
+
+=== cap2b_trampa_dejar ===
+Intentás pensar una frase graciosa pero la vida no es una película de acción. Simplemente lo mirás unos segundos y él se da cuenta. Sus ojos dejan de tener la expresión vacía que conservaban hasta ahora y su rostro se desencaja con una lluvia de emociones. ¿Miedo? ¿Rabia?
+# next
+No te interesa ver más, te das vuelta y comenzás a caminar hasta la dirección que te dio del cubil. Atrás tuyo escuchás sus gritos. Una mezcla de insultos con súplicas. Durante un momento llora como un niño pequeño para después pasar a tratarte de ganado y mugir como una vaca.
+Cuando dudás vuelve a tu cabeza la imagen de la familia muerta, secos en su casa. Cómo su vida cotidiana fue destruida de forma horrible y azarosa por seres que no los consideran más que alimentos.
+Ojalá que arda lentamente.
+~ vampiro_muerto = true
+-> cap2b_frente_cubil
+
+=== cap2b_trampa_liberar ===
+Le pedís que jure por todo lo que considere sagrado que no te va a atacar una vez que rompas el círculo de sal. Él lo hace, jura por la sed y la sangre (lo cual te da más miedo que seguridad) que una vez roto el círculo va a irse para el lado contrario, dejar Costa Alegre y buscar otra ciudad para instalarse.
+No promete que va a dejar de ser un asesino de personas, pero está bien, tampoco le hubieses creído si decía eso.
+# next
+Con una simple patada rompés el círculo. El viento se lleva los pedazos que formaban tu protección. Él sonríe y habla, con el tono entrecortado fruto del jugueteo de su lengua contra sus dientes.
+\- Muy bien, pero esto de jurar por la sed y la sangre me puso un poco juguetón. Creo que debería probar un tentempié para el viaje.
+# MINIGAME: type=qte
+~ vampiro_muerto = true
+-> cap2b_frente_cubil
+
+=== cap2b_trampa_convertirse ===
+\- Lo quiero – la frase sale entrecortada de tu boca, ahogada por la culpa y el miedo – Quiero ser inmortal. No morir nunca, no tener miedo jamás.
+El Vampiro te mira, mientras ladea la cabeza para el lado contrario. Ninguna expresión de emoción, solamente se limita a extender su brazo y señalar a sus pies.
+# next
+Vos entendés de qué se trata. Te tirás de rodilla frente a él, tu cabeza a la altura de su cinto, la sal dispersa por la fuerza de tu caída.
+Todo ocurre demasiado rápido, como una película a la cual le cortaron una escena. Él estaba parado delante tuyo y de repente lo tenés encima.
+Los colmillos rompiendo tu carne duelen, pero la sensación también es placentera. Dios, es el mayor placer que nunca hayas sentido.
+# next
+Las sensaciones se van mezclando. Al principio prima el dolor, que retrocede por oleadas de placer. Después se impone el placer, condimentado por algún pinchazo de dolor.
+Al final estás flotando. En un mar rojizo con un oleaje cada vez más tranquilo. No hay más problemas ni preocupaciones. En el cielo carmesí hay un pequeño sol palpitante que cada vez emite menos luz.
+{
+    - conocimiento >= 25:
+        # next
+        Leíste sobre esta situación de éxtasis demasiadas veces. Es el dulce placer con el cual los Vampiros Superiores engañan a su presa para que se deje matar. Su presa. Vos. Vos sos su presa.
+        Te agarrás de esa idea, es como una balsa en mitad del mar donde te imaginás.
+        Ese bicho no es agradable y la situación no es ni hermosa ni erótica. Es un depredador que clavó sus colmillos en tu cuello para matarte.
+        # next
+        Usás toda tu concentración para volver a sentir tu brazo derecho. Se siente torpe y entumecido, como si estuvieses medio dormido. Lentamente lo lográs mover, primero unos centímetros torpes, pero luego con mayor precisión. La suficiente para encontrar la daga que está en tu cinturón.
+        El golpe es torpe y no le cercena el cuello. No a la primera. El Vampiro grita y te suelta mientras intenta forzar a que tu mano suelte la empuñadura. Pero vos no la soltás. La empuñadura, como la idea de que eras una presa, es a lo que te aferrás para sobrevivir.
+        # next
+        Pero soltarte es su error. Realmente en ese momento ya te habían abandonado las fuerzas necesarias para ganarle un combate. Pero, al soltarte, la gravedad actuó a tu favor.
+        Caíste y, junto a vos, la daga que seguías agarrando bajó cercenando el resto del cuello.
+        Sobre vos llueve una fina capa de polvo y cenizas, el cadáver de algo que debería haber muerto hace mucho tiempo.
+        # stat:hp:-50
+        ~ vampiro_muerto = true
+        -> cap2b_frente_cubil
+    - else:
+        # next
+        Por primera vez en tu vida estás realmente calmo y relajado. Ya nada te importa. Cerrás tus ojos y te dejás barrer por las oleadas cada vez más suaves del mar. El sol palpitante se va apagando y, al mismo tiempo, tu corazón se detiene.
+        # next
+        ESTÁS MUERTO.
+        -> END
+}
+
+// ---------------------------------------------------------
+// SECCIÓN 9: FRENTE AL CUBIL
+// ---------------------------------------------------------
+
+=== cap2b_frente_cubil ===
+Al fin encontrás la cripta correcta. De afuera parece un edificio bastante aburrido, una imitación a un templo grecorromano con una serie de columnas jónicas y un techo en punta.
+Al mirar el lugar con más atención se puede observar unos pequeños detalles que dan cuenta de que está habitado. En el techo alguien colocó una antena (ser inmortal debe implicar mucho tiempo libre para llenar, por lo cual una conexión a internet debe ser un prerrequisito) y da la impresión de que alguien se tomó tiempo para limpiar la fachada.
+# next
+En el frente de la construcción se observan un par de Vampiros. Figuras etéreas con túnicas negras que están mirando fijamente a la nada. Si uno no presta atención, podría confundirlas con dos estatuas de excelente calidad. Pero sabés que en cuanto salgas de tu escondite esas dos estatuas van a cobrar vida y buscar beberse toda la sangre de tu cuerpo.
+{vampiro_muerto:
+    Dos Vampiros son dos más de los que te gustaría. Agradecés haberte sacado de encima el otro Vampiro que te encontraste en el Cementerio, sino la misión suicida que tenés enfrente sería... ¿más suicida?
+}
+# next
+El cielo parece haberse puesto a tono con la situación, un par de truenos son la apertura de una tormenta bíblica que empieza a caer sobre todos. Rápidamente te encontrás mojado, irritado, y con la ropa pegada al cuerpo. En contraposición, los Vampiros parecen emitir un aura que mantiene el agua alejada de su piel (malditos sobrenaturales con ventajas innecesarias).
+# next
+Cada par de segundos el rugido de un trueno tapa todos los ruidos, hasta los latidos de tu corazón, hasta la voz en tu cabeza que te dice que si no lográs idear un plan pronto esto va a ser un desastre.
+Es entonces cuando escuchás un grito proveniente del interior de la cripta. Lo reconocés de inmediato, es el llanto de un bebé. El ruido hace eco en tus huesos y te obliga a una respuesta.
+Cuando un bebé está en peligro uno debe actuar. El imperativo biológico para garantizar la supervivencia de la especie está escrito en nuestro puto ADN.
+Aparte, un bebé está en peligro. ¿Qué tipo de cobarde no haría algo?
+Eso sí, si terminás muerto mucho no lo podrías ayudar. Tenés que pensar en algo.
+-> cap2b_cubil_opciones
+
+=== cap2b_cubil_opciones ===
++ [Los Vampiros están acostumbrados a cazar humanos. Pero un Guardián de El Faro no es una víctima. Atacás] -> cap2b_cubil_fuerza
++ [Esos Vampiros se ven muy inflamables. Que suerte que aprendiste a conjurar bolas de fuego] -> cap2b_cubil_magia
++ [Sin duda podés entrar a una de las criptas vecinas y armar una entrada] -> cap2b_cubil_tunel
++ {not sin_guardias} [Tal vez sería momento de requerirle ayuda a los guardias del Cementerio] -> cap2b_cubil_guardias
++ {tiene_favor_tuco and not uso_favor_tuco} [Es necesario llamar a los refuerzos. Tuco podría caer con las tropas especiales] -> cap2b_cubil_tuco
++ [No se te ocurre ningún plan. Simplemente te acercás e improvisás] -> cap2b_cubil_improvisar
+
+=== cap2b_cubil_fuerza ===
+# REQUIRES: fuerza >= 30
+Dejás que pase un rayo, y la luz que trae, y salís a la carga. Está húmedo y estás mojado, así que tu avance épico es más un chapoteo infantil en los charcos. El primero de los Vampiros detecta tu presencia, hace un débil movimiento estirando la cabeza para adelante y un costado mientras sus ojos brillan como dos faroles en la oscuridad. Vos confirmás su punto disparando un tiro de escopeta directo a su pecho.
+# next
+El Vampiro recibe el disparo como si fuera una cachetada. La fuerza cinética del golpe apenas lo hace retroceder unos centímetros. Responde abriendo su boca, dejando salir un rugido animal y mostrándote unos colmillos que prometen dolor. Una movida atemorizante pero también un desperdicio de tiempo, y en un combate tan cercano cualquier minuto es clave.
+Vos no perdés el tiempo, cortás la distancia con un salto y descargás un golpe con tu espada directo al cuello de tu rival. Antes de terminar el movimiento, su cuerpo se dispersa en una nube de polvo que se lleva la lluvia.
+# next
+El Vampiro superviviente se eleva hacia los cielos, cuando te girás para verlo ya se encuentra a diez metros del piso y subiendo, hasta convertirse en un punto negro entre las nubes de tormenta.
+Va a caer en picada en cualquier momento, instintivamente corrés buscando una cripta que tenga un techo sobresaliente que pueda servir de defensa.
+# next
+El techo estalla sobre tu cabeza en una explosión de polvo, tejas y mármol. Parece que caer en picada no da mucho margen para maniobrar. El Vampiro se encuentra en el piso, todas sus extremidades están en ángulos anormales y su rostro es una masa deforme de la cual sobresale un ojo solitario ubicado en lo que debería ser una mejilla.
+Aun así, sigue vivo, escuchás el horroroso sonido de la carne y el hueso reubicándose intentando volver a una posición más normal.
+Malditos inmortales, con tiempo suficiente (y sangre) sobrevivría hasta a esto.
+Por suerte vos estás ahí con tu espada listo para impedir eso. Para cuando terminás es solo otra pila de cenizas arrastrada por la lluvia.
+-> cap2b_dentro_cubil
+
+=== cap2b_cubil_magia ===
+# REQUIRES: magia >= 30
+Realizar magia bajo la lluvia es complicado. El agua corriendo tiende a barrer y difuminar las energías. Aparte, elegiste hacer magia de fuego como si fuera poco.
+Te escondés debajo de un techo y curvás tu cuerpo, en un intento de proteger a la primera llama que surge de la palma de tu mano.
+# next
+En un claro ejemplo de concentración (y suerte) la tercera vez que lográs crear una llama en tu palma logra sobrevivir a la tormenta hasta convertirse en una pelota de fuego.
+Simplemente apuntás con tu palma hacia el Vampiro y soltás el fuego. La llama sale serpenteando, dejando una estela de humo a su paso a medida que va entrando en contacto con las gotas de agua, y golpea al Vampiro en el pecho.
+Las llamas se extienden y, en cuestión de segundos, es una antorcha humana. El Vampiro se retuerce en el piso gritando de dolor en una lengua que te resulta desconocida.
+# next
+El Vampiro superviviente se eleva hacia los cielos, cuando te girás para verlo ya se encuentra a diez metros del piso y subiendo, hasta convertirse en un punto negro entre las nubes de tormenta.
+Va a caer en picada en cualquier momento. Vos sabés lo que tenés que hacer.
+Avanzás hacia el centro de la calle, justo a tus pies están las cenizas del Vampiro que acabás de incinerar.
+Y esperás, como una presa perfecta. Esa espera, completamente vulnerable, se siente vertiginosa, un vértigo que repercute en tu estómago. Pero es necesario que se tire en picada hacia vos y esperar el último minuto.
+# next
+Notás que está casi encima tuyo por la sombra en el piso y por el agua de la lluvia que comienza a tener un patrón raro. Es en ese momento donde invocás una esfera de energía alrededor tuyo.
+Una MUY SÓLIDA esfera de protección.
+Parece que caer en picada no da mucho margen para maniobrar. El Vampiro rebota contra tu defensa y termina insertado en el techo de una Cripta.
+Cuando vas a ver lo encontrás en el piso con todas sus extremidades en ángulos anormales y su rostro es una masa deforme.
+Aun así, sigue vivo. Malditos inmortales.
+Por suerte decís unas palabras y hacés un gesto con la mano. La carne se convierte en llamas y dolor, y luego en cenizas que se lleva la lluvia.
+-> cap2b_dentro_cubil
+
+=== cap2b_cubil_tunel ===
+# REQUIRES: conocimiento >= 30
+Das la vuelta a lo que podría considerarse una manzana y entrás en la cripta que se encuentra justo detrás. A diferencia del cubil de los Vampiros, este es un lugar olvidado, los familiares de los difuntos hace tiempo los olvidaron o también se encuentran en el reino de los muertos.
+La puerta está quebrada, protegida por un candado oxidado y vencido. Te basta con hacer un poco de fuerza para mover los tablones y hacer un resquicio para poder entrar.
+# next
+Por dentro la cripta es igual de deprimente. Una serie de ataúdes carcomidos por la humedad y las telas de araña. Sin duda los saqueadores de tumbas hicieron su trabajo acá porque la tapa de uno de los ataúdes se encuentra corrida y el esqueleto que debería estar adentro parece un rompecabezas tirado al piso al cual le falta la mayoría de las piezas.
+Pero no estás acá para hacer el paseo artístico. Te tomás cinco segundos y detectás cuál es la pared que debería conectar con la cripta que los Vampiros usan de cubil.
+# next
+Sacás de tu mochila un cincel y un martillo. Lamentás no tener explosivo plástico para hacer este trabajo pero, bueno, estás en el tercer mundo y el presupuesto siempre está limitado.
+Colocás el cincel en una grieta entre dos ladrillos y esperás el próximo trueno. La furia de la tormenta sirve para esconder tus golpes.
+# next
+El trabajo resulta ser más fácil de lo que parecía, en cuanto sacás un par de ladrillos clave la pared sufre un pequeño derrumbe (sin duda las fuerzas de la tormenta están de tu lado porque en ese momento se escuchó un trueno tan fuerte que parecía una carga de artillería).
+Usás una soga para atar tu mochila y la mayoría de tu equipo al tobillo, te tirás al piso, y avanzás cuerpo a tierra.
+No será la entrada más heroica, pero sin duda es la más inteligente.
+-> cap2b_dentro_cubil
+
+=== cap2b_cubil_guardias ===
+Te acercás a la garita que estaba a la entrada del Cementerio y encontrás al grupo de guardias juntos, compartiendo mate mientras una radio (que tira más interferencia que música) pasa un poco de chamamé.
+No hay que ser muy astuto para darse cuenta de que no son el grupo de duros cazadores de vampiros que necesitarías en un momento como este. Pero bueno, construís con lo que tenés a mano.
+# next
+Mentís. Mucho. Decís que estabas viendo la tumba de tu abuelo y te encontraste con un grupo de saqueadores de tumbas. Usás todos los comentarios necesarios para intentar hacerles entender que son peligrosos, sin revelar su naturaleza Vampírica. Decís que parecen drogados, que sin duda están armados.
+Los guardias te creen, el tono de miedo y urgencia que le lograste imprimir a tu voz eran muy convincentes (y no necesitaste fingirlo).
+# next
+El grupo avanza en línea hacia el cubil del Vampiro, vos aprovechás este momento para retroceder un poco y dejar que los guardias hagan el primer ataque.
+No llegás a escuchar qué les dice a los Vampiros, un trueno tapa el sonido, pero debe haber sido algo intenso. Antes que puedas procesar lo que está pasando uno de los Vampiros clavó sus dientes en el cuello del guardia y se elevó con su presa en el aire, para sorpresa de todos.
+La distracción te da espacio para hacer algo.
+
++ [Ingresar al cubil mientras los guardias pelean con los Vampiros] -> cap2b_guardias_entrar
++ [Ayudás a los guardias con el combate] -> cap2b_guardias_ayudar
+
+=== cap2b_guardias_entrar ===
+Sentís que los sacrificaste, como corderos al matadero, pero no vas a tener mejor posibilidad para entrar que esta. Te lanzás para la puerta de la Cripta mientras, atrás tuyo, escuchás puteadas, disparos y una risa macabra que seguro tendrá algún lugar en tus pesadillas.
+~ todos_guardias_mueren = true
+-> cap2b_dentro_cubil
+
+=== cap2b_guardias_ayudar ===
+Antes de entrar en la cripta decidís darles una oportunidad de combate a los guardias. Te acercás por atrás a uno de los vampiros, que viene parando con el pecho toda la sucesión de disparos que recibe, y vaciás sobre su cabeza la cantimplora llena de agua bendita que llevabas.
+Una mezcla de gritos de dolor, olor a carne quemada y sonidos de descreimiento llena el ambiente. El Vampiro intenta recobrar la compostura pero solo se encuentra con tu espada camino a su cuello.
+Ingresás al cubil antes de que el polvo de tu enemigo llegue al piso, esperando que los Guardias puedan encargarse del Vampiro restante.
+~ algunos_guardias_sobreviven = true
+-> cap2b_dentro_cubil
+
+=== cap2b_cubil_tuco ===
+Si hay un momento donde es necesario llamar a la caballería, es este. Sacás el celular de tu bolsillo y, antes que nada, te asegurás de silenciarlo y dejar el brillo al mínimo. Lo peor sería llamar la atención de forma estúpida como un protagonista de película de terror de bajo presupuesto.
+Le enviás a Tuco tu ubicación y un resumen de lo que está pasando. La app de mensajes te da señales de que está escribiendo, escribiendo durante casi un minuto entero.
+Esperás una respuesta larga, tal vez un diagrama de un plan de acción. Pero después del minuto solo te llega un emoticón de una mano con el pulgar para arriba.
+# next
+Completamente frustrado mirás la pantalla del celular intentando comprender qué te quiere decir el mensaje. ¿Está en camino? ¿No le importa lo que está pasando? ¿Va a remitir la información a alguien que piense hacer algo?
+Estás tan enojado que apretás el celular al punto en que llegás a temer que lo destruyas en tus manos.
+Entonces te llega el último mensaje de Tuco: "Preparate. En un minuto actuamos. Borrá este número después de esta noche".
+# next
+Desde que te llegó ese mensaje empezás a contar. Uno, dos, tres...
+Te gustaría tener más idea de cuál es el plan de Tuco, como para saber qué hacer. Estirás tus músculos, te agazapás listo para correr y ponés tu mano izquierda en la empuñadura de tu espada y la derecha en tu pistola. Esperás que así tengas cubierto todas las opciones posibles.
+Entonces escuchás el motor.
+# next
+Primero es un rugido lejano, tapado por la tormenta, pero empieza a subir cada vez más y más de tono hasta replicar dentro de tu caja torácica. Entonces mirás para tu izquierda y, girando la manzana, aparece una camioneta de policía. Una bestia de metal blindada, con rejas protegiendo sus ventanas, y dos faros gigantes en el techo.
+El vehículo acelera y parece que vos no sos el único sorprendido, uno de los Vampiros logra volar pero el otro es llevado puesto por el camión. Su cuerpo es aplastado tres veces, primero por el paragolpe y luego por cada una de las ruedas.
+# next
+Mientras tanto, la camioneta gira en la esquina mientras se prepara para la segunda pasada a la vez que baja la ventana del acompañante. Del espacio sale un policía (con ropa antidisturbios, esa que solo ves cuando el país está cocinando una nueva crisis) y comienza a dispararle al Vampiro que está flotando en el aire.
+Necesitabas una distracción y sin duda te la dieron. Sin pensarlo dos veces te abalanzás contra la puerta de la Cripta.
+~ uso_favor_tuco = true
+# inv:remove:favor_tuco
+-> cap2b_dentro_cubil
+
+=== cap2b_cubil_improvisar ===
+Salís de tu escondite y te dirigís hacia la pareja de Vampiros que cubren la entrada del Cubil. La tormenta esconde el ruido de los pasos pero no logra tapar la voz en tu cabeza. En lugar de darte una idea brillante se dedica a repetir "esto es una pésima idea, esto es una pésima idea" (que es algo que ya sabías, pero tenías fe de tener una inspiración de último minuto que te permita resolver la cuestión).
+A fin de cuentas, hay bebés en peligro y tu trabajo es salvarlos. Mierda, aunque no sea tu trabajo igual irías a salvarlos.
+# next
+Uno de los Vampiros gira para mirarte. Estira su cabeza para adelante y un costado mientras sus ojos brillan como dos faroles en la oscuridad. De su boca sale un fuerte chasquido y su compañero también gira a verte, con la barbilla pegada al pecho y los ojos mirando hacia arriba.
+Seguís avanzando, pero la idea brillante para solucionar el problema nunca llega. Uno de los Vampiros levanta la mano y hace gestos para que te acerques.
+Empezás a dudar si seguís avanzando porque sos valiente o si es porque te encontrás bajo la influencia del Vampiro.
+Lo importante es que no dejás de avanzar.
+# MINIGAME: type=qte
+-> cap2b_dentro_cubil
+
+// ---------------------------------------------------------
+// SECCIÓN 10: DENTRO DEL CUBIL
+// ---------------------------------------------------------
+
+=== cap2b_dentro_cubil ===
+El cubil está iluminado por una lamparita (roja) que le brinda un aspecto orgánico y morboso a todo el cuarto. Sin ningún ataúd a la vista, toda la habitación está seccionada en diversas áreas para sus habitantes. Una esquina tiene una biblioteca con tomos que parecen tener varios siglos de antigüedad, mientras en otra esquina hay colgada una serie de pósters de músicos de los ochentas (no hay otra década donde sean aceptados esos peinados).
+# next
+Das un par de pasos y casi te chocás con una pequeña mesita que tiene una partida de ajedrez en trámite (aunque sospechás que si contás con la inmortalidad, llegar al grado de gran maestro simplemente es cuestión de estar aburrido).
+Más ves la pequeña habitación que es la Cripta y más te parece... triste. No se te ocurre mejor palabra, un montón de vidas congeladas en el tiempo amontonadas en el mismo espacio que ocuparía un local chico en el centro.
+Tal vez los Vampiros de las películas lo hacen ver glamoroso, pero si esta es la forma en la que vive la "clase media Vampírica", la muerte es una mejor alternativa.
+# next
+Tomás una escalera caracol que se adentra en las entrañas de la Cripta. Acá los Vampiros estuvieron trabajando, derribaron una pared y armaron una cueva subterránea. En las entrañas de la tierra la tormenta se vuelve un murmullo lejano.
+Avanzás por un pasillo con ataúdes a intervalos regulares, sin duda el lugar donde viven los Vampiros (uno hasta tuvo el detalle de dejar unas pantuflas a un costado y una alfombrita a los pies del ataúd, sería tierno si no se tratara de un predador peligroso que trata a los humanos como ganado).
+-> cap2b_pasillo_horror
+
+=== cap2b_pasillo_horror ===
+La única luz viene del fondo del pasillo, del mismo lugar que provienen unas voces profundas que entonan un canto rítmico y gutural. Algo que nunca es buena señal.
+Avanzás a tientas, con el temor de que una luz llame la atención.
+Es entonces cuando un pequeño desnivel amenaza con hacerte caer. Te llevás una mano a la boca, para contener el grito reflejo que nació en tu garganta, y la otra se agarra de la pared para evitar que caigas al piso.
+Húmedo. La mano que tocó la pared está en contacto con algo húmedo y pegajoso.
+
++ [Prendés la luz y te fijás qué es] -> cap2b_pasillo_luz
++ [Seguís a oscuras] -> cap2b_pasillo_oscuras
+
+=== cap2b_pasillo_luz ===
+Todo director de cine de terror sabe que insinuar es más efectivo que mostrar. Las cosas que crea tu mente con el estímulo adecuado tienden a ser más terroríficas (y adaptadas a tus miedos) que cualquier cosa que pueda hacer la oficina de efectos especiales.
+Esta era la excepción a la regla. Todo respecto a los Vampiros giraba en torno a la sangre, y esto no era la excepción.
+# next
+En el piso yacía un intestino largo serpenteante que marcaba el camino hacia el lugar del ritual, flanqueado en intervalos regulares por charcos de sangre donde descansaban órganos. Se sentía mal, como romper un tabú o ver algo privado. A simple vista llegabas a reconocer un corazón y unos pulmones, el resto no sabías qué era pero había más que un par de las cosas que debían venir en pares. Ese piso tenía mucha muerte.
+Lo que había en las paredes era escritura, o runas, o parte de un hechizo. Escrito de techo a piso en todos los tonos de rojo posibles.
+{conocimiento >= 25:
+    # next
+    El color no era abstracto, era tan parte del lenguaje como los símbolos. Intentaste abstraerte y leerlo de forma fría (eso era sin pensar cuántas personas habían muerto para escribir eso y evitando pisar un pulmón). Era parte de los preparativos del ritual. La escritura era clara. El sacrificio de siete bebés humanos, uno por cada día de la semana, para garantizar que un Vampiro pueda caminar inmune bajo la luz del sol.
+    No era claro si las otras reglas también se romperían, si podría entrar sin invitación a la casa de la gente o si sería inmune a los símbolos sagrados. Pero Vampiros de día ya eran suficiente problema. El Cazador estaba limitado por su hábitat de caza, y esto rompía esos límites. Era como si el Tiburón Blanco de repente tuviera piernas y pulgares opuestos.
+}
+No te queda más opción ahora, debés seguir avanzando y esperar que la terapia y los psicofármacos puedan hacerte olvidar esto.
+-> cap2b_monticulos
+
+=== cap2b_pasillo_oscuras ===
+La mente funciona de formas raras. Que una idea entre en tu cabeza es fácil, pero que salga es casi imposible. Cualquiera que estuvo toda una tarde tarareando una canción pegajosa lo sabe.
+Lo importante es que decidís que preferís no saber qué es la sustancia pegajosa que se encuentra en el pasillo. Te limpiás las manos en tu pantalón y seguís avanzando.
+-> cap2b_monticulos
+
+=== cap2b_monticulos ===
+Las voces van tejiendo un canto que se hace cada vez más presente, casi tangible. El aire se vuelve espeso y te empieza a doler la cabeza. Te sentís embotado, como si te hubieses despertado en mitad de un sueño, con la mente confundida y las extremidades debilitadas.
+Es entonces cuando escuchás el ruido metálico, a la entrada de la habitación donde se está realizando el ritual hay pilas y pilas de adornos y decoración religiosa robada de otras criptas.
+# next
+La mayoría está amontonada en pequeños túmulos que llegan hasta tu rodilla y embadurnados en una sustancia roja que preferís no averiguar qué es. Su consistencia y distribución no parece azarosa, sin duda es parte de lo que están intentando hacer. ¿Burlarse de los símbolos de la muerte? ¿Mancillar simbología judeocristiana?
+Te ponés en cuclillas para observar mejor los montículos y ver qué encontrás.
+
++ [Una placa de una esposa despidiendo a su difunto marido. Podría servir] -> cap2b_monticulo_placa
++ [Una cruz de plata que casi no tiene manchas. Te la llevás] -> cap2b_monticulo_cruz
++ [Una estatua de Buda que parece casi indemne. Podría ser útil] -> cap2b_monticulo_buda
++ [Pateás todos los montículos. Que se jodan] -> cap2b_monticulo_patear
+
+=== cap2b_monticulo_placa ===
+"Mientras mi corazón siga latiendo, lo hará al ritmo de tu nombre". La frase no tiene autor así que debe ser algo que se decía la pareja en vida, un fragmento real de su cariño. Tal vez una muestra de amor puro pueda ser un arma eficiente (aunque, por las dudas, dejás tu espada a mano).
+Dejás atrás el pasillo del horror y pasás a la siguiente habitación, debés agacharte para entrar, como un penitente o un suplicante.
+# inv:add:placa_amor
+-> cap2b_ritual_final
+
+=== cap2b_monticulo_cruz ===
+La cruz es de plata y tiene a Cristo crucificado en su frente. Te sorprende que, entre todas las tripas y la sangre que tapan los montículos, no tiene ni una mancha. Cuando la sacaste estaba atravesando un cráneo decrépito, tan viejo que estaba más cerca de la decoración que del horror, pero aun así había logrado mantenerse inmaculada.
+Tal vez era una señal de la bendición sagrada. En el peor de los casos, se sentía pesada en tu mano, así que podía servir como una buena maza.
+Dejás atrás el pasillo del horror y pasás a la siguiente habitación, debés agacharte para entrar, como un penitente o un suplicante.
+# inv:add:cruz_plata
+-> cap2b_ritual_final
+
+=== cap2b_monticulo_buda ===
+La estatua de Buda se encuentra en la cima de su pequeño túmulo, justo debajo de un ojo (que hacés todo lo posible para no entrar en contacto directo con su mirada muerta). Te sorprende encontrar un adorno de este tipo, hasta donde sabés la comunidad budista en Costa Alegre es casi insignificante. Al agarrarla te das cuenta de que la estatua es de oro macizo, sin duda una excentricidad de un oligarca que tenía suficiente tiempo libre como para aburrirse. Pero bueno, no es momento para rechazar ningún tipo de ayuda.
+Dejás atrás el pasillo del horror y pasás a la siguiente habitación, debés agacharte para entrar, como un penitente o un suplicante.
+# inv:add:buda_oro
+-> cap2b_ritual_final
+
+=== cap2b_monticulo_patear ===
+Pateás el primer túmulo y explota repartiendo una lluvia de cruces, tripas, placas y carne. Una lluvia plateada y roja. Es bueno, es hacer algo. Esperás que destruirlo sirva de alguna manera para fastidiar el ritual. En el peor de los casos, al menos sirvió para convertir tu miedo en odio y acción. Si tenés que elegir, siempre es mejor estar enojado que asustado.
+Dejás atrás el pasillo del horror y pasás a la siguiente habitación, debés agacharte para entrar, como un penitente o un suplicante.
+-> cap2b_ritual_final
+
+// ---------------------------------------------------------
+// SECCIÓN 11: RITUAL FINAL — LA CONFRONTACIÓN
+// ---------------------------------------------------------
+
+=== cap2b_ritual_final ===
+Sos lo menos interesante en la habitación. Esa es tu ventaja porque nadie te está mirando y te da espacio para actuar.
+En el piso de la habitación hay un círculo delimitado con cera roja (o carne quemada) que contiene una figura geométrica compleja que te da dolor de cabeza con solo verla. Notás que el diagrama pulsa, salvo unos pequeños bultos que aparecen cada tanto como engranajes del diagrama.
+# next
+Encima, flotando a unos diez centímetros del piso, se encuentra el líder del Aquelarre usando una túnica borravino que circula siguiendo el patrón dibujado sobre el suelo.
+Sobre su cabeza la energía del ritual se concentró. Es tanta energía y en tan poco lugar que se puede ver a simple vista. Una intensa red de hilos rojos que se van tensando y relajando a ritmos regulares.
+Por último notás, del otro lado del círculo, a los seis miembros restantes del Aquelarre cantando de forma rítmica. Su ritmo dicta la forma en la que se tensan los hilos y pulsa el símbolo.
+{conocimiento >= 25:
+    Sea como sea, no van a poder detenerse en este momento. Una invocación así requiere una gran entrega y mueve emociones que anulan nuestra parte más racional. Esos seis Vampiros ahora son mera escenografía del ritual.
+}
+# next
+Cuando superás el shock producido por la rareza de la situación, y la certera muerte que implicaría enfrentar a tantos Vampiros, observás mejor la situación. Esos bultos que yacen sobre el diagrama son los bebés desaparecidos.
+{
+    - llegaste_tarde_2b >= 2:
+        # next
+        El horror se presenta como un grito dentro de tu cabeza. Un grito constante en un idioma desconocido. Los cuerpos de bebé forman parte del diagrama en el piso.
+        Cuerpos rotos que, en su desesperación, el Vampiro había desmembrado. Cabezas, gigantes para sus cuerpitos, caídas sobre sus pechos y apenas conectadas al resto del cuerpo por un tirón de músculo. Piernas que, en la homicida necesidad del Vampiro de consumir hasta la última gota de sangre, habían sido estrujadas y arrancadas.
+        Solo un bebé sobrevivía, el último requisito para cerrar el ritual. Un pequeño tan inocente que miraba sin entender el juego de los hilos de energía roja que se tejían sobre su cabeza.
+        Seguramente a la noche, y durante muchas noches (tal vez todas), ibas a pensar en todas las vueltas en falso que diste en tu investigación. Todos los atajos que pudiste haber tomado para llegar a tiempo.
+        Pero ahora, era momento de actuar.
+    - else:
+        # next
+        Los siete bebés que los Vampiros venían secuestrando en la Ciudad. Ahora están callados y quietos en la posición que les correspondía. La mayoría parecía muy joven hasta para gatear, aunque había uno que se notaba que tenía sus piernas en una posición antinatural, sin duda se las habían quebrado para que se quede donde querían.
+        Era horrible, pero estaban vivos. Y estar vivo es el principio de todas las soluciones. Tu misión ahora era asegurarte de que sigan así.
+}
+# next
+Con total indiferencia, y siguiendo un recorrido que parecía aleatorio pero espejaba el diagrama del piso, se agacha lentamente para tomar al bebé entre sus manos. Es una cosa hermosa, un par de cachetes que parecen una copa llena de flan con dulce de leche y una mirada que desborda inocencia.
+En contraste, el Vampiro Superior parece una versión fallida del ser humano. Sus dedos eran largos al punto de generar inconformidad, como si se tratara de apéndices extraños. Como colmo se dejó las uñas largas, uñas que está usando para cortar la piel del bebé hasta hacerlo llorar.
+# next
+El llanto del bebé replicaba en todas las paredes hasta generar verdadero dolor físico, era la necesidad de actuar hecha sonido. El Vampiro lo tomó de una muñeca y lo elevó hasta la altura de su rostro, mirándolo con un brillo predador en sus ojos, mientras seguía levitando como si bailaran juntos un vals al son del llanto.
+Pero vos estabas acá, un Guardián del Faro, y te ibas a asegurar de que esa persona sobreviva.
+# next
+Todas las piezas estaban claras ahora. El diagrama en el piso, el Vampiro levitando arriba a punto de devorar al bebé, los hilos de energía roja concentrándose en el techo y el resto del grupo en el fondo recitando para mantener la sonoridad que necesitaba el ritual.
+La pregunta ahora es: ¿Cómo actuar?
+-> cap2b_ritual_opciones
+
+=== cap2b_ritual_opciones ===
++ [Te tirás contra el Vampiro Superior. Estás seguro de que podés ganarle] -> cap2b_ritual_fuerza
++ [El principal problema de los Vampiros es que son inflamables. Liberás el fuego] -> cap2b_ritual_magia
++ [Con un poco de ingenio se puede modificar el diagrama en el piso] -> cap2b_ritual_diagrama
++ [Sin bebé no hay ritual. Lo más importante es impedir que exista un Vampiro diurno] -> cap2b_ritual_matar_bebe
++ {tiene_favor_tuco and not uso_favor_tuco} [Que suerte que guardaste el favor de Tuco para el último momento] -> cap2b_ritual_tuco
++ [Avanzás con la cruz en alto confiando en el poder divino] -> cap2b_ritual_cruz
++ [Sacás la estatua de Buda y das un paso al frente confiando en que te proteja] -> cap2b_ritual_buda
++ [Sacás la placa de amor y das un paso adelante] -> cap2b_ritual_placa
++ [Sacás tu celular y ponés música a todo volumen para romper la melodía] -> cap2b_ritual_musica
++ [Tu sangre podría contaminar el ritual y convertirlo en un caos] -> cap2b_ritual_sangre
+
+=== cap2b_ritual_fuerza ===
+# REQUIRES: fuerza >= 30
+Avanzás hasta el borde del diagrama. Pisás con fuerza parte del trazado y movés frenéticamente el pie en un intento de borrar la imagen. Como insulto final, escupís sobre una de las figuras geométricas. El desafío está en el aire.
+El Vampiro Superior vuelve a colocar el bebé en su posición (el plan está funcionando) y te mira, su rostro denota cansancio y aburrimiento principalmente.
+# next
+Cargás con la espada en tu mano menos hábil. Su reacción ocurre a la velocidad del pensamiento. En un momento estabas corriendo hacia él y ahora estás colgando a diez centímetros del piso, con una de sus garras en tu cuello y la otra atrapando el brazo donde está tu arma. Todo ocurre tan rápido que escuchás el ruido de tus huesos rompiéndose y el arma cayendo al piso antes de procesar la ola de dolor subiendo por tu brazo.
+Sus labios se retraen dejando al descubierto un par de caninos largos y afilados, como agujas de coser.
+# stat:hp:-10
+# next
+Los Vampiros Superiores pueden tener capacidades regenerativas tan rápidas que parecen inmunes al daño, y un umbral de dolor que los hace parecer intocables, pero no pueden escaparse de la física básica. Justo antes de que te muerda le das un cabezazo con toda tu fuerza. Masa y velocidad concentrada, puede ser que no le duela pero tira su cabeza para atrás. Eso te da un espacio para trabajar.
+El movimiento lo entrenaste con Cabral mil veces. Es como pelear contra un perro, tenés que entregarle algo para que muerda así está distraído y podés trabajar.
+# next
+Por eso cargaste con el arma en tu brazo inhábil, él ocupó su mano en eso y te dejó la otra libre. Otra mano que ahora está aprovechando el espacio que ganó tu cabezazo para meter una daga directo a su cuello.
+Su mirada se vuelve humana durante unos segundos a la par que la daga entra en su cuello. Supongo que volver a estar en contacto con su mortalidad logra eso.
+Pero vos no dudás, seguís extendiendo el brazo (tu único brazo ahora) hasta que termina de estar completamente extendido.
+# next
+Caés al piso rodeado en la nube de polvo que fue tu enemigo. Las energías que el ritual concentraba se vuelven locas, latigazos de energía que cortan el techo e inundan la habitación de un fuerte olor a óxido y electricidad.
+Antes de disiparse, un latigazo pasa por los vampiros que formaban el coro y los reduce a cenizas. Gracias destino. No tenías ni idea cómo encargarte de eso.
+-> cap2b_epilogo
+
+=== cap2b_ritual_magia ===
+# REQUIRES: magia >= 30
+Juntás las yemas de los dedos de ambas manos formando un círculo, como si tuvieras una lente poderosa, y concentrás la energía. El primer fogonazo sale concentrado, más parecido a un chorro de agua a presión que a fuego, pero cumple su objetivo. El brazo del Vampiro Superior queda cercenado inmediatamente y el bebé queda libre (a una distancia considerable del piso, pero bueno, vas a echarle la culpa de eso a los vampiros).
+# next
+El Vampiro Superior carga contra vos. El coro del fondo carga contra vos. Parece que todo el mundo carga contra vos.
+Hay dos consejos muy importantes. El primero es que el miedo no es buena emoción para hacer magia precisa (pero sí sirve si querés hacer explotar todo).
+Segundo, no es conveniente nunca cargar contra la persona que es un lanzallamas humano. Lamentablemente, nadie le había explicado eso nunca a estos Vampiros.
+# next
+Apenas separás los dedos y el fuego fluye. Es una catarata y una explosión. Es el calor que funde todo a sus partículas principales para volver a construir algo nuevo.
+Los Vampiros se convierten en polvo y el polvo en átomos. Las paredes de la cueva empiezan a gotear y se vuelven tan maleables como el barro. Las energías que el ritual había concentrado también son desmenuzadas hasta volverse inertes.
+Entonces escuchás un llanto infantil.
+# next
+Recordás el orden. Vos manejás a la energía, no al revés. Cortar de repente el flujo de energía es doloroso, como interrumpir una función biológica, duele y te hace sentir frustrado y levemente descompuesto. Tu cuerpo empieza a temblar en un intento de procesar qué hacer con tanta energía extra de repente.
+Te caés de rodilla y vomitás. Pero destruiste a los monstruos y, más importante, te aseguraste de no convertirte en uno.
+-> cap2b_epilogo
+
+=== cap2b_ritual_diagrama ===
+# REQUIRES: conocimiento >= 30
+Das un paso al frente y te detenés a ver el conjunto de símbolos y diagramas que forman la figura geométrica en el piso. Cuando uno está iniciando parecen símbolos extraños pero con onda (por eso tantos jóvenes entran al ocultismo, gran estética). A medida que uno aprende se da cuenta de que no son símbolos, son el lenguaje de la realidad.
+En esencia, lo que tenés frente a tus ojos son una serie de órdenes para juntar energía y descargarla de una forma precisa, no muy diferente a lo que sería un trabajo de programación (no por nada los abuelos de la informática vienen del ocultismo).
+# next
+Esas órdenes pueden ser fácilmente modificadas si uno sabe lo que hace (lo sabés) y está lo suficientemente desesperado (lo estás).
+Sacás tu daga y te hacés un corte en tu palma izquierda, la cual vas a usar de tintero. La adrenalina para gran parte del dolor aunque sabés que el corte lo vas a sentir por semanas, es una herida en una zona con mucho movimiento que tarda en sanar.
+# stat:hp:-5
+# next
+Usás tu dedo derecho como pluma y empezás a hacer unas modificaciones. Más complicado es un hechizo más fácil resulta dañarlo, pero vos aspirás a más: vos querés controlar las energías que los Vampiros cosecharon en este lugar impío.
+El Vampiro Superior está listo para morder al bebé cuando el hechizo (tu hechizo) cobra vida.
+# next
+Los hilos de energía del techo se tensan tan rápido que retumba en la habitación un sonido metálico, entonces uno de los hilos se libera dando un latigazo de energía que corta al medio al Vampiro Superior y lo reduce a una nube de polvo.
+Habías mutado la energía del techo, en lugar de ser una máquina para fortalecer Vampiros era una máquina para matar Vampiros. Era sorprendente las pocas letras que tuviste que cambiar.
+# next
+Parecía un calamar con cientos de tentáculos. Desde el cielo empezó a lanzar latigazos contra los miembros del coro.
+Ellos intentaron todo, volar, convertirse en humo o en un grupo de murciélagos. Nada sirvió, en menos de cinco segundos todos habían sido reducidos a polvo.
+Destruido el último Vampiro, los hilos de energía se doblaron sobre sí mismos y formaron un ovillo. Lentamente dejaron de brillar y se camuflaron con el resto del techo, esperando al próximo grupo de vampiros que se adentre en esta cripta creyendo que habían encontrado un buen cubil. Acabás de crear una leyenda urbana, esperás al menos tener el derecho de ponerle nombre vos y que no se termine llamando algo estúpido como "spaghetti cazavampiros".
+Pero lo importante es que lo lograste, contra todo pronóstico.
+-> cap2b_epilogo
+
+=== cap2b_ritual_matar_bebe ===
+Más pensás la idea más te das cuenta de que es un plan horrible. ¿La vida de uno es menos importante que la vida de muchos? Verdad, pero es fácil decirlo cuando la vida que va a ser sacrificada es la de otra persona. ¿Su red de relaciones humanas es casi nula por lo cual su muerte afectará a menos gente? Una idiotez, cualquier persona sabe que un bebé es puro futuro y esperanza.
+Uno puede racionalizarlo todo lo que quiera, pero los argumentos no pueden blindarse contra ese llanto que está pidiendo ayuda a gritos.
+Se supone que vos tenías que venir a salvar al bebé, no hay nada que te diferencie del Vampiro que está por devorarlo. Sos un fracaso y vas a tener que vivir con eso.
+Si no actuás ya no lo vas a poder hacer. Apuntás y...
+# next
+Disparás. Se te pudo haber encasquillado el arma, o pudiste haber pifiado el tiro. Pero no, fue tu mejor disparo. Su cabeza convertida en una explosión de sangre es una imagen que queda grabada en tu retina. A pesar de que cierres los ojos lo seguís viendo, encerrado por siempre en un momento de horror eterno.
+Bajás el arma y esperás que el Vampiro Superior venga a matarte. No querés sobrevivir a esto. Mucho menos tener que hacer informes, recibir aplausos y miradas que fingen comprender el costo de lo que hiciste.
+~ traumado = true
+~ bebe_muerto = true
+# next
+Antes de darte cuenta el Vampiro Superior está encima tuyo (textualmente, está flotando a medio metro del piso) y se prepara para bajar como un ave de presa. Ojalá te mate, ojalá duela.
+Es en ese momento que, al faltar uno de los elementos del ritual, la energía que estaba concentrándose en el techo se descontrola.
+Un latigazo de energía cae justo sobre el Vampiro Superior y lo termina reduciendo a una pila de polvo que llueve sobre vos.
+# next
+Todo es un caos, la energía concentrada en el cielo es una tormenta de furia divina que libera latigazos de energía sobre todo el lugar. Vos no te movés del lugar, esperando el momento en que te caiga uno.
+El coro de vampiros desaparece con un rayo, en una mezcla de fuego, humo y gritos. Casi toda la habitación es castigada, la sangre del piso se derrite y las paredes se cristalizan.
+Pero vos sobrevivís.
+-> cap2b_epilogo
+
+=== cap2b_ritual_tuco ===
+Si existió un momento en la historia de la humanidad en que fue necesario llamar a la caballería, era este. No te importaba quién venga, la caballería polaca, el General Custer o la Brigada Antidisturbios de la Provincia de Buenos Aires. Alguien tenía que poder traer las armas pesadas.
+Sacás una foto de lo que está pasando y se la enviás a Tuco junto con tu ubicación en tiempo real. Te agazapás entre unas sombras y esperás el mensaje de respuesta.
+# next
+Un corazón. Esa es toda la respuesta. Un puto emoticón que no tiene mucho sentido. ¿Significa que está viniendo? ¿Que le claves una estaca en el corazón? ¿Que en el fondo siempre apoyó a los Vampiros y los rituales humanos? ¡¿QUÉ MIERDA ES UN CORAZÓN?!
+# next
+Tenés suerte de que el ritual parece tener una cláusula de tiempo, el Vampiro Superior sigue dando vueltas con el bebé mientras el coro va cantando cada vez a mayor velocidad, sin duda la canción está llegando a un clímax. Un clímax que va a incluir la muerte del bebé.
+No queda otra opción, con un revólver en una mano y la espada en otra, te preparás para actuar.
+# next
+Cuando avanzás hacia tu muerte escuchás el primer disparo, la ráfaga brillante pasó a centímetros tuyo y pega de lleno en la cabeza del Vampiro Superior, incendiando todo su pelo.
+Un agente de la policía, con chaleco antibalas y un casco negro que deja ver unos mechones colorados, avanza y dispara dos tiros más al pecho del Vampiro hasta que la munición recargada de fósforo termina quemando el cañón del arma. Ese es el momento donde pasa a su pistola de bolsillo y vacía el cargador hasta que su blanco es polvo.
+~ final_con_tuco = true
+~ uso_favor_tuco = true
+# inv:remove:favor_tuco
+# next
+Tal vez esta gente carecía de la pericia para descubrir qué estaba ocurriendo y encontrar el cubil de Vampiros, pero sin duda tienen el talento necesario para limpiar el problema. Simplemente te apartás a un costado (para no molestar) mientras un oficial con sobrepeso usa un arma de gas lacrimógeno modificada para lanzar una bomba de agua bendita al coro de Vampiros, a la par que otro agente carga usando un híbrido entre una espada y una cruz.
+La caballería llegó al rescate y se encargó del asunto.
+-> cap2b_epilogo
+
+=== cap2b_ritual_cruz ===
+# REQUIRES: inv:cruz_plata
+Es momento de pasar a la acción. Das un paso hacia adelante, tus pies cruzan el diagrama, y estirás la cruz hacia adelante.
+De repente sentís la energía atrás tuyo, como si una presencia gigante se encontrara a tu espalda. Igual no tenés tiempo para preocuparte por eso, estás demasiado concentrado en mantener tu agarre de la cruz que dejó de ser una estructura sólida de plata para convertirse en un pilar de luz vertiginoso.
+# next
+La voz que sale de tu boca no es la tuya, por suerte dado que estás seguro de que vos nunca hubieses logrado tener ese nivel de seguridad.
+\- Alto, por la Sangre del Cordero, dejen a ese niño y abandonen este lugar.
+La luz de la cruz deja ver al líder del Aquelarre de Vampiros como lo que es, un parásito despreciable. Piel quebradiza, los labios desaparecidos para dejar ver una dentadura compuesta solo por colmillos, la cabellera compuesta solo de un largo mechón gris, gusanos e insectos pululando en heridas infectadas en la piel. Un cadáver caminando.
+# next
+El Vampiro quiebra su columna, girando el cuerpo hacia la derecha hasta que su cabeza toca el piso y dejando tranquilamente el bebé sobre el piso.
+Sentís la presión de la presencia a tu espalda y te ves obligado a avanzar un paso hacia adelante. En respuesta el Vampiro retrocede en cuatro patas hacia el resto de su grupo.
+La energía que se concentraba en el techo simplemente se evapora, dejando atrás un humo rosado de olor metálico, mientras el grupo de Vampiros hace un montículo humano (bueno, no humano realmente) colocándose unos sobre otros e intentando ocultarse de la luz de la cruz.
+# next
+Simplemente ya no tenés una cruz en tu mano. Tus dedos se relajan porque no hay nada más que agarrar. Solamente hay luz adelante, un fogonazo de la primera luz del universo.
+Cuando podés volver a ver, después de un buen tiempo, delante tuyo solo hay una pila de cenizas.
+-> cap2b_epilogo
+
+=== cap2b_ritual_buda ===
+# REQUIRES: inv:buda_oro
+Avanzás con el Buda en tu mano esperando que haga... ¿algo? En el momento en que tu pie toca la figura geométrica el Vampiro Superior se da cuenta de tu presencia. Te mira a vos, al Buda, y de nuevo a vos como intentando entender qué parte del ritual es todo esto.
+Es cuando se da cuenta de que no es parte del ritual, y que la estatua de Buda lo único que está logrando es cansar tus brazos, cuando sonríe. Su sonrisa se va haciendo cada vez más grande hasta dejar al descubierto dos filosos colmillos.
+# next
+Su mordida destruye el cuello del bebé, dejando salir de su cuerpo un fuerte llanto y un chorro de sangre. Diez segundos es lo que tarda en morir el bebé, suena poco pero pudiste haber hecho un montón de cosas en ese tiempo, pero solo se te ocurrió contar y sostener una estatua de Buda.
+Cuando el Vampiro Superior termina su festín deja el cadáver en una posición específica y te mira.
+\- ¿Estás listo para reencarnar?
+# next
+El Vampiro se mueve a la velocidad de tu pensamiento. Solo dos de sus dedos, largos y flacos, se colocan alrededor de tu cuello. Todo lo que basta es un pequeño movimiento y estás muerto.
+Tu cerebro tarda unos segundos en darse cuenta, lo suficiente para escuchar el crack de tus huesos al quebrarse y tener un último pensamiento coherente antes de irte. "¿Cómo pensaste que esto iba a funcionar?"
+# next
+ESTÁS MUERTO.
+-> END
+
+=== cap2b_ritual_placa ===
+# REQUIRES: inv:placa_amor
+Avanzás con la placa en tu mano esperando que haga... ¿algo? En el momento en que tu pie toca la figura geométrica el Vampiro Superior se da cuenta de tu presencia. Te mira a vos, a la placa, y de nuevo a vos como intentando entender qué parte del ritual es todo esto.
+Es cuando se da cuenta de que no es parte del ritual, y que la placa lo único que está logrando es cansar tus brazos, cuando sonríe. Su sonrisa se va haciendo cada vez más grande hasta dejar al descubierto dos filosos colmillos.
+# next
+Su mordida destruye el cuello del bebé, dejando salir de su cuerpo un fuerte llanto y un chorro de sangre. Diez segundos es lo que tarda en morir el bebé, suena poco pero pudiste haber hecho un montón de cosas en ese tiempo, pero solo se te ocurrió contar y sostener una placa funeraria.
+Cuando el Vampiro Superior termina su festín deja el cadáver en una posición específica y te mira.
+\- Veo que ya trajiste tu placa funeraria.
+# next
+El Vampiro se mueve a la velocidad de tu pensamiento. Solo dos de sus dedos, largos y flacos, se colocan alrededor de tu cuello. Todo lo que basta es un pequeño movimiento y estás muerto.
+Tu cerebro tarda unos segundos en darse cuenta, lo suficiente para escuchar el crack de tus huesos al quebrarse y tener un último pensamiento coherente antes de irte. "¿Cómo pensaste que esto iba a funcionar?"
+# next
+ESTÁS MUERTO.
+-> END
+
+=== cap2b_ritual_musica ===
+Sacás el celular y te asegurás de que esté en máximo volumen, abrís la aplicación de música y dejás que el algoritmo elija qué música pasar. Primero pasan un par de temas de trash metal, en el medio pasan un par de cumbias que te hacen mover la cintura aun en esta situación, para pasar por un par de música deprimente de la década del ochenta.
+Los Vampiros que forman el coro se desesperan e intentan cambiar su entonación y ritmo para compensar el sonido que estás insertando vos en el hechizo.
+Casi lo logran, hasta que los sorprendés con una sucesión de boleros.
+# next
+La energía que se estaba concentrando en el techo de la habitación empieza a perder forma. Los hilos se vuelven cada vez más anchos hasta parecer intestinos, uno explota bañando la habitación de sangre e impregnando el ambiente de un penetrante olor a óxido. Cada uno de los juegos de voces lo tironea para lados diferentes y lo moldea de formas contradictorias.
+La situación no es sostenible.
+# next
+Todo explota cuando suena "La Marcha de San Lorenzo". A la par que la canción llamaba a la carga, las energías se descontrolaron completamente. Un tentáculo de energía roja salió disparado y pulverizó al Coro de Vampiros (junto con toda la esquina de la cueva, que se convirtió en vidrio).
+El Vampiro Superior intentó huir, una sombra que pasó volando sobre tu cabeza. Justo en el momento en que otro rayo de energía venía directo hacia tu celular. El Vampiro funcionó de pararrayos y terminó convertido en un cometa de llamas que se pulveriza contra una pared.
+# next
+Ahí es el momento en que decidís apagar la música.
+La energía concentrada termina cayendo en el ambiente como una ligera lluvia de sangre, que esperás que esté libre de cualquier tipo de enfermedad. Doscientos años de historia y los Granaderos siguen cobrándose victorias.
+-> cap2b_epilogo
+
+=== cap2b_ritual_sangre ===
+Pasás la daga por tu palma. Primero sentís el frío de la hoja y luego el calor de la herida. Empieza a brotar sangre, la dualidad vida/muerte y el eje a través del cual gira toda la magia vampírica. Extendés tu mano y dejás que la herida gotee sobre la figura geométrica dibujada en el suelo.
+# stat:hp:-5
+# next
+El plan original era que tu sangre arruine el ritual. Sangre de adulto. Sangre no contemplada.
+Pero nada pasa, al fondo el coro sigue cantando, en el cielo la energía se sigue concentrando y los hilos rojos empiezan a interconectarse formando figuras cada vez más complejas.
+Es entonces cuando el Vampiro Superior clava sus dientes en el cuello del bebé.
+# next
+Su mordida es ansiosa y brutal, desgarra el cuello y lo convierte en un manantial de sangre. Vos solo lo ves, de rodillas, mientras tu sangre comienza a generar una mancha en el piso.
+El Vampiro Superior deja el cadáver del bebé, con más cuidado que el que usaba cuando estaba vivo, en su posición en el ritual.
+Es entonces cuando te mira, con más curiosidad que otra cosa, y te dirige la palabra:
+\- Veo que estás tan ansioso que ya te hiciste un corte. Lamentablemente esta noche tengo una dieta específica.
+# next
+El Vampiro se mueve a la velocidad de tu pensamiento. Solo dos de sus dedos, largos y flacos, se colocan alrededor de tu cuello. Todo lo que basta es un pequeño movimiento y estás muerto.
+Tu cerebro tarda unos segundos en darse cuenta, lo suficiente para escuchar el crack de tus huesos al quebrarse y tener un último pensamiento coherente antes de irte. "¿Cómo pensaste que esto iba a funcionar?"
+# next
+ESTÁS MUERTO.
+-> END
+
+// ---------------------------------------------------------
+// SECCIÓN 12: EPÍLOGO
+// ---------------------------------------------------------
+
+=== cap2b_epilogo ===
+Cuando salís de la cripta la lluvia ya es solo un recuerdo, presente en un par de charcos en el piso y un poco de barro. Las primeras luces del amanecer le dan otro aspecto al cementerio, más calmo, sin luces oscuras donde acechan monstruos.
+{todos_guardias_mueren:
+    # next
+    Tenés que caminar con cuidado, en el piso no solo hay agua. Brazos, tripas y cosas que deberías tomar una clase de anatomía para saber qué son. Los restos de los guardias que mandaste al matadero para poder entrar en la cripta. Estas vidas van a pesar en tu consciencia.
+    Pero eso puede esperar.
+}
+{algunos_guardias_sobreviven:
+    # next
+    Un par de guardias sobrevivieron al ataque final. Están sentados en la entrada de una cripta, bajo una estatua gigante de un ángel con alas extendidas, y te miran con cara desconcentrada. Alguien les va a tener que explicar qué fue lo que pasó. Diantres, hasta deberían ofrecerles un trabajo si sobrevivieron a esto.
+    Pero eso puede esperar.
+}
+{final_con_tuco:
+    # next
+    Contra una pared te espera recostado un agente de policía colorado. Parece lastimado (no querés saber cómo es tu aspecto). Se limita a hacerte un gesto con la mano para darte a entender que todo está bien. Parco para hablar y con una cabellera que debe ser la base de un apodo, el Sargento Tuco. Sin duda cuando no prestes atención va a robarte el celular para asegurarse de que borres su contacto.
+    Pero eso puede esperar.
+}
+# next
+Cerrás los ojos y dejás que la luz del sol te bañe. Padre sol que quema a las cosas horribles e inexplicables mientras nutre y mantiene caliente a la humanidad.
+{traumado:
+    # next
+    Una parte tuya siente que el sol debe quemarlo, que es otro monstruo asesino de niños. Simplemente ya no resistís más, el esfuerzo de racionalizarlo es demasiado pesado y la imagen de su cabeza convertida en una explosión de sangre nunca te abandona. No importa dónde mires esa muerte está ahí, como una impresión traslúcida que se superpone a todo.
+    Te caés de rodilla y llorás. En algún momento el teléfono suena pero eso ocurre en otro lugar. Vos estás en tu mundo personal, un infierno donde no necesitás abrir los ojos para ver tus crímenes.
+    Seguís llorando hasta que te duele el cuerpo y te desembrazás en espasmos mudos.
+    En algún momento alguien te levanta. Recordás la aguja y la calma (física al menos) entrando en tu cuerpo. Ahora estás en tu pieza y no lo podés ver, por ahora.
+}
+{llegaste_tarde_2b >= 2 and not traumado:
+    # next
+    El único bebé sobreviviente está en tus brazos, durmiendo. Te da pánico tenerlo, tenés miedo de hacer un mal movimiento y lastimarlo o que se largue a llorar. Así que encontraste una posición cómoda (para el bebé, vos sentís como se te quiebra la espalda) y no te movés de ahí.
+    Te preguntás quiénes serán sus padres. Por lo que viste esta noche no dudás de que están muertos pero al menos esperás que El Faro le encuentre una linda familia.
+    Eso sería lindo. También es probable que El Faro lo entrene desde chiquito para ser un cazador de vampiros y cobrarse venganza. En ese caso no te extrañaría que en 20 años este bebé sea tu jefe.
+    Te gustaría llamar a Enriquez y pedir que organice que alguien te pase a buscar. Pero eso implicaría moverse y arriesgarse a despertar al bebé.
+    No importa, esperás. Esto es lindo.
+}
+{llegaste_tarde_2b < 2 and not traumado:
+    # next
+    Por suerte El Faro desembarcó con fuerza. Alguien había puesto una puerta médica en la entrada de una Cripta (mostrando que el encargado tenía un morboso sentido del humor). Teniendo en consideración la noche que tuviste, consideraste completamente válido sentarte en una esquina y dejar que el resto se encargue de vos.
+    Pero claro, primero estaban los bebés. Siete vidas que salvaste vos, siete futuros llenos de posibilidades que seguían en camino gracias a tus acciones de esa noche.
+    Y ¿qué era eso? ¿Enriquez cargando a uno mientras habla como un bebé? ¿Y acaso era una sonrisa eso que estaba apareciendo en su boca? Pase lo que pase no la ibas a dejar olvidar nunca este momento.
+    Te deja tranquilo ver que el lugar está lleno de gente que sabe lo que tiene que hacer. Eso te permite desmayarte tranquilo.
 }
 
 FIN DEL EPISODIO.
