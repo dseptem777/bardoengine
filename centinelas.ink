@@ -45,6 +45,7 @@ VAR llegaste_tarde_2b = 0
 VAR willpower = 100
 VAR sometimiento = 0
 VAR willpower_passed = false
+VAR spider_survived = false
 
 -> capitulo_0
 
@@ -1684,6 +1685,7 @@ Golpeas. Primero un par de golpes de cortesía. Luego más fuerte. Por último t
 
 === cueva_entrada ===
 # music:cueva_ambient
+# SPIDER_START: difficulty=slow, fuerza={fuerza}, magia={magia}, sabiduria={conocimiento}
 La cueva no fue pensada para seres humanos. El techo es demasiado bajo, por lo que tenes que avanzar en cuclillas a costa del bienestar de tus rodillas. Al llegar al primer doblez las paredes se estrechan obligándote a pasar por un minúsculo agujero del cual solo te llevas un arañazo en tu rodilla y un fuerte sabor a tierra humedad en la boca.
 La presencia de tela de arañas es total, hilos duros y pegajosos que dificultan tu avance y se pegan a tu cuerpo. Sin duda cuando salgas de esta cueva vas a quemar toda tu ropa, sentís que nunca va a poder estar limpia.
 Después del segundo dobles ya no llega más luz al interior de la cueva
@@ -1788,6 +1790,7 @@ Puteas por lo bajo. Pateas el cadáver de la araña a tus pies, y decidís segu�
 // =========================================================
 
 === boveda ===
+# SPIDER_DIFFICULTY: normal
 # next: Llegas a una gran bóveda
 # music:boveda_ambient
 Avanzas atento. Generalmente una característica de los monstros sobrenaturales que imitan insectos es que forman parte de una gran familia, no te extrañaría enterarte que tiene unos centenares de primos esperando en algún lugar de esta cueva.
@@ -1875,6 +1878,7 @@ De un corte preciso la abrís al medio. La tierra de la cueva se llena de entra�
 // =========================================================
 
 === regreso_orfanato ===
+# SPIDER_DIFFICULTY: fast
 # music:chase_ambient
 Corres por el bosque con el cuerpo de Juan en tus brazos. Será por qué es liviano, o el ruido afilado de los enemigos clavando sus extremidades en los árboles ayuda a empujar tu adrenalina, pero avanzas sin bajar el ritmo. No hay raíces que se interpongan en tu camino o ramas que te molesten
 # next
@@ -1946,28 +1950,34 @@ El grito de los niños vuelva a enfocarte, la araña gigante ya casi subió y la
 === ninos_habitacion ===
 Basta con un grito y un gesto y los chicos entienden de que se trata. Belén se pone upa a uno de los nenes más pequeños y sube las escaleras. Un grupo de arañas, corriendo por una de las paredes van a por ellos
 Esperas que lleguen a hacer una barricada a tiempo
--> combate_final
+-> cap2a_spider_check
 
 === ninos_capilla ===
 Siempre es mejor no necesitar ayuda. Pero estas en un orfanato religioso, peleando contra demonios e intentando salvar a unos niños. Si hay un momento donde el de arriba podría dar una mano, es este.
 Das la orden y Belén toma el mando, asegurándose que ninguno se quede detrás.
 Una araña intenta seguirlo, pero basta un disparo para dejarle en claro que si atención debe centrarse en vos
--> combate_final
+-> cap2a_spider_check
 
 === ninos_cocina ===
 A la par que das la orden, la hermana Paciencia abre la puerta y le rompe la cabeza a una de las arañas con un palo de amasar, que termina bañado en una sustancia viscosa (ojalá que lo lave antes de cocinar). Los niños corren hacia la cocina. En segundo se convierten en un pequeño ejército armado con sartenes, cuchillos y cubiertos que usan como armas arrojadizas.
--> combate_final
+-> cap2a_spider_check
 
 === ninos_pelear ===
 Das la orden y bajan, armados con cintos, lámparas y muebles. Los más grandes cargan de forma valiente, pero carecen de técnica. Los más chicos corren y gritan, esperando lograr algo, pero se quedan inmóviles en cuanto terminan frente a frente con una araña.
 A tu derecha vez a un niño que, inútilmente, le pega a una araña con una almohada. A tu izquierda una niña cae al piso, sobrepasada por una araña que busca llegar a su yugular.
--> combate_final
+-> cap2a_spider_check
 
 === ninos_huir ===
 Belén dirige la retirada hacia la puerta de salida. Va adelante al principio, para romper el miedo, y atrás al final, para ayudar a los rezagados.
 Una araña avanza por el techo, intentando llegar a la puerta antes que ellos, pero de un disparo la bajas al piso obligándola dolorosamente a respetar la ley de gravedad.
 Solo queda esperar que no se encuentren más arañas en el largo camino hacia la salida.
--> combate_final
+-> cap2a_spider_check
+
+=== cap2a_spider_check ===
+# SPIDER_CHECK: 12
+# SPIDER_STOP
+
++ [→] -> combate_final
 
 // =========================================================
 // COMBATE FINAL
@@ -2065,7 +2075,12 @@ No sé levanta mas
 === despues_combate ===
 # next: Después del combate
 # music:misterio_ambient
-La adrenalina tarda en salir de tu cuerpo. No te das cuenta pero están teniendo unos temblores involuntarios, la energía sigue activa y está reclamando acción.
+{ spider_survived:
+    La adrenalina tarda en salir de tu cuerpo pero te das cuenta que estás entero. Tus manos están firmes. Las arañas no pudieron con vos.
+- else:
+    La adrenalina tarda en salir de tu cuerpo. Las mordeduras de araña te arden en los brazos y el cuello. Tenés marcas por todos lados y cada movimiento cuesta el doble de lo que debería.
+    # stat:hp:-10
+}
 Lo correcto sería llamar a El Faro, informarle de la misión y pedir que envíen un equipo de limpieza (y alguien para que te lleve de vuelta a Costa Alegre, no estás es condición de manejar)
 Pero tenés cosas que hacer
 # next
