@@ -44,6 +44,45 @@ Al seleccionar una story en el selector de desarrollo, si existe como import est
 
 ---
 
+## [0.5.2] — 2026-03-19
+
+### Fix: Eliminar UI_EFFECT y MOUSE_RESISTANCE atmosféricos huérfanos en Cap 2B
+
+8 etiquetas removidas de secciones narrativas del Capítulo 2B que no estaban emparejadas con bloques `WILLPOWER_START`/`CHECK`/`STOP`. Los tags `UI_EFFECT` y `MOUSE_RESISTANCE` solo son válidos dentro de secuencias de combate de voluntad.
+
+**Tags removidos:**
+| Knot | Tag |
+|------|-----|
+| `cap2b_entre_criptas` | `UI_EFFECT: cold_blue` |
+| `cap2b_pasillo_horror` | `UI_EFFECT: blood_pulse`, `MOUSE_RESISTANCE: low` |
+| `cap2b_pasillo_luz` | `UI_EFFECT: static_mind` |
+| `cap2b_monticulos` | `UI_EFFECT: static_mind`, `MOUSE_RESISTANCE: medium` |
+| `cap2b_ritual_final` | `UI_EFFECT: blood_pulse`, `MOUSE_RESISTANCE: low` |
+
+Todos los tags en bloques WILLPOWER y los resets del epílogo se mantienen intactos.
+
+### Archivos modificados
+- `centinelas.ink` — 8 líneas de tags removidas
+- `src/stories/centinelas.json` — recompilado
+- `src/stories/centinelas.config.json` — version bump 0.5.1 → 0.5.2
+
+---
+
+## [0.5.1] — 2026-03-19
+
+### Fix: REQUIRES inline en choices del Capítulo 2B
+
+16 puertas de stats en el Capítulo 2B estaban rotas: las etiquetas `# REQUIRES:` se colocaron al inicio del knot destino en vez de inline en la choice. El engine solo lee tags en `choice.tags`/`choice.text`, así que las puertas eran ignoradas silenciosamente.
+
+**Choices corregidas:** `cap2b_entrar_invisible`, `cap2b_escapar_techos`, `cap2b_escapar_invisible`, `cap2b_lomas_hechizo`, `cap2b_lomas_trepar`, `cap2b_lomas_alcantarilla`, `cap2b_vampiro_trampa`, `cap2b_cubil_fuerza`, `cap2b_cubil_magia`, `cap2b_cubil_tunel`, `cap2b_ritual_fuerza`, `cap2b_ritual_magia`, `cap2b_ritual_diagrama`, `cap2b_ritual_cruz`, `cap2b_ritual_buda`, `cap2b_ritual_placa`
+
+### Archivos modificados
+- `centinelas.ink` — 16 REQUIRES movidos a inline en choices
+- `src/stories/centinelas.json` — recompilado
+- `src/stories/centinelas.config.json` — version bump 0.5.0 → 0.5.1
+
+---
+
 ## [0.4.1] y anteriores
 
 Ver historial de git.
