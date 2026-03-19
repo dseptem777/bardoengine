@@ -2690,7 +2690,6 @@ Sabías que el argumento de la abuelita no iba a fallar. Todo el mundo ama a las
 // ---------------------------------------------------------
 
 === cap2b_entre_criptas ===
-# UI_EFFECT: cold_blue
 Dentro del cementerio te encontrás en una pequeña ciudad. Calles rectas que forman manzanas llenas de criptas elegantes. Construcciones de mármol y cristal con decoraciones.
 Si bien la mayoría está adornada con cruces y ángeles, la decoración más común debe ser estatuas de mujeres jóvenes. Mujeres jóvenes llorando contra la puerta de la cripta, mujeres jóvenes semidesnudas de la mano con esqueletos, mujeres jóvenes con rostros invadidos por la tristeza.
 No entendés muy bien quién decidió que la parca debía ser tan sensual. Sospechás más que los artistas usaron modelo vivo y prefirieron explorar burdeles antes que morgues.
@@ -3130,8 +3129,6 @@ Avanzás por un pasillo con ataúdes a intervalos regulares, sin duda el lugar d
 -> cap2b_pasillo_horror
 
 === cap2b_pasillo_horror ===
-# UI_EFFECT: blood_pulse
-# MOUSE_RESISTANCE: low
 La única luz viene del fondo del pasillo, del mismo lugar que provienen unas voces profundas que entonan un canto rítmico y gutural. Algo que nunca es buena señal.
 Avanzás a tientas, con el temor de que una luz llame la atención.
 Es entonces cuando un pequeño desnivel amenaza con hacerte caer. Te llevás una mano a la boca, para contener el grito reflejo que nació en tu garganta, y la otra se agarra de la pared para evitar que caigas al piso.
@@ -3141,7 +3138,6 @@ Húmedo. La mano que tocó la pared está en contacto con algo húmedo y pegajos
 + [Seguís a oscuras] -> cap2b_pasillo_oscuras
 
 === cap2b_pasillo_luz ===
-# UI_EFFECT: static_mind
 Todo director de cine de terror sabe que insinuar es más efectivo que mostrar. Las cosas que crea tu mente con el estímulo adecuado tienden a ser más terroríficas (y adaptadas a tus miedos) que cualquier cosa que pueda hacer la oficina de efectos especiales.
 Esta era la excepción a la regla. Todo respecto a los Vampiros giraba en torno a la sangre, y esto no era la excepción.
 # next
@@ -3161,8 +3157,6 @@ Lo importante es que decidís que preferís no saber qué es la sustancia pegajo
 -> cap2b_monticulos
 
 === cap2b_monticulos ===
-# UI_EFFECT: static_mind
-# MOUSE_RESISTANCE: medium
 Las voces van tejiendo un canto que se hace cada vez más presente, casi tangible. El aire se vuelve espeso y te empieza a doler la cabeza. Te sentís embotado, como si te hubieses despertado en mitad de un sueño, con la mente confundida y las extremidades debilitadas.
 Es entonces cuando escuchás el ruido metálico, a la entrada de la habitación donde se está realizando el ritual hay pilas y pilas de adornos y decoración religiosa robada de otras criptas.
 # next
@@ -3203,8 +3197,6 @@ Dejás atrás el pasillo del horror y pasás a la siguiente habitación, debés 
 // ---------------------------------------------------------
 
 === cap2b_ritual_final ===
-# UI_EFFECT: blood_pulse
-# MOUSE_RESISTANCE: low
 Sos lo menos interesante en la habitación. Esa es tu ventaja porque nadie te está mirando y te da espacio para actuar.
 En el piso de la habitación hay un círculo delimitado con cera roja (o carne quemada) que contiene una figura geométrica compleja que te da dolor de cabeza con solo verla. Notás que el diagrama pulsa, salvo unos pequeños bultos que aparecen cada tanto como engranajes del diagrama.
 # next
