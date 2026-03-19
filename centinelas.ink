@@ -42,6 +42,9 @@ VAR traumado = false
 VAR bebe_muerto = false
 VAR paso_tiempo_casa = 0
 VAR llegaste_tarde_2b = 0
+VAR willpower = 100
+VAR sometimiento = 0
+VAR willpower_passed = false
 
 -> capitulo_0
 
@@ -2224,7 +2227,7 @@ Ambos se miran, como en un western de bajo presupuesto. Hay que tomar una decisi
 + [Te retirás y das la vuelta manzana buscando una entrada por los techos] -> cap2b_entrar_techos
 + {tiene_favor_tuco and not uso_favor_tuco} [Es momento de cobrar tu favor con Tuco] -> cap2b_entrar_tuco
 * [Tenés un billete en el bolsillo. El viejo sobornín siempre funciona] -> cap2b_entrar_soborno
-+ [Te hacés invisible para entrar en la casa] -> cap2b_entrar_invisible
++ [Te hacés invisible para entrar en la casa # REQUIRES: magia >= 30] -> cap2b_entrar_invisible
 + [Fingís ser un policía para que te deje pasar] -> cap2b_entrar_policia
 
 === cap2b_entrar_techos ===
@@ -2266,7 +2269,6 @@ No estás seguro si el policía no entiende el concepto de soborno, o lo entiend
 -> cap2b_entrar_opciones
 
 === cap2b_entrar_invisible ===
-# REQUIRES: magia >= 30
 Te alejás hasta doblar la esquina, y perder el campo de visión con el policía. Protegido por las sombras te ponés a recitar el hechizo. Es algo fácil, solo se requiere unas palabras, romper un espejo, quemar unas entrañas de ave y hacerte un corte superficial con un arma blanca nunca usada. Obviamente, son todos objetos que llevás en tu mochila.
 # next
 El hechizo no hace ningún ruido imponente, solamente vas desapareciendo lentamente. Al principio te cuesta un poco caminar. Es raro avanzar cuando no ves tus piernas o calcular por dónde vas sin ver tus brazos, pero te las arreglás.
@@ -2380,13 +2382,12 @@ Ahora lo importante es ver cómo hacer para salir de la casa sin que te vean.
 -> cap2b_escapar_opciones
 
 === cap2b_escapar_opciones ===
-+ [Corrés al patio trasero y trepás por los techos] -> cap2b_escapar_techos
-+ [Te hacés invisible] -> cap2b_escapar_invisible
++ [Corrés al patio trasero y trepás por los techos # REQUIRES: fuerza >= 25] -> cap2b_escapar_techos
++ [Te hacés invisible # REQUIRES: magia >= 30] -> cap2b_escapar_invisible
 + [Te escondés en la casa] -> cap2b_escapar_escondite
 + [Salís corriendo por la puerta principal antes que reaccionen] -> cap2b_escapar_correr
 
 === cap2b_escapar_techos ===
-# REQUIRES: fuerza >= 25
 Vas hacia el fondo de la casa. El patio no tiene un punto de apoyo así que intentás correr con todas tus fuerzas contra la pared y hacer un poco de parkour para lograr empotrarte contra una pequeña abertura.
 Lo lográs, la adrenalina invade tu cuerpo y lamentás que no haya nadie para ver lo que hiciste dado que fue bastante increíble.
 # next
@@ -2396,7 +2397,6 @@ A la par que se abre la puerta del patio, lográs subirte al techo. Contenés un
 -> cap2b_investigacion
 
 === cap2b_escapar_invisible ===
-# REQUIRES: magia >= 30
 Elegís una esquina que parece poco importante, y donde esperás que nadie pase, y preparás el hechizo. Es rápido, improvisado y a falta de escenografía que te ayude tenés que apoyarte en fuerza bruta y eso se siente mientras recitás las palabras. Se siente en el dolor punzante en tu cabeza y en las gotas de sangre que empiezan a escaparte de tu nariz.
 # next
 Pero lo lográs, los policías entran y recorren la casa. Uno mira a tu esquina y pasa casualmente la luz de su linterna por donde está tu cuerpo, pero no encuentra nada. Debés contenerte para que los latidos de tu corazón no te delaten pero lo importante es que lo lograste. Una vez que ellos se reparten por la casa para hacer su investigación, aprovechás y avanzás hacia la puerta de la calle con el mayor sigilo posible.
@@ -2626,29 +2626,26 @@ Si vas a hacer algo, es este momento.
 -> cap2b_entrar_lomas
 
 === cap2b_entrar_lomas ===
-+ [Un simple hechizo para dormir va a ser suficiente] -> cap2b_lomas_hechizo
-+ [Esas paredes no son tan altas, se puede trepar] -> cap2b_lomas_trepar
-+ [La puerta es la entrada fácil, debe haber otra entrada] -> cap2b_lomas_alcantarilla
++ [Un simple hechizo para dormir va a ser suficiente # REQUIRES: magia >= 25] -> cap2b_lomas_hechizo
++ [Esas paredes no son tan altas, se puede trepar # REQUIRES: fuerza >= 25] -> cap2b_lomas_trepar
++ [La puerta es la entrada fácil, debe haber otra entrada # REQUIRES: conocimiento >= 25] -> cap2b_lomas_alcantarilla
 + {tiene_favor_tuco and not uso_favor_tuco} [Es la hora de cobrarte el favor con Tuco] -> cap2b_lomas_tuco
 + [Es solo un guardia de seguridad. Calculás que podés ganarle] -> cap2b_lomas_atacar
 * [Podrías intentar fingir que sos su jefe] -> cap2b_lomas_jefe
 + [Tal vez si le decís que venís a ver la tumba de un pariente se apiade] -> cap2b_lomas_abuelita
 
 === cap2b_lomas_hechizo ===
-# REQUIRES: magia >= 25
 Recitás las palabras y sentís cómo todo el agotamiento de tu cuerpo, el peso de tus extremidades y el dolor en tu cabeza, se empieza a concentrar en tu estómago. El hechizo termina con vos tosiendo, sacando a la fuerza un humo rosado y con olor dulce de tus entrañas.
 El humo repta al ras del piso y, como un animal de caza, salta a la ventana abierta de la garita. En menos de un minuto: intensos ronquidos.
 ~ sin_guardias = true
 -> cap2b_entre_criptas
 
 === cap2b_lomas_trepar ===
-# REQUIRES: fuerza >= 25
 Te ponés a recorrer el perímetro y encontrás un lugar donde la pared tiene una pequeña mueca, suficiente para colocar la punta de tu pie. Con ese punto de apoyo (y las horas de entrenamiento que llevás encima) tenés más que suficiente para poder trepar la pared.
 Un salto, unas gotas de transpiración invertidas, y ya estás adentro.
 -> cap2b_entre_criptas
 
 === cap2b_lomas_alcantarilla ===
-# REQUIRES: conocimiento >= 25
 Con un celular, y tener acceso a las bases de datos correctas, se pueden conseguir muchas cosas. Tardás unos diez minutos en tener un mapa del cementerio, fácil de conseguir dado que es una atracción turística. El momento eureka viene cuando buscás el plano de las alcantarillas y notás que una de considerable tamaño pasa por debajo del cementerio.
 # next
 Soportás un pequeño momento de espeleología urbana y te metés dentro de una boca de tormenta cercana. Avanzás en la oscuridad, con un líquido hasta tus rodillas (elegís creer que es agua, así como te decís que lo que chilla y se mueve en la oscuridad son hojas) pero después de unos minutos encontrás una escalera que te lleva a una puerta de alcantarilla justo en el centro del Cementerio.
@@ -2693,6 +2690,7 @@ Sabías que el argumento de la abuelita no iba a fallar. Todo el mundo ama a las
 // ---------------------------------------------------------
 
 === cap2b_entre_criptas ===
+# UI_EFFECT: cold_blue
 Dentro del cementerio te encontrás en una pequeña ciudad. Calles rectas que forman manzanas llenas de criptas elegantes. Construcciones de mármol y cristal con decoraciones.
 Si bien la mayoría está adornada con cruces y ángeles, la decoración más común debe ser estatuas de mujeres jóvenes. Mujeres jóvenes llorando contra la puerta de la cripta, mujeres jóvenes semidesnudas de la mano con esqueletos, mujeres jóvenes con rostros invadidos por la tristeza.
 No entendés muy bien quién decidió que la parca debía ser tan sensual. Sospechás más que los artistas usaron modelo vivo y prefirieron explorar burdeles antes que morgues.
@@ -2708,7 +2706,7 @@ Encontraste a un Vampiro Superior. Ahora hay que decidir el siguiente paso.
 + [El único vampiro bueno es el vampiro muerto. Cargás contra él] -> cap2b_vampiro_atacar
 + [Te acercás a hablarle. Tal vez lográs sacarle algo de información] -> cap2b_vampiro_hablar
 + [Lo seguís con el mayor cuidado posible. Debe estar yendo a su cubil] -> cap2b_vampiro_seguir
-+ [Intentás ir por un camino paralelo y poner una trampa] -> cap2b_vampiro_trampa
++ [Intentás ir por un camino paralelo y poner una trampa # REQUIRES: conocimiento >= 25] -> cap2b_vampiro_trampa
 
 === cap2b_vampiro_atacar ===
 El peso de la espada en tu mano te da la confianza que necesitabas. Avanzás hacia la silueta y, cuando estás a unos pasos, cargás con un golpe perfecto directo para cortar la cabeza.
@@ -2735,9 +2733,91 @@ Salís de entre las criptas y le dirigís la palabra con un tono de voz que sale
 El Vampiro gira y te mira con ojos vacíos. Su cabeza un poco caída para el costado, como si confiara en que al recostar la cabeza la gravedad ayudara a que las ideas caigan en el lugar correcto y le expliquen lo que está pasando. No se apura en hablar, te deja seguir.
 \- Si querés yo te puedo mostrar mi cripta favorita – el tono de tu voz va enflaqueciendo a la par que el Vampiro te sigue viendo como una estatua con ojos de infinito – y vos me podrías mostrar la tuya.
 # next
-Sonríe, dejando asomar bajo los labios dos colmillos que son una promesa de dolor. Sin duda apelar a la faceta humana de la bestia no fue la mejor estrategia.
-# MINIGAME: type=qte
+Sonríe, dejando asomar bajo los labios dos colmillos que son una promesa de dolor. Pero no ataca. En su lugar sentís algo mucho peor: una presión invisible detrás de tus ojos, como si alguien estuviera empujando tus pensamientos hacia un costado para hacer lugar a los suyos.
+\- Qué valiente el ganado que se acerca solo – su voz resuena dentro de tu cráneo, no en tus oídos – Hace mucho que no me divierto así.
+# WILLPOWER_START: normal
+# UI_EFFECT: blur_vignette
+# MOUSE_RESISTANCE: medium
+[PRESIONÁ "V" PARA RESISTIR]
+
++ [Resistís la dominación mental]
+    # WILLPOWER_CHECK: 60
+    { willpower_passed:
+        -> cap2b_hablar_resistido
+    - else:
+        -> cap2b_hablar_escalada
+    }
++ [Cedés ante la presencia del Vampiro]
+    # WILLPOWER_STOP
+    # MOUSE_RESISTANCE: none
+    # UI_EFFECT: none
+    -> cap2b_hablar_cedido
+
+=== cap2b_hablar_resistido ===
+# WILLPOWER_STOP
+# MOUSE_RESISTANCE: none
+# UI_EFFECT: none
+# flash_white
+# shake
+Algo se quiebra. No en vos, sino en la conexión que el Vampiro intentaba forjar. Es como arrancar una sanguijuela de tu cerebro: doloroso pero liberador.
+El Vampiro retrocede un paso, genuinamente sorprendido. Sus ojos vacíos se abren un poco más de lo normal.
+\- Interesante – dice, pero su voz ahora solo sale de su boca – Hace siglos que un mortal...
+No le dejás terminar. La espada sale antes que la frase y le cruzás el cuello de un solo golpe limpio. Su cuerpo se dispersa en una nube de polvo y cenizas que se lleva el viento nocturno.
 ~ vampiro_muerto = true
+-> cap2b_frente_cubil
+
+=== cap2b_hablar_escalada ===
+La presión se intensifica. Sentís que tus pensamientos se vuelven lentos y pesados, como si caminaran por barro. La sonrisa del Vampiro se ensancha.
+\- Ahí estás. Casi puedo saborearte – sus palabras se mezclan con las tuyas hasta que no sabés cuáles son de quién.
+# WILLPOWER_START: fast
+# UI_EFFECT: static_mind
+# MOUSE_RESISTANCE: high
+[PRESIONÁ "V" PARA RESISTIR]
+
++ [Último esfuerzo de resistencia]
+    # WILLPOWER_CHECK: 40
+    { willpower_passed:
+        -> cap2b_hablar_resistido_segundo
+    - else:
+        -> cap2b_hablar_dominado
+    }
+
+=== cap2b_hablar_resistido_segundo ===
+# WILLPOWER_STOP
+# MOUSE_RESISTANCE: none
+# UI_EFFECT: none
+# flash_white
+# shake
+Con un esfuerzo que sentís en cada fibra de tu ser, empujás la presencia fuera de tu mente. Es como vomitar algo que no debería estar adentro tuyo.
+Caés de rodillas, jadeando, pero tu mano encuentra la empuñadura de la espada. El Vampiro te mira con algo que podría ser respeto o curiosidad, pero no le das tiempo a decidir cuál.
+Te levantás y cortás. El polvo cae sobre vos como nieve sucia.
+~ vampiro_muerto = true
+-> cap2b_frente_cubil
+
+=== cap2b_hablar_dominado ===
+# WILLPOWER_STOP
+# MOUSE_RESISTANCE: none
+# UI_EFFECT: none
+Tu voluntad cede como un dique que se rompe. Por un instante horrible ves el mundo a través de sus ojos: vos sos pequeño, frágil, tibio. Alimento.
+El Vampiro se acerca flotando y sus colmillos perforan tu cuello. El dolor es intenso pero breve, reemplazado por un frío que te recorre entero.
+# stat:hp:-25
+# next
+Pero algo sale mal para él. Tu sangre, contaminada por años de contacto con sustancias arcanas y hierbas de cazador, le produce un espasmo violento. Te suelta, escupiendo y retorciéndose.
+\- ¡¿Qué sos?! – grita, con tu sangre corriendo por su mentón.
+No tenés fuerzas para responder pero tampoco las necesitás. El Vampiro huye, elevándose hacia el cielo nocturno como una sombra que se disuelve entre las nubes.
+~ sometimiento = sometimiento + 30
+-> cap2b_frente_cubil
+
+=== cap2b_hablar_cedido ===
+~ sometimiento = sometimiento + 30
+Dejás que la presencia del Vampiro inunde tu mente. Es como sumergirse en agua helada: al principio duele, después se adormece todo.
+\- Buen ganado – susurra, y su aprobación se siente como una caricia en tu cerebro – Ahora mirá.
+# next
+El Vampiro levanta una mano y, sin querer, tus ojos siguen el movimiento. Te muestra el camino: entre las criptas, doblar a la izquierda en el ángel sin cabeza, la tercera cripta con columnas jónicas. Su cubil.
+\- Andá – dice, y tus piernas obedecen antes que tu cerebro procese la orden – Deciles que te mandé yo. Tal vez te dejen vivir. Tal vez no.
+# next
+Caminás en la dirección indicada. A cada paso que te aleja del Vampiro recuperás un poco más de control sobre tu cuerpo. Pero la información queda: sabés exactamente dónde está el cubil.
+Lo que no sabés es si fuiste a buscarlo o si él te mandó como ofrenda.
 -> cap2b_frente_cubil
 
 === cap2b_vampiro_seguir ===
@@ -2748,7 +2828,6 @@ Pero tu estrategia da resultado. Luego de un par de giros el Vampiro llega a la 
 -> cap2b_frente_cubil
 
 === cap2b_vampiro_trampa ===
-# REQUIRES: conocimiento >= 25
 Te escurrís entre dos criptas y avanzás a paso rápido entre lo que parece ser una calle paralela. Llegás primero a una esquina donde el Vampiro tiene que doblar así que aprovechás los segundos que tenés para trazar un semicírculo de sal y esconderte detrás de una estatua. La idea es que entre dentro de la figura y, cuando esté adentro, tirar una capa más de sal para convertirlo en un círculo y dejarlo encerrado.
 (Sí, en tu mochila hay sal, ajo, mandrágora, amaranta y demás hierbas, suficiente para ser un buen cazador de monstruos o un chef de primer nivel.)
 # next
@@ -2804,29 +2883,62 @@ Los colmillos rompiendo tu carne duelen, pero la sensación también es placente
 # next
 Las sensaciones se van mezclando. Al principio prima el dolor, que retrocede por oleadas de placer. Después se impone el placer, condimentado por algún pinchazo de dolor.
 Al final estás flotando. En un mar rojizo con un oleaje cada vez más tranquilo. No hay más problemas ni preocupaciones. En el cielo carmesí hay un pequeño sol palpitante que cada vez emite menos luz.
+# WILLPOWER_START: fast
+# UI_EFFECT: blood_pulse
+# MOUSE_RESISTANCE: high
 {
     - conocimiento >= 25:
         # next
         Leíste sobre esta situación de éxtasis demasiadas veces. Es el dulce placer con el cual los Vampiros Superiores engañan a su presa para que se deje matar. Su presa. Vos. Vos sos su presa.
         Te agarrás de esa idea, es como una balsa en mitad del mar donde te imaginás.
         Ese bicho no es agradable y la situación no es ni hermosa ni erótica. Es un depredador que clavó sus colmillos en tu cuello para matarte.
-        # next
-        Usás toda tu concentración para volver a sentir tu brazo derecho. Se siente torpe y entumecido, como si estuvieses medio dormido. Lentamente lo lográs mover, primero unos centímetros torpes, pero luego con mayor precisión. La suficiente para encontrar la daga que está en tu cinturón.
-        El golpe es torpe y no le cercena el cuello. No a la primera. El Vampiro grita y te suelta mientras intenta forzar a que tu mano suelte la empuñadura. Pero vos no la soltás. La empuñadura, como la idea de que eras una presa, es a lo que te aferrás para sobrevivir.
-        # next
-        Pero soltarte es su error. Realmente en ese momento ya te habían abandonado las fuerzas necesarias para ganarle un combate. Pero, al soltarte, la gravedad actuó a tu favor.
-        Caíste y, junto a vos, la daga que seguías agarrando bajó cercenando el resto del cuello.
-        Sobre vos llueve una fina capa de polvo y cenizas, el cadáver de algo que debería haber muerto hace mucho tiempo.
-        # stat:hp:-50
-        ~ vampiro_muerto = true
-        -> cap2b_frente_cubil
+        [PRESIONÁ "V" PARA RESISTIR]
+        * [Luchás contra el éxtasis]
+            # WILLPOWER_CHECK: 60
+            { willpower_passed:
+                -> cap2b_convertirse_escape
+            - else:
+                -> cap2b_convertirse_muerte_lucida
+            }
     - else:
         # next
+        # WILLPOWER_STOP
+        # MOUSE_RESISTANCE: none
+        # UI_EFFECT: none
         Por primera vez en tu vida estás realmente calmo y relajado. Ya nada te importa. Cerrás tus ojos y te dejás barrer por las oleadas cada vez más suaves del mar. El sol palpitante se va apagando y, al mismo tiempo, tu corazón se detiene.
         # next
         ESTÁS MUERTO.
         -> END
 }
+
+=== cap2b_convertirse_escape ===
+# WILLPOWER_STOP
+# MOUSE_RESISTANCE: none
+# UI_EFFECT: none
+# flash_white
+# shake
+Usás toda tu concentración para volver a sentir tu brazo derecho. Se siente torpe y entumecido, como si estuvieses medio dormido. Lentamente lo lográs mover, primero unos centímetros torpes, pero luego con mayor precisión. La suficiente para encontrar la daga que está en tu cinturón.
+El golpe es torpe y no le cercena el cuello. No a la primera. El Vampiro grita y te suelta mientras intenta forzar a que tu mano suelte la empuñadura. Pero vos no la soltás. La empuñadura, como la idea de que eras una presa, es a lo que te aferrás para sobrevivir.
+# next
+Pero soltarte es su error. Realmente en ese momento ya te habían abandonado las fuerzas necesarias para ganarle un combate. Pero, al soltarte, la gravedad actuó a tu favor.
+Caíste y, junto a vos, la daga que seguías agarrando bajó cercenando el resto del cuello.
+Sobre vos llueve una fina capa de polvo y cenizas, el cadáver de algo que debería haber muerto hace mucho tiempo.
+# stat:hp:-50
+~ vampiro_muerto = true
+-> cap2b_frente_cubil
+
+=== cap2b_convertirse_muerte_lucida ===
+# WILLPOWER_STOP
+# MOUSE_RESISTANCE: none
+# UI_EFFECT: none
+Sabés exactamente qué te está pasando. Leíste las descripciones, estudiaste los casos, conocés cada etapa de la muerte por éxtasis vampírico. Y ese conocimiento es lo peor de todo.
+Porque sentís cómo tu brazo derecho intenta moverse hacia la daga, pero los músculos ya no responden. La voluntad está ahí, la idea está ahí, pero el cuerpo ya pertenece al placer.
+# next
+Es como estar encerrado detrás de un vidrio, mirando cómo te matan. Sabés que la daga está a centímetros de tu mano. Sabés que un solo corte bastaría. Pero el mar rojizo te sostiene y las olas son cada vez más suaves y el sol palpitante se apaga lentamente.
+Lo último que pensás, con una claridad cruel, es que morís sabiendo exactamente cómo salvarte.
+# next
+ESTÁS MUERTO.
+-> END
 
 // ---------------------------------------------------------
 // SECCIÓN 9: FRENTE AL CUBIL
@@ -2851,15 +2963,14 @@ Eso sí, si terminás muerto mucho no lo podrías ayudar. Tenés que pensar en a
 -> cap2b_cubil_opciones
 
 === cap2b_cubil_opciones ===
-+ [Los Vampiros están acostumbrados a cazar humanos. Pero un Guardián de El Faro no es una víctima. Atacás] -> cap2b_cubil_fuerza
-+ [Esos Vampiros se ven muy inflamables. Que suerte que aprendiste a conjurar bolas de fuego] -> cap2b_cubil_magia
-+ [Sin duda podés entrar a una de las criptas vecinas y armar una entrada] -> cap2b_cubil_tunel
++ [Los Vampiros están acostumbrados a cazar humanos. Pero un Guardián de El Faro no es una víctima. Atacás # REQUIRES: fuerza >= 30] -> cap2b_cubil_fuerza
++ [Esos Vampiros se ven muy inflamables. Que suerte que aprendiste a conjurar bolas de fuego # REQUIRES: magia >= 30] -> cap2b_cubil_magia
++ [Sin duda podés entrar a una de las criptas vecinas y armar una entrada # REQUIRES: conocimiento >= 30] -> cap2b_cubil_tunel
 + {not sin_guardias} [Tal vez sería momento de requerirle ayuda a los guardias del Cementerio] -> cap2b_cubil_guardias
 + {tiene_favor_tuco and not uso_favor_tuco} [Es necesario llamar a los refuerzos. Tuco podría caer con las tropas especiales] -> cap2b_cubil_tuco
 + [No se te ocurre ningún plan. Simplemente te acercás e improvisás] -> cap2b_cubil_improvisar
 
 === cap2b_cubil_fuerza ===
-# REQUIRES: fuerza >= 30
 Dejás que pase un rayo, y la luz que trae, y salís a la carga. Está húmedo y estás mojado, así que tu avance épico es más un chapoteo infantil en los charcos. El primero de los Vampiros detecta tu presencia, hace un débil movimiento estirando la cabeza para adelante y un costado mientras sus ojos brillan como dos faroles en la oscuridad. Vos confirmás su punto disparando un tiro de escopeta directo a su pecho.
 # next
 El Vampiro recibe el disparo como si fuera una cachetada. La fuerza cinética del golpe apenas lo hace retroceder unos centímetros. Responde abriendo su boca, dejando salir un rugido animal y mostrándote unos colmillos que prometen dolor. Una movida atemorizante pero también un desperdicio de tiempo, y en un combate tan cercano cualquier minuto es clave.
@@ -2875,7 +2986,6 @@ Por suerte vos estás ahí con tu espada listo para impedir eso. Para cuando ter
 -> cap2b_dentro_cubil
 
 === cap2b_cubil_magia ===
-# REQUIRES: magia >= 30
 Realizar magia bajo la lluvia es complicado. El agua corriendo tiende a barrer y difuminar las energías. Aparte, elegiste hacer magia de fuego como si fuera poco.
 Te escondés debajo de un techo y curvás tu cuerpo, en un intento de proteger a la primera llama que surge de la palma de tu mano.
 # next
@@ -2897,7 +3007,6 @@ Por suerte decís unas palabras y hacés un gesto con la mano. La carne se convi
 -> cap2b_dentro_cubil
 
 === cap2b_cubil_tunel ===
-# REQUIRES: conocimiento >= 30
 Das la vuelta a lo que podría considerarse una manzana y entrás en la cripta que se encuentra justo detrás. A diferencia del cubil de los Vampiros, este es un lugar olvidado, los familiares de los difuntos hace tiempo los olvidaron o también se encuentran en el reino de los muertos.
 La puerta está quebrada, protegida por un candado oxidado y vencido. Te basta con hacer un poco de fuerza para mover los tablones y hacer un resquicio para poder entrar.
 # next
@@ -2968,7 +3077,41 @@ Uno de los Vampiros gira para mirarte. Estira su cabeza para adelante y un costa
 Seguís avanzando, pero la idea brillante para solucionar el problema nunca llega. Uno de los Vampiros levanta la mano y hace gestos para que te acerques.
 Empezás a dudar si seguís avanzando porque sos valiente o si es porque te encontrás bajo la influencia del Vampiro.
 Lo importante es que no dejás de avanzar.
-# MINIGAME: type=qte
+# WILLPOWER_START: extreme
+# UI_EFFECT: static_mind
+# MOUSE_RESISTANCE: extreme
+[PRESIONÁ "V" PARA RESISTIR]
+
+* [Controlás tus pasos]
+    # WILLPOWER_CHECK: 50
+    { willpower_passed:
+        -> cap2b_improvisar_resistido
+    - else:
+        -> cap2b_improvisar_dominado
+    }
+
+=== cap2b_improvisar_resistido ===
+# WILLPOWER_STOP
+# MOUSE_RESISTANCE: none
+# UI_EFFECT: none
+# flash_white
+Recuperás el control de tu cuerpo con un tirón violento, como si despertaras de una pesadilla. Tus piernas vuelven a ser tuyas.
+El Vampiro más cercano inclina la cabeza, confundido por un instante. Ese instante es todo lo que necesitás.
+Tu espada sale y corta limpio. El polvo del Vampiro se mezcla con la lluvia mientras su compañero retrocede, evaluándote con ojos nuevos. Decide que no vale la pena y se eleva hacia las nubes de tormenta.
+La entrada del cubil está libre.
+-> cap2b_dentro_cubil
+
+=== cap2b_improvisar_dominado ===
+# WILLPOWER_STOP
+# MOUSE_RESISTANCE: none
+# UI_EFFECT: none
+Tus piernas siguen avanzando sin tu permiso. Sentís que sos un pasajero en tu propio cuerpo, mirando desde atrás de tus ojos cómo te acercás a dos depredadores que sonríen con la boca abierta.
+Uno de ellos se lanza sobre vos. Los colmillos perforan tu hombro y el dolor rompe el hechizo de un golpe. Gritás, pero el grito es tuyo y tus brazos también vuelven a ser tuyos.
+# stat:hp:-15
+# next
+Lográs sacar la espada y el Vampiro se despega. Hay sangre, mucha, pero es un corte limpio y superficial. El otro Vampiro no se molesta en atacar, te observa como se observa a un insecto que hizo algo inesperado.
+Aprovechás la confusión para lanzarte hacia la puerta de la cripta. Entrás sangrando y temblando, pero entrás.
+~ sometimiento = sometimiento + 30
 -> cap2b_dentro_cubil
 
 // ---------------------------------------------------------
@@ -2987,6 +3130,8 @@ Avanzás por un pasillo con ataúdes a intervalos regulares, sin duda el lugar d
 -> cap2b_pasillo_horror
 
 === cap2b_pasillo_horror ===
+# UI_EFFECT: blood_pulse
+# MOUSE_RESISTANCE: low
 La única luz viene del fondo del pasillo, del mismo lugar que provienen unas voces profundas que entonan un canto rítmico y gutural. Algo que nunca es buena señal.
 Avanzás a tientas, con el temor de que una luz llame la atención.
 Es entonces cuando un pequeño desnivel amenaza con hacerte caer. Te llevás una mano a la boca, para contener el grito reflejo que nació en tu garganta, y la otra se agarra de la pared para evitar que caigas al piso.
@@ -2996,6 +3141,7 @@ Húmedo. La mano que tocó la pared está en contacto con algo húmedo y pegajos
 + [Seguís a oscuras] -> cap2b_pasillo_oscuras
 
 === cap2b_pasillo_luz ===
+# UI_EFFECT: static_mind
 Todo director de cine de terror sabe que insinuar es más efectivo que mostrar. Las cosas que crea tu mente con el estímulo adecuado tienden a ser más terroríficas (y adaptadas a tus miedos) que cualquier cosa que pueda hacer la oficina de efectos especiales.
 Esta era la excepción a la regla. Todo respecto a los Vampiros giraba en torno a la sangre, y esto no era la excepción.
 # next
@@ -3015,6 +3161,8 @@ Lo importante es que decidís que preferís no saber qué es la sustancia pegajo
 -> cap2b_monticulos
 
 === cap2b_monticulos ===
+# UI_EFFECT: static_mind
+# MOUSE_RESISTANCE: medium
 Las voces van tejiendo un canto que se hace cada vez más presente, casi tangible. El aire se vuelve espeso y te empieza a doler la cabeza. Te sentís embotado, como si te hubieses despertado en mitad de un sueño, con la mente confundida y las extremidades debilitadas.
 Es entonces cuando escuchás el ruido metálico, a la entrada de la habitación donde se está realizando el ritual hay pilas y pilas de adornos y decoración religiosa robada de otras criptas.
 # next
@@ -3055,6 +3203,8 @@ Dejás atrás el pasillo del horror y pasás a la siguiente habitación, debés 
 // ---------------------------------------------------------
 
 === cap2b_ritual_final ===
+# UI_EFFECT: blood_pulse
+# MOUSE_RESISTANCE: low
 Sos lo menos interesante en la habitación. Esa es tu ventaja porque nadie te está mirando y te da espacio para actuar.
 En el piso de la habitación hay un círculo delimitado con cera roja (o carne quemada) que contiene una figura geométrica compleja que te da dolor de cabeza con solo verla. Notás que el diagrama pulsa, salvo unos pequeños bultos que aparecen cada tanto como engranajes del diagrama.
 # next
@@ -3091,19 +3241,18 @@ La pregunta ahora es: ¿Cómo actuar?
 -> cap2b_ritual_opciones
 
 === cap2b_ritual_opciones ===
-+ [Te tirás contra el Vampiro Superior. Estás seguro de que podés ganarle] -> cap2b_ritual_fuerza
-+ [El principal problema de los Vampiros es que son inflamables. Liberás el fuego] -> cap2b_ritual_magia
-+ [Con un poco de ingenio se puede modificar el diagrama en el piso] -> cap2b_ritual_diagrama
++ [Te tirás contra el Vampiro Superior. Estás seguro de que podés ganarle # REQUIRES: fuerza >= 30] -> cap2b_ritual_fuerza
++ [El principal problema de los Vampiros es que son inflamables. Liberás el fuego # REQUIRES: magia >= 30] -> cap2b_ritual_magia
++ [Con un poco de ingenio se puede modificar el diagrama en el piso # REQUIRES: conocimiento >= 30] -> cap2b_ritual_diagrama
 + [Sin bebé no hay ritual. Lo más importante es impedir que exista un Vampiro diurno] -> cap2b_ritual_matar_bebe
 + {tiene_favor_tuco and not uso_favor_tuco} [Que suerte que guardaste el favor de Tuco para el último momento] -> cap2b_ritual_tuco
-+ [Avanzás con la cruz en alto confiando en el poder divino] -> cap2b_ritual_cruz
-+ [Sacás la estatua de Buda y das un paso al frente confiando en que te proteja] -> cap2b_ritual_buda
-+ [Sacás la placa de amor y das un paso adelante] -> cap2b_ritual_placa
++ [Avanzás con la cruz en alto confiando en el poder divino # REQUIRES: inv:cruz_plata] -> cap2b_ritual_cruz
++ [Sacás la estatua de Buda y das un paso al frente confiando en que te proteja # REQUIRES: inv:buda_oro] -> cap2b_ritual_buda
++ [Sacás la placa de amor y das un paso adelante # REQUIRES: inv:placa_amor] -> cap2b_ritual_placa
 + [Sacás tu celular y ponés música a todo volumen para romper la melodía] -> cap2b_ritual_musica
 + [Tu sangre podría contaminar el ritual y convertirlo en un caos] -> cap2b_ritual_sangre
 
 === cap2b_ritual_fuerza ===
-# REQUIRES: fuerza >= 30
 Avanzás hasta el borde del diagrama. Pisás con fuerza parte del trazado y movés frenéticamente el pie en un intento de borrar la imagen. Como insulto final, escupís sobre una de las figuras geométricas. El desafío está en el aire.
 El Vampiro Superior vuelve a colocar el bebé en su posición (el plan está funcionando) y te mira, su rostro denota cansancio y aburrimiento principalmente.
 # next
@@ -3123,7 +3272,6 @@ Antes de disiparse, un latigazo pasa por los vampiros que formaban el coro y los
 -> cap2b_epilogo
 
 === cap2b_ritual_magia ===
-# REQUIRES: magia >= 30
 Juntás las yemas de los dedos de ambas manos formando un círculo, como si tuvieras una lente poderosa, y concentrás la energía. El primer fogonazo sale concentrado, más parecido a un chorro de agua a presión que a fuego, pero cumple su objetivo. El brazo del Vampiro Superior queda cercenado inmediatamente y el bebé queda libre (a una distancia considerable del piso, pero bueno, vas a echarle la culpa de eso a los vampiros).
 # next
 El Vampiro Superior carga contra vos. El coro del fondo carga contra vos. Parece que todo el mundo carga contra vos.
@@ -3139,7 +3287,6 @@ Te caés de rodilla y vomitás. Pero destruiste a los monstruos y, más importan
 -> cap2b_epilogo
 
 === cap2b_ritual_diagrama ===
-# REQUIRES: conocimiento >= 30
 Das un paso al frente y te detenés a ver el conjunto de símbolos y diagramas que forman la figura geométrica en el piso. Cuando uno está iniciando parecen símbolos extraños pero con onda (por eso tantos jóvenes entran al ocultismo, gran estética). A medida que uno aprende se da cuenta de que no son símbolos, son el lenguaje de la realidad.
 En esencia, lo que tenés frente a tus ojos son una serie de órdenes para juntar energía y descargarla de una forma precisa, no muy diferente a lo que sería un trabajo de programación (no por nada los abuelos de la informática vienen del ocultismo).
 # next
@@ -3199,7 +3346,6 @@ La caballería llegó al rescate y se encargó del asunto.
 -> cap2b_epilogo
 
 === cap2b_ritual_cruz ===
-# REQUIRES: inv:cruz_plata
 Es momento de pasar a la acción. Das un paso hacia adelante, tus pies cruzan el diagrama, y estirás la cruz hacia adelante.
 De repente sentís la energía atrás tuyo, como si una presencia gigante se encontrara a tu espalda. Igual no tenés tiempo para preocuparte por eso, estás demasiado concentrado en mantener tu agarre de la cruz que dejó de ser una estructura sólida de plata para convertirse en un pilar de luz vertiginoso.
 # next
@@ -3216,7 +3362,6 @@ Cuando podés volver a ver, después de un buen tiempo, delante tuyo solo hay un
 -> cap2b_epilogo
 
 === cap2b_ritual_buda ===
-# REQUIRES: inv:buda_oro
 Avanzás con el Buda en tu mano esperando que haga... ¿algo? En el momento en que tu pie toca la figura geométrica el Vampiro Superior se da cuenta de tu presencia. Te mira a vos, al Buda, y de nuevo a vos como intentando entender qué parte del ritual es todo esto.
 Es cuando se da cuenta de que no es parte del ritual, y que la estatua de Buda lo único que está logrando es cansar tus brazos, cuando sonríe. Su sonrisa se va haciendo cada vez más grande hasta dejar al descubierto dos filosos colmillos.
 # next
@@ -3231,7 +3376,6 @@ ESTÁS MUERTO.
 -> END
 
 === cap2b_ritual_placa ===
-# REQUIRES: inv:placa_amor
 Avanzás con la placa en tu mano esperando que haga... ¿algo? En el momento en que tu pie toca la figura geométrica el Vampiro Superior se da cuenta de tu presencia. Te mira a vos, a la placa, y de nuevo a vos como intentando entender qué parte del ritual es todo esto.
 Es cuando se da cuenta de que no es parte del ritual, y que la placa lo único que está logrando es cansar tus brazos, cuando sonríe. Su sonrisa se va haciendo cada vez más grande hasta dejar al descubierto dos filosos colmillos.
 # next
@@ -3284,6 +3428,9 @@ ESTÁS MUERTO.
 // ---------------------------------------------------------
 
 === cap2b_epilogo ===
+# UI_EFFECT: none
+# MOUSE_RESISTANCE: none
+# WILLPOWER_STOP
 Cuando salís de la cripta la lluvia ya es solo un recuerdo, presente en un par de charcos en el piso y un poco de barro. Las primeras luces del amanecer le dan otro aspecto al cementerio, más calmo, sin luces oscuras donde acechan monstruos.
 {todos_guardias_mueren:
     # next
@@ -3323,6 +3470,11 @@ Cerrás los ojos y dejás que la luz del sol te bañe. Padre sol que quema a las
     Pero claro, primero estaban los bebés. Siete vidas que salvaste vos, siete futuros llenos de posibilidades que seguían en camino gracias a tus acciones de esa noche.
     Y ¿qué era eso? ¿Enriquez cargando a uno mientras habla como un bebé? ¿Y acaso era una sonrisa eso que estaba apareciendo en su boca? Pase lo que pase no la ibas a dejar olvidar nunca este momento.
     Te deja tranquilo ver que el lugar está lleno de gente que sabe lo que tiene que hacer. Eso te permite desmayarte tranquilo.
+}
+{sometimiento >= 50:
+    # next
+    Mientras te alejás del cementerio sentís la voz del Vampiro todavía susurrando en tu cabeza. No son palabras, es más bien una presencia, como una mancha de humedad que se extiende en una pared. Algo que no estaba antes y que ahora no se va.
+    ~ traumado = true
 }
 
 FIN DEL EPISODIO.
