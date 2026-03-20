@@ -15,8 +15,8 @@ Replace the HUD-based ApneaGame with a fully diegetic experience. No bars, no nu
 ```
 
 - `params.waves` (number, default 3): number of shadow waves
-- `params.duration` (number, default 35): total game duration
-- `onFinish(1)`: player survived
+- `params.duration`: vestigial, ignored. Total duration is determined by wave count via `generateNarrative()`.
+- `onFinish(1)`: player survived (called after 1.5s delay on final narrative entry, so player sees "Se va. Te salvaste." with effects fading)
 - `onFinish(0)`: player died (O2 depletion or detected)
 - Touch support: touchstart/touchend map to hold/release
 
@@ -40,7 +40,7 @@ During shadow waves, any noise risks detection. Between waves, breathing is safe
 ## Mechanics
 
 ### O2 System
-- **Drain while holding**: scales per wave — `10 + (wave - 1) * 2` %/s
+- **Drain while holding**: lookup table per wave — `[12, 14, 18, 20]` %/s (wave 4+ capped at 20)
   - Wave 1: 12%/s, Wave 2: 14%/s, Wave 3: 18%/s, Wave 4+: 20%/s
 - **Recovery while released**: 8%/s, after 500ms delay (anti micro-tap)
 - **Death at 0%**: `onFinish(0)`
@@ -53,6 +53,13 @@ Internal value 0-100 representing how much the creature suspects the player's pr
 - **Death at 100%**: `onFinish(0)`
 
 This value is never shown numerically — it drives the intensity of ambient effects.
+
+During recovery phases (no shadow), awareness still decays at -25%/s if the player is holding, but since it won't be increasing either, it should naturally reach 0 before the next wave.
+
+### Removed Mechanics
+The following mechanics from the v0.7.1 implementation are intentionally removed:
+- **Involuntary gasps**: Removed — they take control away from the player, which breaks immersion and feels unfair.
+- **Scare events**: Removed — random jump-scare interrupts are cheap tension, not the sustained dread this design targets.
 
 ### Noise Spike Detail
 When the player releases after holding:
@@ -73,6 +80,10 @@ ApneaGame manages its own audio via `new Audio()`. No dependency on `useAudio` h
 
 All audio is cleaned up in useEffect return. Audio objects are created once and reused.
 
+**Note**: `playbackRate` on `HTMLAudioElement` changes pitch along with speed. For the heartbeat this is actually desirable — higher pitch at low O2 adds to the panic feeling. The `loop` property on `HTMLAudioElement` may have a small gap at the loop point; this is acceptable for breathing but could click on the rumble. If noticeable, the rumble asset should have a long tail with natural fade.
+
+**Input**: `keydown` events filter `e.repeat` to ignore OS key-repeat while holding SPACE.
+
 ## Visual Feedback (back to front layer order)
 
 ### 1. Base background
@@ -86,7 +97,7 @@ This IS the oxygen meter — the player learns "blue = suffocating."
 Radial gradient (transparent center, black edges). Opacity scales with `creatureAwareness`. At high awareness, field of vision narrows to tunnel vision. Communicates "the thing is right here."
 
 ### 4. Screen shake
-Framer-motion animation on the container. Intensity scales with creature proximity during shadow phases. Constant low tremor when creature is near, sharp jolt on noise spike.
+Framer-motion animation on the container. Quantized into 4 discrete levels (none/low/medium/high) to avoid per-frame re-renders. Level determined by `creatureAwareness` thresholds (0/25/50/75). Jolt to "high" on noise spike regardless of current awareness.
 
 ### 5. Narrative text
 Visible but degrades with O2:
