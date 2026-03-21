@@ -59,6 +59,7 @@ export function useBardoEngine({
         makeChoice: makeChoiceState,
         setGlobalVariable,
         getGlobalVariable,
+        restoreMinigameState,
         resetStoryState,
         spawnAtKnot: rawSpawnAtKnot,
         getKnotList,
@@ -144,15 +145,28 @@ export function useBardoEngine({
         const numericResult = (result === true || result === 1) ? 1 : 0
         console.log(`[Ink Bridge] Committing result: ${numericResult}`)
 
+        // Restore Ink state to before the Continue() that produced the MINIGAME tag.
+        // inkjs evaluates diverts and conditionals inside a single Continue() call,
+        // so by the time we detect the tag, Ink has already branched on minigame_result=-1.
+        // Restoring the snapshot lets the conditional re-evaluate with the correct value.
+        const restored = restoreMinigameState()
+
         setGlobalVariable("minigame_result", numericResult)
         const verified = getGlobalVariable("minigame_result")
         console.log(`[Ink Bridge] Verified value in Ink: ${verified}`)
+
+        if (restored && storyRef.current) {
+            // Advance past the MINIGAME tag line so continueStory() doesn't re-trigger it.
+            // This single Continue() re-processes the knot (now with the correct result),
+            // following the divert and conditional into the right branch.
+            storyRef.current.Continue()
+        }
 
         // Auto-continue after minigame
         if (continueStoryRef.current) {
             continueStoryRef.current()
         }
-    }, [setGlobalVariable, getGlobalVariable])
+    }, [setGlobalVariable, getGlobalVariable, restoreMinigameState])
 
     const minigameController = useMinigameController(handleMinigameResult)
 

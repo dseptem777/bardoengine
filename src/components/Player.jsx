@@ -368,10 +368,11 @@ export default function Player({
             </header>
 
             {/* Main content area - PURE BLOCK LAYOUT, NO FLEXBOX */}
+            {/* Hidden during immersive minigames (apnea) so their text doesn't overlap */}
             <main
                 ref={scrollContainerRef}
                 onScroll={handleScroll}
-                className="flex-1 overflow-y-auto custom-scrollbar bg-bardo-bg"
+                className={`flex-1 overflow-y-auto custom-scrollbar bg-bardo-bg ${isMinigameActive ? 'invisible' : ''}`}
             >
                 {/*
                     Simple block container with fixed top padding.

@@ -2,9 +2,12 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getMinigameComponent } from '../config/minigameRegistry'
 
+// Minigame types that render immersively (no backdrop, no frame, no result screen)
+const IMMERSIVE_TYPES = new Set(['apnea'])
+
 /**
  * MinigameOverlay - Renders the active minigame
- * 
+ *
  * Props:
  * - isPlaying: boolean - Whether a game is active
  * - config: { type, params } - Game configuration
@@ -22,6 +25,8 @@ export default function MinigameOverlay({
     const [result, setResult] = useState(null)
     const [showingResult, setShowingResult] = useState(false)
 
+    const isImmersive = config && IMMERSIVE_TYPES.has(config.type?.toLowerCase())
+
     // Reset result state when a new game starts
     useEffect(() => {
         if (isPlaying) {
@@ -34,6 +39,12 @@ export default function MinigameOverlay({
 
     const handleGameFinish = (outcome) => {
         const numericResult = (outcome === true || outcome === 1) ? 1 : 0
+
+        if (isImmersive) {
+            // Immersive games handle their own finish UX — commit immediately
+            onFinish(numericResult)
+            return
+        }
 
         if (showResultScreen) {
             setResult(numericResult)
@@ -71,6 +82,26 @@ export default function MinigameOverlay({
                     Close
                 </button>
             </div>
+        )
+    }
+
+    // Immersive mode: no backdrop, no frame, no spring animation, no result screen.
+    // The game component renders inside the content flow and Player's header stays visible.
+    if (isImmersive) {
+        return (
+            <AnimatePresence>
+                {isPlaying && (
+                    <motion.div
+                        className="fixed inset-0 z-[60]"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        {renderGame()}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         )
     }
 

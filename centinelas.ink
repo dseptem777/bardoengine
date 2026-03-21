@@ -46,6 +46,7 @@ VAR willpower = 100
 VAR sometimiento = 0
 VAR willpower_passed = false
 VAR spider_survived = false
+VAR minigame_result = -1
 
 -> capitulo_0
 
@@ -858,11 +859,7 @@ Lentamente tomás lo que puede ser la peor decisión de tu vida y te asomás un 
 Se está... comiendo... el cadáver...
 Ya terminó con los dos brazos y está por mandarse la cabeza y el torso en una sola mordida.
 Entrás para adentro de tu escondite poniendo las manos en tu boca para contener el grito.
-# next
-// TODO: minijuego de silencio
-Esperás una eternidad conteniendo la respiración hasta que la criatura se retira. Te arrastrás para salir. El cadáver del NN ya no está. Esa cosa se lo comió.
-Al menos recuperaste una mano, mejor ir para El Faro a ver qué pueden hacer con eso.
--> final_morgue_exito
+-> apnea_escondite
 
 === escondite_quedarse ===
 Esperás cinco minutos. La mole se vuelve a mover, escuchás el poco mobiliario que sigue en pie quejándose y ser destruido por su peso.
@@ -871,6 +868,29 @@ Y luego esperás cinco minutos más. Diez minutos. Hasta que la sensación de mi
 Te arrastrás para salir de tu escondite. El cadáver NN ya no está ahí. Esa... cosa... se lo comió.
 Al menos recuperaste una mano, mejor ir para El Faro a ver qué pueden hacer con eso.
 -> final_morgue_exito
+
+=== apnea_escondite ===
+# MINIGAME: type=apnea, waves=3, autostart=true
+
+-> apnea_escondite_resultado
+
+=== apnea_escondite_resultado ===
+{ minigame_result:
+    - 1: -> apnea_escondite_exito
+    - else: -> apnea_escondite_fallo
+}
+
+=== apnea_escondite_exito ===
+La criatura se retira. Esperás una eternidad más para estar seguro. Te arrastrás para salir. El cadáver del NN ya no está. Esa cosa se lo comió.
+Al menos recuperaste una mano, mejor ir para El Faro a ver qué pueden hacer con eso.
+-> final_morgue_exito
+
+=== apnea_escondite_fallo ===
+# shake # flash_red # play_sfx:jumpscare
+La puerta del privado se abre de golpe. Garras oscuras se cierran alrededor de tu tobillo y te sacan arrastrando.
+Lo último que ves es esa boca inmensa abriéndose de oreja a oreja.
+MORISTE. FIN DEL JUEGO.
+-> END
 
 === escape_trampa ===
 Tenés unos minutos para improvisar una emboscada, sea lo que sea que está ahí afuera acaba de matar a un policía, así que es peligroso y no debés contenerte para atacar. Tu gran ventaja es que hay una sola puerta de entrada.
@@ -952,11 +972,29 @@ Ya no es posible retroceder. Hay que seguir corriendo, nada más importa. Ganarl
   - else:
     # stat:hp:-10
     Nunca le vas a ganar, estás muy herido y vas dejando un rastro de sangre. Abrís una puerta y el azar te premia. Un vestuario con una serie de taquillas contra la pared. Con la poca energía que tenés te arrastrás dentro de una.
-    # next
-    // TODO: minijuego de escondite
-    La entidad recorre el pasillo. Escuchás sus pasos pesados acercarse... y alejarse. Cuando el silencio vuelve, salís temblando y te arrastrás hasta tu auto. Te dirigís al Faro.
-    -> final_morgue_exito
+    -> apnea_taquilla
 }
+
+=== apnea_taquilla ===
+# MINIGAME: type=apnea, waves=2, autostart=true
+
+-> apnea_taquilla_resultado
+
+=== apnea_taquilla_resultado ===
+{ minigame_result:
+    - 1: -> apnea_taquilla_exito
+    - else: -> apnea_taquilla_fallo
+}
+
+=== apnea_taquilla_exito ===
+La entidad recorre el pasillo. Escuchás sus pasos pesados acercarse... y alejarse. Cuando el silencio vuelve, salís temblando y te arrastrás hasta tu auto. Te dirigís al Faro.
+-> final_morgue_exito
+
+=== apnea_taquilla_fallo ===
+# shake # flash_red # play_sfx:jumpscare
+La puerta de la taquilla se arranca de sus bisagras. No tenés energía para gritar.
+MORISTE. FIN DEL JUEGO.
+-> END
 
 === final_morgue_exito ===
 # music:misterio_ambient
