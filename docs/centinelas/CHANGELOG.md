@@ -1,5 +1,13 @@
 # Changelog — Centinelas del Sur
 
+## [0.8.1] — 2026-03-21
+
+### Content
+- **cueva_pelea_normal**: Reemplazado QTE placeholder con escena narrativa de pelea con daga (opción sin fuerza suficiente)
+- **combate_disparos**: Reemplazado QTE placeholder con escena narrativa de disparos a las patas de la araña gigante
+
+---
+
 ## [0.8.0] — 2026-03-21
 
 ### Feature: ApneaGame como knot virtual + fix crítico de resultado de minigame

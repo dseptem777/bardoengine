@@ -14,13 +14,19 @@ export default function QTEGame({ params = [], onFinish }) {
         onFinish(success ? 1 : 0)
     }, [onFinish])
 
+    // Transition to playing when countdown reaches 0
+    useEffect(() => {
+        if (gameState === 'ready' && readyCountdown <= 0) {
+            setGameState('playing')
+        }
+    }, [gameState, readyCountdown])
+
     useEffect(() => {
         if (gameState === 'ready') {
             const timer = setInterval(() => {
                 setReadyCountdown(prev => {
                     if (prev <= 1) {
                         clearInterval(timer)
-                        setGameState('playing')
                         return 0
                     }
                     return prev - 1

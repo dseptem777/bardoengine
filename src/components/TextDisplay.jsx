@@ -7,9 +7,13 @@ const FONT_SIZE_CLASSES = {
     large: 'text-2xl md:text-3xl',
 }
 
+// Characters to reveal per animation frame during fast-forward
+const FAST_FORWARD_CHARS_PER_FRAME = 8
+
 export default function TextDisplay({
     text,
     isTyping,
+    fastForward = false,
     onComplete,
     typewriterDelay = 30, // 0 = instant
     fontSize = 'normal',
@@ -20,9 +24,11 @@ export default function TextDisplay({
     const hasFoundRef = useRef(false)
     const indexRef = useRef(0)
     const timeoutRef = useRef(null)
+    const rafRef = useRef(null)           // rAF ID for fast-forward loop
     const anchorRef = useRef(null)
     const currentTextRef = useRef('')  // Track which text we're currently typing
     const typewriterProgressedRef = useRef(false)  // True only AFTER first char is typed
+    const fastForwardRef = useRef(false)
 
     // Store onComplete in a ref to avoid re-triggering the effect when callback changes
     const onCompleteRef = useRef(onComplete)
@@ -30,12 +36,54 @@ export default function TextDisplay({
         onCompleteRef.current = onComplete
     }, [onComplete])
 
+    // Fast-forward: when activated, kill the slow timeout loop and switch to rAF chunk loop
+    useEffect(() => {
+        const wasOff = !fastForwardRef.current
+        fastForwardRef.current = fastForward
+
+        if (fastForward && wasOff && text && indexRef.current < text.length) {
+            // Kill the normal typewriter timeout
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
+                timeoutRef.current = null
+            }
+
+            // Start rAF chunk loop
+            const fastLoop = () => {
+                if (indexRef.current >= text.length) {
+                    onCompleteRef.current?.()
+                    return
+                }
+
+                // Advance by N chars per frame
+                indexRef.current = Math.min(indexRef.current + FAST_FORWARD_CHARS_PER_FRAME, text.length)
+                setDisplayedText(text.slice(0, indexRef.current))
+                typewriterProgressedRef.current = true
+
+                rafRef.current = requestAnimationFrame(fastLoop)
+            }
+
+            rafRef.current = requestAnimationFrame(fastLoop)
+        }
+
+        // Cleanup rAF if fast-forward is turned off
+        if (!fastForward && rafRef.current) {
+            cancelAnimationFrame(rafRef.current)
+            rafRef.current = null
+        }
+    }, [fastForward, text])
+
     // Split text into paragraphs for rendering
     const paragraphs = displayedText.split('\n').filter(p => p.trim().length > 0 || p.length > 0)
 
     useEffect(() => {
         // Clear any existing timeout
         if (timeoutRef.current) clearTimeout(timeoutRef.current)
+        // Clear any fast-forward rAF
+        if (rafRef.current) {
+            cancelAnimationFrame(rafRef.current)
+            rafRef.current = null
+        }
 
         // Reset everything on new text
         setDisplayedText('')
@@ -59,12 +107,16 @@ export default function TextDisplay({
                 return
             }
 
+            // If fast-forward activated mid-typing, don't continue the slow loop
+            // (the rAF loop from the fastForward effect takes over)
+            if (fastForwardRef.current) return
+
             const currentChar = text[indexRef.current]
             indexRef.current++
             setDisplayedText(text.slice(0, indexRef.current))
             typewriterProgressedRef.current = true
 
-            // Dynamic rhythm logic — original timing
+            // Dynamic rhythm logic
             let dynamicDelay = typewriterDelay
             if (['.', '?', '!'].includes(currentChar)) {
                 dynamicDelay = typewriterDelay * 12
@@ -82,6 +134,10 @@ export default function TextDisplay({
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current)
             }
+            if (rafRef.current) {
+                cancelAnimationFrame(rafRef.current)
+                rafRef.current = null
+            }
         }
     }, [text, isTyping, typewriterDelay])
 
@@ -90,6 +146,10 @@ export default function TextDisplay({
         if (!isTyping && text) {
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current)
+            }
+            if (rafRef.current) {
+                cancelAnimationFrame(rafRef.current)
+                rafRef.current = null
             }
             setDisplayedText(text)
             typewriterProgressedRef.current = true  // Mark as progressed since we showed full text

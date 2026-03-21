@@ -62,6 +62,7 @@ export default function Player({
     // If no text but has interactive content, skip typewriter
     const hasInteractiveContent = choices.length > 0 || isEnded
     const [isTyping, setIsTyping] = useState(text ? true : !hasInteractiveContent)
+    const [fastForward, setFastForward] = useState(false)
     const autoAdvanceTimerRef = useRef(null)
     const interactiveRef = useRef(null)
     const choiceButtonRefs = useRef({})
@@ -156,6 +157,7 @@ export default function Player({
             setIsTyping(false)
         } else if (text) {
             setIsTyping(true)
+            setFastForward(false)
             // Force stick to bottom when new text arrives
             isStickyRef.current = true
         }
@@ -185,8 +187,16 @@ export default function Player({
             console.log('[Player] Text skip blocked - willpower active with choices')
             return
         }
-        setIsTyping(false)
-    }, [willpowerActive, choices.length])
+
+        if (fastForward || !text || text.length < 100) {
+            // Second press OR short text → instant skip
+            setIsTyping(false)
+            setFastForward(false)
+        } else {
+            // First press on long text → fast-forward (3ms/char, no punctuation pauses)
+            setFastForward(true)
+        }
+    }, [willpowerActive, choices.length, fastForward, text])
 
     // Handle keyboard resistance - simulates clicking choice multiple times
     const handleResistanceKeyPress = useCallback((index) => {
@@ -392,6 +402,7 @@ export default function Player({
                         <TextDisplay
                             text={text}
                             isTyping={isTyping}
+                            fastForward={fastForward}
                             onComplete={handleTypingComplete}
                             typewriterDelay={typewriterDelay}
                             fontSize={fontSize}
@@ -563,7 +574,9 @@ export default function Player({
                 <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] pointer-events-none">
                     <div className="px-5 py-2.5 bg-black/80 backdrop-blur-md border border-white/20 rounded-full shadow-2xl">
                         <p className="text-bardo-muted font-mono text-[10px] md:text-xs animate-pulse tracking-widest uppercase text-center font-bold">
-                            Presioná una tecla para continuar
+                            {fastForward
+                                ? 'Presioná de nuevo para saltar'
+                                : 'Presioná una tecla para continuar'}
                         </p>
                     </div>
                 </div>

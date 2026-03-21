@@ -1908,7 +1908,12 @@ De un corte preciso la abrís al medio. La tierra de la cueva se llena de entra�
 -> regreso_orfanato
 
 === cueva_pelea_normal ===
-# MINIGAME: type=qte
+No tenes la fuerza para cargar contra ellas, así que haces lo único que se te ocurre: esperar. Daga en mano, espalda contra la pared, dejas que vengan.
+# next
+La primera araña salta hacia vos. La esquivas por centímetros y le clavas la daga en el costado. No es un golpe limpio, pero basta. El bicho se retuerce y cae.
+La segunda araña duda. Aprovechas para arrancar la daga y lanzar una patada al cadáver de la primera, empujándolo hacia ella. En la confusión, encontrás el hueco que necesitabas.
+# next
+Un corte. Otro. La daga se siente pesada pero tus brazos no paran. Cuando terminas, estas cubierto de un líquido translúcido y temblando. Pero vivo.
 -> regreso_orfanato
 
 // =========================================================
@@ -2054,7 +2059,12 @@ Un viento entra en la habitación y las cenizas se dispersan perdiendo cualquier
 -> despues_combate
 
 === combate_disparos ===
-# MINIGAME: type=qte
+Sacas el arma y apuntas a las patas. Si le volás el apoyo, la gravedad hace el resto.
+# next
+El primer disparo le arranca una pata delantera. La araña gigante se tambalea pero no cae. El segundo disparo le da en otra articulación y un crujido horrendo llena la bóveda.
+La criatura intenta compensar redistribuyendo su peso, pero ya es tarde. Con el tercer disparo pierde el equilibrio y cae hacia el agujero del que salió, llevándose pedazos de roca y telaraña.
+# next
+El eco del impacto dura varios segundos. Después, silencio. Te asomas al borde y solo ves oscuridad. No sabés si está muerta, pero no va a volver a subir.
 -> despues_combate
 
 === combate_exorcismo ===
