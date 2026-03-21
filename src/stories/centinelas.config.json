@@ -1,6 +1,6 @@
 {
     "title": "🚨 CENTINELAS DEL SUR",
-    "version": "0.4.1",
+    "version": "0.8.0",
     "theme": {
         "primaryColor": "#8b5cf6",
         "bgColor": "#030712",
@@ -131,6 +131,48 @@
             "description": "Las estatuas del sótano representan los cuatro obispos del 7mo círculo del infierno.",
             "icon": "👹",
             "category": "documentos"
+        },
+        "teoria_vampiros": {
+            "name": "Teoría: Vampiros Superiores",
+            "description": "Análisis de los casos anteriores. Las víctimas muestran marcas de colmillos y sonrisas de placer. Clásico ataque de Vampiro Superior.",
+            "icon": "🧛",
+            "category": "documentos"
+        },
+        "favor_tuco": {
+            "name": "Favor del Sgto. Tuco",
+            "description": "El Sargento Tuco te debe un favor. Uno solo. Remarcó la unicidad del favor con todos los objetivos posibles.",
+            "icon": "📞",
+            "category": "claves"
+        },
+        "cementerio_correcto": {
+            "name": "Pista: Lomas de Paz",
+            "description": "Un familiar de las víctimas fue enterrado recientemente en el cementerio Lomas de Paz. Podría ser el caballo de Troya vampírico.",
+            "icon": "🗺️",
+            "category": "documentos"
+        },
+        "teoria_sacrificio": {
+            "name": "Teoría: Sacrificio de Bebés",
+            "description": "Un hechizo vampírico requiere sacrificar siete bebés para caminar bajo la luz del sol. Los bebés desaparecidos encajan en el patrón.",
+            "icon": "📜",
+            "category": "documentos"
+        },
+        "cruz_plata": {
+            "name": "Cruz de Plata",
+            "description": "Una cruz de plata inmaculada encontrada entre los montículos de objetos religiosos. Pesada y resplandeciente.",
+            "icon": "✝️",
+            "category": "items"
+        },
+        "placa_amor": {
+            "name": "Placa de Amor",
+            "description": "\"Mientras mi corazón siga latiendo, lo hará al ritmo de tu nombre\". Una placa funeraria con una dedicatoria de amor puro.",
+            "icon": "💌",
+            "category": "items"
+        },
+        "buda_oro": {
+            "name": "Buda de Oro",
+            "description": "Una estatua de Buda de oro macizo. Excentricidad de algún oligarca con demasiado tiempo libre.",
+            "icon": "🪷",
+            "category": "items"
         }
     }
 }

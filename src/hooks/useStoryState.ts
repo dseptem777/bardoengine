@@ -21,6 +21,7 @@ export interface UseStoryStateReturn {
     makeChoice: (index: number) => { text: string; tags: string[] };
     setGlobalVariable: (varName: string, value: any) => void;
     getGlobalVariable: (varName: string) => any;
+    restoreMinigameState: () => boolean;
     resetStoryState: () => void;
     spawnAtKnot: (knotName: string, variables?: Record<string, any>) => { text: string; tags: string[] };
     getKnotList: () => string[];
@@ -38,6 +39,12 @@ export function useStoryState(): UseStoryStateReturn {
     const [currentTags, setCurrentTags] = useState<string[]>([])
 
     const storyRef = useRef<Story | null>(null)
+    // Snapshot of Ink state from just before the Continue() that produced a MINIGAME tag.
+    // inkjs follows diverts and evaluates conditionals inside a single Continue() call,
+    // so by the time we detect the MINIGAME tag, Ink has already branched on minigame_result
+    // (which is -1 at that point). Restoring this snapshot after the game lets the conditional
+    // re-evaluate with the correct result.
+    const minigameStateSnapshotRef = useRef<string | null>(null)
 
     // Helper to process story continuation until a stop condition
     const processStoryLoop = useCallback((currentStory: Story) => {
@@ -47,6 +54,9 @@ export function useStoryState(): UseStoryStateReturn {
 
         try {
             while (currentStory.canContinue) {
+                // Save state BEFORE Continue() — needed for minigame result fix
+                const preState = currentStory.state.toJson()
+
                 const nextBatch = currentStory.Continue()
                 const tags = currentStory.currentTags || []
 
@@ -65,8 +75,12 @@ export function useStoryState(): UseStoryStateReturn {
                     break
                 }
 
-                // Break for minigame - Orchestrator handles the actual game start, but we must pause text generation
-                if (tags.some((t: string) => t.trim().toLowerCase().startsWith('minigame:'))) break
+                // Break for minigame — save the pre-Continue snapshot so handleMinigameResult
+                // can restore it and let the conditional re-evaluate with the correct result
+                if (tags.some((t: string) => t.trim().toLowerCase().startsWith('minigame:'))) {
+                    minigameStateSnapshotRef.current = preState
+                    break
+                }
             }
         } catch (e) {
             console.error("[StoryState] Ink Runtime Error during processing:", e)
@@ -173,6 +187,22 @@ export function useStoryState(): UseStoryStateReturn {
         }
     }, [])
 
+    // Restore Ink state to just before the Continue() that produced the MINIGAME tag.
+    // This lets the conditional (e.g. { minigame_result: - 1: -> exito }) re-evaluate
+    // with the correct value instead of the stale -1 from the initial Continue().
+    const restoreMinigameState = useCallback(() => {
+        const snapshot = minigameStateSnapshotRef.current
+        if (!snapshot || !storyRef.current) return false
+        try {
+            storyRef.current.state.LoadJson(snapshot)
+            minigameStateSnapshotRef.current = null
+            return true
+        } catch (e) {
+            console.warn('[StoryState] Failed to restore minigame state snapshot:', e)
+            return false
+        }
+    }, [])
+
     const setGlobalVariable = useCallback((varName: string, value: any) => {
         if (storyRef.current) {
             try {
@@ -264,6 +294,7 @@ export function useStoryState(): UseStoryStateReturn {
         makeChoice,
         setGlobalVariable,
         getGlobalVariable,
+        restoreMinigameState,
         resetStoryState,
         spawnAtKnot,
         getKnotList,
@@ -282,6 +313,7 @@ export function useStoryState(): UseStoryStateReturn {
         makeChoice,
         setGlobalVariable,
         getGlobalVariable,
+        restoreMinigameState,
         resetStoryState,
         spawnAtKnot,
         getKnotList,

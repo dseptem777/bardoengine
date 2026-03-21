@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "BardoEditor",
-  "version": "1.0.0",
-  "identifier": "com.bardoengine.editor",
+  "productName": "🚨 CENTINELAS DEL SUR",
+  "version": "0.8.0",
+  "identifier": "com.bardoengine.centinelas",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "BardoEditor",
+        "title": "🚨 CENTINELAS DEL SUR",
         "width": 1024,
         "height": 768,
         "resizable": true,
