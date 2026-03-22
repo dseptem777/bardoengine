@@ -51,6 +51,7 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
     const musicRef = useRef(null)
     const currentTrackRef = useRef(null)
     const pendingMusicRef = useRef(null)
+    const fadeTimeoutRef = useRef(null)
     const audioUnlockedRef = useRef(false)
 
     // Store current volumes in refs for real-time updates
@@ -171,6 +172,12 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
             return
         }
 
+        // Cancel any pending fade-out from a previous stopMusic call
+        if (fadeTimeoutRef.current) {
+            clearTimeout(fadeTimeoutRef.current)
+            fadeTimeoutRef.current = null
+        }
+
         // Cancel any pending load to prevent orphaned Howl instances
         if (pendingMusicRef.current) {
             pendingMusicRef.current.unload()
@@ -216,19 +223,19 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
 
         if (!musicRef.current) return
 
+        const currentMusic = musicRef.current
+        musicRef.current = null
+        currentTrackRef.current = null
+
         if (fadeOut) {
-            musicRef.current.fade(musicRef.current.volume(), 0, FADE_DURATION)
-            setTimeout(() => {
-                musicRef.current?.stop()
-                musicRef.current?.unload()
-                musicRef.current = null
-                currentTrackRef.current = null
+            currentMusic.fade(currentMusic.volume(), 0, FADE_DURATION)
+            fadeTimeoutRef.current = setTimeout(() => {
+                currentMusic.stop()
+                currentMusic.unload()
             }, FADE_DURATION)
         } else {
-            musicRef.current.stop()
-            musicRef.current.unload()
-            musicRef.current = null
-            currentTrackRef.current = null
+            currentMusic.stop()
+            currentMusic.unload()
         }
     }, [])
 

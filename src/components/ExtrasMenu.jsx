@@ -41,8 +41,8 @@ export default function ExtrasMenu({
     }
 
     const handleClose = () => {
-        // Stop jukebox music when fully closing ExtrasMenu
-        if (stopMusic) stopMusic()
+        // Only stop music if user was on the jukebox page
+        if (currentPage === 'jukebox' && stopMusic) stopMusic()
         setCurrentPage('menu')
         onClose()
     }

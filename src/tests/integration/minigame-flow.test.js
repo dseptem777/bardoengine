@@ -80,7 +80,7 @@ describe('Minigame Flow Integration', () => {
         })
 
         expect(result.current.state).toBe('idle')
-        expect(onResultCommit).not.toHaveBeenCalled()
+        expect(onResultCommit).toHaveBeenCalledWith(0)
     })
 
     it('should resolve Ink variables in minigame params', () => {

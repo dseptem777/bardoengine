@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getMinigameComponent } from '../config/minigameRegistry'
 
@@ -24,6 +24,8 @@ export default function MinigameOverlay({
 }) {
     const [result, setResult] = useState(null)
     const [showingResult, setShowingResult] = useState(false)
+    const resultTimeoutRef = useRef(null)
+    const hasCommittedRef = useRef(false)
 
     const isImmersive = config && IMMERSIVE_TYPES.has(config.type?.toLowerCase())
 
@@ -32,16 +34,32 @@ export default function MinigameOverlay({
         if (isPlaying) {
             setResult(null)
             setShowingResult(false)
+            hasCommittedRef.current = false
+            if (resultTimeoutRef.current) {
+                clearTimeout(resultTimeoutRef.current)
+                resultTimeoutRef.current = null
+            }
         }
     }, [isPlaying])
 
     if (!isPlaying && !showingResult) return null
 
+    const commitResult = (finalResult) => {
+        if (hasCommittedRef.current) return
+        hasCommittedRef.current = true
+        if (resultTimeoutRef.current) {
+            clearTimeout(resultTimeoutRef.current)
+            resultTimeoutRef.current = null
+        }
+        setShowingResult(false)
+        setResult(null)
+        onFinish(finalResult)
+    }
+
     const handleGameFinish = (outcome) => {
         const numericResult = (outcome === true || outcome === 1) ? 1 : 0
 
         if (isImmersive) {
-            // Immersive games handle their own finish UX — commit immediately
             onFinish(numericResult)
             return
         }
@@ -49,15 +67,12 @@ export default function MinigameOverlay({
         if (showResultScreen) {
             setResult(numericResult)
             setShowingResult(true)
+            hasCommittedRef.current = false
 
-            // Result display — auto-dismiss after 1500ms
-            setTimeout(() => {
-                setShowingResult(false)
-                setResult(null)
-                onFinish(numericResult)
+            resultTimeoutRef.current = setTimeout(() => {
+                commitResult(numericResult)
             }, 1500)
         } else {
-            // Immediate commit, no result screen
             onFinish(numericResult)
         }
     }
@@ -134,11 +149,7 @@ export default function MinigameOverlay({
                                 style={{ borderRadius: 'var(--ui-border-radius)' }}
                                 initial={{ opacity: 0, scale: 0.8 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                onClick={() => {
-                                    setShowingResult(false)
-                                    setResult(null)
-                                    onFinish(result)
-                                }}
+                                onClick={() => commitResult(result)}
                             >
                                 <motion.h2
                                     className={`text-5xl font-black tracking-tight mb-2 ${result === 1 ? 'text-bardo-accent' : 'text-red-500'
