@@ -30,6 +30,7 @@ export default function SaveLoadModal({
     const [saveName, setSaveName] = useState('')
     const [selectedSave, setSelectedSave] = useState(null)
     const [activeTab, setActiveTab] = useState(initialMode) // Internal tab state
+    const [deleteConfirmId, setDeleteConfirmId] = useState(null)
     const inputRef = useRef(null)
 
     // Sync internal tab with prop when modal opens
@@ -68,9 +69,18 @@ export default function SaveLoadModal({
 
     const handleDelete = (save, e) => {
         e.stopPropagation()
-        if (confirm(`¿Eliminar "${save.name}"?`)) {
-            onDelete(save.id)
-        }
+        setDeleteConfirmId(save.id)
+    }
+
+    const confirmDelete = (id, e) => {
+        e.stopPropagation()
+        onDelete(id)
+        setDeleteConfirmId(null)
+    }
+
+    const cancelDelete = (e) => {
+        e.stopPropagation()
+        setDeleteConfirmId(null)
     }
 
     const formatDate = (timestamp) => {
@@ -95,7 +105,8 @@ export default function SaveLoadModal({
                 onClick={onClose}
             >
                 <motion.div
-                    className="bg-gray-900 border-2 border-bardo-accent/50 rounded-lg w-full max-w-md mx-4 overflow-hidden"
+                    className="bg-bardo-bg border-[var(--ui-border-width)] border-bardo-accent/50 w-full max-w-md mx-4 overflow-hidden"
+                    style={{ borderRadius: 'var(--ui-border-radius)' }}
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.9, opacity: 0 }}
@@ -193,13 +204,30 @@ export default function SaveLoadModal({
                                                 {formatDate(save.timestamp)}
                                             </div>
                                         </div>
-                                        <button
-                                            onClick={(e) => handleDelete(save, e)}
-                                            className="ml-2 text-gray-600 hover:text-red-500 text-lg"
-                                            title="Eliminar"
-                                        >
-                                            🗑️
-                                        </button>
+                                        {deleteConfirmId === save.id ? (
+                                            <div className="ml-2 flex gap-1 items-center" onClick={e => e.stopPropagation()}>
+                                                <button
+                                                    onClick={(e) => confirmDelete(save.id, e)}
+                                                    className="text-xs px-2 py-1 bg-red-600 text-white hover:bg-red-500 transition-colors"
+                                                >
+                                                    ✓
+                                                </button>
+                                                <button
+                                                    onClick={cancelDelete}
+                                                    className="text-xs px-2 py-1 border border-gray-600 text-gray-400 hover:text-white transition-colors"
+                                                >
+                                                    ✕
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={(e) => handleDelete(save, e)}
+                                                className="ml-2 text-gray-600 hover:text-red-500 text-lg"
+                                                title="Eliminar"
+                                            >
+                                                🗑️
+                                            </button>
+                                        )}
                                     </motion.div>
                                 ))}
                             </div>

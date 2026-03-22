@@ -161,6 +161,7 @@ function MenuButton({ children, onClick, secondary = false, disabled = false }) 
             onClick={disabled ? undefined : onClick}
             whileHover={disabled ? {} : { scale: 1.02 }}
             whileTap={disabled ? {} : { scale: 0.98 }}
+            style={{ borderRadius: 'var(--ui-border-radius)' }}
         >
             {children}
         </motion.button>

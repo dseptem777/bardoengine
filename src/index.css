@@ -72,6 +72,25 @@ h6 {
   color: var(--bardo-bg);
 }
 
+/* Range input thumb — cross-browser accent color */
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bardo-accent);
+  cursor: pointer;
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bardo-accent);
+  cursor: pointer;
+}
+
 /* VFX Classes */
 .vfx-shake {
   animation: shake 0.5s ease-in-out;

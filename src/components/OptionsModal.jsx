@@ -32,11 +32,12 @@ export default function OptionsModal({ isOpen, onClose }) {
 
                     {/* Modal */}
                     <motion.div
-                        className="relative bg-bardo-bg border-2 border-bardo-accent p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto"
+                        className="relative bg-bardo-bg border-[var(--ui-border-width)] border-bardo-accent/50 p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto"
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
                         style={{
+                            borderRadius: 'var(--ui-border-radius)',
                             boxShadow: '0 0 30px color-mix(in srgb, var(--bardo-accent) 30%, transparent)',
                         }}
                     >
@@ -166,7 +167,7 @@ function SliderSetting({ label, value, onChange, min, max, labels, showValue }) 
                 max={max}
                 value={value}
                 onChange={(e) => onChange(parseInt(e.target.value))}
-                className="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-bardo-accent"
+                className="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer"
             />
             {labels && (
                 <div className="flex justify-between text-xs text-gray-500">

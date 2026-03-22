@@ -101,7 +101,8 @@ export default function DebugSpawnModal({
 
                     {/* Modal */}
                     <motion.div
-                        className="relative z-10 bg-gray-950 border border-bardo-accent/30 rounded-lg w-[700px] max-w-[95vw] max-h-[85vh] flex flex-col shadow-2xl"
+                        className="relative z-10 bg-bardo-bg border-[var(--ui-border-width)] border-bardo-accent/50 w-[700px] max-w-[95vw] max-h-[85vh] flex flex-col shadow-2xl"
+                        style={{ borderRadius: 'var(--ui-border-radius)' }}
                         initial={{ scale: 0.9, y: 20 }}
                         animate={{ scale: 1, y: 0 }}
                         exit={{ scale: 0.9, y: 20 }}

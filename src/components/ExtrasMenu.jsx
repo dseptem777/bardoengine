@@ -55,8 +55,8 @@ export default function ExtrasMenu({
                 exit={{ opacity: 0 }}
             >
                 <motion.div
-                    className="w-full max-w-2xl h-[80vh] mx-4 p-6 rounded-lg border-2 border-bardo-accent/40
-                               bg-gradient-to-b from-neutral-950 to-neutral-900 overflow-hidden"
+                    className="w-full max-w-2xl h-[80vh] mx-4 p-6 border-[var(--ui-border-width)] border-bardo-accent/40 bg-bardo-bg overflow-hidden"
+                    style={{ borderRadius: 'var(--ui-border-radius)' }}
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.9, opacity: 0 }}
@@ -72,14 +72,8 @@ export default function ExtrasMenu({
                                 exit={{ opacity: 0, x: 20 }}
                             >
                                 {/* Header */}
-                                <div className="flex justify-between items-center mb-8">
+                                <div className="mb-8">
                                     <h1 className="text-3xl font-bold text-bardo-accent">EXTRAS</h1>
-                                    <button
-                                        className="text-neutral-400 hover:text-neutral-200 text-2xl"
-                                        onClick={handleClose}
-                                    >
-                                        ✕
-                                    </button>
                                 </div>
 
                                 {/* Menu Items */}

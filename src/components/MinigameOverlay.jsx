@@ -130,7 +130,8 @@ export default function MinigameOverlay({
                         {/* Result Screen */}
                         {showingResult && (
                             <motion.div
-                                className="flex flex-col items-center justify-center py-16 bg-zinc-900/95 border-2 border-bardo-accent shadow-2xl shadow-bardo-accent/20"
+                                className="flex flex-col items-center justify-center py-16 bg-bardo-bg/95 border-[var(--ui-border-width)] border-bardo-accent/50 shadow-2xl shadow-bardo-accent/20"
+                                style={{ borderRadius: 'var(--ui-border-radius)' }}
                                 initial={{ opacity: 0, scale: 0.8 }}
                                 animate={{ opacity: 1, scale: 1 }}
                             >
