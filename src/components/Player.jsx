@@ -25,6 +25,8 @@ export default function Player({
     continueLabel = null,
     onOptions,
     onToggleHistory,
+    // Branding
+    gameTitle = null,
     // Settings props
     typewriterDelay = 30,
     fontSize = 'normal',
@@ -306,7 +308,10 @@ export default function Player({
                             className="text-bardo-accent text-sm tracking-wider shrink-0"
                             style={{ fontFamily: 'var(--bardo-font-mono)' }}
                         >
-                            {isMobile ? 'BARDO' : `BARDO ENGINE v${engineVersion}`}
+                            {gameTitle
+                                ? (isMobile ? gameTitle.split(' ')[0] : gameTitle)
+                                : (isMobile ? 'BARDO' : `BARDO ENGINE v${engineVersion}`)
+                            }
                         </h1>
                         {/* Mobile: value stats inline in header */}
                         {isMobile && headerStatsProps && (

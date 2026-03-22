@@ -36,7 +36,8 @@
     "stats": {
         "enabled": true,
         "playerNameVariable": "nombre_personaje",
-            "nicknameVariable": "apodo_personaje",
+        "nicknameVariable": "apodo_personaje",
+        "roleLabel": "Centinela",
         "chapterVariable": "capitulo_actual",
         "definitions": [
             {

@@ -43,10 +43,10 @@ describe('StartScreen', () => {
             expect(screen.getByText('NUEVA PARTIDA')).toBeInTheDocument()
         })
 
-        it('should render CONTINUAR button', () => {
+        it('should not render CONTINUAR button when no save exists', () => {
             render(<StartScreen {...defaultProps} />)
 
-            expect(screen.getByText('CONTINUAR')).toBeInTheDocument()
+            expect(screen.queryByText(/CONTINUAR/)).not.toBeInTheDocument()
         })
 
         it('should render footer with version', () => {
@@ -113,13 +113,10 @@ describe('StartScreen', () => {
             expect(onContinue).toHaveBeenCalled()
         })
 
-        it('should NOT call onContinue when disabled', () => {
-            const onContinue = vi.fn()
-            render(<StartScreen {...defaultProps} hasContinue={false} onContinue={onContinue} />)
+        it('should not render CONTINUAR when hasContinue is false', () => {
+            render(<StartScreen {...defaultProps} hasContinue={false} />)
 
-            fireEvent.click(screen.getByText('CONTINUAR'))
-
-            expect(onContinue).not.toHaveBeenCalled()
+            expect(screen.queryByText(/CONTINUAR/)).not.toBeInTheDocument()
         })
 
         it('should call onLoadGame when CARGAR PARTIDA clicked', () => {

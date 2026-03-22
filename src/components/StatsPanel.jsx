@@ -87,9 +87,11 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.2 }}
                         >
-                            <div className="text-[10px] uppercase tracking-widest text-bardo-accent/70 mb-1">
-                                Centinela
-                            </div>
+                            {statsConfig?.roleLabel && (
+                                <div className="text-[10px] uppercase tracking-widest text-bardo-accent/70 mb-1">
+                                    {statsConfig.roleLabel}
+                                </div>
+                            )}
                             <div className="text-lg font-bold text-bardo-accent tracking-wide">
                                 {playerName}
                             </div>

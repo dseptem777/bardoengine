@@ -535,6 +535,7 @@ function AppContent({ onStorySelect }) {
                     continueLabel={continueLabel}
                     onOptions={() => setOptionsOpen(true)}
                     onToggleHistory={() => setHistoryOpen(prev => !prev)}
+                    gameTitle={getGameTitle()}
                     // Settings
                     typewriterDelay={getTypewriterDelay()}
                     fontSize={settings.fontSize}
@@ -611,8 +612,8 @@ function AppContent({ onStorySelect }) {
             <InputOverlay
                 isOpen={!!subsystems.input.pendingInput}
                 placeholder={subsystems.input.pendingInput?.placeholder}
+                label={subsystems.input.pendingInput?.label}
                 onCommit={subsystems.input.commitInput}
-                onCancel={() => { }} // Could implement a cancel that just resumes without setting var
             />
 
             {/* Debug Spawn Button */}

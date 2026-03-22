@@ -94,14 +94,12 @@ export default function StartScreen({
                         NUEVA PARTIDA
                     </MenuButton>
 
-                    {/* Continue - always visible, disabled if no save */}
-                    <MenuButton
-                        onClick={onContinue}
-                        secondary
-                        disabled={!hasContinue}
-                    >
-                        {hasContinue ? '✓ ' : ''}CONTINUAR
-                    </MenuButton>
+                    {/* Continue - only shown when a save exists */}
+                    {hasContinue && (
+                        <MenuButton onClick={onContinue} secondary>
+                            ✓ CONTINUAR
+                        </MenuButton>
+                    )}
 
                     {/* Load Game - only if any saves exist */}
                     {hasAnySave && (

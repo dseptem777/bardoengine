@@ -3,10 +3,11 @@ import React, { useState, useEffect, useRef } from 'react'
 export default function InputOverlay({
     isOpen,
     placeholder,
-    onCommit,
-    onCancel
+    label,
+    onCommit
 }) {
     const [value, setValue] = useState('')
+    const [warning, setWarning] = useState(false)
     const inputRef = useRef(null)
 
     useEffect(() => {
@@ -31,7 +32,8 @@ export default function InputOverlay({
 
     const handleKeyDown = (e) => {
         if (e.key === 'Escape') {
-            onCancel()
+            setWarning(true)
+            setTimeout(() => setWarning(false), 2500)
         }
     }
 
@@ -41,7 +43,7 @@ export default function InputOverlay({
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-2">
                         <label className="block font-mono text-bardo-accent text-xs tracking-widest uppercase opacity-70">
-                            Registro de Identidad
+                            {label || 'Registro de Identidad'}
                         </label>
                         <input
                             ref={inputRef}
@@ -56,9 +58,15 @@ export default function InputOverlay({
                     </div>
 
                     <div className="flex justify-between items-center pt-4">
-                        <p className="text-[10px] font-mono text-white/40 italic uppercase tracking-tighter">
-                            Presioná ENTER para confirmar
-                        </p>
+                        {warning ? (
+                            <p className="text-[10px] font-mono text-red-400 italic uppercase tracking-tighter animate-pulse">
+                                Necesitás ingresar un valor
+                            </p>
+                        ) : (
+                            <p className="text-[10px] font-mono text-white/40 italic uppercase tracking-tighter">
+                                Presioná ENTER para confirmar
+                            </p>
+                        )}
                         <button
                             type="submit"
                             disabled={!value.trim()}
