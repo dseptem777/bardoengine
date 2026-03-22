@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Trophy, Image, Music } from 'lucide-react'
+import { useModalA11y } from '../hooks/useModalA11y'
 import AchievementsPage from './extras/AchievementsPage'
 import GalleryPage from './extras/GalleryPage'
 import JukeboxPage from './extras/JukeboxPage'
@@ -47,6 +48,8 @@ export default function ExtrasMenu({
         onClose()
     }
 
+    const modalRef = useModalA11y(isOpen, handleClose)
+
     if (!isOpen) return null
 
     return (
@@ -58,6 +61,10 @@ export default function ExtrasMenu({
                 exit={{ opacity: 0 }}
             >
                 <motion.div
+                    ref={modalRef}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Extras"
                     className="w-full max-w-2xl h-[80vh] mx-4 p-6 border-[var(--ui-border-width)] border-bardo-accent/40 bg-bardo-bg overflow-hidden"
                     style={{ borderRadius: 'var(--ui-border-radius)' }}
                     initial={{ scale: 0.9, opacity: 0 }}

@@ -106,7 +106,12 @@ export default function QTEGame({ params = [], onFinish }) {
                     />
                 </svg>
 
-                <div className="z-10 bg-bardo-accent text-zinc-900 text-5xl font-black w-24 h-24 flex items-center justify-center rounded-lg shadow-lg">
+                <div
+                    className="z-10 bg-bardo-accent text-zinc-900 text-5xl font-black w-24 h-24 flex items-center justify-center rounded-lg shadow-lg cursor-pointer active:scale-95 transition-transform"
+                    onClick={() => gameState === 'playing' && finish(true)}
+                    role="button"
+                    aria-label={`Presionar ${targetKey}`}
+                >
                     {targetKey === 'SPACE' ? '⎵' : targetKey}
                 </div>
             </div>

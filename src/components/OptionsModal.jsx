@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Settings, Music, Keyboard, Accessibility, Monitor } from 'lucide-react'
 import { useSettings } from '../hooks/useSettings'
+import { useModalA11y } from '../hooks/useModalA11y'
 
 /**
  * OptionsModal - Settings modal with retro-futuristic styling
@@ -15,6 +16,7 @@ export default function OptionsModal({ isOpen, onClose }) {
         toggleFullscreen,
         resetSettings,
     } = useSettings()
+    const modalRef = useModalA11y(isOpen, onClose)
 
     return (
         <AnimatePresence>
@@ -33,6 +35,10 @@ export default function OptionsModal({ isOpen, onClose }) {
 
                     {/* Modal */}
                     <motion.div
+                        ref={modalRef}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Opciones"
                         className="relative bg-bardo-bg border-[var(--ui-border-width)] border-bardo-accent/50 p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto accent-box-shadow-30"
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}

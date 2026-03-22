@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Save, FolderOpen, Trash2 } from 'lucide-react'
+import { useModalA11y } from '../hooks/useModalA11y'
 
 /**
  * Generate a default save name with current date/time
@@ -33,6 +34,7 @@ export default function SaveLoadModal({
     const [activeTab, setActiveTab] = useState(initialMode) // Internal tab state
     const [deleteConfirmId, setDeleteConfirmId] = useState(null)
     const inputRef = useRef(null)
+    const modalRef = useModalA11y(isOpen, onClose)
 
     // Sync internal tab with prop when modal opens
     useEffect(() => {
@@ -106,6 +108,10 @@ export default function SaveLoadModal({
                 onClick={onClose}
             >
                 <motion.div
+                    ref={modalRef}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Guardar y cargar"
                     className="bg-bardo-bg border-[var(--ui-border-width)] border-bardo-accent/50 w-full max-w-md mx-4 overflow-hidden"
                     style={{ borderRadius: 'var(--ui-border-radius)' }}
                     initial={{ scale: 0.9, opacity: 0 }}

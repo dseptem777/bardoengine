@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { BookOpen } from 'lucide-react'
+import { useModalA11y } from '../hooks/useModalA11y'
 
 /**
  * HistoryLog - Modal component to display the narrative history (Bitácora)
@@ -11,6 +12,7 @@ import { BookOpen } from 'lucide-react'
  */
 const HistoryLog = ({ isOpen, history, onClose }) => {
     const scrollRef = useRef(null);
+    const modalRef = useModalA11y(isOpen, onClose);
 
     // Scroll to ~600px from bottom when opened, so user sees recent entries
     useEffect(() => {
@@ -29,6 +31,10 @@ const HistoryLog = ({ isOpen, history, onClose }) => {
             onClick={onClose}
         >
             <div
+                ref={modalRef}
+                role="dialog"
+                aria-modal="true"
+                aria-label="Bitácora"
                 className="w-full max-w-4xl max-h-[80vh] bg-bardo-bg border-[var(--ui-border-width)] border-bardo-accent flex flex-col shadow-[0_0_30px_rgba(0,0,0,0.5)] animate-in zoom-in-95 duration-300"
                 style={{ borderRadius: 'var(--ui-border-radius)' }}
                 onClick={(e) => e.stopPropagation()}

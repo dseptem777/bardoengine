@@ -29,6 +29,15 @@ export default function MinigameOverlay({
 
     const isImmersive = config && IMMERSIVE_TYPES.has(config.type?.toLowerCase())
 
+    // Allow any key press to dismiss result screen
+    const commitResultRef = useRef(null)
+    useEffect(() => {
+        if (!showingResult) return
+        const handleKey = () => { if (commitResultRef.current) commitResultRef.current(result) }
+        window.addEventListener('keydown', handleKey)
+        return () => window.removeEventListener('keydown', handleKey)
+    }, [showingResult, result])
+
     // Reset result state when a new game starts
     useEffect(() => {
         if (isPlaying) {
@@ -55,6 +64,7 @@ export default function MinigameOverlay({
         setResult(null)
         onFinish(finalResult)
     }
+    commitResultRef.current = commitResult
 
     const handleGameFinish = (outcome) => {
         const numericResult = (outcome === true || outcome === 1) ? 1 : 0
@@ -161,7 +171,7 @@ export default function MinigameOverlay({
                                 </motion.h2>
                                 <div className="h-0.5 w-32 bg-bardo-accent/40 mb-4" />
                                 <p className="text-gray-500 font-mono text-sm animate-pulse">
-                                    Toca para continuar...
+                                    Tocá o presioná una tecla...
                                 </p>
                             </motion.div>
                         )}
