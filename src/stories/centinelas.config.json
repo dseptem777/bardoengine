@@ -179,5 +179,60 @@
             "icon": "🪷",
             "category": "items"
         }
+    },
+    "achievements": [
+        {
+            "id": "centinela_magica",
+            "title": "La Chispa",
+            "description": "Elegiste despertar con el poder de la magia.",
+            "icon": "✨"
+        },
+        {
+            "id": "centinela_combate",
+            "title": "Pura Adrenalina",
+            "description": "Elegiste despertar en medio del combate.",
+            "icon": "⚡"
+        },
+        {
+            "id": "centinela_conocimiento",
+            "title": "La Obsesión",
+            "description": "Elegiste despertar buscando conocimiento prohibido.",
+            "icon": "📚"
+        },
+        {
+            "id": "primer_caso",
+            "title": "Un Cadáver Sin Nombre",
+            "description": "Completaste el Capítulo 0 y comenzaste tu primera investigación.",
+            "icon": "🔍"
+        },
+        {
+            "id": "nuevo_amanecer",
+            "title": "El Nuevo Amanecer",
+            "description": "Alcanzaste el Capítulo 2B — El Nuevo Amanecer.",
+            "icon": "🌅"
+        }
+    ],
+    "extras": {
+        "jukebox": [
+            { "id": "misterio_ambient", "title": "Misterio", "unlockedBy": null },
+            { "id": "city_ambient", "title": "Ciudad Nocturna", "unlockedBy": null },
+            { "id": "city_ambient_b", "title": "Ciudad Nocturna II", "unlockedBy": null },
+            { "id": "escuela_ambient", "title": "Escuela", "unlockedBy": null },
+            { "id": "escuela_ambient_b", "title": "Escuela II", "unlockedBy": null },
+            { "id": "escuela_ambient_c", "title": "Escuela III", "unlockedBy": null },
+            { "id": "horror_ambient", "title": "Tensión", "unlockedBy": null },
+            { "id": "horror_ambient_b", "title": "Tensión II", "unlockedBy": null },
+            { "id": "playa_ambient", "title": "Playa", "unlockedBy": null },
+            { "id": "playa_ambient_b", "title": "Playa II", "unlockedBy": null },
+            { "id": "supermarket_muzak", "title": "Supermercado", "unlockedBy": null },
+            { "id": "rave_electronic", "title": "Rave Electrónico", "unlockedBy": null },
+            { "id": "tension_drone", "title": "Tensión Profunda", "unlockedBy": null },
+            { "id": "morning_hangover", "title": "La Resaca", "unlockedBy": null },
+            { "id": "crank_up", "title": "Crank Up", "unlockedBy": null },
+            { "id": "crank_up_b", "title": "Crank Up II", "unlockedBy": null },
+            { "id": "terror_ambient", "title": "Terror", "unlockedBy": "primer_caso" },
+            { "id": "terror_ambient_b", "title": "Terror II", "unlockedBy": "primer_caso" },
+            { "id": "victory_fanfare", "title": "Himno de la Victoria", "unlockedBy": "nuevo_amanecer" }
+        ]
     }
 }

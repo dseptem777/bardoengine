@@ -76,6 +76,7 @@ VAR minigame_result = -1
 
 === origen_magia ===
 # music:escuela_ambient
+# achievement:unlock:centinela_magica
 El reloj nunca se movió tan rápido. Y eso que estaba en clase de matemática con el Profesor Schmit, que siempre se convertía en un torneo de bostezos y ronquidos.
 
 Jorge había prometido que me iba a esperar después de clase para matarme a golpes, desde principio de año venía haciéndome la vida imposible pero esta vez sus palabras habían tenido una entonación especial. Filosas.
@@ -182,6 +183,7 @@ El Faro me había encontrado.
 
 === origen_combate ===
 # music:horror_ambient
+# achievement:unlock:centinela_combate
 Mierda. Mierda. Mierda. La manija de la puerta se resbalaba en mi mano. Escucho a alguien llorar en el piso de arriba de la cabaña y yo no puedo abrir la puta puerta.
 
 Me miro las manos. Están húmedas. Sangre. ¿De quién es esta sangre? ¿Miguel? ¿Claudia?
@@ -276,6 +278,7 @@ Me levanté con una misión. Yo sería quien llegaría siempre una hora antes.
 
 === origen_conocimiento ===
 # music:misterio_ambient
+# achievement:unlock:centinela_conocimiento
 \- No sé si me siento cómodo robando un libro.
 
 \- No lo pienses tanto como que lo estamos robando, prefiero decir que lo estamos liberando – dijo Julieta mientras su sonrisa dejaba ver los hoyuelos que me metieron en tantos problemas.
@@ -525,6 +528,7 @@ Te queda un poco de tiempo para tu siguiente misión. Tal vez podés hacer algo 
 === capitulo_1 ===
 ~ capitulo_actual = "Cap. 1 — Un cadáver sin nombre"
 # inv:clear_mission
+# achievement:unlock:primer_caso
 # music:misterio_ambient
 La sede de "El Faro" estaba en el fondo de un predio universitario. A esa hora de la noche era un mundo aparte. A lo lejos se escuchaban los ruidos de algunos universitarios, festejando haber aprobado alguna materia o pensando a qué fiesta ir más tarde.
 
@@ -2195,6 +2199,7 @@ FIN DEL EPISODIO.
 === capitulo_2b ===
 ~ capitulo_actual = "Cap. 2 — El nuevo amanecer"
 # inv:clear_mission
+# achievement:unlock:nuevo_amanecer
 # music:city_ambient
 Te encontrás en uno de los barrios periféricos de Costa Alegre. A esta distancia el viento ya no trae el ruido de mar ni el olor a sal. Tranquilamente podrías estar en cualquier lugar de la Provincia. Es un barrio tranquilo, de veredas amplias, calles protegidas por las sombras de grandes árboles y poco tráfico.
 # next
