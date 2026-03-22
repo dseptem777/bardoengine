@@ -28,6 +28,7 @@ const ChoiceButton = forwardRef(function ChoiceButton({
     const [clicksRemaining, setClicksRemaining] = useState(0)
     const [totalClicks, setTotalClicks] = useState(0)
     const [isStruggling, setIsStruggling] = useState(false)
+    const [showHint, setShowHint] = useState(false)
     const clicksRemainingRef = useRef(0)
     const choiceProcessedRef = useRef(false) // Prevent double submit
 
@@ -75,6 +76,11 @@ const ChoiceButton = forwardRef(function ChoiceButton({
         if (clicksRemainingRef.current > 0) {
             clicksRemainingRef.current -= 1
             setClicksRemaining(clicksRemainingRef.current)
+
+            // Show hint on first resistance click
+            if (!showHint && clicksRemainingRef.current === totalClicks - 1) {
+                setShowHint(true)
+            }
 
             triggerStruggle()
 
@@ -196,6 +202,11 @@ const ChoiceButton = forwardRef(function ChoiceButton({
 
                 {hasResistance && (
                     <div className="ml-3 flex items-center gap-1">
+                        {showHint && clicksRemaining > 0 && (
+                            <span className="text-red-400/70 text-xs mr-2 animate-pulse">
+                                Seguí haciendo click
+                            </span>
+                        )}
                         <div className="flex gap-0.5">
                             {Array.from({ length: Math.min(totalClicks, 8) }).map((_, i) => (
                                 <div

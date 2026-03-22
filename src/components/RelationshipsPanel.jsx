@@ -134,6 +134,13 @@ export default function RelationshipsPanel({
                             <h3 className="text-bardo-accent font-bold flex items-center gap-2">
                                 <span>❤️</span> RELACIONES
                             </h3>
+                            <button
+                                onClick={handleToggle}
+                                className="text-gray-500 hover:text-white transition-colors text-lg leading-none"
+                                aria-label="Cerrar"
+                            >
+                                ×
+                            </button>
                         </div>
 
                         <div className="p-3 max-h-[calc(60vh-60px)] overflow-y-auto space-y-3">

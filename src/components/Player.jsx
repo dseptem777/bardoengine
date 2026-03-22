@@ -306,11 +306,11 @@ export default function Player({
                     {/* Left side: title + mobile header stats */}
                     <div className="flex items-center gap-3 min-w-0">
                         <h1
-                            className="text-bardo-accent text-sm tracking-wider shrink-0"
+                            className={`text-bardo-accent text-sm tracking-wider shrink-0 ${isMobile ? 'max-w-[8rem] truncate' : ''}`}
                             style={{ fontFamily: 'var(--bardo-font-mono)' }}
                         >
                             {gameTitle
-                                ? (isMobile ? gameTitle.split(' ')[0] : gameTitle)
+                                ? gameTitle
                                 : (isMobile ? 'BARDO' : `BARDO ENGINE v${engineVersion}`)
                             }
                         </h1>

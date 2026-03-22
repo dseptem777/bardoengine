@@ -185,7 +185,7 @@ export default function SaveLoadModal({
                         {saves.length > 0 ? (
                             <div className="space-y-2">
                                 {activeTab === 'save' && saves.length > 0 && (
-                                    <p className="text-gray-500 text-sm mb-2">O sobrescribir:</p>
+                                    <p className="text-orange-400/70 text-sm mb-2 font-medium">O sobrescribir una partida existente:</p>
                                 )}
                                 {saves.map(save => (
                                     <motion.div

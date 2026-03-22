@@ -13,6 +13,7 @@ export interface UseStoryStateReturn {
     text: string;
     choices: any[];
     canContinue: boolean;
+    continueLabel: string | null;
     isEnded: boolean;
     history: StoryHistoryEntry[];
     currentTags: string[];

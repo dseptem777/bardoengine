@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Settings, Music, Keyboard, Accessibility, Monitor } from 'lucide-react'
 import { useSettings } from '../hooks/useSettings'
@@ -17,6 +17,23 @@ export default function OptionsModal({ isOpen, onClose }) {
         resetSettings,
     } = useSettings()
     const modalRef = useModalA11y(isOpen, onClose)
+    const [resetConfirm, setResetConfirm] = useState(false)
+
+    // Auto-revert confirmation after 3 seconds
+    useEffect(() => {
+        if (!resetConfirm) return
+        const tid = setTimeout(() => setResetConfirm(false), 3000)
+        return () => clearTimeout(tid)
+    }, [resetConfirm])
+
+    const handleReset = useCallback(() => {
+        if (resetConfirm) {
+            resetSettings()
+            setResetConfirm(false)
+        } else {
+            setResetConfirm(true)
+        }
+    }, [resetConfirm, resetSettings])
 
     return (
         <AnimatePresence>
@@ -78,7 +95,7 @@ export default function OptionsModal({ isOpen, onClose }) {
                                 onChange={(v) => updateSetting('typewriterSpeed', v)}
                                 min={0}
                                 max={5}
-                                labels={['Instantáneo', '', '', '', '', 'Muy Rápido']}
+                                labels={['Instantáneo', '', '', '', '', 'Lento']}
                             />
                             <ToggleSetting
                                 label="Auto-avance"
@@ -122,10 +139,14 @@ export default function OptionsModal({ isOpen, onClose }) {
                         {/* Actions */}
                         <div className="flex gap-4 mt-6">
                             <button
-                                onClick={resetSettings}
-                                className="flex-1 py-3 px-4 border border-gray-600 text-gray-400 hover:border-red-500 hover:text-red-500 transition-colors font-bold tracking-wider"
+                                onClick={handleReset}
+                                className={`flex-1 py-3 px-4 border font-bold tracking-wider transition-colors ${
+                                    resetConfirm
+                                        ? 'border-red-500 text-red-500 hover:bg-red-500 hover:text-black'
+                                        : 'border-gray-600 text-gray-400 hover:border-red-500 hover:text-red-500'
+                                }`}
                             >
-                                RESET
+                                {resetConfirm ? 'CONFIRMAR?' : 'RESET'}
                             </button>
                             <button
                                 onClick={onClose}

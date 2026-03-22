@@ -209,7 +209,7 @@ export default function TextDisplay({
 
     return (
         <div
-            className="relative select-none cursor-pointer space-y-6"
+            className="relative cursor-default space-y-6"
             style={{
                 textAlign: 'var(--player-text-align, left)',
                 fontFamily: 'var(--bardo-font-main)'
