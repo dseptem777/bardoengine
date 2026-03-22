@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 
 export interface StatDefinition {
     id: string;
@@ -50,13 +50,15 @@ export function useStats(config: GameConfigWithStats | null) {
     }, [statsConfig])
 
     const [stats, setStats] = useState<Record<string, number>>(getInitialStats)
-    const [prevStatsConfig, setPrevStatsConfig] = useState(statsConfig)
+    const prevStatsConfigRef = useRef(statsConfig)
 
-    // Reset stats when config changes (during render to avoid extra pass)
-    if (statsConfig !== prevStatsConfig) {
-        setPrevStatsConfig(statsConfig)
-        setStats(getInitialStats())
-    }
+    // Reset stats when config changes
+    useEffect(() => {
+        if (statsConfig !== prevStatsConfigRef.current) {
+            prevStatsConfigRef.current = statsConfig
+            setStats(getInitialStats())
+        }
+    }, [statsConfig, getInitialStats])
 
     /**
      * Modify a stat by delta (add or subtract)

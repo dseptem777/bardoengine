@@ -66,7 +66,7 @@ export default function ForcedClickOverlay({
         }
     }, [active, targetSelector])
 
-    // Targeting Logic
+    // Targeting Logic — uses MutationObserver instead of 50ms polling
     useEffect(() => {
         if (!active || phase === 'idle' || phase === 'done') return
 
@@ -76,44 +76,76 @@ export default function ForcedClickOverlay({
             moveTimeout = setTimeout(() => setPhase('moving'), 1200)
         }
 
-        // 2. Continuous seeking
-        const ticker = setInterval(() => {
-            const targetEl = document.querySelector(targetSelector)
+        // Validate selector to prevent querySelector injection
+        if (targetSelector && !/^[a-zA-Z0-9_.#\-\s[\]=":>+~*]+$/.test(targetSelector)) {
+            console.warn('[ForcedClick] Invalid target selector:', targetSelector)
+            return () => { if (moveTimeout) clearTimeout(moveTimeout) }
+        }
 
-            if (targetEl) {
-                const rect = targetEl.getBoundingClientRect()
-                if (rect.width > 0 && rect.height > 0) {
-                    setTargetPosition({
-                        x: rect.left + rect.width / 2,
-                        y: rect.top + rect.height / 2
-                    })
+        let resizeObserver = null
+        let foundRef = false
 
-                    if (!hasFoundTarget) {
-                        setHasFoundTarget(true)
-                        targetEl.classList.add('forced-target-lock')
-                        console.log('[ForcedClick] Specific button locked')
-                    }
-                    return
+        const updateTargetFromElement = (el) => {
+            const rect = el.getBoundingClientRect()
+            if (rect.width > 0 && rect.height > 0) {
+                setTargetPosition({
+                    x: rect.left + rect.width / 2,
+                    y: rect.top + rect.height / 2
+                })
+                if (!foundRef) {
+                    foundRef = true
+                    setHasFoundTarget(true)
+                    el.classList.add('forced-target-lock')
+                    console.log('[ForcedClick] Specific button locked')
                 }
+                return true
+            }
+            return false
+        }
+
+        const tryFindTarget = () => {
+            const targetEl = document.querySelector(targetSelector)
+            if (targetEl && updateTargetFromElement(targetEl)) {
+                // Watch for layout shifts on the found element
+                resizeObserver = new ResizeObserver(() => updateTargetFromElement(targetEl))
+                resizeObserver.observe(targetEl)
+                return true
             }
 
-            // Fallback while waiting: Move towards the general choice area
+            // Fallback: move towards the general choice area
             const container = document.querySelector('.choice-container')
-            if (container && phase === 'moving' && !hasFoundTarget) {
+            if (container && phase === 'moving') {
                 const rect = container.getBoundingClientRect()
                 setTargetPosition({
                     x: rect.left + rect.width / 2,
-                    y: rect.top + rect.height / 2 + 50 // Slightly below to look intentional
+                    y: rect.top + rect.height / 2 + 50
                 })
-            } else if (phase === 'moving' && !hasFoundTarget) {
-                // Last resort fallback
+            } else if (phase === 'moving') {
                 setTargetPosition({ x: window.innerWidth / 2, y: window.innerHeight * 0.85 })
             }
-        }, 50)
+            return false
+        }
+
+        // Try immediately
+        if (!tryFindTarget()) {
+            // Watch for DOM changes until target appears
+            const observer = new MutationObserver(() => {
+                if (tryFindTarget()) {
+                    observer.disconnect()
+                }
+            })
+            observer.observe(document.body, { childList: true, subtree: true })
+
+            return () => {
+                if (moveTimeout) clearTimeout(moveTimeout)
+                observer.disconnect()
+                if (resizeObserver) resizeObserver.disconnect()
+            }
+        }
 
         return () => {
             if (moveTimeout) clearTimeout(moveTimeout)
-            clearInterval(ticker)
+            if (resizeObserver) resizeObserver.disconnect()
         }
     }, [active, phase, targetSelector])
 

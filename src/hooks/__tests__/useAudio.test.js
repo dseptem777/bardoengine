@@ -67,21 +67,19 @@ describe('useAudio', () => {
     })
 
     describe('playSfx', () => {
-        it('should warn for unknown SFX', () => {
-            const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => { })
+        it('should create Howl instance for any SFX id (dynamic path resolution)', () => {
             const { result } = renderHook(() => useAudio())
 
             act(() => {
-                result.current.playSfx('nonexistent_sfx')
+                result.current.playSfx('any_sound')
             })
 
-            expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Unknown SFX ID'))
-            warnSpy.mockRestore()
+            // Dynamic resolution: any ID maps to /sounds/{id}.mp3
+            // Howl's onloaderror handles missing files gracefully
+            expect(Howl).toHaveBeenCalledWith(
+                expect.objectContaining({ src: ['/sounds/any_sound.mp3'] })
+            )
         })
-
-        // Note: Testing actual playback of known SFX requires the Howl constructor,
-        // which is complex to mock properly due to how Vitest handles ES module mocks.
-        // The important behavior (warning on unknown SFX) is tested above.
         // Manual testing confirms playSfx works correctly with real audio files.
     })
 

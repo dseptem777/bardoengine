@@ -131,17 +131,7 @@ export function useGameSystems(storyId: string) {
             }
         }
 
-        // Handle minigame tags: #minigame:name:param1:param2
-        if (trimmedTag.startsWith('minigame:')) {
-            const parts = trimmedTag.split(':')
-            if (parts.length >= 2) {
-                const name = parts[1]
-                const params = parts.slice(2)
-
-                // Return a special object that the caller (App.jsx) should handle
-                return { type: 'minigame', name, params }
-            }
-        }
+        // Minigame tags are handled by useTagProcessor, not here
 
         return false
     }, [statsHook, inventoryHook])

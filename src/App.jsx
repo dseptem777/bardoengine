@@ -98,7 +98,11 @@ function AppContent({ onStorySelect }) {
         setDevStoryList(prev => {
             const filtered = prev.filter(s => s.id !== id)
             const next = [...filtered, entry]
-            localStorage.setItem('bardo_dev_stories', JSON.stringify(next))
+            try {
+                localStorage.setItem('bardo_dev_stories', JSON.stringify(next))
+            } catch (e) {
+                console.error('[App] localStorage quota exceeded — story too large to persist:', e)
+            }
             return next
         })
     }, [])

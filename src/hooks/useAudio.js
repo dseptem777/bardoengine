@@ -1,45 +1,10 @@
 import { useCallback, useRef, useEffect, useMemo } from 'react'
 import { Howl, Howler } from 'howler'
 
-// ============================================
-// SFX REGISTRY - Short one-shot sound effects
-// ============================================
-const SOUNDS = {
-    // Serruchín SFX
-    serrucho: '/sounds/serrucho.mp3',
-    serrucho_hueso: '/sounds/serrucho_hueso.mp3',
-    grito: '/sounds/grito.mp3',
-    carne: '/sounds/carne.mp3',
-
-    // Shared SFX
-    victory: '/sounds/victory.mp3',
-
-    // Partuza SFX
-    resaca: '/sounds/resaca.mp3',
-    paparazzi: '/sounds/paparazzi.mp3',
-    super_ambience: '/sounds/super_ambience.mp3',
-    disco: '/sounds/disco.mp3',
-    sirena_poli: '/sounds/sirena_poli.mp3',
-    invitacion: '/sounds/invitacion.mp3',
-}
-
-// ============================================
-// MUSIC REGISTRY - Looping background tracks
-// ============================================
-const MUSIC = {
-    // Serruchín tracks
-    horror_ambient: '/music/horror_ambient.mp3',
-    tension_drone: '/music/tension_drone.mp3',
-
-    // Partuza tracks
-    morning_hangover: '/music/morning_hangover.mp3',
-    supermarket_muzak: '/music/supermarket_muzak.mp3',
-    rave_electronic: '/music/rave_electronic.mp3',
-
-    // Shared/Generic
-    victory_fanfare: '/music/victory_fanfare.mp3',
-    game_over: '/music/game_over.mp3',
-}
+// Audio paths are resolved dynamically from the ID:
+// SFX: /sounds/{id}.mp3
+// Music: /music/{id}.mp3
+// No hardcoded registry needed — just place .mp3 files in public/sounds/ or public/music/
 
 // Default volumes (used as fallback)
 const DEFAULT_SFX_VOLUME = 0.7
@@ -132,18 +97,15 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
     const playSfx = useCallback((id) => {
         console.log(`[Audio] Play SFX: ${id}`)
 
-        if (!SOUNDS[id]) {
-            console.warn(`[Audio] Unknown SFX ID: ${id}`)
-            return
-        }
+        const sfxSrc = `/sounds/${id}.mp3`
 
         // Lazy-load: create Howl instance on first play
         if (!soundsRef.current[id]) {
             soundsRef.current[id] = new Howl({
-                src: [SOUNDS[id]],
+                src: [sfxSrc],
                 volume: sfxVolumeRef.current,
                 onloaderror: (soundId, error) => {
-                    console.error(`[Audio] Failed to load SFX ${id}:`, error)
+                    console.warn(`[Audio] Failed to load SFX ${id}:`, error)
                 },
                 onplayerror: (soundId, error) => {
                     console.error(`[Audio] Failed to play SFX ${id}:`, error)
@@ -184,7 +146,7 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
             pendingMusicRef.current = null
         }
 
-        const musicSrc = MUSIC[id] || `/music/${id}.mp3`
+        const musicSrc = `/music/${id}.mp3`
 
         // Create new music instance — only kill old track once new one loads
         const newMusic = new Howl({

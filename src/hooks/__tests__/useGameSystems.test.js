@@ -288,7 +288,7 @@ describe('useGameSystems', () => {
     })
 
     describe('minigame tag detection', () => {
-        it('should return minigame object for minigame tags', async () => {
+        it('should not handle minigame tags (handled by useTagProcessor)', async () => {
             const { result } = renderHook(() => useGameSystems('test'))
 
             await waitFor(() => expect(result.current.configLoaded).toBe(true))
@@ -298,11 +298,8 @@ describe('useGameSystems', () => {
                 tagResult = result.current.processGameTag('minigame:qte:SPACE:2')
             })
 
-            expect(tagResult).toMatchObject({
-                type: 'minigame',
-                name: 'qte',
-                params: ['SPACE', '2']
-            })
+            // Minigame tags are handled by useTagProcessor, not useGameSystems
+            expect(tagResult).toBe(false)
         })
     })
 
