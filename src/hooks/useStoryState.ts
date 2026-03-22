@@ -49,6 +49,7 @@ export function useStoryState(): UseStoryStateReturn {
     // Helper to process story continuation until a stop condition
     const processStoryLoop = useCallback((currentStory: Story) => {
         let fullText = ""
+        let hasCriticalError = false
         const allTags: string[] = []
         setContinueLabel(null)
 
@@ -84,7 +85,8 @@ export function useStoryState(): UseStoryStateReturn {
             }
         } catch (e) {
             console.error("[StoryState] Ink Runtime Error during processing:", e)
-            fullText += "\n\n[System Error: The story encountered a critical error and cannot continue.]"
+            fullText += "\n\n[Error: La historia encontró un error crítico.]"
+            hasCriticalError = true
         }
 
         const trimmedText = fullText.trim()
@@ -93,9 +95,9 @@ export function useStoryState(): UseStoryStateReturn {
 
         // Update state
         setText(trimmedText)
-        setChoices([...currentStory.currentChoices])
-        setCanContinue(currentStory.canContinue)
-        setIsEnded(!currentStory.canContinue && currentStory.currentChoices.length === 0)
+        setChoices(hasCriticalError ? [] : [...currentStory.currentChoices])
+        setCanContinue(hasCriticalError ? false : currentStory.canContinue)
+        setIsEnded(hasCriticalError || (!currentStory.canContinue && currentStory.currentChoices.length === 0))
         setCurrentTags(allTags)
 
         // Add to history if there is text

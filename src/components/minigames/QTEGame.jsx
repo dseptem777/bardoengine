@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, useAnimation } from 'framer-motion'
 
 export default function QTEGame({ params = [], onFinish }) {
@@ -8,6 +8,7 @@ export default function QTEGame({ params = [], onFinish }) {
     const [timeLeft, setTimeLeft] = useState(duration)
     const [gameState, setGameState] = useState('ready') // ready, go, playing, win, lose
     const [readyCountdown, setReadyCountdown] = useState(2)
+    const expiredRef = useRef(false)
 
     const finish = useCallback((success) => {
         setGameState(success ? 'win' : 'lose')
@@ -44,7 +45,7 @@ export default function QTEGame({ params = [], onFinish }) {
             setTimeLeft(prev => {
                 if (prev <= 0.05) {
                     clearInterval(timer)
-                    finish(false)
+                    expiredRef.current = true
                     return 0
                 }
                 return prev - 0.05
@@ -65,6 +66,14 @@ export default function QTEGame({ params = [], onFinish }) {
             window.removeEventListener('keydown', handleKeyDown)
         }
     }, [gameState, targetKey, finish])
+
+    // Fire finish outside state updater (safe for StrictMode)
+    useEffect(() => {
+        if (expiredRef.current && gameState === 'playing') {
+            expiredRef.current = false
+            finish(false)
+        }
+    }, [timeLeft, gameState, finish])
 
     const progress = (timeLeft / duration) * 100
 

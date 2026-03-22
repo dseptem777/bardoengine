@@ -345,7 +345,8 @@ export default function Player({
                         {onSave && (
                             <button
                                 onClick={onSave}
-                                className="flex items-center gap-1.5 font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
+                                disabled={isMinigameActive}
+                                className={`flex items-center gap-1.5 font-mono text-sm transition-colors ${isMinigameActive ? 'text-neutral-600 cursor-not-allowed' : 'text-bardo-muted hover:text-bardo-accent'}`}
                             >
                                 <Save size={14} />
                                 {!isMobile && 'GUARDAR/CARGAR'}

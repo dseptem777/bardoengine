@@ -121,6 +121,13 @@ function AppContent({ onStorySelect }) {
         ? stories[0].id
         : selectedStory?.id
 
+    // Sync currentStoryId to parent (for SettingsProvider)
+    useEffect(() => {
+        if (onStorySelect && currentStoryId) {
+            onStorySelect(currentStoryId)
+        }
+    }, [currentStoryId, onStorySelect])
+
     // Get current story data
     const getCurrentStoryData = () => {
         if (isProductionMode && stories.length > 0) return stories[0]
@@ -682,16 +689,8 @@ function AppContent({ onStorySelect }) {
 function App() {
     const [selectedStoryId, setSelectedStoryId] = useState(null)
 
-    const { stories, isLoading, isProductionMode } = useStoryLoader({
-        devStories: DEV_STORIES
-    })
-
-    const currentStoryId = isProductionMode && stories.length > 0
-        ? stories[0].id
-        : selectedStoryId
-
     return (
-        <SettingsProvider storyId={currentStoryId}>
+        <SettingsProvider storyId={selectedStoryId}>
             <AppContent
                 onStorySelect={setSelectedStoryId}
                 selectedStoryId={selectedStoryId}

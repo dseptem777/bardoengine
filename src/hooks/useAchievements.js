@@ -16,6 +16,7 @@ export function useAchievements(gameId, rawDefinitions = []) {
 
     const storageKey = gameId ? `bardo_achievements_${gameId}` : null
     const prevStorageKey = useRef(null)
+    const initialDataRef = useRef(null)
 
     // Load unlocked achievements from localStorage
     const loadUnlocked = useCallback(() => {
@@ -39,8 +40,12 @@ export function useAchievements(gameId, rawDefinitions = []) {
         return { unlockedIds: [], hasCompletedGame: false }
     }, [storageKey])
 
-    const [unlockedIds, setUnlockedIds] = useState(() => loadUnlocked().unlockedIds)
-    const [hasCompletedGame, setHasCompletedGame] = useState(() => loadUnlocked().hasCompletedGame)
+    const [unlockedIds, setUnlockedIds] = useState(() => {
+        const initial = loadUnlocked()
+        initialDataRef.current = initial
+        return initial.unlockedIds
+    })
+    const [hasCompletedGame, setHasCompletedGame] = useState(() => initialDataRef.current.hasCompletedGame)
     const [pendingToast, setPendingToast] = useState(null)
 
     // Reload when storageKey changes (game switch)
