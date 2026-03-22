@@ -157,11 +157,20 @@ export default function InventoryPanel({
                         {/* Header */}
                         <div className="flex items-center justify-between p-3 border-b border-bardo-accent/20">
                             <h3 className="text-bardo-accent font-bold flex items-center gap-2">
-                                <span>🎒</span> INVENTARIO
+                                <Backpack size={16} /> INVENTARIO
                             </h3>
-                            <span className="text-xs text-gray-500">
-                                {itemCount}/{inventoryConfig.maxSlots}
-                            </span>
+                            <div className="flex items-center gap-3">
+                                <span className="text-xs text-gray-500">
+                                    {itemCount}/{inventoryConfig.maxSlots}
+                                </span>
+                                <button
+                                    onClick={handleToggle}
+                                    className="text-gray-400 hover:text-white text-lg leading-none"
+                                    aria-label="Cerrar inventario"
+                                >
+                                    ✕
+                                </button>
+                            </div>
                         </div>
 
                         {/* Items List */}

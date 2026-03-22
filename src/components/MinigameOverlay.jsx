@@ -50,12 +50,12 @@ export default function MinigameOverlay({
             setResult(numericResult)
             setShowingResult(true)
 
-            // Brief result display, then commit
+            // Result display — auto-dismiss after 1500ms
             setTimeout(() => {
                 setShowingResult(false)
                 setResult(null)
                 onFinish(numericResult)
-            }, 800)
+            }, 1500)
         } else {
             // Immediate commit, no result screen
             onFinish(numericResult)
@@ -130,10 +130,15 @@ export default function MinigameOverlay({
                         {/* Result Screen */}
                         {showingResult && (
                             <motion.div
-                                className="flex flex-col items-center justify-center py-16 bg-bardo-bg/95 border-[var(--ui-border-width)] border-bardo-accent/50 shadow-2xl shadow-bardo-accent/20"
+                                className="flex flex-col items-center justify-center py-16 bg-bardo-bg/95 border-[var(--ui-border-width)] border-bardo-accent/50 shadow-2xl shadow-bardo-accent/20 cursor-pointer"
                                 style={{ borderRadius: 'var(--ui-border-radius)' }}
                                 initial={{ opacity: 0, scale: 0.8 }}
                                 animate={{ opacity: 1, scale: 1 }}
+                                onClick={() => {
+                                    setShowingResult(false)
+                                    setResult(null)
+                                    onFinish(result)
+                                }}
                             >
                                 <motion.h2
                                     className={`text-5xl font-black tracking-tight mb-2 ${result === 1 ? 'text-bardo-accent' : 'text-red-500'
@@ -145,7 +150,7 @@ export default function MinigameOverlay({
                                 </motion.h2>
                                 <div className="h-0.5 w-32 bg-bardo-accent/40 mb-4" />
                                 <p className="text-gray-500 font-mono text-sm animate-pulse">
-                                    Continuando...
+                                    Toca para continuar...
                                 </p>
                             </motion.div>
                         )}

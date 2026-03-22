@@ -178,7 +178,7 @@ describe('MinigameOverlay', () => {
             screen.getByText('Lose').click()
 
             act(() => {
-                vi.advanceTimersByTime(800)
+                vi.advanceTimersByTime(1500)
             })
 
             expect(onFinish).toHaveBeenCalledWith(0)
@@ -200,7 +200,7 @@ describe('MinigameOverlay', () => {
             screen.getByText('Win').click()
 
             act(() => {
-                vi.advanceTimersByTime(800)
+                vi.advanceTimersByTime(1500)
             })
 
             expect(onFinish).toHaveBeenCalledWith(1)
