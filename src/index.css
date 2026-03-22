@@ -123,8 +123,37 @@ input[type='range']::-moz-range-thumb {
 }
 
 .glow-hover:hover {
+  /* fallback for browsers without color-mix support */
+  box-shadow: 0 0 20px rgba(250, 204, 21, 0.4), 0 0 40px rgba(250, 204, 21, 0.2);
   box-shadow: 0 0 20px color-mix(in srgb, var(--bardo-accent) 40%, transparent),
     0 0 40px color-mix(in srgb, var(--bardo-accent) 20%, transparent);
+}
+
+/* Accent glow utilities — CSS cascade provides rgba fallback for older browsers */
+.accent-drop-shadow-50 {
+  filter: drop-shadow(0 0 20px rgba(250, 204, 21, 0.5));
+  filter: drop-shadow(0 0 20px color-mix(in srgb, var(--bardo-accent) 50%, transparent));
+}
+
+.accent-text-shadow-50 {
+  text-shadow: 0 0 20px rgba(250, 204, 21, 0.5);
+  text-shadow: 0 0 20px color-mix(in srgb, var(--bardo-accent) 50%, transparent);
+}
+
+.accent-text-shadow-title {
+  text-shadow: 0 0 40px rgba(250, 204, 21, 0.6), 0 0 80px rgba(250, 204, 21, 0.3);
+  text-shadow: 0 0 40px color-mix(in srgb, var(--bardo-accent) 60%, transparent),
+               0 0 80px color-mix(in srgb, var(--bardo-accent) 30%, transparent);
+}
+
+.accent-box-shadow-30 {
+  box-shadow: 0 0 30px rgba(250, 204, 21, 0.3);
+  box-shadow: 0 0 30px color-mix(in srgb, var(--bardo-accent) 30%, transparent);
+}
+
+.accent-box-shadow-40 {
+  box-shadow: 0 0 20px rgba(250, 204, 21, 0.4);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--bardo-accent) 40%, transparent);
 }
 
 /* ============================================

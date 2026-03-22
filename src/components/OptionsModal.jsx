@@ -33,13 +33,12 @@ export default function OptionsModal({ isOpen, onClose }) {
 
                     {/* Modal */}
                     <motion.div
-                        className="relative bg-bardo-bg border-[var(--ui-border-width)] border-bardo-accent/50 p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto"
+                        className="relative bg-bardo-bg border-[var(--ui-border-width)] border-bardo-accent/50 p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto accent-box-shadow-30"
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
                         style={{
                             borderRadius: 'var(--ui-border-radius)',
-                            boxShadow: '0 0 30px color-mix(in srgb, var(--bardo-accent) 30%, transparent)',
                         }}
                     >
                         {/* Header */}

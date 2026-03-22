@@ -82,7 +82,7 @@ export default function StartScreen({
                     className={`text-5xl md:text-7xl font-bold text-bardo-accent tracking-wider text-center transition-all duration-500 ${cheatActivated ? 'scale-105' : ''}`}
                     style={{ textShadow: cheatActivated
                         ? '0 0 60px var(--bardo-accent), 0 0 120px var(--bardo-accent)'
-                        : '0 0 30px color-mix(in srgb, var(--bardo-accent) 50%, transparent)'
+                        : '0 0 30px rgba(250, 204, 21, 0.5)'
                     }}
                 >
                     {gameTitle}

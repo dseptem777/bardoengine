@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Image } from 'lucide-react'
 
 /**
  * GalleryPage - Grid of unlockable artwork/images
@@ -11,6 +12,7 @@ export default function GalleryPage({
     onBack
 }) {
     const [selectedImage, setSelectedImage] = useState(null)
+    const [errorIds, setErrorIds] = useState(new Set())
 
     // Determine which items are unlocked
     const galleryItems = items.map(item => ({
@@ -55,19 +57,15 @@ export default function GalleryPage({
                                     <div className="w-full h-full bg-neutral-900 flex flex-col">
                                         <div className="flex-1 flex items-center justify-center bg-neutral-800 overflow-hidden">
                                             {/* Show actual image if path exists, otherwise placeholder */}
-                                            {item.image ? (
+                                            {item.image && !errorIds.has(item.id) ? (
                                                 <img
                                                     src={item.image}
                                                     alt={item.title}
                                                     className="w-full h-full object-cover"
-                                                    onError={(e) => {
-                                                        // Fallback to emoji if image fails to load
-                                                        e.target.style.display = 'none'
-                                                        e.target.parentNode.innerHTML = '<span class="text-4xl">🖼️</span>'
-                                                    }}
+                                                    onError={() => setErrorIds(prev => new Set([...prev, item.id]))}
                                                 />
                                             ) : (
-                                                <span className="text-4xl">🖼️</span>
+                                                <Image size={36} className="text-neutral-500" />
                                             )}
                                         </div>
                                         <div className="p-2 text-center bg-neutral-900">
@@ -123,18 +121,17 @@ export default function GalleryPage({
 
                             {/* Image */}
                             <div className="rounded-lg overflow-hidden border-2 border-bardo-accent/50 bg-neutral-900">
-                                {selectedImage.image ? (
+                                {selectedImage.image && !errorIds.has(selectedImage.id) ? (
                                     <img
                                         src={selectedImage.image}
                                         alt={selectedImage.title}
                                         className="max-w-full max-h-[70vh] object-contain"
-                                        onError={(e) => {
-                                            e.target.style.display = 'none'
-                                            e.target.parentNode.innerHTML = '<div class="p-20 text-6xl">🖼️</div>'
-                                        }}
+                                        onError={() => setErrorIds(prev => new Set([...prev, selectedImage.id]))}
                                     />
                                 ) : (
-                                    <div className="p-20 text-6xl">🖼️</div>
+                                    <div className="p-20 flex items-center justify-center">
+                                        <Image size={64} className="text-neutral-500" />
+                                    </div>
                                 )}
                             </div>
 

@@ -181,7 +181,7 @@ export default function WillpowerMeter({
                     </span>
 
                     {difficultyLabel && (
-                        <span className={`text-[8px] font-mono uppercase ${decayRate === 'extreme' ? 'text-red-500' :
+                        <span className={`text-[10px] font-mono uppercase ${decayRate === 'extreme' ? 'text-red-500' :
                             decayRate === 'fast' ? 'text-orange-500' :
                                 decayRate === 'normal' ? 'text-yellow-500' :
                                     'text-green-500'
