@@ -128,9 +128,7 @@ export default function JukeboxPage({
                 <button
                     className="text-neutral-400 hover:text-neutral-200 transition-colors"
                     onClick={() => {
-                        // Stop music when leaving jukebox
-                        if (stopMusic) stopMusic()
-                        setPlayingTrack(null)
+                        // Music continues playing — ExtrasMenu only stops it on full close
                         onBack()
                     }}
                 >

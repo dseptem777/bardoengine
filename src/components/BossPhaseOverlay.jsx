@@ -365,7 +365,7 @@ export default function BossPhaseOverlay({
                             return (
                                 <motion.p
                                     key={`corridor-${i}`}
-                                    className="font-serif text-base leading-relaxed mb-3 select-none"
+                                    className="text-base leading-relaxed mb-3 select-none" style={{ fontFamily: "'Georgia', serif" }}
                                     animate={{ color: '#a855f7', textShadow: '0 0 15px rgba(168,85,247,0.5)' }}
                                     transition={{ duration: 0.3 }}
                                 >
@@ -377,8 +377,8 @@ export default function BossPhaseOverlay({
                         return (
                             <motion.p
                                 key={`corridor-${i}`}
-                                className="font-serif text-base leading-relaxed mb-3 cursor-pointer select-none transition-colors"
-                                style={{ color, textShadow }}
+                                className="text-base leading-relaxed mb-3 cursor-pointer select-none transition-colors"
+                                style={{ color, textShadow, fontFamily: "'Georgia', serif" }}
                                 onClick={() => handleErrataClick(i)}
                                 animate={isWrong ? { x: [0, -4, 4, -4, 0] } : {}}
                                 transition={isWrong ? { duration: 0.3 } : {}}
@@ -426,7 +426,7 @@ export default function BossPhaseOverlay({
                            style={{ textShadow: '0 0 15px rgba(168,85,247,0.4)' }}>
                             FASE FINAL
                         </p>
-                        <p className="font-serif text-gray-300 text-base leading-relaxed">
+                        <p className="text-gray-300 text-base leading-relaxed" style={{ fontFamily: "'Georgia', serif" }}>
                             El viewport se colapsa. Portales dimensionales aparecen brevemente
                             {' \u2014 '} hacé click en ellos para dañar a Amaru.
                             Si errás, el viewport se cierra más rápido.

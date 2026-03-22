@@ -63,11 +63,10 @@ export default function LockpickGame({ params = [], onFinish }) {
             <div className="relative w-full h-12 bg-zinc-800 rounded-full overflow-hidden border border-zinc-700">
                 {/* Sweet Spot */}
                 <div
-                    className="absolute h-full bg-bardo-accent/40"
+                    className="absolute h-full bg-bardo-accent/40 accent-box-shadow-40"
                     style={{
                         left: `${zoneStart}%`,
                         width: `${zoneSize}%`,
-                        boxShadow: '0 0 20px color-mix(in srgb, var(--bardo-accent) 40%, transparent)'
                     }}
                 />
 

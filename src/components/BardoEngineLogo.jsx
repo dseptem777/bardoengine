@@ -122,10 +122,7 @@ export default function BardoEngineLogo({
                 width={size}
                 height={size}
                 viewBox={`0 0 ${size} ${size}`}
-                className="text-bardo-accent"
-                style={{
-                    filter: 'drop-shadow(0 0 20px color-mix(in srgb, var(--bardo-accent) 50%, transparent))'
-                }}
+                className="text-bardo-accent accent-drop-shadow-50"
                 initial={animated ? { scale: 0.8, opacity: 0 } : {}}
                 animate={animated ? { scale: 1, opacity: 1 } : {}}
                 transition={{ duration: 0.5, ease: "easeOut" }}
@@ -183,11 +180,7 @@ export default function BardoEngineLogo({
                     transition={{ duration: 0.5, delay: 1 }}
                 >
                     <h1
-                        className="text-3xl md:text-4xl font-bold text-bardo-accent tracking-[0.3em] font-mono"
-                        style={{
-                            textShadow: '0 0 20px color-mix(in srgb, var(--bardo-accent) 50%, transparent)',
-                            letterSpacing: '0.3em'
-                        }}
+                        className="text-3xl md:text-4xl font-bold text-bardo-accent tracking-[0.3em] font-mono accent-text-shadow-50"
                     >
                         BARDOENGINE
                     </h1>
