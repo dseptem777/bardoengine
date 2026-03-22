@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { BookOpen } from 'lucide-react'
 
 /**
  * HistoryLog - Modal component to display the narrative history (Bitácora)
@@ -34,7 +35,7 @@ const HistoryLog = ({ isOpen, history, onClose }) => {
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b border-white/10">
                     <h2 className="text-bardo-accent font-header text-xl uppercase tracking-widest flex items-center gap-2">
-                        <span className="text-2xl">📖</span> Bitácora Narrativa
+                        <BookOpen size={20} /> Bitácora Narrativa
                     </h2>
                     <button
                         onClick={onClose}

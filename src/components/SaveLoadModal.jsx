@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Save, FolderOpen, Trash2 } from 'lucide-react'
 
 /**
  * Generate a default save name with current date/time
@@ -117,21 +118,21 @@ export default function SaveLoadModal({
                         <div className="flex gap-4">
                             <button
                                 onClick={() => setActiveTab('save')}
-                                className={`text-lg font-bold transition-colors ${activeTab === 'save'
+                                className={`flex items-center gap-2 text-lg font-bold transition-colors ${activeTab === 'save'
                                     ? 'text-bardo-accent'
                                     : 'text-gray-500 hover:text-gray-300'
                                     }`}
                             >
-                                💾 GUARDAR
+                                <Save size={16} /> GUARDAR
                             </button>
                             <button
                                 onClick={() => setActiveTab('load')}
-                                className={`text-lg font-bold transition-colors ${activeTab === 'load'
+                                className={`flex items-center gap-2 text-lg font-bold transition-colors ${activeTab === 'load'
                                     ? 'text-bardo-accent'
                                     : 'text-gray-500 hover:text-gray-300'
                                     }`}
                             >
-                                📂 CARGAR
+                                <FolderOpen size={16} /> CARGAR
                             </button>
                         </div>
                         <button
@@ -222,10 +223,10 @@ export default function SaveLoadModal({
                                         ) : (
                                             <button
                                                 onClick={(e) => handleDelete(save, e)}
-                                                className="ml-2 text-gray-600 hover:text-red-500 text-lg"
+                                                className="ml-2 text-gray-600 hover:text-red-500 transition-colors"
                                                 title="Eliminar"
                                             >
-                                                🗑️
+                                                <Trash2 size={16} />
                                             </button>
                                         )}
                                     </motion.div>

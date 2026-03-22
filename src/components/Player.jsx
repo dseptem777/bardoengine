@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { BookOpen, Settings, Save, Heart, Backpack, FastForward } from 'lucide-react'
 import TextDisplay from './TextDisplay'
 import ChoiceButton from './ChoiceButton'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation'
@@ -325,46 +326,49 @@ export default function Player({
                             <div className="flex items-center gap-1 sm:gap-2">
                                 <button
                                     onClick={onToggleHistory}
-                                    className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
+                                    className="flex items-center gap-1.5 font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
                                     title="Bitácora (L)"
                                 >
-                                    {isMobile ? '📖' : '📖 BITÁCORA'}
+                                    <BookOpen size={14} />
+                                    {!isMobile && 'BITÁCORA'}
                                 </button>
                                 <button
                                     onClick={onOptions}
-                                    className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
+                                    className="flex items-center gap-1.5 font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
                                     title="Opciones"
                                 >
-                                    {isMobile ? '⚙️' : '⚙️ OPCIONES'}
+                                    <Settings size={14} />
+                                    {!isMobile && 'OPCIONES'}
                                 </button>
                             </div>
                         )}
                         {onSave && (
                             <button
                                 onClick={onSave}
-                                className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
+                                className="flex items-center gap-1.5 font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
                             >
-                                {isMobile ? '💾' : '💾 GUARDAR/CARGAR'}
+                                <Save size={14} />
+                                {!isMobile && 'GUARDAR/CARGAR'}
                             </button>
                         )}
                         {/* Mobile: relationships toggle in header */}
                         {isMobile && relationshipsEnabled && onToggleRelationships && (
                             <button
                                 onClick={onToggleRelationships}
-                                className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
+                                className="text-bardo-muted hover:text-bardo-accent transition-colors"
                                 title="Relaciones"
                             >
-                                ❤️
+                                <Heart size={16} />
                             </button>
                         )}
                         {/* Mobile: inventory toggle in header */}
                         {isMobile && inventoryEnabled && onToggleInventory && (
                             <button
                                 onClick={onToggleInventory}
-                                className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors relative"
+                                className="relative text-bardo-muted hover:text-bardo-accent transition-colors"
                                 title="Inventario"
                             >
-                                🎒
+                                <Backpack size={16} />
                                 {inventoryItemCount > 0 && (
                                     <span className="absolute -top-1 -right-2 bg-bardo-accent text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                                         {inventoryItemCount}
@@ -581,7 +585,7 @@ export default function Player({
                 <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] pointer-events-none">
                     <div className="px-5 py-2.5 bg-black/80 backdrop-blur-md border border-white/20 rounded-full shadow-2xl">
                         <p className="text-bardo-muted font-mono text-[10px] md:text-xs animate-pulse text-center font-bold tracking-tight">
-                            ⏩ AUTO-AVANCE EN <span className="text-bardo-accent">{autoAdvanceDelay}s</span>...
+                            <FastForward size={10} className="inline mr-1" /> AUTO-AVANCE EN <span className="text-bardo-accent">{autoAdvanceDelay}s</span>...
                         </p>
                     </div>
                 </div>

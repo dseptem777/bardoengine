@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Trophy, Image, Music } from 'lucide-react'
 import AchievementsPage from './extras/AchievementsPage'
 import GalleryPage from './extras/GalleryPage'
 import JukeboxPage from './extras/JukeboxPage'
@@ -30,9 +31,9 @@ export default function ExtrasMenu({
     const hasAnyExtras = hasAchievements || hasGallery || hasJukebox
 
     const menuItems = [
-        { id: 'achievements', label: 'LOGROS', icon: '🏆', enabled: hasAchievements, count: achievementStats.unlocked },
-        { id: 'gallery', label: 'GALERÍA', icon: '🖼️', enabled: hasGallery },
-        { id: 'jukebox', label: 'JUKEBOX', icon: '🎵', enabled: hasJukebox },
+        { id: 'achievements', label: 'LOGROS', icon: <Trophy size={28} />, enabled: hasAchievements, count: achievementStats.unlocked },
+        { id: 'gallery', label: 'GALERÍA', icon: <Image size={28} />, enabled: hasGallery },
+        { id: 'jukebox', label: 'JUKEBOX', icon: <Music size={28} />, enabled: hasJukebox },
     ]
 
     const handleBack = () => {
@@ -95,7 +96,7 @@ export default function ExtrasMenu({
                                                 whileHover={item.enabled ? { x: 10 } : {}}
                                                 disabled={!item.enabled}
                                             >
-                                                <span className="text-3xl">{item.icon}</span>
+                                                <span className={item.enabled ? 'text-bardo-accent' : 'text-neutral-600'}>{item.icon}</span>
                                                 <span className={`text-xl font-semibold
                                                     ${item.enabled ? 'text-bardo-accent' : 'text-neutral-600'}`}>
                                                     {item.label}

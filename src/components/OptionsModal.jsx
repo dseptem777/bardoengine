@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Settings, Music, Keyboard, Accessibility, Monitor } from 'lucide-react'
 import { useSettings } from '../hooks/useSettings'
 
 /**
@@ -42,12 +43,12 @@ export default function OptionsModal({ isOpen, onClose }) {
                         }}
                     >
                         {/* Header */}
-                        <h2 className="text-2xl font-bold text-bardo-accent text-center mb-6 tracking-wider">
-                            ⚙️ OPCIONES
+                        <h2 className="text-2xl font-bold text-bardo-accent text-center mb-6 tracking-wider flex items-center justify-center gap-2">
+                            <Settings size={22} /> OPCIONES
                         </h2>
 
                         {/* Audio Section */}
-                        <SettingsSection title="🎵 Audio">
+                        <SettingsSection title={<span className="flex items-center gap-1.5"><Music size={13} /> Audio</span>}>
                             <SliderSetting
                                 label="Volumen Música"
                                 value={settings.musicVolume}
@@ -65,7 +66,7 @@ export default function OptionsModal({ isOpen, onClose }) {
                         </SettingsSection>
 
                         {/* Text Section */}
-                        <SettingsSection title="⌨️ Texto">
+                        <SettingsSection title={<span className="flex items-center gap-1.5"><Keyboard size={13} /> Texto</span>}>
                             <SliderSetting
                                 label="Velocidad"
                                 value={settings.typewriterSpeed}
@@ -92,7 +93,7 @@ export default function OptionsModal({ isOpen, onClose }) {
                         </SettingsSection>
 
                         {/* Accessibility Section */}
-                        <SettingsSection title="♿ Accesibilidad">
+                        <SettingsSection title={<span className="flex items-center gap-1.5"><Accessibility size={13} /> Accesibilidad</span>}>
                             <ToggleSetting
                                 label="Efectos Visuales (shake/flash)"
                                 value={settings.vfxEnabled}
@@ -105,7 +106,7 @@ export default function OptionsModal({ isOpen, onClose }) {
                         </SettingsSection>
 
                         {/* Display Section */}
-                        <SettingsSection title="📺 Pantalla">
+                        <SettingsSection title={<span className="flex items-center gap-1.5"><Monitor size={13} /> Pantalla</span>}>
                             <ToggleSetting
                                 label="Pantalla Completa"
                                 value={isFullscreen}
@@ -142,7 +143,7 @@ export default function OptionsModal({ isOpen, onClose }) {
 function SettingsSection({ title, children }) {
     return (
         <div className="mb-6">
-            <h3 className="text-sm font-bold text-gray-500 mb-3 border-b border-gray-800 pb-1">
+            <h3 className="text-sm font-bold text-gray-500 mb-3 border-b border-gray-800 pb-1 flex items-center gap-1.5">
                 {title}
             </h3>
             <div className="space-y-4">

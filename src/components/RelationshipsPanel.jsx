@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Heart } from 'lucide-react'
 
 /**
  * RelationshipsPanel - Displays relationship stats with NPCs
@@ -65,7 +66,7 @@ export default function RelationshipsPanel({
 
                             <div className="flex items-center justify-between px-4 py-2 border-b border-bardo-accent/20">
                                 <h3 className="text-bardo-accent font-bold flex items-center gap-2">
-                                    <span>❤️</span> RELACIONES
+                                    <Heart size={16} /> RELACIONES
                                 </h3>
                                 <button
                                     onClick={handleToggle}
@@ -104,7 +105,7 @@ export default function RelationshipsPanel({
                     whileTap={{ scale: 0.95 }}
                 >
                     <div className="flex items-center gap-2">
-                        <span className="text-xl">❤️</span>
+                        <Heart size={18} />
                         {activeCount > 0 && (
                             <span className="bg-bardo-accent text-black text-xs font-bold px-1.5 py-0.5 rounded-full">
                                 {activeCount}

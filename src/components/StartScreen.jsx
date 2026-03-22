@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
+import { Settings, Trophy } from 'lucide-react'
 
 /**
  * StartScreen - Main menu for standalone games
@@ -111,14 +112,14 @@ export default function StartScreen({
                     {/* Options */}
                     {onOptions && (
                         <MenuButton onClick={onOptions} secondary>
-                            ⚙️ OPCIONES
+                            <Settings size={16} className="inline mr-2" />OPCIONES
                         </MenuButton>
                     )}
 
                     {/* Extras */}
                     {hasExtras && onExtras && (
                         <MenuButton onClick={onExtras} secondary>
-                            🏆 EXTRAS
+                            <Trophy size={16} className="inline mr-2" />EXTRAS
                         </MenuButton>
                     )}
                 </div>
