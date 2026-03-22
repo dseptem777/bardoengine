@@ -6,7 +6,7 @@ export default function QTEGame({ params = [], onFinish }) {
     const duration = parseFloat(params[1]) || 2.0
 
     const [timeLeft, setTimeLeft] = useState(duration)
-    const [gameState, setGameState] = useState('ready') // ready, playing, win, lose
+    const [gameState, setGameState] = useState('ready') // ready, go, playing, win, lose
     const [readyCountdown, setReadyCountdown] = useState(2)
 
     const finish = useCallback((success) => {
@@ -14,14 +14,17 @@ export default function QTEGame({ params = [], onFinish }) {
         onFinish(success ? 1 : 0)
     }, [onFinish])
 
-    // Transition to playing when countdown reaches 0
+    // Transition to 'go' flash then 'playing' when countdown reaches 0
     useEffect(() => {
         if (gameState === 'ready' && readyCountdown <= 0) {
-            setGameState('playing')
+            setGameState('go')
+            setTimeout(() => setGameState('playing'), 200)
         }
     }, [gameState, readyCountdown])
 
     useEffect(() => {
+        if (gameState === 'go') return
+
         if (gameState === 'ready') {
             const timer = setInterval(() => {
                 setReadyCountdown(prev => {
@@ -101,7 +104,9 @@ export default function QTEGame({ params = [], onFinish }) {
 
             <p className="text-gray-400 font-mono text-center">
                 {gameState === 'ready' ? (
-                    <span className="text-bardo-accent text-3xl font-black animate-ping">¿LISTO? {readyCountdown}</span>
+                    <span className="text-bardo-accent text-3xl font-black animate-pulse">¿LISTO? {readyCountdown}</span>
+                ) : gameState === 'go' ? (
+                    <span className="text-green-400 text-4xl font-black animate-ping">¡YA!</span>
                 ) : gameState === 'playing' ? (
                     <>¡PRESIONÁ <span className="text-bardo-accent font-bold">[{targetKey}]</span> AHORA!</>
                 ) : gameState === 'win' ? (

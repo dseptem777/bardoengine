@@ -470,8 +470,30 @@ function AppContent({ onStorySelect }) {
 
             {/* Error state */}
             {storyError && (
-                <div className="flex items-center justify-center min-h-screen">
-                    <div className="text-red-500 text-xl">Error: {storyError}</div>
+                <div className="flex items-center justify-center min-h-screen bg-bardo-bg">
+                    <div className="max-w-md w-full mx-4 p-8 border border-red-800/50 bg-red-950/30 text-center"
+                        style={{ borderRadius: 'var(--ui-border-radius)' }}>
+                        <p className="text-red-400 text-xl font-bold mb-2">Error de carga</p>
+                        <p className="text-red-600 text-sm font-mono mb-6 break-all">{storyError}</p>
+                        <div className="flex gap-3 justify-center">
+                            <button
+                                onClick={() => window.location.reload()}
+                                className="px-4 py-2 border border-red-700 text-red-400 hover:bg-red-900/30 text-sm transition-colors"
+                                style={{ borderRadius: 'var(--ui-border-radius)' }}
+                            >
+                                Reintentar
+                            </button>
+                            {!isProductionMode && (
+                                <button
+                                    onClick={backToStorySelector}
+                                    className="px-4 py-2 border border-neutral-700 text-neutral-400 hover:bg-neutral-800/30 text-sm transition-colors"
+                                    style={{ borderRadius: 'var(--ui-border-radius)' }}
+                                >
+                                    Volver al selector
+                                </button>
+                            )}
+                        </div>
+                    </div>
                 </div>
             )}
 
