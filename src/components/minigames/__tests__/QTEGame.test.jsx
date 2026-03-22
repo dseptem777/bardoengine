@@ -32,13 +32,13 @@ describe('QTEGame', () => {
         it('should render game title', () => {
             render(<QTEGame params={['SPACE', 2]} onFinish={vi.fn()} />)
 
-            expect(screen.getByText('RAPID REACTION')).toBeInTheDocument()
+            expect(screen.getByText('REACCIÓN RÁPIDA')).toBeInTheDocument()
         })
 
         it('should show ready countdown initially', () => {
             render(<QTEGame params={['SPACE', 2]} onFinish={vi.fn()} />)
 
-            expect(screen.getByText(/READY/)).toBeInTheDocument()
+            expect(screen.getByText(/LISTO/)).toBeInTheDocument()
         })
 
         it('should display the target key', () => {
@@ -63,7 +63,7 @@ describe('QTEGame', () => {
                 vi.advanceTimersByTime(1200) // 2 x 600ms countdown
             })
 
-            expect(screen.getByText(/PRESS/)).toBeInTheDocument()
+            expect(screen.getByText(/PRESIONÁ/)).toBeInTheDocument()
         })
 
         it('should show target key instruction when playing', () => {
@@ -103,7 +103,7 @@ describe('QTEGame', () => {
 
             fireEvent.keyDown(window, { key: 'e' })
 
-            expect(screen.getByText(/SUCCESS/)).toBeInTheDocument()
+            expect(screen.getByText(/ÉXITO/)).toBeInTheDocument()
         })
     })
 
@@ -136,7 +136,7 @@ describe('QTEGame', () => {
                 vi.advanceTimersByTime(1100)
             })
 
-            expect(screen.getByText(/FAILED/)).toBeInTheDocument()
+            expect(screen.getByText(/FALLIDO/)).toBeInTheDocument()
         })
     })
 

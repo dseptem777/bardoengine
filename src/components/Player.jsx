@@ -413,9 +413,6 @@ export default function Player({
 
                     {/* Choices & Footer Area - Scroll target when typing completes */}
                     <div ref={interactiveRef} className="mt-8 choice-container">
-                        {/* Debug log (hidden in prod) */}
-                        <div className="hidden">{console.log('[Player] Render choices. isTyping:', isTyping, 'Length:', choices.length)}</div>
-
                         {/* Choices - Appear below text, no layout impact on text above */}
                         {/* Hide gate choices [→] during boss — they're auto-selected by phase mechanics */}
                         {!isTyping && !hasPendingMinigame && choices.length > 0 && !isBossGateChoice && (
@@ -507,13 +504,6 @@ export default function Player({
                     </div>
                 </div>
             </main>
-
-            {/* Footer - flex-none to stay at bottom */}
-            <footer className="flex-none p-4 border-t border-bardo-accent/10">
-                <p className="text-center font-mono text-bardo-muted/50 text-xs">
-                    Powered by Ink • © BardoEngine
-                </p>
-            </footer>
 
             {/* Boss HP Indicator */}
             {bossState && (

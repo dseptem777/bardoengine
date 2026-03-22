@@ -58,7 +58,7 @@ export default function LockpickGame({ params = [], onFinish }) {
 
     return (
         <div className="bg-zinc-900 border-2 border-bardo-accent p-12 flex flex-col items-center justify-center gap-10 shadow-2xl" onClick={handleAction}>
-            <h2 className="text-3xl font-bold text-bardo-accent tracking-widest uppercase">Precision Unlock</h2>
+            <h2 className="text-3xl font-bold text-bardo-accent tracking-widest uppercase">GANZÚA DE PRECISIÓN</h2>
 
             <div className="relative w-full h-12 bg-zinc-800 rounded-full overflow-hidden border border-zinc-700">
                 {/* Sweet Spot */}
@@ -82,17 +82,17 @@ export default function LockpickGame({ params = [], onFinish }) {
             <div className="flex flex-col items-center gap-2">
                 <p className="text-gray-400 font-mono text-center">
                     {gameState === 'playing' ? (
-                        <>CLICK or <span className="text-bardo-accent">SPACE</span> when needle enters zone</>
+                        <>CLICK o <span className="text-bardo-accent">ESPACIO</span> cuando la aguja entre en la zona</>
                     ) : gameState === 'win' ? (
-                        <span className="text-green-500 font-bold text-2xl">✓ UNLOCKED</span>
+                        <span className="text-green-500 font-bold text-2xl">✓ ¡DESBLOQUEADO!</span>
                     ) : (
-                        <span className="text-red-500 font-bold text-2xl animate-pulse">FAILED</span>
+                        <span className="text-red-500 font-bold text-2xl animate-pulse">FALLIDO</span>
                     )}
                 </p>
 
                 <div className="w-full flex justify-between px-2 text-[10px] text-zinc-600 font-mono">
-                    <span>LOCKED</span>
-                    <span>ENGAGED</span>
+                    <span>CERRADO</span>
+                    <span>TRABADO</span>
                 </div>
             </div>
         </div>

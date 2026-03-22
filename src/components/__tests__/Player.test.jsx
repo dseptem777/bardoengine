@@ -81,10 +81,10 @@ describe('Player', () => {
             expect(screen.getByText('Welcome to the adventure.')).toBeInTheDocument()
         })
 
-        it('should render footer', () => {
+        it('should not render engine footer during gameplay', () => {
             render(<Player {...defaultProps} />)
 
-            expect(screen.getByText(/Powered by Ink/)).toBeInTheDocument()
+            expect(screen.queryByText(/Powered by Ink/)).not.toBeInTheDocument()
         })
 
         it('should render save button when onSave provided', () => {

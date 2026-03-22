@@ -1,5 +1,5 @@
 {
-    "title": "🚨 CENTINELAS DEL SUR",
+    "title": "CENTINELAS DEL SUR",
     "version": "0.8.1",
     "theme": {
         "primaryColor": "#8b5cf6",
@@ -28,6 +28,10 @@
             "borderRadius": "20px",
             "borderWidth": "1px"
         }
+    },
+    "intro": {
+        "titleMusic": "misterio_ambient",
+        "titleSubtitle": "Ficción Interactiva Sobrenatural"
     },
     "stats": {
         "enabled": true,

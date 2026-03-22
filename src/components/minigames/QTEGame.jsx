@@ -67,7 +67,7 @@ export default function QTEGame({ params = [], onFinish }) {
 
     return (
         <div className="bg-zinc-900 border-2 border-bardo-accent p-12 flex flex-col items-center justify-center gap-8 shadow-2xl">
-            <h2 className="text-3xl font-bold text-bardo-accent tracking-widest">RAPID REACTION</h2>
+            <h2 className="text-3xl font-bold text-bardo-accent tracking-widest">REACCIÓN RÁPIDA</h2>
 
             <div className="relative w-48 h-48 flex items-center justify-center">
                 {/* Timer Circle */}
@@ -101,13 +101,13 @@ export default function QTEGame({ params = [], onFinish }) {
 
             <p className="text-gray-400 font-mono text-center">
                 {gameState === 'ready' ? (
-                    <span className="text-bardo-accent text-3xl font-black animate-ping">READY? {readyCountdown}</span>
+                    <span className="text-bardo-accent text-3xl font-black animate-ping">¿LISTO? {readyCountdown}</span>
                 ) : gameState === 'playing' ? (
-                    <>PRESS <span className="text-bardo-accent font-bold">[{targetKey}]</span> NOW!</>
+                    <>¡PRESIONÁ <span className="text-bardo-accent font-bold">[{targetKey}]</span> AHORA!</>
                 ) : gameState === 'win' ? (
-                    <span className="text-green-500 font-bold scale-125 inline-block transition-transform">✓ SUCCESS</span>
+                    <span className="text-green-500 font-bold scale-125 inline-block transition-transform">✓ ¡ÉXITO!</span>
                 ) : (
-                    <span className="text-red-500 font-bold animate-pulse">FAILED</span>
+                    <span className="text-red-500 font-bold animate-pulse">FALLIDO</span>
                 )}
             </p>
         </div>
