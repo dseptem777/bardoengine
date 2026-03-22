@@ -289,7 +289,8 @@ export function useSpiderInfestation() {
             return s
         }))
         setKillCount(prev => { killCountRef.current = prev + 1; return prev + 1 })
-        setTimeout(() => { setSpiders(prev => prev.filter(s => s.id !== spiderId)) }, 300)
+        const tid = setTimeout(() => { setSpiders(prev => prev.filter(s => s.id !== spiderId)) }, 300)
+        pendingTimeoutsRef.current.push(tid)
     }, [])
 
     const clearWeb = useCallback((webId) => {

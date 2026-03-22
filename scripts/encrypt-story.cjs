@@ -10,9 +10,30 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-// AES-256-GCM encryption key (32 bytes)
-// This key is also hardcoded in the Rust backend for decryption
-const ENCRYPTION_KEY = Buffer.from('B4rd0Eng1n3_S3cr3t_K3y_2024_!@#$', 'utf8');
+// AES-256-GCM encryption key (32 bytes) — loaded from environment or .env file
+function loadEncryptionKey() {
+    if (process.env.BARDO_ENCRYPTION_KEY) {
+        return Buffer.from(process.env.BARDO_ENCRYPTION_KEY, 'utf8');
+    }
+    // Try loading from .env file
+    const envPath = path.join(__dirname, '..', '.env');
+    if (fs.existsSync(envPath)) {
+        const envContent = fs.readFileSync(envPath, 'utf8');
+        const match = envContent.match(/^BARDO_ENCRYPTION_KEY=(.+)$/m);
+        if (match) {
+            return Buffer.from(match[1].trim(), 'utf8');
+        }
+    }
+    console.error('Error: BARDO_ENCRYPTION_KEY not found.');
+    console.error('Set it as an environment variable or in a .env file at the project root.');
+    console.error('The key must be exactly 32 bytes (32 ASCII characters).');
+    process.exit(1);
+}
+const ENCRYPTION_KEY = loadEncryptionKey();
+if (ENCRYPTION_KEY.length !== 32) {
+    console.error(`Error: BARDO_ENCRYPTION_KEY must be exactly 32 bytes, got ${ENCRYPTION_KEY.length}`);
+    process.exit(1);
+}
 
 function encrypt(plaintext) {
     // Generate random 12-byte IV (standard for GCM)

@@ -4,8 +4,9 @@ use aes_gcm::{
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
 
-// Same key as in encrypt-story.cjs (32 bytes for AES-256)
-const ENCRYPTION_KEY: &[u8; 32] = b"B4rd0Eng1n3_S3cr3t_K3y_2024_!@#$";
+// AES-256-GCM key loaded from BARDO_ENCRYPTION_KEY env var at compile time.
+// Set this env var before building: export BARDO_ENCRYPTION_KEY="your_32_byte_key"
+const ENCRYPTION_KEY: &[u8] = env!("BARDO_ENCRYPTION_KEY", "BARDO_ENCRYPTION_KEY env var must be set at compile time (32 ASCII chars)").as_bytes();
 
 pub fn decrypt_story_content(encrypted_base64: &str) -> Result<String, String> {
     // Decode base64

@@ -70,11 +70,15 @@ export function useHeavyCursor(config: HeavyCursorConfig) {
         const cursor = document.createElement('div')
         cursor.id = 'horror-virtual-cursor'
         cursor.className = 'horror-cursor'
-        cursor.innerHTML = `
-            <div class="horror-cursor-core"></div>
-            <div class="horror-cursor-ring"></div>
-            <div class="horror-cursor-strain"></div>
-        `
+        const core = document.createElement('div')
+        core.className = 'horror-cursor-core'
+        const ring = document.createElement('div')
+        ring.className = 'horror-cursor-ring'
+        const strain = document.createElement('div')
+        strain.className = 'horror-cursor-strain'
+        cursor.appendChild(core)
+        cursor.appendChild(ring)
+        cursor.appendChild(strain)
         document.body.appendChild(cursor)
         cursorRef.current = cursor
 

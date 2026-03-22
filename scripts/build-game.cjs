@@ -19,6 +19,21 @@ const { execSync, spawn } = require('child_process');
 const STORIES_DIR = path.join(__dirname, '..', 'src', 'stories');
 const TAURI_CONF = path.join(__dirname, '..', 'src-tauri', 'tauri.conf.json');
 
+// Load .env file for BARDO_ENCRYPTION_KEY (needed for both encrypt-story and Rust compile)
+function loadDotEnv() {
+    const envPath = path.join(__dirname, '..', '.env');
+    if (fs.existsSync(envPath)) {
+        const lines = fs.readFileSync(envPath, 'utf8').split('\n');
+        for (const line of lines) {
+            const match = line.match(/^([A-Z_]+)=(.+)$/);
+            if (match && !process.env[match[1]]) {
+                process.env[match[1]] = match[2].trim();
+            }
+        }
+    }
+}
+loadDotEnv();
+
 // Platform targets mapping
 const PLATFORM_TARGETS = {
     windows: 'nsis',

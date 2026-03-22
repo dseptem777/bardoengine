@@ -192,12 +192,13 @@ function AppContent({ onStorySelect }) {
         }
     }, [willpower?.state?.value, willpower?.state?.active, choices.length, hasAutoSubmitted, actions])
 
-    // Handle forced click completion
+    // Handle forced click completion — select the last choice (surrender/ceder option)
     const handleForcedClickComplete = useCallback(() => {
-        console.log('[Willpower] Forced click complete - selecting ceder')
+        const lastIndex = Math.max(0, choices.length - 1)
+        console.log(`[Willpower] Forced click complete - selecting choice ${lastIndex} (ceder)`)
         setShowForcedClick(false)
-        actions.makeChoice(1)  // Index 1 = second option = ceder
-    }, [actions])
+        actions.makeChoice(lastIndex)
+    }, [actions, choices.length])
 
     // ==================
     // Heavy Cursor Effect (Meta-Horror)
