@@ -975,28 +975,29 @@ Ya no es posible retroceder. Hay que seguir corriendo, nada más importa. Ganarl
     -> final_morgue_exito
   - else:
     # stat:hp:-10
-    Nunca le vas a ganar, estás muy herido y vas dejando un rastro de sangre. Abrís una puerta y el azar te premia. Un vestuario con una serie de taquillas contra la pared. Con la poca energía que tenés te arrastrás dentro de una.
-    -> apnea_taquilla
+    Nunca le vas a ganar, estás muy herido y vas dejando un rastro de sangre. Ves la puerta de salida al final del pasillo. Treinta metros. Nada más.
+    Pero tus piernas ya no responden. Te caés de rodillas y el impacto contra las baldosas frías te arranca un gemido.
+    -> keymash_arrastre
 }
 
-=== apnea_taquilla ===
-# MINIGAME: type=apnea, waves=2, autostart=true
+=== keymash_arrastre ===
+# MINIGAME: type=crawl, autostart=true
 
--> apnea_taquilla_resultado
+-> keymash_arrastre_resultado
 
-=== apnea_taquilla_resultado ===
+=== keymash_arrastre_resultado ===
 { minigame_result:
-    - 1: -> apnea_taquilla_exito
-    - else: -> apnea_taquilla_fallo
+    - 1: -> keymash_arrastre_exito
+    - else: -> keymash_arrastre_fallo
 }
 
-=== apnea_taquilla_exito ===
-La entidad recorre el pasillo. Escuchás sus pasos pesados acercarse... y alejarse. Cuando el silencio vuelve, salís temblando y te arrastrás hasta tu auto. Te dirigís al Faro.
+=== keymash_arrastre_exito ===
+Abrís la puerta del auto con dedos que ya casi no sentís. Arrancás. No mirás atrás.
+Te dirigís a El Faro.
 -> final_morgue_exito
 
-=== apnea_taquilla_fallo ===
-# shake # flash_red # play_sfx:jumpscare
-La puerta de la taquilla se arranca de sus bisagras. No tenés energía para gritar.
+=== keymash_arrastre_fallo ===
+# flash_red
 MORISTE. FIN DEL JUEGO.
 -> END
 
