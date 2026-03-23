@@ -1,5 +1,69 @@
 # Changelog — BardoEngine
 
+## v0.15.0 (2026-03-23)
+
+### Security
+- **Encryption key rotation**: Move hardcoded key to `BARDO_ENCRYPTION_KEY` env var. Old key burned from git history. `encrypt-story.cjs`, `crypto.rs`, and `build-game.cjs` all read from `.env` or environment.
+
+### Fixes — Engine Correctness
+- **Forced click**: Replace hardcoded `makeChoice(1)` with last-choice selection
+- **useHeavyCursor**: Replace `innerHTML` with `createElement` (XSS prevention)
+- **useSpiderInfestation**: Track `squashSpider` setTimeout in `pendingTimeoutsRef`
+- **useStats**: Fix setState during render → `useEffect` with ref
+- **useGameSystems**: Remove dead minigame branch (handled by `useTagProcessor`)
+- **ForcedClickOverlay**: Replace 50ms `setInterval` polling with `MutationObserver` + `ResizeObserver`
+- **App.jsx**: Add try/catch for localStorage quota on dev story import
+
+### Fixes — Performance
+- **useAudio**: Remove hardcoded `SOUNDS`/`MUSIC` registries, use dynamic path resolution (`/sounds/{id}.mp3`)
+
+### Mobile + Accessibility
+- **QTEGame**: Add touch/click support on key display (mobile playable)
+- **useModalA11y**: New hook — focus trap, Escape key, ARIA attributes, focus restore
+- **Modals**: Apply `useModalA11y` to SaveLoadModal, OptionsModal, ExtrasMenu, HistoryLog
+- **MinigameOverlay**: Add keyboard dismiss for result screen
+
+### UX Polish
+- **OptionsModal**: Fix typewriter speed labels (Instantáneo↔Lento), add two-step RESET confirmation
+- **TextDisplay**: Allow text selection, change cursor to default
+- **Player**: Use CSS truncation for mobile title instead of `split(' ')[0]`
+- **ChoiceButton**: Show "Seguí haciendo click" hint on first resistance click
+- **SaveLoadModal**: Improve overwrite section header (orange tint)
+- **RelationshipsPanel**: Add close button to desktop panel
+- **useStoryState**: Add missing `continueLabel` to TypeScript interface
+
+---
+
+## v0.14.1 (2026-03-22)
+
+### Critical Fixes
+- **MinigameOverlay**: `hasCommittedRef` guard prevents double `onFinish` from timeout+click race
+- **cancelGame**: Now commits failure result (0) to prevent permanent story deadlock
+- **useAudio**: `stopMusic` captures Howl locally + `fadeTimeoutRef` prevents killing new tracks
+- **ExtrasMenu**: Only stops music if user was on jukebox page, preserves game BGM
+
+### Other Fixes
+- **QTEGame**: Move `finish()` out of state updater into `useEffect` (StrictMode safe)
+- **Player**: Disable save/load button during active minigame
+- **App**: Remove duplicate `useStoryLoader`, sync storyId from AppContent to parent
+- **useStoryState**: Clear choices and end story on critical Ink error
+- **useAchievements**: Eliminate double `loadUnlocked()` on init
+
+---
+
+## v0.14.0 (2026-03-22)
+
+### UI/UX Overhaul (7 stages)
+- **Stage 1**: Remove emoji from title, add intro config, translate minigame strings to Spanish, remove footer and console.log spam
+- **Stage 2**: Configurable branding — game title in header, roleLabel for stats, input label prop, hide Continue when no save
+- **Stage 3**: Modal consistency — unified backgrounds, borders, border-radius, inline delete confirmation
+- **Stage 4**: SVG icon system via `lucide-react` — replace 18 UI emoji with cross-platform SVG icons
+- **Stage 5**: UX flow — minigame result timing 800→1500ms, QTE ¡YA! flash state, HistoryLog scroll position, styled error card, Arkanoid configurable rows/cols, inventory close button
+- **Stage 6**: Cross-browser polish — `color-mix()` fallbacks, serif font fix, GalleryPage React fix, Jukebox music continuity
+- **Stage 7 (Centinelas)**: 5 achievements, 19-track jukebox, achievement tags in ink, SFX audit
+
+---
+
 ## v0.13.0 (2026-03-21)
 
 ### Features
@@ -9,10 +73,15 @@
 ### Fixes
 - **QTE countdown race condition**: Countdown got stuck at "Ready? 2" due to `setGameState` being called inside `setReadyCountdown` updater. Separated state transition into its own effect.
 
+---
+
 ## v0.12.1
 
-- merge(feature/capitulo-2b): Capítulo 2B, arañas, apnea virtual knot (v0.8.0)
+- fix(engine): Dev story selector uses fresh JSON instead of localStorage cache
+
+---
 
 ## v0.12.0
 
 - feat(centinelas): ApneaGame como knot virtual + fix resultado minigame
+

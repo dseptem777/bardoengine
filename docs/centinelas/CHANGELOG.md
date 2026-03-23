@@ -1,5 +1,19 @@
 # Changelog — Centinelas del Sur
 
+## [0.9.0] — 2026-03-23
+
+### Feature: Title Screen
+- Imagen de fondo en pantalla de título (`title.png` — escena noir con neones y lluvia)
+- Título y subtítulo posicionados en tercio inferior sobre la imagen (30% opacidad)
+- Efecto lluvia CSS animado entre la imagen y el texto
+- Corners decorativos ocultos cuando hay background image
+
+### Engine (TitleScreen.jsx)
+- Soporte para posicionamiento de título con `backgroundImage` (`mt-[68vh]`)
+- Dos capas de lluvia SVG con velocidades distintas para efecto de profundidad
+
+---
+
 ## [0.8.1] — 2026-03-21
 
 ### Content
