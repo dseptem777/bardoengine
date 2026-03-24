@@ -93,6 +93,14 @@ export default function WillpowerMeter({
     // Straining state for key prompt styling
     const [isStraining, setIsStraining] = useState(false)
 
+    // Touch device detection (primary touch — no hover, coarse pointer)
+    const [isTouchDevice] = useState(() =>
+        window.matchMedia('(hover: none) and (pointer: coarse)').matches
+    )
+
+    // Touch hint visibility
+    const [showTouchHint, setShowTouchHint] = useState(false)
+
     // Active whisper: { id, text, x, y } | null
     const [whisper, setWhisper] = useState(null)
     const lastWhisperRef = useRef(null)
@@ -155,6 +163,38 @@ export default function WillpowerMeter({
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener('keydown', handleKeyDown)
     }, [active, targetKey, boost, boostValue])
+
+    // ── Touch hint: show on first activation on touch devices ────────────────
+    useEffect(() => {
+        if (active && isTouchDevice) {
+            setShowTouchHint(true)
+        }
+        if (!active) setShowTouchHint(false)
+    }, [active, isTouchDevice])
+
+    // Auto-hide touch hint after 5 seconds
+    useEffect(() => {
+        if (!showTouchHint) return
+        const timer = setTimeout(() => setShowTouchHint(false), 5000)
+        return () => clearTimeout(timer)
+    }, [showTouchHint])
+
+    // ── Touch handler for the eye area ────────────────────────────────────────
+    const handleTouch = useCallback((e) => {
+        e.preventDefault()
+        if (!active) return
+
+        if (boostValue) boostValue(boost)
+
+        setBoostPulse(0.15)
+        if (boostPulseTimerRef.current) clearTimeout(boostPulseTimerRef.current)
+        boostPulseTimerRef.current = setTimeout(() => setBoostPulse(0), 200)
+
+        setIsStraining(true)
+        setTimeout(() => setIsStraining(false), 100)
+
+        setShowTouchHint(false)
+    }, [active, boost, boostValue])
 
     // ── Whisper scheduler ─────────────────────────────────────────────────────
     useEffect(() => {
@@ -219,13 +259,16 @@ export default function WillpowerMeter({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
             >
-                {/* SVG Eye */}
+                {/* SVG Eye — also responds to touch */}
                 <motion.div
                     animate={isCritical ? { scale: [1, 1.05, 1] } : {}}
                     transition={isCritical
                         ? { repeat: Infinity, duration: 0.5, ease: 'easeInOut' }
                         : {}
                     }
+                    onTouchStart={handleTouch}
+                    style={{ touchAction: 'none' }}
+                    data-testid="eye-touch-zone"
                 >
                     <svg
                         width="80"
@@ -281,17 +324,33 @@ export default function WillpowerMeter({
                     </svg>
                 </motion.div>
 
-                {/* Key prompt */}
+                {/* Key / touch prompt */}
                 <div className="mt-2 flex flex-col items-center gap-1">
-                    <div
-                        className={`w-8 h-8 rounded border flex items-center justify-center text-sm font-bold ${
-                            isStraining
-                                ? 'border-white text-white bg-red-900/30'
-                                : 'border-red-900/40 text-red-600/60'
-                        }`}
-                    >
-                        {targetKey}
-                    </div>
+                    {/* Keyboard hint — hidden on pure touch devices */}
+                    {!isTouchDevice && (
+                        <div
+                            className={`w-8 h-8 rounded border flex items-center justify-center text-sm font-bold ${
+                                isStraining
+                                    ? 'border-white text-white bg-red-900/30'
+                                    : 'border-red-900/40 text-red-600/60'
+                            }`}
+                        >
+                            {targetKey}
+                        </div>
+                    )}
+
+                    {/* Touch hint — only on touch devices, fades after first use or 5 s */}
+                    {isTouchDevice && showTouchHint && (
+                        <motion.span
+                            className="text-red-500/60 text-xs italic animate-pulse"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            data-testid="touch-hint"
+                        >
+                            TOCA
+                        </motion.span>
+                    )}
                 </div>
             </motion.div>
 

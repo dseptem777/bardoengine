@@ -20,6 +20,11 @@ vi.mock('framer-motion', () => ({
                 {children}
             </div>
         ),
+        span: ({ children, className, style, 'data-testid': testId, ...props }) => (
+            <span className={className} style={style} data-testid={testId} {...props}>
+                {children}
+            </span>
+        ),
         g: ({ children, style, ...props }) => (
             <g style={style} {...props}>{children}</g>
         ),
@@ -54,10 +59,29 @@ import { useWillpowerCorruption } from '../../hooks/useWillpowerCorruption'
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
+// ─── matchMedia helper ────────────────────────────────────────────────────────
+function mockMatchMedia(matches) {
+    Object.defineProperty(window, 'matchMedia', {
+        writable: true,
+        value: vi.fn((query) => ({
+            matches,
+            media: query,
+            onchange: null,
+            addListener: vi.fn(),
+            removeListener: vi.fn(),
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
+            dispatchEvent: vi.fn(),
+        })),
+    })
+}
+
 describe('WillpowerMeter', () => {
     beforeEach(() => {
         vi.useFakeTimers()
         vi.clearAllMocks()
+        // Default: non-touch device
+        mockMatchMedia(false)
     })
 
     afterEach(() => {
@@ -382,6 +406,101 @@ describe('WillpowerMeter', () => {
             boostValue.mockClear()
             fireEvent.keyDown(window, { key: 'v' })
             expect(boostValue).not.toHaveBeenCalled()
+        })
+    })
+
+    // ── Touch support ─────────────────────────────────────────────────────────
+
+    describe('touch support', () => {
+        it('shows [V] key prompt on non-touch device', () => {
+            mockMatchMedia(false)
+            render(
+                <WillpowerMeter active={true} value={80} targetKey="V" boostValue={vi.fn()} />
+            )
+            expect(screen.getByText('V')).toBeInTheDocument()
+        })
+
+        it('hides [V] key prompt on pure touch device', () => {
+            mockMatchMedia(true)
+            render(
+                <WillpowerMeter active={true} value={80} targetKey="V" boostValue={vi.fn()} />
+            )
+            expect(screen.queryByText('V')).toBeNull()
+        })
+
+        it('shows TOCA hint on first activation on touch device', () => {
+            mockMatchMedia(true)
+            render(
+                <WillpowerMeter active={true} value={80} boostValue={vi.fn()} />
+            )
+            expect(screen.getByTestId('touch-hint')).toBeInTheDocument()
+            expect(screen.getByText('TOCA')).toBeInTheDocument()
+        })
+
+        it('does not show TOCA hint on non-touch device', () => {
+            mockMatchMedia(false)
+            render(
+                <WillpowerMeter active={true} value={80} boostValue={vi.fn()} />
+            )
+            expect(screen.queryByTestId('touch-hint')).toBeNull()
+        })
+
+        it('hides TOCA hint after 5 seconds', () => {
+            mockMatchMedia(true)
+            render(
+                <WillpowerMeter active={true} value={80} boostValue={vi.fn()} />
+            )
+            expect(screen.getByTestId('touch-hint')).toBeInTheDocument()
+
+            act(() => { vi.advanceTimersByTime(5001) })
+            expect(screen.queryByTestId('touch-hint')).toBeNull()
+        })
+
+        it('calls boostValue on touch and hides hint', () => {
+            mockMatchMedia(true)
+            const boostValue = vi.fn()
+            render(
+                <WillpowerMeter
+                    active={true}
+                    value={80}
+                    decayRate="normal"
+                    boostValue={boostValue}
+                />
+            )
+
+            const touchZone = screen.getByTestId('eye-touch-zone')
+            fireEvent.touchStart(touchZone)
+
+            expect(boostValue).toHaveBeenCalledWith(6)  // BOOST_AMOUNTS.normal
+            expect(screen.queryByTestId('touch-hint')).toBeNull()
+        })
+
+        it('does not call boostValue on touch when inactive', () => {
+            mockMatchMedia(true)
+            const boostValue = vi.fn()
+            render(
+                <WillpowerMeter active={false} value={80} boostValue={boostValue} />
+            )
+            // Component renders null when inactive, so touch zone doesn't exist
+            expect(screen.queryByTestId('eye-touch-zone')).toBeNull()
+            expect(boostValue).not.toHaveBeenCalled()
+        })
+
+        it('touch zone exists on non-touch device too (keyboard users may have touch screens)', () => {
+            mockMatchMedia(false)
+            render(
+                <WillpowerMeter active={true} value={80} boostValue={vi.fn()} />
+            )
+            expect(screen.getByTestId('eye-touch-zone')).toBeInTheDocument()
+        })
+
+        it('does not show TOCA hint when inactive transitions to active on non-touch device', () => {
+            mockMatchMedia(false)
+            const { rerender } = render(
+                <WillpowerMeter active={false} value={80} boostValue={vi.fn()} />
+            )
+            rerender(<WillpowerMeter active={true} value={80} boostValue={vi.fn()} />)
+            expect(screen.queryByTestId('touch-hint')).toBeNull()
         })
     })
 })
