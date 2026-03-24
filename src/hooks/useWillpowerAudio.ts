@@ -140,7 +140,7 @@ export function useWillpowerAudio(
         burstGain.gain.value = burstVolume
 
         burstSource.connect(burstGain)
-        burstGain.connect(nodes.masterGain)
+        burstGain.connect(nodes.staticGain)
         burstSource.start()
 
         onStaticBurst?.()
