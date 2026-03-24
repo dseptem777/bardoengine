@@ -19,6 +19,9 @@
 - **DebugSpawnModal z-index**: subido a z-[9999], no lo tapan las arañas
 - **centinelas.ink**: choices en `boveda_capullo` cambiados de `*` a `+` (sticky) para evitar que se quemen
 
+### Centinelas del Sur — v0.10.0
+- Integración del sistema Torch & Corruption en la bóveda (cap 1)
+
 ## v0.15.0 (2026-03-23)
 
 ### Security
