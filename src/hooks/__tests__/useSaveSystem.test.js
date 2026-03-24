@@ -150,7 +150,8 @@ describe('useSaveSystem', () => {
             expect(loaded).toEqual({
                 state: '{"state":"test"}',
                 text: 'Test text',
-                gameSystems: { stats: { hp: 50 } }
+                gameSystems: { stats: { hp: 50 } },
+                parallelSystems: null,
             })
         })
 

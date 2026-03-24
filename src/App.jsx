@@ -205,6 +205,18 @@ function AppContent({ onStorySelect }) {
     }, [actions, choices.length])
 
     // ==================
+    // Spider Infestation — Pause when any modal is open
+    // ==================
+    const isMenuOpen = saveModalMode !== null || optionsOpen || historyOpen
+        || inventoryOpen || relationshipsOpen || extrasOpen
+
+    useEffect(() => {
+        if (!spiderInfestation?.actions) return
+        if (isMenuOpen) spiderInfestation.actions.pause()
+        else spiderInfestation.actions.resume()
+    }, [isMenuOpen, spiderInfestation?.actions])
+
+    // ==================
     // Heavy Cursor Effect (Meta-Horror)
     // ==================
     // Activate heavy cursor when willpower system is active OR horror effects are active

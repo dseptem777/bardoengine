@@ -68,7 +68,7 @@ export function useSaveSystem(storyId) {
     /**
      * Create a new save or overwrite existing
      */
-    const saveGame = useCallback((name, stateJson, currentText = '', gameSystems = null, overwriteId = null) => {
+    const saveGame = useCallback((name, stateJson, currentText = '', gameSystems = null, overwriteId = null, parallelSystems = null) => {
         const saveData = {
             id: overwriteId || `save_${Date.now()}`,
             name: name,
@@ -76,7 +76,8 @@ export function useSaveSystem(storyId) {
             timestamp: Date.now(),
             state: stateJson,
             text: currentText,
-            gameSystems: gameSystems
+            gameSystems: gameSystems,
+            parallelSystems: parallelSystems,
         }
 
         const currentSaves = savesRef.current
@@ -95,7 +96,7 @@ export function useSaveSystem(storyId) {
     /**
      * Quick autosave (overwrites autosave slot)
      */
-    const autoSave = useCallback((stateJson, currentText = '', gameSystems = null) => {
+    const autoSave = useCallback((stateJson, currentText = '', gameSystems = null, parallelSystems = null) => {
         const autosaveId = `autosave_${storyId}`
         const autosaveData = {
             id: autosaveId,
@@ -105,6 +106,7 @@ export function useSaveSystem(storyId) {
             state: stateJson,
             text: currentText,
             gameSystems: gameSystems,
+            parallelSystems: parallelSystems,
             isAutosave: true
         }
 
@@ -129,7 +131,8 @@ export function useSaveSystem(storyId) {
             return {
                 state: save.state,
                 text: save.text || '',
-                gameSystems: save.gameSystems || null
+                gameSystems: save.gameSystems || null,
+                parallelSystems: save.parallelSystems || null,
             }
         }
         return null

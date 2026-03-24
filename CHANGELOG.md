@@ -1,5 +1,24 @@
 # Changelog — BardoEngine
 
+## v0.17.0 (2026-03-24)
+
+### Features — Spider Infestation (Torch & Corruption)
+- **Complete redesign**: cursor = antorcha, oscuridad cubre la pantalla con agujero en la luz
+- **Corrupción directa**: CSS `filter: blur + brightness` aplicado directo al DOM de párrafos (no overlays rectangulares)
+- **Telarañas orgánicas**: SVG full-screen con geometría radial real (radios + anillos concéntricos) en lugar de líneas aleatorias
+- **Arañas graduales**: spawn trickle de 1 araña cada 4s hasta el cap de dificultad
+- **Pausa automática**: overlay se pausa (y oscuridad se oculta) al abrir cualquier menú
+- **Restauración suave**: ~2.5s para limpiar corrupción; telaraña SVG decae más lento (~10s) con mapa independiente
+- **Fix anti-parpadeo**: filtro CSS aplicado directo en el game loop (no via React state), elimina reinicio de transitions
+- **Fix unblur**: usa distancia al punto más cercano del rect (no al centro) — el mouse sobre el texto siempre restaura
+- **Save/restore**: `continueGame` ahora restaura sistemas paralelos (spider, willpower, arrebatados) igual que `loadSave`
+- **parallelSystems**: campo en `useSaveSystem` para guardar/restaurar estado de todos los sistemas paralelos
+
+### Fixes — UI
+- **StatsPanel z-index**: subido a z-[150], queda visible sobre minigames
+- **DebugSpawnModal z-index**: subido a z-[9999], no lo tapan las arañas
+- **centinelas.ink**: choices en `boveda_capullo` cambiados de `*` a `+` (sticky) para evitar que se quemen
+
 ## v0.15.0 (2026-03-23)
 
 ### Security
