@@ -1,78 +1,43 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 /**
  * WillpowerMeter - Non-blocking Willpower UI (LEFT SIDE VERTICAL)
- * 
- * REBALANCED for human playability:
- * - Decay is slower
- * - Boost per press is more generous
- * - Still challenging but winnable
+ *
+ * Pure display component. The decay loop lives in useWillpowerSystem (rAF-based).
+ * This component only handles:
+ *   - Rendering the current `value` prop
+ *   - Keydown boost: calls updateValue with a clamped increment
  */
 
-// Decay rates per second - REDUCED for playability
-const DECAY_RATES = {
-    slow: 2,       // 2% per second
-    normal: 4.5,   // 4.5% per second (slightly harder than original 4)
-    fast: 8,       // 8% per second (harder than original 7)
-    extreme: 14    // 14% per second (very hard)
-}
-
-// Boost amount per keypress - BALANCED for challenge
+// Boost amount per keypress — per-difficulty tuning (decay rates live in the hook)
 const BOOST_AMOUNTS = {
     slow: 8,       // Generous
-    normal: 6,     // Original standard
-    fast: 4,       // Original standard
-    extreme: 2.5   // Tighter than original
+    normal: 6,     // Standard
+    fast: 4,       // Tighter
+    extreme: 2.5   // Very tight
 }
 
 export default function WillpowerMeter({
     active,
-    initialValue = 100,
+    value = 100,          // canonical value from hook state
     decayRate = 'normal',
     targetKey = 'V',
-    onValueChange,
+    updateValue,          // hook action: updateValue(newVal)
     position = 'left'
 }) {
-    const [value, setValue] = useState(initialValue)
     const [isStraining, setIsStraining] = useState(false)
     const [pulseKey, setPulseKey] = useState(0)
     const [mashCount, setMashCount] = useState(0)
-    const intervalRef = useRef(null)
 
-    // Get difficulty-scaled values
-    const rate = typeof decayRate === 'number' ? decayRate : DECAY_RATES[decayRate] || DECAY_RATES.normal
-    const boost = BOOST_AMOUNTS[decayRate] || BOOST_AMOUNTS.normal
-
-    // Reset value when becoming active
+    // Reset mash counter when becoming active
     useEffect(() => {
-        if (active) {
-            setValue(initialValue)
-            setMashCount(0)
-        }
-    }, [active, initialValue])
+        if (active) setMashCount(0)
+    }, [active])
 
-    // Decay timer - runs every 100ms
-    useEffect(() => {
-        if (!active) {
-            if (intervalRef.current) clearInterval(intervalRef.current)
-            return
-        }
+    const boost = BOOST_AMOUNTS[decayRate] ?? BOOST_AMOUNTS.normal
 
-        intervalRef.current = setInterval(() => {
-            setValue(prev => {
-                const newVal = Math.max(0, prev - (rate / 10))  // /10 because we run every 100ms
-                if (onValueChange) onValueChange(newVal)
-                return newVal
-            })
-        }, 100)
-
-        return () => {
-            if (intervalRef.current) clearInterval(intervalRef.current)
-        }
-    }, [active, rate, onValueChange])
-
-    // Key handler
+    // Key handler — boosts willpower; hook's rAF loop handles decay
     useEffect(() => {
         if (!active) return
 
@@ -80,12 +45,9 @@ export default function WillpowerMeter({
             if (e.key.toUpperCase() === targetKey.toUpperCase()) {
                 e.preventDefault()
 
-                // Boost willpower
-                setValue(prev => {
-                    const newVal = Math.min(100, prev + boost)
-                    if (onValueChange) onValueChange(newVal)
-                    return newVal
-                })
+                if (updateValue) {
+                    updateValue(Math.min(100, value + boost))
+                }
 
                 setMashCount(prev => prev + 1)
                 setPulseKey(prev => prev + 1)
@@ -96,7 +58,7 @@ export default function WillpowerMeter({
 
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [active, targetKey, boost, onValueChange])
+    }, [active, targetKey, boost, updateValue, value])
 
     if (!active) return null
 

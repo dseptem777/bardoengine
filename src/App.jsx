@@ -389,10 +389,10 @@ function AppContent({ onStorySelect }) {
             {/* Parallel Willpower Meter - Shows after first reveal, stays until inactive */}
             <WillpowerMeter
                 active={willpower?.state?.active && meterRevealed && !minigameController.isPlaying}
-                initialValue={100}
+                value={willpower?.state?.value ?? 100}
                 decayRate={willpower?.state?.decayRate || 'normal'}
                 targetKey={willpower?.state?.targetKey || 'V'}
-                onValueChange={willpower?.updateValue}
+                updateValue={willpower?.updateValue}
                 position="left"
             />
 
