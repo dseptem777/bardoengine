@@ -392,7 +392,7 @@ function AppContent({ onStorySelect }) {
                 value={willpower?.state?.value ?? 100}
                 decayRate={willpower?.state?.decayRate || 'normal'}
                 targetKey={willpower?.state?.targetKey || 'V'}
-                updateValue={willpower?.updateValue}
+                boostValue={willpower?.boostValue}
                 position="left"
             />
 

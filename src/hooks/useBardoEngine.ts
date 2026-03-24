@@ -752,7 +752,8 @@ export function useBardoEngine({
         willpower: {
             state: willpowerState,
             actions: willpowerActions,
-            updateValue: willpowerActions.updateValue
+            updateValue: willpowerActions.updateValue,
+            boostValue: willpowerActions.boostValue
         },
         spiderInfestation,
         scrollFriction,

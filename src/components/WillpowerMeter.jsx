@@ -23,7 +23,7 @@ export default function WillpowerMeter({
     value = 100,          // canonical value from hook state
     decayRate = 'normal',
     targetKey = 'V',
-    updateValue,          // hook action: updateValue(newVal)
+    boostValue,           // hook action: boostValue(delta) — reads valueRef to avoid stale captures
     position = 'left'
 }) {
     const [isStraining, setIsStraining] = useState(false)
@@ -45,8 +45,8 @@ export default function WillpowerMeter({
             if (e.key.toUpperCase() === targetKey.toUpperCase()) {
                 e.preventDefault()
 
-                if (updateValue) {
-                    updateValue(Math.min(100, value + boost))
+                if (boostValue) {
+                    boostValue(boost)
                 }
 
                 setMashCount(prev => prev + 1)
@@ -58,7 +58,7 @@ export default function WillpowerMeter({
 
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [active, targetKey, boost, updateValue, value])
+    }, [active, targetKey, boost, boostValue])
 
     if (!active) return null
 

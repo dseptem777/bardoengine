@@ -24,6 +24,7 @@ export interface WillpowerActions {
     startWillpower: (config?: Partial<Omit<WillpowerState, 'active'>>) => void
     stopWillpower: () => void
     updateValue: (value: number) => void
+    boostValue: (delta: number) => void
     checkWillpower: (threshold: number) => boolean
 }
 
@@ -89,8 +90,6 @@ export function useWillpowerSystem(
 
     // ─── Actions ─────────────────────────────────────────────────────────────
     const startWillpower = useCallback((config?: Partial<Omit<WillpowerState, 'active'>>) => {
-        console.log('[WillpowerSystem] Starting with config:', config)
-
         const initialValue = config?.value ?? 100
         const rate = config?.decayRate ?? 'normal'
 
@@ -112,7 +111,6 @@ export function useWillpowerSystem(
     }, [tick])
 
     const stopWillpower = useCallback(() => {
-        console.log('[WillpowerSystem] Stopping')
         activeRef.current = false
         if (rafRef.current !== null) {
             cancelAnimationFrame(rafRef.current)
@@ -126,6 +124,14 @@ export function useWillpowerSystem(
         const clampedValue = Math.max(0, Math.min(100, value))
         valueRef.current = clampedValue
         setState(prev => ({ ...prev, value: clampedValue }))
+        if (onValueChangeRef.current) onValueChangeRef.current(clampedValue)
+    }, [])
+
+    const boostValue = useCallback((delta: number) => {
+        const next = Math.max(0, Math.min(100, valueRef.current + delta))
+        valueRef.current = next
+        setState(prev => ({ ...prev, value: next }))
+        if (onValueChangeRef.current) onValueChangeRef.current(next)
     }, [])
 
     const checkWillpower = useCallback((threshold: number): boolean => {
@@ -150,8 +156,9 @@ export function useWillpowerSystem(
         startWillpower,
         stopWillpower,
         updateValue,
+        boostValue,
         checkWillpower
-    }), [startWillpower, stopWillpower, updateValue, checkWillpower])
+    }), [startWillpower, stopWillpower, updateValue, boostValue, checkWillpower])
 
     return [state, actions]
 }

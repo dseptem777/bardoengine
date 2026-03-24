@@ -71,12 +71,13 @@ describe('useWillpowerSystem', () => {
             expect(state.threshold).toBe(50)
         })
 
-        it('exposes the four actions', () => {
+        it('exposes the five actions', () => {
             const { result } = renderHook(() => useWillpowerSystem())
             const [, actions] = result.current
             expect(typeof actions.startWillpower).toBe('function')
             expect(typeof actions.stopWillpower).toBe('function')
             expect(typeof actions.updateValue).toBe('function')
+            expect(typeof actions.boostValue).toBe('function')
             expect(typeof actions.checkWillpower).toBe('function')
         })
     })
@@ -164,6 +165,74 @@ describe('useWillpowerSystem', () => {
 
             act(() => { result.current[1].updateValue(65) })
             expect(result.current[0].value).toBe(65)
+        })
+
+        it('calls onValueChange with the clamped value', () => {
+            const onValueChange = vi.fn()
+            const { result } = renderHook(() => useWillpowerSystem(undefined, onValueChange))
+
+            act(() => { result.current[1].updateValue(75) })
+
+            expect(onValueChange).toHaveBeenCalledWith(75)
+        })
+    })
+
+    // ── boostValue ─────────────────────────────────────────────────────────
+
+    describe('boostValue', () => {
+        it('increments value by delta', () => {
+            const { result } = renderHook(() => useWillpowerSystem())
+
+            act(() => { result.current[1].updateValue(50) })
+            act(() => { result.current[1].boostValue(10) })
+
+            expect(result.current[0].value).toBe(60)
+        })
+
+        it('clamps to 100 on overflow', () => {
+            const { result } = renderHook(() => useWillpowerSystem())
+
+            act(() => { result.current[1].updateValue(95) })
+            act(() => { result.current[1].boostValue(20) })
+
+            expect(result.current[0].value).toBe(100)
+        })
+
+        it('clamps to 0 on underflow (negative delta)', () => {
+            const { result } = renderHook(() => useWillpowerSystem())
+
+            act(() => { result.current[1].updateValue(5) })
+            act(() => { result.current[1].boostValue(-20) })
+
+            expect(result.current[0].value).toBe(0)
+        })
+
+        it('reads from valueRef so rapid sequential calls accumulate correctly', () => {
+            const { result } = renderHook(() => useWillpowerSystem())
+
+            act(() => { result.current[1].updateValue(50) })
+
+            // Three boosts in the same act() — each reads valueRef.current from the prior call
+            act(() => {
+                result.current[1].boostValue(5)
+                result.current[1].boostValue(5)
+                result.current[1].boostValue(5)
+            })
+
+            expect(result.current[0].value).toBe(65)
+        })
+
+        it('calls onValueChange with the new value', () => {
+            const onValueChange = vi.fn()
+            const { result } = renderHook(() => useWillpowerSystem(undefined, onValueChange))
+
+            act(() => { result.current[1].updateValue(50) })
+            onValueChange.mockClear()
+
+            act(() => { result.current[1].boostValue(10) })
+
+            expect(onValueChange).toHaveBeenCalledTimes(1)
+            expect(onValueChange).toHaveBeenCalledWith(60)
         })
     })
 
