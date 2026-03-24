@@ -393,7 +393,7 @@ function AppContent({ onStorySelect }) {
                 decayRate={willpower?.state?.decayRate || 'normal'}
                 targetKey={willpower?.state?.targetKey || 'V'}
                 boostValue={willpower?.boostValue}
-                position="left"
+                volumeMultiplier={getMusicVolume()}
             />
 
             {/* Forced Click Animation - When willpower reaches 0 */}
