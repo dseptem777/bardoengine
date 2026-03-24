@@ -19,6 +19,17 @@
 - **DebugSpawnModal z-index**: subido a z-[9999], no lo tapan las arañas
 - **centinelas.ink**: choices en `boveda_capullo` cambiados de `*` a `+` (sticky) para evitar que se quemen
 
+## v0.16.0 (2026-03-23)
+
+### Features — CrawlGame
+- **Nuevo minigame narrativo**: reemplaza apnea #2 (taquilla) con CrawlGame — sostener V arrastra al personaje, soltar recupera estamina
+- **Texto acumulativo reactivo**: hold, release, baja estamina, forced release, sustos aleatorios, hitos de progreso
+- **VFX**: vignette rojo, manchas de sangre como blobs CSS progresivos, shake, degradación de texto, scare flash
+- **SFX**: heartbeat_loop, 3 groans situacionales con pitch variation via Web Audio API (detune independiente)
+- **Balance**: 14%/s drain, 4.5%/s progreso, 45s time limit
+
+---
+
 ## v0.15.0 (2026-03-23)
 
 ### Security
