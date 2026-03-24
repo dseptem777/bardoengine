@@ -137,8 +137,6 @@ export function useWillpowerSystem(
     const checkWillpower = useCallback((threshold: number): boolean => {
         const currentValue = valueRef.current
         const passed = currentValue >= threshold
-        console.log(`[WillpowerSystem] Check at ${threshold}: value=${currentValue}, passed=${passed}`)
-
         if (onPassCheckRef.current) onPassCheckRef.current(passed)
 
         return passed
