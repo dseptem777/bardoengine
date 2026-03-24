@@ -181,8 +181,8 @@ export default function WillpowerMeter({
 
     // ── Touch handler for the eye area ────────────────────────────────────────
     const handleTouch = useCallback((e) => {
-        e.preventDefault()
         if (!active) return
+        e.preventDefault()
 
         if (boostValue) boostValue(boost)
 
@@ -340,17 +340,19 @@ export default function WillpowerMeter({
                     )}
 
                     {/* Touch hint — only on touch devices, fades after first use or 5 s */}
-                    {isTouchDevice && showTouchHint && (
-                        <motion.span
-                            className="text-red-500/60 text-xs italic animate-pulse"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            data-testid="touch-hint"
-                        >
-                            TOCA
-                        </motion.span>
-                    )}
+                    <AnimatePresence>
+                        {isTouchDevice && showTouchHint && (
+                            <motion.span
+                                className="text-red-500/60 text-xs italic animate-pulse"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                data-testid="touch-hint"
+                            >
+                                TOCA
+                            </motion.span>
+                        )}
+                    </AnimatePresence>
                 </div>
             </motion.div>
 
