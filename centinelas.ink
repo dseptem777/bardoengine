@@ -1898,8 +1898,8 @@ Atrás tuyo se escucha movimiento. Como si alguien estuviera clavando un centena
 Saltas por encima de la media que marcaba el camino. Casi estas afueran.
 Entonces las vez. Primero son meramente el reflejo de luz en la oscuridad. El brillo de sus ojos. Dieciséis ojos. Dos arañas. Dejas el cuerpo de Juan en el piso y te preparas para pelear
 
-* [Nadie me puede detener # REQUIRES: fuerza >= 25] -> cueva_pelea_fuerza
-* [Va a ser una pelea dura] -> cueva_pelea_normal
++ [Nadie me puede detener # REQUIRES: fuerza >= 25] -> cueva_pelea_fuerza
++ [Va a ser una pelea dura] -> cueva_pelea_normal
 
 === cueva_pelea_fuerza ===
 Antes que te des cuenta una sustancia babosa y pegajosa rodea tu muñeca, la inhábil por suerte. Una de las arañas te atrapo con su tela y te tira hacia ella mientras la otra se prepara para flanquearte.

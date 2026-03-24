@@ -216,7 +216,8 @@ export function useBardoEngine({
     }, [spiderInfestation.actions])
 
     const handleSpiderCheck = useCallback((threshold: number) => {
-        const survived = spiderInfestation.actions.checkKills(threshold)
+        // threshold = % clean text required (0-100)
+        const survived = spiderInfestation.actions.checkCorruption(threshold)
         // Set variable in Ink
         if (storyRef?.current) {
             try {
@@ -267,6 +268,23 @@ export function useBardoEngine({
         setArrebatadosEnabled(false)
         setArrebatadosCount(0)
     }, [])
+
+    // Build snapshot of all active parallel systems for save data
+    const buildParallelSystemsSaveState = useCallback(() => {
+        const spider = spiderInfestation.actions.getSaveState()
+        const willpower = willpowerState.active ? {
+            value: willpowerState.value,
+            decayRate: willpowerState.decayRate,
+            targetKey: willpowerState.targetKey,
+        } : null
+        const arrebatados = arrebatadosEnabled ? {
+            count: arrebatadosCount,
+            fuerza: arrebatadosFuerza,
+        } : null
+
+        if (!spider && !willpower && !arrebatados) return null
+        return { spider, willpower, arrebatados }
+    }, [spiderInfestation.actions, willpowerState, arrebatadosEnabled, arrebatadosCount, arrebatadosFuerza])
 
     // ==================
     // Boss Controller System
@@ -414,13 +432,18 @@ export function useBardoEngine({
 
         processTags(tags)
 
+        // Notify spider system that player advanced (resets idle timer)
+        if (spiderInfestation.state.infesting) {
+            spiderInfestation.actions.notifyAdvance()
+        }
+
         // Don't autosave if story just ended (preserves last save before death/ending)
         const storyEnded = !story.canContinue && story.currentChoices.length === 0
         if (storyId && newText && !storyEnded) {
             // @ts-ignore
-            saveSystem.autoSave(story.state.toJson(), newText, gameSystems.exportGameSystems() || undefined)
+            saveSystem.autoSave(story.state.toJson(), newText, gameSystems.exportGameSystems() || undefined, buildParallelSystemsSaveState())
         }
-    }, [story, minigameController.isPlaying, continueStoryState, processTags, storyId, saveSystem, gameSystems])
+    }, [story, minigameController.isPlaying, continueStoryState, processTags, spiderInfestation, storyId, saveSystem, gameSystems])
 
     // Debug spawn wrapper — sets variables, jumps to knot, processes tags
     const spawnAtKnot = useCallback((knotName: string, variables: Record<string, any> = {}) => {
@@ -568,13 +591,18 @@ export function useBardoEngine({
 
         processTags(tags)
 
+        // Notify spider system that player advanced (resets idle timer)
+        if (spiderInfestation.state.infesting) {
+            spiderInfestation.actions.notifyAdvance()
+        }
+
         // Don't autosave if story just ended (preserves last save before death/ending)
         const storyEnded = !story.canContinue && story.currentChoices.length === 0
         if (storyId && newText && !storyEnded) {
             // @ts-ignore
-            saveSystem.autoSave(story.state.toJson(), newText, gameSystems.exportGameSystems() || undefined)
+            saveSystem.autoSave(story.state.toJson(), newText, gameSystems.exportGameSystems() || undefined, buildParallelSystemsSaveState())
         }
-    }, [clearVFX, makeChoiceState, processTags, storyId, saveSystem, story, gameSystems])
+    }, [clearVFX, makeChoiceState, processTags, spiderInfestation, storyId, saveSystem, story, gameSystems])
 
     // Keep makeChoice ref updated for spider phase auto-select
     const makeChoiceRef = useRef<any>(null)
@@ -636,24 +664,50 @@ export function useBardoEngine({
         const saveData = saveSystem.loadLastSave()
         if (saveData && storyData) {
             initStory(storyData, saveData.state, saveData.text, saveData.gameSystems)
+            // Restore parallel systems that were active when saved
+            const ps = saveData.parallelSystems
+            if (ps?.spider) {
+                spiderInfestation.actions.startInfestation(ps.spider)
+            }
+            if (ps?.willpower) {
+                willpowerActions.startWillpower(ps.willpower)
+            }
+            if (ps?.arrebatados) {
+                setArrebatadosEnabled(true)
+                setArrebatadosCount(ps.arrebatados.count)
+                setArrebatadosFuerza(ps.arrebatados.fuerza)
+            }
             return saveData
         }
         return null
-    }, [saveSystem, storyData, initStory])
+    }, [saveSystem, storyData, initStory, spiderInfestation.actions, willpowerActions, setArrebatadosEnabled, setArrebatadosCount, setArrebatadosFuerza])
 
     const loadSave = useCallback((saveId: string) => {
         const saveData = saveSystem.loadSave(saveId)
         if (saveData && storyData) {
             initStory(storyData, saveData.state, saveData.text, saveData.gameSystems)
+            // Restore parallel systems that were active when saved
+            const ps = saveData.parallelSystems
+            if (ps?.spider) {
+                spiderInfestation.actions.startInfestation(ps.spider)
+            }
+            if (ps?.willpower) {
+                willpowerActions.startWillpower(ps.willpower)
+            }
+            if (ps?.arrebatados) {
+                setArrebatadosEnabled(true)
+                setArrebatadosCount(ps.arrebatados.count)
+                setArrebatadosFuerza(ps.arrebatados.fuerza)
+            }
             return saveData
         }
         return null
-    }, [saveSystem, storyData, initStory])
+    }, [saveSystem, storyData, initStory, spiderInfestation.actions, willpowerActions, setArrebatadosEnabled, setArrebatadosCount, setArrebatadosFuerza])
 
     const manualSave = useCallback((name: string, overwriteId: string | null = null) => {
         if (!story || !storyId) return
         // @ts-ignore
-        saveSystem.saveGame(name, story.state.toJson(), text, gameSystems.exportGameSystems() || undefined, overwriteId)
+        saveSystem.saveGame(name, story.state.toJson(), text, gameSystems.exportGameSystems() || undefined, overwriteId, buildParallelSystemsSaveState())
     }, [story, storyId, text, saveSystem, gameSystems])
 
     // ==================
