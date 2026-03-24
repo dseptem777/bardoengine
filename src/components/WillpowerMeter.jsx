@@ -220,13 +220,12 @@ export default function WillpowerMeter({
                 exit={{ opacity: 0, y: 20 }}
             >
                 {/* SVG Eye */}
-                <motion.g
-                    animate={isCritical ? { scale: [1, 1.05, 1] } : { scale: 1 }}
+                <motion.div
+                    animate={isCritical ? { scale: [1, 1.05, 1] } : {}}
                     transition={isCritical
-                        ? { repeat: Infinity, duration: 0.5 }
-                        : { duration: 0.2 }
+                        ? { repeat: Infinity, duration: 0.5, ease: 'easeInOut' }
+                        : {}
                     }
-                    style={{ display: 'block' }}
                 >
                     <svg
                         width="80"
@@ -280,7 +279,7 @@ export default function WillpowerMeter({
                             opacity={value > 20 ? 0.6 : 0}
                         />
                     </svg>
-                </motion.g>
+                </motion.div>
 
                 {/* Key prompt */}
                 <div className="mt-2 flex flex-col items-center gap-1">
