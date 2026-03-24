@@ -1,5 +1,14 @@
 # Changelog — Centinelas del Sur
 
+## [0.10.0] — 2026-03-24
+
+### Feature: Spider Torch & Corruption (La Bóveda)
+- Sistema Torch & Corruption activo en la bóveda (cap 1): cursor = antorcha, oscuridad atmosférica, texto se corrompe con blur/brightness
+- Telarañas SVG con geometría radial real sobre párrafos corruptos
+- Choices en `boveda_capullo` cambiados a sticky (`+`) para evitar que se quemen al cargar saves
+
+---
+
 ## [0.9.0] — 2026-03-23
 
 ### Feature: Title Screen
