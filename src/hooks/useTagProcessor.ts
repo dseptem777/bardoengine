@@ -16,6 +16,8 @@ interface TagProcessorOptions {
     onWillpowerStop?: () => void;
     onWillpowerCheck?: (threshold: number) => boolean;
     getWillpowerValue?: () => number;
+    // Genjutsu break callback
+    onGenjutsuBreak?: (stat: string, targetKnot: string) => void;
     // Spider infestation callbacks
     onSpiderStart?: (config: { difficulty?: string, fuerza?: number, magia?: number, sabiduria?: number }) => void;
     onSpiderStop?: () => void;
@@ -48,6 +50,7 @@ export function useTagProcessor({
     onWillpowerStop,
     onWillpowerCheck,
     getWillpowerValue,
+    onGenjutsuBreak,
     onSpiderStart,
     onSpiderStop,
     onSpiderCheck,
@@ -170,6 +173,23 @@ export function useTagProcessor({
                     } catch (e) {
                         console.warn('[Tags] Could not set willpower_passed:', e)
                     }
+                }
+                return
+            }
+
+            // ============================================
+            // GENJUTSU BREAK — Vampire illusion break point
+            // Format: GENJUTSU_BREAK: stat:target_knot
+            // ============================================
+
+            if (tag.toUpperCase().startsWith('GENJUTSU_BREAK:')) {
+                const payload = tag.substring('GENJUTSU_BREAK:'.length).trim()
+                const [rawStat, rawTarget] = payload.split(':').map(s => s.trim())
+                const stat = rawStat?.toLowerCase() || ''
+                const targetKnot = rawTarget || ''
+                console.log(`[Tags] GENJUTSU_BREAK: stat=${stat}, target=${targetKnot}`)
+                if (onGenjutsuBreak) {
+                    onGenjutsuBreak(stat, targetKnot)
                 }
                 return
             }
