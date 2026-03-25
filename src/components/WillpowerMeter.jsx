@@ -82,6 +82,7 @@ export default function WillpowerMeter({
     targetKey = 'V',
     boostValue,
     volumeMultiplier = 1,
+    genjutsuActive = false,
     // position is intentionally ignored — everything is fixed
 }) {
     const boost = BOOST_AMOUNTS[decayRate] ?? BOOST_AMOUNTS.normal
@@ -147,6 +148,7 @@ export default function WillpowerMeter({
         const handleKeyDown = (e) => {
             if (e.key.toUpperCase() !== targetKey.toUpperCase()) return
             e.preventDefault()
+            if (genjutsuActive) return
 
             if (boostValue) boostValue(boost)
 
@@ -162,7 +164,7 @@ export default function WillpowerMeter({
 
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [active, targetKey, boost, boostValue])
+    }, [active, targetKey, boost, boostValue, genjutsuActive])
 
     // ── Touch hint: show on first activation on touch devices ────────────────
     useEffect(() => {
@@ -182,6 +184,7 @@ export default function WillpowerMeter({
     // ── Touch handler for the eye area ────────────────────────────────────────
     const handleTouch = useCallback((e) => {
         if (!active) return
+        if (genjutsuActive) return
         e.preventDefault()
 
         if (boostValue) boostValue(boost)
@@ -194,7 +197,7 @@ export default function WillpowerMeter({
         setTimeout(() => setIsStraining(false), 100)
 
         setShowTouchHint(false)
-    }, [active, boost, boostValue])
+    }, [active, boost, boostValue, genjutsuActive])
 
     // ── Whisper scheduler ─────────────────────────────────────────────────────
     useEffect(() => {
@@ -326,8 +329,8 @@ export default function WillpowerMeter({
 
                 {/* Key / touch prompt */}
                 <div className="mt-2 flex flex-col items-center gap-1">
-                    {/* Keyboard hint — hidden on pure touch devices */}
-                    {!isTouchDevice && (
+                    {/* Keyboard hint — hidden on pure touch devices and during genjutsu */}
+                    {!isTouchDevice && !genjutsuActive && (
                         <div
                             className={`w-8 h-8 rounded border flex items-center justify-center text-sm font-bold ${
                                 isStraining
