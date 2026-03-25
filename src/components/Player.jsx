@@ -43,6 +43,11 @@ export default function Player({
     choiceResistanceLevel = 'none',  // 'none', 'slow', 'normal', 'fast', 'extreme'
     onChoicesVisibleChange = null,   // Callback when choices visibility changes
     onWillpowerHintVisible = null,   // Callback when willpower mash hint is revealed
+    // Genjutsu props
+    genjutsuBreak = null,
+    dominantStat = null,
+    willpowerValue = 100,
+    onBreakGenjutsu = null,
     // Mobile props
     isMobile = false,
     headerStatsProps = null,         // { stats, statsConfig, getAllStatsInfo }
@@ -418,6 +423,10 @@ export default function Player({
                             fontSize={fontSize}
                             seekString={willpowerActive ? '[PRESIONÁ' : null}
                             onStringFound={onWillpowerHintVisible}
+                            genjutsuBreak={genjutsuBreak}
+                            dominantStat={dominantStat}
+                            willpowerValue={willpowerValue}
+                            onBreakGenjutsu={onBreakGenjutsu}
                         />
                     </div>
 

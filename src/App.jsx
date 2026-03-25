@@ -17,12 +17,12 @@ import InputOverlay from './components/InputOverlay'
 import DebugSpawnModal from './components/DebugSpawnModal'
 import HorrorVFXLayer from './components/HorrorVFXLayer'
 import WillpowerMeter from './components/WillpowerMeter'
-import ForcedClickOverlay from './components/ForcedClickOverlay'
 import SpiderOverlay from './components/SpiderOverlay'
 import { useHeavyCursor } from './hooks/useHeavyCursor'
 import { useStoryLoader } from './hooks/useStoryLoader'
 import { useBardoEngine } from './hooks/useBardoEngine'
 import { processChoiceRequirements } from './utils/choiceRequirements'
+import { getDominantStat } from './utils/getDominantStat'
 import { SettingsProvider, useSettings } from './hooks/useSettings'
 import { useIsMobile } from './hooks/useMediaQuery'
 
@@ -157,21 +157,15 @@ function AppContent({ onStorySelect }) {
         story, text, choices, canContinue, continueLabel, isEnded, history,
         actions, subsystems, config
     } = engine
-    const { audio, vfx, saveSystem, gameSystems, achievementsSystem, minigameController, willpower, spiderInfestation, scrollFriction, bossController, visualDamage, scrollContainerRef } = subsystems
+    const { audio, vfx, saveSystem, gameSystems, achievementsSystem, minigameController, willpower, spiderInfestation, scrollFriction, bossController, visualDamage, scrollContainerRef, genjutsu } = subsystems
 
     // Keep debug unlocked in sync with dev mode
     useEffect(() => {
         if (!isProductionMode) setDebugUnlocked(true)
     }, [isProductionMode])
 
-    // Track if we've auto-submitted due to zero willpower
-    const [hasAutoSubmitted, setHasAutoSubmitted] = useState(false)
-    const [showForcedClick, setShowForcedClick] = useState(false)
-
-    // Reset auto-submit flag and reveal state when choices or text change
+    // Reset reveal state when choices or text change
     useEffect(() => {
-        setHasAutoSubmitted(false)
-        setShowForcedClick(false)
         setChoicesVisible(false)
         // Do NOT reset meterRevealed here. It is now strictly controlled by 'active' state.
     }, [choices, currentStoryId, text])
@@ -183,26 +177,6 @@ function AppContent({ onStorySelect }) {
         // When willpower becomes inactive, hide the meter
         setMeterRevealed(false)
     }, [willpower?.state?.active])
-
-    // Trigger forced click animation when willpower reaches 0
-    useEffect(() => {
-        if (willpower?.state?.active &&
-            willpower?.state?.value <= 0 &&
-            choices.length >= 2 &&
-            !hasAutoSubmitted) {
-            console.log('[Willpower] Zero willpower - starting forced click takeover')
-            setHasAutoSubmitted(true)
-            setShowForcedClick(true)
-        }
-    }, [willpower?.state?.value, willpower?.state?.active, choices.length, hasAutoSubmitted, actions])
-
-    // Handle forced click completion — select the last choice (surrender/ceder option)
-    const handleForcedClickComplete = useCallback(() => {
-        const lastIndex = Math.max(0, choices.length - 1)
-        console.log(`[Willpower] Forced click complete - selecting choice ${lastIndex} (ceder)`)
-        setShowForcedClick(false)
-        actions.makeChoice(lastIndex)
-    }, [actions, choices.length])
 
     // ==================
     // Spider Infestation — Pause when any modal is open
@@ -223,7 +197,7 @@ function AppContent({ onStorySelect }) {
     const horrorEffect = vfx.vfxState?.horrorEffect
     const willpowerActive = willpower?.state?.active
 
-    const shouldActivateHeavyCursor = (willpowerActive && (meterRevealed || showForcedClick)) ||
+    const shouldActivateHeavyCursor = (willpowerActive && meterRevealed) ||
         horrorEffect === 'static_mind' ||
         horrorEffect === 'blur_vignette' ||
         horrorEffect === 'submission_fade'
@@ -394,15 +368,7 @@ function AppContent({ onStorySelect }) {
                 targetKey={willpower?.state?.targetKey || 'V'}
                 boostValue={willpower?.boostValue}
                 volumeMultiplier={getMusicVolume()}
-            />
-
-            {/* Forced Click Animation - When willpower reaches 0 */}
-            <ForcedClickOverlay
-                active={showForcedClick}
-                targetSelector='[data-choice-index="1"]'
-                choicesVisible={choicesVisible}
-                onComplete={handleForcedClickComplete}
-                message="Ya no tenés control..."
+                genjutsuActive={genjutsu?.active ?? false}
             />
 
             {/* Spider Infestation Overlay - Parasitic horror on story UI */}
@@ -621,6 +587,10 @@ function AppContent({ onStorySelect }) {
                     onBossPhaseComplete={bossController?.handleBossPhaseComplete}
                     onBossPlayerDeath={bossController?.handleBossPlayerDeath}
                     sabiduria={gameSystems?.stats?.sabiduria}
+                    genjutsuBreak={genjutsu?.break ?? null}
+                    dominantStat={getDominantStat(gameSystems.stats || {})}
+                    willpowerValue={willpower?.state?.value ?? 100}
+                    onBreakGenjutsu={genjutsu?.breakGenjutsu}
                 />
             )}
 
