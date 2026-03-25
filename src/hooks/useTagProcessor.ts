@@ -443,6 +443,7 @@ export function useTagProcessor({
         onWillpowerStop,
         onWillpowerCheck,
         getWillpowerValue,
+        onGenjutsuBreak,
         onSpiderStart,
         onSpiderStop,
         onSpiderCheck,
