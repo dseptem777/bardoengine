@@ -10,6 +10,12 @@ const FONT_SIZE_CLASSES = {
 // Characters to reveal per animation frame during fast-forward
 const FAST_FORWARD_CHARS_PER_FRAME = 8
 
+function getGenjutsuOpacity(wp) {
+    if (wp > 70) return 0.15
+    if (wp > 30) return 0.15 + (70 - wp) / 40 * 0.25  // 0.15 → 0.40
+    return 0.40 + (30 - wp) / 30 * 0.30  // 0.40 → 0.70
+}
+
 export default function TextDisplay({
     text,
     isTyping,
@@ -18,7 +24,12 @@ export default function TextDisplay({
     typewriterDelay = 30, // 0 = instant
     fontSize = 'normal',
     seekString = null,     // Optional string to look for
-    onStringFound = null   // Callback when seekString is revealed
+    onStringFound = null,  // Callback when seekString is revealed
+    // Genjutsu system
+    genjutsuBreak = null,      // { stat: string, text: string } | null
+    dominantStat = null,       // string | null
+    willpowerValue = 100,      // 0-100
+    onBreakGenjutsu = null,    // () => void
 }) {
     const [displayedText, setDisplayedText] = useState('')
     const hasFoundRef = useRef(false)
@@ -216,22 +227,44 @@ export default function TextDisplay({
             }}
         >
             {paragraphs.length > 0 ? (
-                paragraphs.map((para, i) => (
-                    <p
-                        key={i}
-                        data-paragraph-index={i}
-                        className={`font-narrative ${fontSizeClass} leading-relaxed text-bardo-text`}
-                    >
-                        {para}
-                        {/* Show cursor only on the last paragraph being typed */}
-                        {isTyping &&
-                            typewriterDelay > 0 &&
-                            i === paragraphs.length - 1 &&
-                            displayedText.length < text.length && (
-                                <span className="inline-block w-2 h-6 bg-bardo-accent ml-1 animate-pulse" />
-                            )}
-                    </p>
-                ))
+                paragraphs.map((para, i) => {
+                    const isGenjutsuTarget =
+                        genjutsuBreak &&
+                        dominantStat &&
+                        onBreakGenjutsu &&
+                        dominantStat === genjutsuBreak.stat &&
+                        para.trim() === genjutsuBreak.text.trim()
+
+                    const genjutsuStyle = isGenjutsuTarget ? {
+                        textDecoration: 'underline dotted',
+                        textUnderlineOffset: '4px',
+                        opacity: getGenjutsuOpacity(willpowerValue),
+                        filter: `drop-shadow(0 0 ${8 - willpowerValue / 100 * 6}px rgba(220, 38, 38, ${getGenjutsuOpacity(willpowerValue)}))`,
+                        transition: 'opacity 500ms ease, filter 500ms ease',
+                    } : undefined
+
+                    return (
+                        <p
+                            key={i}
+                            data-paragraph-index={i}
+                            data-testid={isGenjutsuTarget ? 'genjutsu-break' : undefined}
+                            className={`font-narrative ${fontSizeClass} leading-relaxed text-bardo-text ${
+                                isGenjutsuTarget ? 'cursor-pointer' : ''
+                            }`}
+                            onClick={isGenjutsuTarget ? onBreakGenjutsu : undefined}
+                            style={genjutsuStyle}
+                        >
+                            {para}
+                            {/* Show cursor only on the last paragraph being typed */}
+                            {isTyping &&
+                                typewriterDelay > 0 &&
+                                i === paragraphs.length - 1 &&
+                                displayedText.length < text.length && (
+                                    <span className="inline-block w-2 h-6 bg-bardo-accent ml-1 animate-pulse" />
+                                )}
+                        </p>
+                    )
+                })
             ) : (
                 // Fallback for empty/initial state to maintain layout
                 <p className={`font-narrative ${fontSizeClass} leading-relaxed opacity-0`}>&nbsp;</p>
