@@ -179,6 +179,18 @@ export function useBardoEngine({
 
     const [willpowerState, willpowerActions] = useWillpowerSystem(onWillpowerCheckCallback)
 
+    // ==================
+    // Genjutsu Vampírico (Illusion Break System)
+    // ==================
+    const [genjutsuBreak, setGenjutsuBreak] = useState<{
+        stat: string
+        text: string
+        targetKnot: string
+    } | null>(null)
+    const genjutsuActive = genjutsuBreak !== null
+    const genjutsuBreakRef = useRef(genjutsuBreak)
+    genjutsuBreakRef.current = genjutsuBreak
+
     const handleWillpowerStart = useCallback((config: { decayRate?: string, targetKey?: string, initialValue?: number }) => {
         willpowerActions.startWillpower({
             decayRate: config.decayRate || 'normal',
@@ -189,6 +201,7 @@ export function useBardoEngine({
 
     const handleWillpowerStop = useCallback(() => {
         willpowerActions.stopWillpower()
+        setGenjutsuBreak(null)
     }, [willpowerActions])
 
     const handleWillpowerCheck = useCallback((threshold: number): boolean => {
@@ -281,10 +294,15 @@ export function useBardoEngine({
             count: arrebatadosCount,
             fuerza: arrebatadosFuerza,
         } : null
+        const genjutsu = genjutsuBreak ? {
+            stat: genjutsuBreak.stat,
+            text: genjutsuBreak.text,
+            targetKnot: genjutsuBreak.targetKnot,
+        } : null
 
-        if (!spider && !willpower && !arrebatados) return null
-        return { spider, willpower, arrebatados }
-    }, [spiderInfestation.actions, willpowerState, arrebatadosEnabled, arrebatadosCount, arrebatadosFuerza])
+        if (!spider && !willpower && !arrebatados && !genjutsu) return null
+        return { spider, willpower, arrebatados, genjutsu }
+    }, [spiderInfestation.actions, willpowerState, arrebatadosEnabled, arrebatadosCount, arrebatadosFuerza, genjutsuBreak])
 
     // ==================
     // Boss Controller System
@@ -393,6 +411,39 @@ export function useBardoEngine({
     const storyRef = useRef<any>(null)
     storyRef.current = story
 
+    // ── Genjutsu: tag handler ───────────────────────────────────────────────
+    const handleGenjutsuBreak = useCallback((stat: string, targetKnot: string) => {
+        const rawText = story?.currentText?.trim() || ''
+        console.log(`[Genjutsu] BREAK point: stat=${stat}, target=${targetKnot}, text="${rawText.substring(0, 50)}..."`)
+        setGenjutsuBreak({ stat, text: rawText, targetKnot })
+    }, [story])
+
+    // ── Genjutsu: break action ──────────────────────────────────────────────
+    const breakGenjutsu = useCallback(() => {
+        const gb = genjutsuBreakRef.current
+        if (!gb || !storyRef.current) return
+
+        try {
+            setGlobalVariable('genjutsu_stat_used', gb.stat)
+            setGlobalVariable('genjutsu_willpower', Math.round(willpowerValueRef.current))
+            console.log(`[Genjutsu] Broke illusion: stat=${gb.stat}, wp=${Math.round(willpowerValueRef.current)}`)
+        } catch (e) {
+            console.warn('[Genjutsu] Could not set Ink variables:', e)
+        }
+
+        setGenjutsuBreak(null)
+        willpowerActions.stopWillpower()
+
+        try {
+            storyRef.current.ChoosePathString(gb.targetKnot)
+            if (continueStoryRef.current) {
+                continueStoryRef.current()
+            }
+        } catch (e) {
+            console.warn('[Genjutsu] Could not divert to target knot:', e)
+        }
+    }, [willpowerActions, setGlobalVariable])
+
     const { processTags } = useTagProcessor({
         // @ts-ignore
         storyRef,
@@ -418,6 +469,7 @@ export function useBardoEngine({
         onBossCheck: handleBossCheck,
         onBossStop: handleBossStop,
         onVisualDamage: handleVisualDamage,
+        onGenjutsuBreak: handleGenjutsuBreak,
     })
 
     // ==================
@@ -563,7 +615,12 @@ export function useBardoEngine({
             return
         }
 
-
+        // Genjutsu: trap choice costs willpower
+        if (genjutsuBreakRef.current) {
+            const GENJUTSU_TRAP_COST = 15
+            willpowerActions.boostValue(-GENJUTSU_TRAP_COST)
+            console.log(`[Genjutsu] Trap choice selected — willpower -${GENJUTSU_TRAP_COST}`)
+        }
 
         clearVFX()
 
@@ -602,11 +659,27 @@ export function useBardoEngine({
             // @ts-ignore
             saveSystem.autoSave(story.state.toJson(), newText, gameSystems.exportGameSystems() || undefined, buildParallelSystemsSaveState())
         }
-    }, [clearVFX, makeChoiceState, processTags, spiderInfestation, storyId, saveSystem, story, gameSystems])
+    }, [clearVFX, makeChoiceState, processTags, spiderInfestation, storyId, saveSystem, story, gameSystems, willpowerActions])
 
     // Keep makeChoice ref updated for spider phase auto-select
     const makeChoiceRef = useRef<any>(null)
     makeChoiceRef.current = makeChoice
+
+    // Genjutsu: auto-surrender when willpower reaches 0
+    useEffect(() => {
+        if (!genjutsuActive) return
+        if (willpowerState.value > 0) return
+        if (!willpowerState.active) return
+        if (choices.length === 0) return
+
+        console.log('[Genjutsu] Willpower 0 — auto-surrendering (choice 0)')
+        // Clear ref BEFORE makeChoice to prevent trap-cost guard from firing
+        genjutsuBreakRef.current = null
+        setGenjutsuBreak(null)
+        if (makeChoiceRef.current) {
+            makeChoiceRef.current(0)
+        }
+    }, [genjutsuActive, willpowerState.value, willpowerState.active, choices.length])
 
     const restart = useCallback(() => {
         if (storyData && storyId) {
@@ -677,6 +750,9 @@ export function useBardoEngine({
                 setArrebatadosCount(ps.arrebatados.count)
                 setArrebatadosFuerza(ps.arrebatados.fuerza)
             }
+            if (ps?.genjutsu) {
+                setGenjutsuBreak(ps.genjutsu)
+            }
             return saveData
         }
         return null
@@ -698,6 +774,9 @@ export function useBardoEngine({
                 setArrebatadosEnabled(true)
                 setArrebatadosCount(ps.arrebatados.count)
                 setArrebatadosFuerza(ps.arrebatados.fuerza)
+            }
+            if (ps?.genjutsu) {
+                setGenjutsuBreak(ps.genjutsu)
             }
             return saveData
         }
@@ -765,13 +844,19 @@ export function useBardoEngine({
         },
         visualDamage,
         scrollContainerRef,
+        genjutsu: {
+            break: genjutsuBreak,
+            active: genjutsuActive,
+            breakGenjutsu,
+        },
     }), [
         playSfx, playMusic, stopMusic, stopAllAudio,
         vfxState, triggerVFX, clearVFX,
         saveSystem, gameSystems, achievementsSystem, minigameController, pendingInput, commitInput,
         willpowerState, willpowerActions,
         spiderInfestation,
-        scrollFriction, bossController.state, bossController.actions, handleBossPhaseComplete, handleBossPlayerDeath, visualDamage
+        scrollFriction, bossController.state, bossController.actions, handleBossPhaseComplete, handleBossPlayerDeath, visualDamage,
+        genjutsuBreak, genjutsuActive, breakGenjutsu
     ])
 
     const gameVersion = gameSystems.config?.version || '0.0.0'
