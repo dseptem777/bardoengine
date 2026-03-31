@@ -1,204 +1,383 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useWillpowerAudio } from '../hooks/useWillpowerAudio'
+import { useWillpowerCorruption } from '../hooks/useWillpowerCorruption'
 
 /**
- * WillpowerMeter - Non-blocking Willpower UI (LEFT SIDE VERTICAL)
- * 
- * REBALANCED for human playability:
- * - Decay is slower
- * - Boost per press is more generous
- * - Still challenging but winnable
+ * WillpowerMeter — Immersive atmospheric overlay (rewrite from HUD bar).
+ *
+ * Replaces the vertical bar meter with:
+ *   - An SVG eye that closes as willpower drops (fixed bottom-left)
+ *   - Vampire whisper texts appearing at screen edges
+ *   - Procedural audio via useWillpowerAudio
+ *   - Text corruption via useWillpowerCorruption
+ *
+ * The component stays at the same path so no App.jsx import changes are needed.
+ * The `position` prop is accepted but ignored (kept for back-compat with App.jsx).
  */
 
-// Decay rates per second - REDUCED for playability
-const DECAY_RATES = {
-    slow: 2,       // 2% per second
-    normal: 4.5,   // 4.5% per second (slightly harder than original 4)
-    fast: 8,       // 8% per second (harder than original 7)
-    extreme: 14    // 14% per second (very hard)
+// ─── Boost amounts (unchanged from original) ─────────────────────────────────
+const BOOST_AMOUNTS = {
+    slow: 8,
+    normal: 6,
+    fast: 4,
+    extreme: 2.5,
 }
 
-// Boost amount per keypress - BALANCED for challenge
-const BOOST_AMOUNTS = {
-    slow: 8,       // Generous
-    normal: 6,     // Original standard
-    fast: 4,       // Original standard
-    extreme: 2.5   // Tighter than original
+// ─── Whisper text pools ───────────────────────────────────────────────────────
+const WHISPER_SUBTLE = [
+    'Dejate llevar...',
+    'No tiene sentido resistir.',
+    'Sería más fácil si cedés.',
+    '¿Por qué luchás?',
+    'Relajate.',
+]
+
+const WHISPER_PRESSURE = [
+    'Ya casi no quedás vos.',
+    'Tu voluntad se agrieta.',
+    'No podés mantener esto mucho más.',
+    'Cada segundo es más difícil.',
+    '¿Quién sos? ¿Importa?',
+]
+
+const WHISPER_CRITICAL = [
+    'CEDÉ.',
+    'Ya no sos vos.',
+    'El control nunca fue tuyo.',
+    'Dejalo ir.',
+    'Rendite. Es inevitable.',
+]
+
+// ─── Whisper positions (% of viewport) ───────────────────────────────────────
+const WHISPER_POSITIONS = [
+    { x: 5,  y: 15 },  // top-left
+    { x: 70, y: 10 },  // top-right
+    { x: 5,  y: 80 },  // bottom-left
+    { x: 65, y: 85 },  // bottom-right
+    { x: 40, y: 5  },  // top-center
+    { x: 40, y: 90 },  // bottom-center
+]
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function pickPool(value) {
+    if (value > 60) return WHISPER_SUBTLE
+    if (value > 30) return WHISPER_PRESSURE
+    return WHISPER_CRITICAL
 }
+
+function pickInterval(value) {
+    if (value > 60) return 4000 + Math.random() * 4000   // 4000–8000 ms
+    if (value > 30) return 2000 + Math.random() * 2000   // 2000–4000 ms
+    return 1000 + Math.random() * 1000                    // 1000–2000 ms
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export default function WillpowerMeter({
     active,
-    initialValue = 100,
+    value = 100,
     decayRate = 'normal',
     targetKey = 'V',
-    onValueChange,
-    position = 'left'
+    boostValue,
+    volumeMultiplier = 1,
+    genjutsuActive = false,
+    // position is intentionally ignored — everything is fixed
 }) {
-    const [value, setValue] = useState(initialValue)
+    const boost = BOOST_AMOUNTS[decayRate] ?? BOOST_AMOUNTS.normal
+
+    // Eye "fight" open pulse when V is pressed
+    const [boostPulse, setBoostPulse] = useState(0)
+    const boostPulseTimerRef = useRef(null)
+
+    // Straining state for key prompt styling
     const [isStraining, setIsStraining] = useState(false)
-    const [pulseKey, setPulseKey] = useState(0)
-    const [mashCount, setMashCount] = useState(0)
-    const intervalRef = useRef(null)
 
-    // Get difficulty-scaled values
-    const rate = typeof decayRate === 'number' ? decayRate : DECAY_RATES[decayRate] || DECAY_RATES.normal
-    const boost = BOOST_AMOUNTS[decayRate] || BOOST_AMOUNTS.normal
+    // Touch device detection (primary touch — no hover, coarse pointer)
+    const [isTouchDevice] = useState(() =>
+        window.matchMedia('(hover: none) and (pointer: coarse)').matches
+    )
 
-    // Reset value when becoming active
+    // Touch hint visibility
+    const [showTouchHint, setShowTouchHint] = useState(false)
+
+    // Active whisper: { id, text, x, y } | null
+    const [whisper, setWhisper] = useState(null)
+    const lastWhisperRef = useRef(null)
+    const whisperTimerRef = useRef(null)
+    const whisperIdRef = useRef(0)
+
+    // ── handleStaticBurst — sync whisper with audio static ───────────────────
+    const handleStaticBurst = useCallback(() => {
+        const pool = pickPool(value)
+        // Avoid consecutive repeat
+        const candidates = pool.filter(t => t !== lastWhisperRef.current)
+        const text = candidates[Math.floor(Math.random() * candidates.length)]
+        lastWhisperRef.current = text
+        const pos = WHISPER_POSITIONS[Math.floor(Math.random() * WHISPER_POSITIONS.length)]
+        whisperIdRef.current += 1
+        setWhisper({ id: whisperIdRef.current, text, x: pos.x, y: pos.y })
+    }, [value])
+
+    // ── Audio ─────────────────────────────────────────────────────────────────
+    const audio = useWillpowerAudio(handleStaticBurst, volumeMultiplier)
+
     useEffect(() => {
         if (active) {
-            setValue(initialValue)
-            setMashCount(0)
+            audio.start()
+        } else {
+            audio.stop()
         }
-    }, [active, initialValue])
+        return () => audio.stop()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [active])
 
-    // Decay timer - runs every 100ms
     useEffect(() => {
-        if (!active) {
-            if (intervalRef.current) clearInterval(intervalRef.current)
-            return
-        }
+        audio.setIntensity(1 - value / 100)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [value])
 
-        intervalRef.current = setInterval(() => {
-            setValue(prev => {
-                const newVal = Math.max(0, prev - (rate / 10))  // /10 because we run every 100ms
-                if (onValueChange) onValueChange(newVal)
-                return newVal
-            })
-        }, 100)
+    // ── Corruption ────────────────────────────────────────────────────────────
+    useWillpowerCorruption(active, value)
 
-        return () => {
-            if (intervalRef.current) clearInterval(intervalRef.current)
-        }
-    }, [active, rate, onValueChange])
-
-    // Key handler
+    // ── Key handler ───────────────────────────────────────────────────────────
     useEffect(() => {
         if (!active) return
 
         const handleKeyDown = (e) => {
-            if (e.key.toUpperCase() === targetKey.toUpperCase()) {
-                e.preventDefault()
+            if (e.key.toUpperCase() !== targetKey.toUpperCase()) return
+            e.preventDefault()
+            if (genjutsuActive) return
 
-                // Boost willpower
-                setValue(prev => {
-                    const newVal = Math.min(100, prev + boost)
-                    if (onValueChange) onValueChange(newVal)
-                    return newVal
-                })
+            if (boostValue) boostValue(boost)
 
-                setMashCount(prev => prev + 1)
-                setPulseKey(prev => prev + 1)
-                setIsStraining(true)
-                setTimeout(() => setIsStraining(false), 100)
-            }
+            // Trigger eye open pulse
+            setBoostPulse(0.15)
+            if (boostPulseTimerRef.current) clearTimeout(boostPulseTimerRef.current)
+            boostPulseTimerRef.current = setTimeout(() => setBoostPulse(0), 200)
+
+            // Straining flash for key prompt
+            setIsStraining(true)
+            setTimeout(() => setIsStraining(false), 100)
         }
 
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [active, targetKey, boost, onValueChange])
+    }, [active, targetKey, boost, boostValue, genjutsuActive])
+
+    // ── Touch hint: show on first activation on touch devices ────────────────
+    useEffect(() => {
+        if (active && isTouchDevice) {
+            setShowTouchHint(true)
+        }
+        if (!active) setShowTouchHint(false)
+    }, [active, isTouchDevice])
+
+    // Auto-hide touch hint after 5 seconds
+    useEffect(() => {
+        if (!showTouchHint) return
+        const timer = setTimeout(() => setShowTouchHint(false), 5000)
+        return () => clearTimeout(timer)
+    }, [showTouchHint])
+
+    // ── Touch handler for the eye area ────────────────────────────────────────
+    const handleTouch = useCallback((e) => {
+        if (!active) return
+        if (genjutsuActive) return
+        e.preventDefault()
+
+        if (boostValue) boostValue(boost)
+
+        setBoostPulse(0.15)
+        if (boostPulseTimerRef.current) clearTimeout(boostPulseTimerRef.current)
+        boostPulseTimerRef.current = setTimeout(() => setBoostPulse(0), 200)
+
+        setIsStraining(true)
+        setTimeout(() => setIsStraining(false), 100)
+
+        setShowTouchHint(false)
+    }, [active, boost, boostValue, genjutsuActive])
+
+    // ── Whisper scheduler ─────────────────────────────────────────────────────
+    useEffect(() => {
+        if (!active) {
+            clearTimeout(whisperTimerRef.current)
+            setWhisper(null)
+            return
+        }
+
+        function scheduleNext() {
+            const pool = pickPool(value)
+            const candidates = pool.filter(t => t !== lastWhisperRef.current)
+            const text = candidates[Math.floor(Math.random() * candidates.length)]
+            lastWhisperRef.current = text
+            const pos = WHISPER_POSITIONS[Math.floor(Math.random() * WHISPER_POSITIONS.length)]
+            whisperIdRef.current += 1
+            setWhisper({ id: whisperIdRef.current, text, x: pos.x, y: pos.y })
+
+            // Schedule fade-out then next whisper
+            whisperTimerRef.current = setTimeout(() => {
+                setWhisper(null)
+                whisperTimerRef.current = setTimeout(scheduleNext, pickInterval(value))
+            }, 3000 + Math.random() * 1000)  // show for 3–4 s
+        }
+
+        scheduleNext()
+
+        return () => clearTimeout(whisperTimerRef.current)
+    // Intentionally re-run when value crosses pool boundaries
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [active, value > 60, value > 30])
+
+    // ── Computed eye values ───────────────────────────────────────────────────
+    const openness = Math.min(1, Math.max(0, value / 100 + boostPulse))
+    const isCritical = value < 15
+
+    const lidY = 25 - openness * 20   // 25 (center) to 5 (above eye)
+    const upperLidPath = `M 5 25 Q 40 ${lidY} 75 25 L 75 0 L 5 0 Z`
+
+    const irisRadius = 6 + openness * 4   // 6–10
+    const pupilRadius = 3 + (1 - openness) * 4   // 3–7
+
+    const eyeColor =
+        value > 60 ? '#e2e8f0' :
+        value > 30 ? '#f59e0b' :
+        value > 15 ? '#dc2626' :
+                     '#991b1b'
+
+    const whisperColor =
+        value > 60 ? 'text-red-300/40' :
+        value > 30 ? 'text-red-400/60' :
+                     'text-red-200/80'
 
     if (!active) return null
 
-    const isLow = value < 30
-    const isCritical = value < 15
-    const barColor = isCritical
-        ? 'bg-red-600'
-        : isLow
-            ? 'bg-orange-500'
-            : 'bg-emerald-500'
-
-    const glowColor = isCritical
-        ? 'rgba(220, 38, 38, 0.6)'
-        : isLow
-            ? 'rgba(249, 115, 22, 0.4)'
-            : 'rgba(16, 185, 129, 0.3)'
-
-    const difficultyLabel = {
-        slow: 'FÁCIL',
-        normal: 'NORMAL',
-        fast: 'INTENSO',
-        extreme: 'DIFÍCIL'
-    }[decayRate] || ''
-
     return (
-        <AnimatePresence>
+        <>
+            {/* Eye meter + key prompt — fixed bottom-left */}
             <motion.div
-                initial={{ opacity: 0, x: position === 'left' ? -100 : 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: position === 'left' ? -100 : 100 }}
-                className={`fixed top-1/2 -translate-y-1/2 z-[60] ${position === 'left' ? 'left-4' : 'right-4'
-                    }`}
+                className="fixed bottom-6 left-6 z-[60] flex flex-col items-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
             >
-                <div
-                    className="bg-black/90 backdrop-blur-md border border-red-900/50 rounded-lg p-3 flex flex-col items-center gap-2"
-                    style={{
-                        boxShadow: `0 0 30px ${glowColor}, inset 0 0 20px rgba(0,0,0,0.5)`,
-                        width: '80px'
-                    }}
+                {/* SVG Eye — also responds to touch */}
+                <motion.div
+                    animate={isCritical ? { scale: [1, 1.05, 1] } : {}}
+                    transition={isCritical
+                        ? { repeat: Infinity, duration: 0.5, ease: 'easeInOut' }
+                        : {}
+                    }
+                    onTouchStart={handleTouch}
+                    style={{ touchAction: 'none' }}
+                    data-testid="eye-touch-zone"
                 >
-                    <span className={`font-mono text-[10px] uppercase tracking-wider text-center ${isCritical ? 'text-red-400 animate-pulse' : 'text-red-300'
-                        }`}>
-                        {isCritical ? '¡CEDÉS!' : isLow ? '¡LUCHÁ!' : 'VOLUNTAD'}
-                    </span>
-
-                    <div
-                        className="w-8 bg-zinc-900 rounded-full overflow-hidden border border-zinc-700 relative"
-                        style={{ height: '180px' }}
+                    <svg
+                        width="80"
+                        height="50"
+                        viewBox="0 0 80 50"
+                        aria-label={`Willpower: ${Math.round(value)}%`}
+                        data-testid="willpower-eye"
                     >
-                        <motion.div
-                            className={`absolute bottom-0 left-0 right-0 ${barColor} transition-colors duration-300`}
-                            initial={{ height: '100%' }}
-                            animate={{
-                                height: `${value}%`,
-                                boxShadow: isStraining
-                                    ? `0 0 20px ${glowColor}`
-                                    : `0 0 10px ${glowColor}`
-                            }}
-                            transition={{ type: 'tween', duration: 0.05 }}
+                        <defs>
+                            <filter id="wp-glow">
+                                <feGaussianBlur stdDeviation="3" result="blur" />
+                                <feMerge>
+                                    <feMergeNode in="blur" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
+
+                        {/* Eye outline */}
+                        <ellipse
+                            cx="40" cy="25" rx="35" ry="18"
+                            fill="none"
+                            stroke={eyeColor}
+                            strokeWidth="1.5"
+                            filter="url(#wp-glow)"
                         />
-                    </div>
 
-                    <span className={`font-mono text-lg font-bold ${isCritical ? 'text-red-400' : isLow ? 'text-orange-400' : 'text-white'
-                        }`}>
-                        {Math.round(value)}%
-                    </span>
+                        {/* Upper eyelid — closes as willpower drops */}
+                        <path d={upperLidPath} fill={eyeColor} opacity="0.9" data-testid="upper-lid" />
 
-                    <motion.div
-                        key={pulseKey}
-                        className={`w-12 h-12 flex items-center justify-center rounded-lg border-2 font-bold text-xl ${isStraining
-                            ? 'bg-red-600 border-red-400 text-white scale-110'
-                            : 'bg-zinc-800 border-red-900/50 text-red-400'
+                        {/* Iris */}
+                        <circle
+                            cx="40" cy="25"
+                            r={irisRadius}
+                            fill={eyeColor}
+                            opacity="0.6"
+                        />
+
+                        {/* Pupil */}
+                        <circle
+                            cx="40" cy="25"
+                            r={pupilRadius}
+                            fill="black"
+                        />
+
+                        {/* Shine */}
+                        <circle
+                            cx="45" cy="20"
+                            r="2"
+                            fill="white"
+                            opacity={value > 20 ? 0.6 : 0}
+                        />
+                    </svg>
+                </motion.div>
+
+                {/* Key / touch prompt */}
+                <div className="mt-2 flex flex-col items-center gap-1">
+                    {/* Keyboard hint — hidden on pure touch devices and during genjutsu */}
+                    {!isTouchDevice && !genjutsuActive && (
+                        <div
+                            className={`w-8 h-8 rounded border flex items-center justify-center text-sm font-bold ${
+                                isStraining
+                                    ? 'border-white text-white bg-red-900/30'
+                                    : 'border-red-900/40 text-red-600/60'
                             }`}
-                        animate={isStraining ? { scale: [1, 1.3, 1] } : {}}
-                        transition={{ duration: 0.1 }}
-                    >
-                        {targetKey}
-                    </motion.div>
-
-                    <span className="text-zinc-600 text-[10px] font-mono">
-                        ×{mashCount}
-                    </span>
-
-                    {difficultyLabel && (
-                        <span className={`text-[10px] font-mono uppercase ${decayRate === 'extreme' ? 'text-red-500' :
-                            decayRate === 'fast' ? 'text-orange-500' :
-                                decayRate === 'normal' ? 'text-yellow-500' :
-                                    'text-green-500'
-                            }`}>
-                            {difficultyLabel}
-                        </span>
+                        >
+                            {targetKey}
+                        </div>
                     )}
 
-                    {isCritical && (
-                        <motion.div
-                            className="absolute inset-0 rounded-lg border-2 border-red-500 pointer-events-none"
-                            animate={{ opacity: [0.3, 0.8, 0.3] }}
-                            transition={{ repeat: Infinity, duration: 0.5 }}
-                        />
-                    )}
+                    {/* Touch hint — only on touch devices, fades after first use or 5 s */}
+                    <AnimatePresence>
+                        {isTouchDevice && showTouchHint && (
+                            <motion.span
+                                className="text-red-500/60 text-xs italic animate-pulse"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                data-testid="touch-hint"
+                            >
+                                TOCA
+                            </motion.span>
+                        )}
+                    </AnimatePresence>
                 </div>
             </motion.div>
-        </AnimatePresence>
+
+            {/* Whisper texts — fixed at various screen positions */}
+            <AnimatePresence>
+                {whisper && (
+                    <motion.div
+                        key={whisper.id}
+                        className="fixed z-[59] pointer-events-none select-none"
+                        style={{ left: `${whisper.x}%`, top: `${whisper.y}%` }}
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -5 }}
+                        transition={{ duration: 1 }}
+                        data-testid="whisper-text"
+                    >
+                        <span className={`italic text-sm ${whisperColor}`}>
+                            {whisper.text}
+                        </span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
     )
 }

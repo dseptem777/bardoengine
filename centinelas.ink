@@ -47,6 +47,8 @@ VAR sometimiento = 0
 VAR willpower_passed = false
 VAR spider_survived = false
 VAR minigame_result = -1
+VAR genjutsu_stat_used = ""
+VAR genjutsu_willpower = 0
 
 -> capitulo_0
 
@@ -2806,20 +2808,22 @@ Sonríe, dejando asomar bajo los labios dos colmillos que son una promesa de dol
 # WILLPOWER_START: normal
 # UI_EFFECT: blur_vignette
 # MOUSE_RESISTANCE: medium
-[PRESIONÁ "V" PARA RESISTIR]
-
-+ [Resistís la dominación mental]
-    # WILLPOWER_CHECK: 60
-    { willpower_passed:
-        -> cap2b_hablar_resistido
+{
+    - magia >= fuerza and magia >= conocimiento:
+        La realidad se dobla. El cementerio sigue siendo el mismo pero lo sentís como algo tuyo, familiar, casi hogareño. El Vampiro extiende un brazo y en su palma hay algo que parece un recuerdo que perdiste. La ilusión es buena: sólida, coherente, construida con materiales que reconocés. El olor es exacto. Los sonidos son exactos. Hasta la temperatura del aire tiene algo de correcto. Sería perfecta si no fuera porque los bordes de ese recuerdo brillan con un azul frío y residual que ninguna cosa real debería tener. —La costura del hilo. Un mago aprende a distinguir la energía de prestado de la energía propia, y esto claramente es lo primero. El hilo que cose la mentira, perfectamente visible para quien sabe mirar ese tipo de costuras. La ilusión sigue funcionando alrededor pero la grieta ya no puede ocultarse. # GENJUTSU_BREAK: magia:cap2b_hablar_resistido:—La costura del hilo.
+    - fuerza >= magia and fuerza >= conocimiento:
+        La realidad se dobla. El cementerio sigue siendo el mismo pero lo sentís como algo tuyo, familiar, casi hogareño. El Vampiro extiende un brazo y en su palma hay algo que parece un recuerdo que perdiste. La ilusión es buena, casi impecable. Te hace sentir en paz, a salvo, en el lugar exacto donde deberías estar. Y sin embargo hay algo que no cierra. Sería perfecta si no fuera porque tu cuerpo tiene un depredador a dos metros con colmillos y aun así no produce ni una gota de adrenalina. —Ninguna adrenalina. Ningún músculo en tensión, ningún latido extra, ninguna mandíbula apretada. Tu cuerpo debería estar gritando pero la ilusión le tiene tapada la boca. La paz que sentís no es tuya. # GENJUTSU_BREAK: fuerza:cap2b_hablar_resistido:—Ninguna adrenalina.
     - else:
-        -> cap2b_hablar_escalada
-    }
-+ [Cedés ante la presencia del Vampiro]
+        La realidad se dobla. El cementerio sigue siendo el mismo pero lo sentís como algo tuyo, familiar, casi hogareño. El Vampiro extiende un brazo y en su palma hay algo que parece un recuerdo que perdiste. La ilusión es buena, meticulosa, construida con suficiente verosimilitud para engañar a alguien que no haya prestado atención. Hay una historia, hay un contexto, hay datos que encajan. Casi todos. Sería perfecta si no fuera porque en algún momento afirma que los primeros enterramientos de este cementerio fueron en el ala norte. —El ala este. Lo sabés porque lo leíste: los registros más viejos siempre citan el ala este. Los datos incorrectos tienen una textura particular, se sienten como una piedra en el zapato. La mentira es casi perfecta pero ese detalle la delata por completo. # GENJUTSU_BREAK: conocimiento:cap2b_hablar_resistido:—El ala este.
+}
+
+* [Cedés ante la presencia del Vampiro]
     # WILLPOWER_STOP
     # MOUSE_RESISTANCE: none
     # UI_EFFECT: none
     -> cap2b_hablar_cedido
+* [Intentás resistir la presión mental]
+    -> cap2b_hablar_escalada
 
 === cap2b_hablar_resistido ===
 # WILLPOWER_STOP
@@ -2840,15 +2844,25 @@ La presión se intensifica. Sentís que tus pensamientos se vuelven lentos y pes
 # WILLPOWER_START: fast
 # UI_EFFECT: static_mind
 # MOUSE_RESISTANCE: high
-[PRESIONÁ "V" PARA RESISTIR]
-
-+ [Último esfuerzo de resistencia]
-    # WILLPOWER_CHECK: 40
-    { willpower_passed:
-        -> cap2b_hablar_resistido_segundo
+{
+    - magia >= fuerza and magia >= conocimiento:
+        La ilusión se vuelve más densa. El Vampiro ya no te muestra recuerdos: te mete adentro de uno. Estás en algún lugar que reconocés a medias, rodeado de caras borrosas que deberían importarte. El peso del suelo bajo tus pies, la temperatura del aire, los sonidos de fondo: todo está construido con una precisión que da miedo. Es más convincente que antes. Te hablan, te tocan el brazo, hacen referencias que deberían emocionarte. Casi funciona. Pero las caras tienen los movimientos del labio ligeramente desfasados respecto de las voces. —Labios desfasados. Como una película a la que le modificaron el audio. Un defecto de sincronía, un error en la fabricación del sueño que un mago con menos práctica no notaría. Pero vos lo notás. # GENJUTSU_BREAK: magia:cap2b_hablar_resistido_segundo:—Labios desfasados.
+    - fuerza >= magia and fuerza >= conocimiento:
+        La ilusión se vuelve más densa, el recuerdo inventado más cálido. Te envuelve como una manta: sonidos familiares, caras conocidas, la sensación de estar exactamente donde tenés que estar. Tu mente acepta casi todo sin pelear. Pero tu cuerpo empieza a filtrar la verdad que tu mente no puede: transpiración fría en la nuca, mandíbula apretada, puño cerrado sin que lo hayas decidido. —Frío en la nuca. No elegiste cerrar ese puño. Tu sistema nervioso le mandó a tus músculos la señal de combate que la ilusión está tratando de apagar. Peligro real, ahí afuera. No es paz lo que sentís. Cada segundo que pasa la ilusión se afina pero tu cuerpo sigue gritando que algo está mal. # GENJUTSU_BREAK: fuerza:cap2b_hablar_resistido_segundo:—Frío en la nuca.
     - else:
-        -> cap2b_hablar_dominado
-    }
+        La ilusión se vuelve más densa. Ahora el Vampiro habla con la voz de alguien que conocés, usando frases que suenan auténticas. La entonación está bien. Los patrones de habla están bien. Los temas de conversación son los correctos. Casi funciona. Pero en un momento usa una expresión que esa persona nunca usaría, con una cadencia que aprendió de memoria sin entender el contexto. —No es su voz. Una combinación de palabras que esa persona evitaría por razones que el Vampiro no puede saber porque nunca realmente la conoció. No es la persona. Es una copia que estudió a la persona de afuera, y ahora que lo notaste no podés dejar de notar las costuras en cada frase que dice. # GENJUTSU_BREAK: conocimiento:cap2b_hablar_resistido_segundo:—No es su voz.
+}
+
+* [Cedés ante la presencia del Vampiro]
+    # WILLPOWER_STOP
+    # MOUSE_RESISTANCE: none
+    # UI_EFFECT: none
+    -> cap2b_hablar_dominado
+* [Intentás aguantar]
+    # WILLPOWER_STOP
+    # MOUSE_RESISTANCE: none
+    # UI_EFFECT: none
+    -> cap2b_hablar_dominado
 
 === cap2b_hablar_resistido_segundo ===
 # WILLPOWER_STOP
@@ -2955,29 +2969,23 @@ Al final estás flotando. En un mar rojizo con un oleaje cada vez más tranquilo
 # UI_EFFECT: blood_pulse
 # MOUSE_RESISTANCE: high
 {
-    - conocimiento >= 25:
-        # next
-        Leíste sobre esta situación de éxtasis demasiadas veces. Es el dulce placer con el cual los Vampiros Superiores engañan a su presa para que se deje matar. Su presa. Vos. Vos sos su presa.
-        Te agarrás de esa idea, es como una balsa en mitad del mar donde te imaginás.
-        Ese bicho no es agradable y la situación no es ni hermosa ni erótica. Es un depredador que clavó sus colmillos en tu cuello para matarte.
-        [PRESIONÁ "V" PARA RESISTIR]
-        * [Luchás contra el éxtasis]
-            # WILLPOWER_CHECK: 60
-            { willpower_passed:
-                -> cap2b_convertirse_escape
-            - else:
-                -> cap2b_convertirse_muerte_lucida
-            }
+    - magia >= fuerza and magia >= conocimiento:
+        Flotás en ese mar carmesí. Es hermoso. Cada fibra de tu cuerpo quiere creerlo. El oleaje es suave y caliente, las preocupaciones se disuelven antes de llegar a la orilla, hay una voz que te dice que estás bien, que esto está bien, que siempre estuvo bien. Es lo más hermoso que sentiste en tu vida. Pero un mago sabe distinguir entre una sensación real y una que le fabricaron: hay una corriente de energía entrando por tu cuello que no es sangre, es la manipulación directa de tu sistema límbico. —El hechizo. La costura. No es tuya esa paz. El placer es un hechizo y la emoción es una instrucción. Ahora que ves las costuras del encantamiento, el mar carmesí empieza a perder color en los bordes. # GENJUTSU_BREAK: magia:cap2b_convertirse_escape:—El hechizo. La costura.
+    - fuerza >= magia and fuerza >= conocimiento:
+        Flotás en ese mar carmesí. Es hermoso. Cada fibra de tu cuerpo quiere quedarse aquí para siempre. El oleaje te lleva y te trae, el sol carmesí pulsa despacio, la orilla siempre parece cerca. Es lo más hermoso que sentiste en tu vida. Pero tu cuerpo manda señales que el placer no puede tapar del todo: presión arterial bajando, extremidades frías, ritmo cardíaco cada vez más irregular. —Te estás vaciando. Tus dedos están azules. No te estás relajando. No estás flotando en ningún mar. Ese sol carmesí que pulsa es tu propio corazón quedándose sin combustible. # GENJUTSU_BREAK: fuerza:cap2b_convertirse_escape:—Te estás vaciando.
     - else:
-        # next
-        # WILLPOWER_STOP
-        # MOUSE_RESISTANCE: none
-        # UI_EFFECT: none
-        Por primera vez en tu vida estás realmente calmo y relajado. Ya nada te importa. Cerrás tus ojos y te dejás barrer por las oleadas cada vez más suaves del mar. El sol palpitante se va apagando y, al mismo tiempo, tu corazón se detiene.
-        # next
-        ESTÁS MUERTO.
-        -> END
+        Flotás en ese mar carmesí. Es hermoso. Cada parte de vos quiere creerlo. La sensación es tan total que casi es un argumento en sí misma, casi prueba que debe ser real. Es lo más hermoso que sentiste en tu vida. Pero leíste sobre esta situación demasiadas veces: el mar carmesí y el sol palpitante son una mentira que tu cuerpo compra con entusiasmo. Lo que realmente ocurre es que estás perdiendo sangre en un cementerio mientras un depredador te vacía por el cuello. —No es placer. Esta escena tiene nombre y tiene diagnóstico. El éxtasis es el truco, el mecanismo de anestesia que la mordida usa para que no te resistas. Cada segundo que seguís flotando es un segundo menos de sangre en tus venas. # GENJUTSU_BREAK: conocimiento:cap2b_convertirse_escape:—No es placer.
 }
+* [Te dejás llevar]
+    # WILLPOWER_STOP
+    # MOUSE_RESISTANCE: none
+    # UI_EFFECT: none
+    -> cap2b_convertirse_muerte_lucida
+* [Intentás resistir la sensación]
+    # WILLPOWER_STOP
+    # MOUSE_RESISTANCE: none
+    # UI_EFFECT: none
+    -> cap2b_convertirse_muerte_lucida
 
 === cap2b_convertirse_escape ===
 # WILLPOWER_STOP
@@ -3148,15 +3156,25 @@ Lo importante es que no dejás de avanzar.
 # WILLPOWER_START: extreme
 # UI_EFFECT: static_mind
 # MOUSE_RESISTANCE: extreme
-[PRESIONÁ "V" PARA RESISTIR]
-
-* [Controlás tus pasos]
-    # WILLPOWER_CHECK: 50
-    { willpower_passed:
-        -> cap2b_improvisar_resistido
+{
+    - magia >= fuerza and magia >= conocimiento:
+        Tus piernas siguen avanzando. No las mandaste a avanzar pero siguen haciéndolo, una zancada detrás de la otra, como si hubieran recibido órdenes de una cadena de mando que no pasa por tu cabeza. Y entonces lo ves: hilos de energía, finos como telarañas, conectados a tus rodillas y tus tobillos. Los Vampiros los sostienen desde el otro extremo como si fueran las cuerdas de una marioneta. —Los hilos en tus rodillas. No es voluntad lo que te mueve. No es valentía, no es coraje, no es decisión. Es magia de compulsión, vieja y burda, de alguien que asumió que no sabrías reconocerla. Ahora que la identificaste, sus costuras son tan visibles como cualquier otro hechizo que hayas deshecho. Los hilos tiritan cuando los mirás directo. # GENJUTSU_BREAK: magia:cap2b_improvisar_resistido:—Los hilos en tus rodillas.
+    - fuerza >= magia and fuerza >= conocimiento:
+        Tus piernas siguen avanzando. No las estás moviendo vos. Intentás frenarlas y hay un segundo de confusión, como si el comando se perdiera en el camino, como si la señal de tu cerebro llegara con eco. Existe una diferencia entre caminar hacia el peligro porque sos un idiota valiente y no poder dejar de caminar aunque quieras. Tus piernas ahora son lo segundo. Un cuerpo entrenado sabe cuando algo va en contra de su propio movimiento. —El músculo que resiste. Lo reconocés antes que en tu cabeza: el tendón que tironea en sentido contrario, el instinto de supervivencia que grita parate aunque la ilusión diga avanzá. Tu cuerpo ya lo sabe aunque tu mente tarde en aceptarlo. Cada paso que das sin quererlo es una confirmación más de que algo externo te está moviendo. # GENJUTSU_BREAK: fuerza:cap2b_improvisar_resistido:—El músculo que resiste.
     - else:
-        -> cap2b_improvisar_dominado
-    }
+        Tus piernas siguen avanzando. Sentís que querés ir hacia allá. O al menos eso es lo que te parece que sentís. Hay una diferencia entre los dos y tardan unos segundos en separarse en tu cabeza. Recordás haber leído sobre esto: la compulsión vampírica genera una sensación de "querer ir" artificialmente, pero tiene un tell conductual específico. El movimiento involuntario tiene una firma distinta al voluntario. La cabeza no hace los microajustes de equilibrio que haría un movimiento voluntario. —Demasiado uniformes. Tus piernas van demasiado rectas, demasiado mecánicas, sin la microoscilación constante que tiene un cuerpo que se mueve por su propia voluntad. Nada orgánico se mueve así. El patrón es tan claro que ahora no podés dejar de verlo en cada zancada. # GENJUTSU_BREAK: conocimiento:cap2b_improvisar_resistido:—Demasiado uniformes.
+}
+
+* [Cedés al control]
+    # WILLPOWER_STOP
+    # MOUSE_RESISTANCE: none
+    # UI_EFFECT: none
+    -> cap2b_improvisar_dominado
+* [Intentás detenerte]
+    # WILLPOWER_STOP
+    # MOUSE_RESISTANCE: none
+    # UI_EFFECT: none
+    -> cap2b_improvisar_dominado
 
 === cap2b_improvisar_resistido ===
 # WILLPOWER_STOP

@@ -43,6 +43,12 @@ export default function Player({
     choiceResistanceLevel = 'none',  // 'none', 'slow', 'normal', 'fast', 'extreme'
     onChoicesVisibleChange = null,   // Callback when choices visibility changes
     onWillpowerHintVisible = null,   // Callback when willpower mash hint is revealed
+    // Genjutsu props
+    genjutsuBreak = null,
+    dominantStat = null,
+    willpowerValue = 100,
+    onBreakGenjutsu = null,
+    onGenjutsuTypingComplete = null,
     // Mobile props
     isMobile = false,
     headerStatsProps = null,         // { stats, statsConfig, getAllStatsInfo }
@@ -246,6 +252,11 @@ export default function Player({
     const handleTypingComplete = useCallback(() => {
         setIsTyping(false)
 
+        // Notify genjutsu system that the fisura paragraph is fully visible and clickable
+        if (genjutsuBreak && onGenjutsuTypingComplete) {
+            onGenjutsuTypingComplete()
+        }
+
         // Auto-start minigame if configured
         if (hasPendingMinigame && minigameAutoStart && onMinigameReady) {
             onMinigameReady()
@@ -258,7 +269,7 @@ export default function Player({
                 onContinue()
             }, autoAdvanceDelay * 1000)
         }
-    }, [autoAdvance, autoAdvanceDelay, choices.length, isEnded, onContinue, hasPendingMinigame, minigameAutoStart, onMinigameReady])
+    }, [autoAdvance, autoAdvanceDelay, choices.length, isEnded, onContinue, hasPendingMinigame, minigameAutoStart, onMinigameReady, genjutsuBreak, onGenjutsuTypingComplete])
 
     // Scroll to interactive area when typing finishes
     useEffect(() => {
@@ -418,6 +429,10 @@ export default function Player({
                             fontSize={fontSize}
                             seekString={willpowerActive ? '[PRESIONÁ' : null}
                             onStringFound={onWillpowerHintVisible}
+                            genjutsuBreak={genjutsuBreak}
+                            dominantStat={dominantStat}
+                            willpowerValue={willpowerValue}
+                            onBreakGenjutsu={onBreakGenjutsu}
                         />
                     </div>
 
@@ -440,8 +455,8 @@ export default function Player({
                                             onClick={() => handleChoice(index)}
                                             disabled={checkBurned ? checkBurned(choice) : false}
                                             lockedRequirement={isLocked ? lockResult.displayText : null}
-                                            // Only first choice (resistir) has resistance, others (ceder) are easy
-                                            resistanceLevel={willpowerActive && index === 0 ? choiceResistanceLevel : 'none'}
+                                            // Last choice (resistir) has resistance, first (ceder) is easy
+                                            resistanceLevel={willpowerActive && index === choices.length - 1 ? choiceResistanceLevel : 'none'}
                                         />
                                     )
                                 })}
