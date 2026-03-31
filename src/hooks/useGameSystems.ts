@@ -32,6 +32,7 @@ export interface SavedGameSystems {
  * - #inv:add:itemId[:qty]  (e.g., #inv:add:llave_dorada, #inv:add:balas:5)
  * - #inv:remove:itemId[:qty]
  * - #inv:clear
+ * - #inv:clear_mission  (keeps items with persistent: true)
  */
 export function useGameSystems(storyId: string) {
     const [config, setConfig] = useState<GameConfigWithStats & GameConfigWithInventory>(DEFAULT_CONFIG)
@@ -106,6 +107,12 @@ export function useGameSystems(storyId: string) {
                 return true
             }
 
+            // Handle clear_mission action - keeps persistent items
+            if (action === 'clear_mission') {
+                inventoryHook.clearNonPersistent()
+                return true
+            }
+
             // Other actions require at least 3 parts
             if (parts.length >= 3) {
                 const itemId = parts[2]
@@ -124,17 +131,7 @@ export function useGameSystems(storyId: string) {
             }
         }
 
-        // Handle minigame tags: #minigame:name:param1:param2
-        if (trimmedTag.startsWith('minigame:')) {
-            const parts = trimmedTag.split(':')
-            if (parts.length >= 2) {
-                const name = parts[1]
-                const params = parts.slice(2)
-
-                // Return a special object that the caller (App.jsx) should handle
-                return { type: 'minigame', name, params }
-            }
-        }
+        // Minigame tags are handled by useTagProcessor, not here
 
         return false
     }, [statsHook, inventoryHook])

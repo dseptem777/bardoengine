@@ -17,6 +17,7 @@ export default function LockpickGame({ params = [], onFinish }) {
 
     const requestRef = useRef()
     const startTimeRef = useRef()
+    const positionRef = useRef(0)
 
     const animate = useCallback(time => {
         if (gameState !== 'playing') return
@@ -25,6 +26,7 @@ export default function LockpickGame({ params = [], onFinish }) {
         const progress = (time - startTimeRef.current) / 1000
         const newPos = (Math.sin(progress * speed) + 1) * 50 // Oscilla between 0 and 100
 
+        positionRef.current = newPos
         setPosition(newPos)
         requestRef.current = requestAnimationFrame(animate)
     }, [gameState, speed])
@@ -37,11 +39,12 @@ export default function LockpickGame({ params = [], onFinish }) {
     const handleAction = useCallback(() => {
         if (gameState !== 'playing') return
 
-        const isSuccess = position >= zoneStart && position <= (zoneStart + zoneSize)
+        const currentPos = positionRef.current
+        const isSuccess = currentPos >= zoneStart && currentPos <= (zoneStart + zoneSize)
         setGameState(isSuccess ? 'win' : 'lose')
 
         onFinish(isSuccess ? 1 : 0)
-    }, [gameState, position, zoneStart, zoneSize, onFinish])
+    }, [gameState, zoneStart, zoneSize, onFinish])
 
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -55,16 +58,15 @@ export default function LockpickGame({ params = [], onFinish }) {
 
     return (
         <div className="bg-zinc-900 border-2 border-bardo-accent p-12 flex flex-col items-center justify-center gap-10 shadow-2xl" onClick={handleAction}>
-            <h2 className="text-3xl font-bold text-bardo-accent tracking-widest uppercase">Precision Unlock</h2>
+            <h2 className="text-3xl font-bold text-bardo-accent tracking-widest uppercase">GANZÚA DE PRECISIÓN</h2>
 
             <div className="relative w-full h-12 bg-zinc-800 rounded-full overflow-hidden border border-zinc-700">
                 {/* Sweet Spot */}
                 <div
-                    className="absolute h-full bg-bardo-accent/40"
+                    className="absolute h-full bg-bardo-accent/40 accent-box-shadow-40"
                     style={{
                         left: `${zoneStart}%`,
                         width: `${zoneSize}%`,
-                        boxShadow: '0 0 20px color-mix(in srgb, var(--bardo-accent) 40%, transparent)'
                     }}
                 />
 
@@ -79,17 +81,17 @@ export default function LockpickGame({ params = [], onFinish }) {
             <div className="flex flex-col items-center gap-2">
                 <p className="text-gray-400 font-mono text-center">
                     {gameState === 'playing' ? (
-                        <>CLICK or <span className="text-bardo-accent">SPACE</span> when needle enters zone</>
+                        <>CLICK o <span className="text-bardo-accent">ESPACIO</span> cuando la aguja entre en la zona</>
                     ) : gameState === 'win' ? (
-                        <span className="text-green-500 font-bold text-2xl">✓ UNLOCKED</span>
+                        <span className="text-green-500 font-bold text-2xl">✓ ¡DESBLOQUEADO!</span>
                     ) : (
-                        <span className="text-red-500 font-bold text-2xl animate-pulse">FAILED</span>
+                        <span className="text-red-500 font-bold text-2xl animate-pulse">FALLIDO</span>
                     )}
                 </p>
 
                 <div className="w-full flex justify-between px-2 text-[10px] text-zinc-600 font-mono">
-                    <span>LOCKED</span>
-                    <span>ENGAGED</span>
+                    <span>CERRADO</span>
+                    <span>TRABADO</span>
                 </div>
             </div>
         </div>

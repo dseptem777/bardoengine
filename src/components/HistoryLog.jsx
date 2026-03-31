@@ -1,4 +1,6 @@
 import React, { useEffect, useRef } from 'react';
+import { BookOpen } from 'lucide-react'
+import { useModalA11y } from '../hooks/useModalA11y'
 
 /**
  * HistoryLog - Modal component to display the narrative history (Bitácora)
@@ -10,11 +12,13 @@ import React, { useEffect, useRef } from 'react';
  */
 const HistoryLog = ({ isOpen, history, onClose }) => {
     const scrollRef = useRef(null);
+    const modalRef = useModalA11y(isOpen, onClose);
 
-    // Auto-scroll to bottom when opened or history updates
+    // Scroll to ~600px from bottom when opened, so user sees recent entries
     useEffect(() => {
         if (isOpen && scrollRef.current) {
-            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+            const el = scrollRef.current
+            el.scrollTop = Math.max(0, el.scrollHeight - 600)
         }
     }, [isOpen, history]);
 
@@ -27,6 +31,10 @@ const HistoryLog = ({ isOpen, history, onClose }) => {
             onClick={onClose}
         >
             <div
+                ref={modalRef}
+                role="dialog"
+                aria-modal="true"
+                aria-label="Bitácora"
                 className="w-full max-w-4xl max-h-[80vh] bg-bardo-bg border-[var(--ui-border-width)] border-bardo-accent flex flex-col shadow-[0_0_30px_rgba(0,0,0,0.5)] animate-in zoom-in-95 duration-300"
                 style={{ borderRadius: 'var(--ui-border-radius)' }}
                 onClick={(e) => e.stopPropagation()}
@@ -34,7 +42,7 @@ const HistoryLog = ({ isOpen, history, onClose }) => {
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b border-white/10">
                     <h2 className="text-bardo-accent font-header text-xl uppercase tracking-widest flex items-center gap-2">
-                        <span className="text-2xl">📖</span> Bitácora Narrativa
+                        <BookOpen size={20} /> Bitácora Narrativa
                     </h2>
                     <button
                         onClick={onClose}
@@ -74,7 +82,13 @@ const HistoryLog = ({ isOpen, history, onClose }) => {
                 </div>
 
                 {/* Footer */}
-                <div className="p-4 bg-black/20 text-center border-t border-white/5">
+                <div className="p-4 bg-black/20 flex items-center justify-between border-t border-white/5">
+                    <button
+                        onClick={() => { if (scrollRef.current) scrollRef.current.scrollTop = 0 }}
+                        className="text-white/30 hover:text-bardo-accent text-xs font-mono uppercase tracking-tighter transition-colors"
+                    >
+                        ↑ Inicio
+                    </button>
                     <p className="text-white/40 text-xs font-mono uppercase tracking-tighter">
                         — Fin del Registro Actual —
                     </p>

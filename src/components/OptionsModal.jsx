@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Settings, Music, Keyboard, Accessibility, Monitor } from 'lucide-react'
 import { useSettings } from '../hooks/useSettings'
+import { useModalA11y } from '../hooks/useModalA11y'
 
 /**
  * OptionsModal - Settings modal with retro-futuristic styling
@@ -14,8 +16,24 @@ export default function OptionsModal({ isOpen, onClose }) {
         toggleFullscreen,
         resetSettings,
     } = useSettings()
+    const modalRef = useModalA11y(isOpen, onClose)
+    const [resetConfirm, setResetConfirm] = useState(false)
 
-    if (!isOpen) return null
+    // Auto-revert confirmation after 3 seconds
+    useEffect(() => {
+        if (!resetConfirm) return
+        const tid = setTimeout(() => setResetConfirm(false), 3000)
+        return () => clearTimeout(tid)
+    }, [resetConfirm])
+
+    const handleReset = useCallback(() => {
+        if (resetConfirm) {
+            resetSettings()
+            setResetConfirm(false)
+        } else {
+            setResetConfirm(true)
+        }
+    }, [resetConfirm, resetSettings])
 
     return (
         <AnimatePresence>
@@ -34,21 +52,25 @@ export default function OptionsModal({ isOpen, onClose }) {
 
                     {/* Modal */}
                     <motion.div
-                        className="relative bg-bardo-bg border-2 border-bardo-accent p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto"
+                        ref={modalRef}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Opciones"
+                        className="relative bg-bardo-bg border-[var(--ui-border-width)] border-bardo-accent/50 p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto accent-box-shadow-30"
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
                         style={{
-                            boxShadow: '0 0 30px color-mix(in srgb, var(--bardo-accent) 30%, transparent)',
+                            borderRadius: 'var(--ui-border-radius)',
                         }}
                     >
                         {/* Header */}
-                        <h2 className="text-2xl font-bold text-bardo-accent text-center mb-6 tracking-wider">
-                            ⚙️ OPCIONES
+                        <h2 className="text-2xl font-bold text-bardo-accent text-center mb-6 tracking-wider flex items-center justify-center gap-2">
+                            <Settings size={22} /> OPCIONES
                         </h2>
 
                         {/* Audio Section */}
-                        <SettingsSection title="🎵 Audio">
+                        <SettingsSection title={<span className="flex items-center gap-1.5"><Music size={13} /> Audio</span>}>
                             <SliderSetting
                                 label="Volumen Música"
                                 value={settings.musicVolume}
@@ -66,14 +88,14 @@ export default function OptionsModal({ isOpen, onClose }) {
                         </SettingsSection>
 
                         {/* Text Section */}
-                        <SettingsSection title="⌨️ Texto">
+                        <SettingsSection title={<span className="flex items-center gap-1.5"><Keyboard size={13} /> Texto</span>}>
                             <SliderSetting
                                 label="Velocidad"
                                 value={settings.typewriterSpeed}
                                 onChange={(v) => updateSetting('typewriterSpeed', v)}
                                 min={0}
                                 max={5}
-                                labels={['Instantáneo', '', '', '', '', 'Muy Rápido']}
+                                labels={['Instantáneo', '', '', '', '', 'Lento']}
                             />
                             <ToggleSetting
                                 label="Auto-avance"
@@ -93,7 +115,7 @@ export default function OptionsModal({ isOpen, onClose }) {
                         </SettingsSection>
 
                         {/* Accessibility Section */}
-                        <SettingsSection title="♿ Accesibilidad">
+                        <SettingsSection title={<span className="flex items-center gap-1.5"><Accessibility size={13} /> Accesibilidad</span>}>
                             <ToggleSetting
                                 label="Efectos Visuales (shake/flash)"
                                 value={settings.vfxEnabled}
@@ -106,7 +128,7 @@ export default function OptionsModal({ isOpen, onClose }) {
                         </SettingsSection>
 
                         {/* Display Section */}
-                        <SettingsSection title="📺 Pantalla">
+                        <SettingsSection title={<span className="flex items-center gap-1.5"><Monitor size={13} /> Pantalla</span>}>
                             <ToggleSetting
                                 label="Pantalla Completa"
                                 value={isFullscreen}
@@ -117,10 +139,14 @@ export default function OptionsModal({ isOpen, onClose }) {
                         {/* Actions */}
                         <div className="flex gap-4 mt-6">
                             <button
-                                onClick={resetSettings}
-                                className="flex-1 py-3 px-4 border border-gray-600 text-gray-400 hover:border-red-500 hover:text-red-500 transition-colors font-bold tracking-wider"
+                                onClick={handleReset}
+                                className={`flex-1 py-3 px-4 border font-bold tracking-wider transition-colors ${
+                                    resetConfirm
+                                        ? 'border-red-500 text-red-500 hover:bg-red-500 hover:text-black'
+                                        : 'border-gray-600 text-gray-400 hover:border-red-500 hover:text-red-500'
+                                }`}
                             >
-                                RESET
+                                {resetConfirm ? 'CONFIRMAR?' : 'RESET'}
                             </button>
                             <button
                                 onClick={onClose}
@@ -143,7 +169,7 @@ export default function OptionsModal({ isOpen, onClose }) {
 function SettingsSection({ title, children }) {
     return (
         <div className="mb-6">
-            <h3 className="text-sm font-bold text-gray-500 mb-3 border-b border-gray-800 pb-1">
+            <h3 className="text-sm font-bold text-gray-500 mb-3 border-b border-gray-800 pb-1 flex items-center gap-1.5">
                 {title}
             </h3>
             <div className="space-y-4">
@@ -168,7 +194,7 @@ function SliderSetting({ label, value, onChange, min, max, labels, showValue }) 
                 max={max}
                 value={value}
                 onChange={(e) => onChange(parseInt(e.target.value))}
-                className="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-bardo-accent"
+                className="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer"
             />
             {labels && (
                 <div className="flex justify-between text-xs text-gray-500">

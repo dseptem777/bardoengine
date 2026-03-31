@@ -44,7 +44,7 @@ describe('InventoryPanel', () => {
                 />
             )
 
-            expect(screen.getByText('🎒')).toBeInTheDocument()
+            expect(screen.getByRole('button', { name: 'Inventario' })).toBeInTheDocument()
         })
 
         it('should not render when disabled', () => {
@@ -56,7 +56,7 @@ describe('InventoryPanel', () => {
                 />
             )
 
-            expect(screen.queryByText('🎒')).not.toBeInTheDocument()
+            expect(screen.queryByRole('button', { name: 'Inventario' })).not.toBeInTheDocument()
         })
 
         it('should show item count badge when items exist', () => {
@@ -87,7 +87,7 @@ describe('InventoryPanel', () => {
             expect(screen.queryByText('INVENTARIO')).not.toBeInTheDocument()
 
             // Click toggle button
-            fireEvent.click(screen.getByText('🎒'))
+            fireEvent.click(screen.getByRole('button', { name: 'Inventario' }))
 
             // Panel should now be visible
             expect(screen.getByText(/INVENTARIO/)).toBeInTheDocument()
@@ -102,16 +102,12 @@ describe('InventoryPanel', () => {
                 />
             )
 
-            // Get all backpack icons - there's one in toggle button
-            const toggleButtons = screen.getAllByText('🎒')
-
-            // Open - click the first one which is the toggle button
-            fireEvent.click(toggleButtons[0])
+            // Open
+            fireEvent.click(screen.getByRole('button', { name: 'Inventario' }))
             expect(screen.getByText(/INVENTARIO/)).toBeInTheDocument()
 
-            // Close - get buttons again since DOM changed
-            const toggleButtonsAfter = screen.getAllByText('🎒')
-            fireEvent.click(toggleButtonsAfter[0])
+            // Close
+            fireEvent.click(screen.getByRole('button', { name: 'Inventario' }))
 
             // Panel header should be gone
             expect(screen.queryByText(/INVENTARIO/)).not.toBeInTheDocument()
@@ -128,7 +124,7 @@ describe('InventoryPanel', () => {
                 />
             )
 
-            fireEvent.click(screen.getByText('🎒'))
+            fireEvent.click(screen.getByRole('button', { name: 'Inventario' }))
 
             expect(screen.getByText('Health Potion')).toBeInTheDocument()
             expect(screen.getByText('Iron Sword')).toBeInTheDocument()
@@ -143,7 +139,7 @@ describe('InventoryPanel', () => {
                 />
             )
 
-            fireEvent.click(screen.getByText('🎒'))
+            fireEvent.click(screen.getByRole('button', { name: 'Inventario' }))
 
             expect(screen.getByText('🧪')).toBeInTheDocument()
             expect(screen.getByText('⚔️')).toBeInTheDocument()
@@ -158,7 +154,7 @@ describe('InventoryPanel', () => {
                 />
             )
 
-            fireEvent.click(screen.getByText('🎒'))
+            fireEvent.click(screen.getByRole('button', { name: 'Inventario' }))
 
             expect(screen.getByText('x2')).toBeInTheDocument()
         })
@@ -172,7 +168,7 @@ describe('InventoryPanel', () => {
                 />
             )
 
-            fireEvent.click(screen.getByText('🎒'))
+            fireEvent.click(screen.getByRole('button', { name: 'Inventario' }))
 
             expect(screen.getByText('2/20')).toBeInTheDocument()
         })
@@ -188,7 +184,7 @@ describe('InventoryPanel', () => {
                 />
             )
 
-            fireEvent.click(screen.getByText('🎒'))
+            fireEvent.click(screen.getByRole('button', { name: 'Inventario' }))
 
             expect(screen.getByText('Inventario vacío')).toBeInTheDocument()
         })

@@ -1,0 +1,117 @@
+# Changelog — BardoEngine
+
+## v0.17.0 (2026-03-24)
+
+### Features — Spider Infestation (Torch & Corruption)
+- **Complete redesign**: cursor = antorcha, oscuridad cubre la pantalla con agujero en la luz
+- **Corrupción directa**: CSS `filter: blur + brightness` aplicado directo al DOM de párrafos (no overlays rectangulares)
+- **Telarañas orgánicas**: SVG full-screen con geometría radial real (radios + anillos concéntricos) en lugar de líneas aleatorias
+- **Arañas graduales**: spawn trickle de 1 araña cada 4s hasta el cap de dificultad
+- **Pausa automática**: overlay se pausa (y oscuridad se oculta) al abrir cualquier menú
+- **Restauración suave**: ~2.5s para limpiar corrupción; telaraña SVG decae más lento (~10s) con mapa independiente
+- **Fix anti-parpadeo**: filtro CSS aplicado directo en el game loop (no via React state), elimina reinicio de transitions
+- **Fix unblur**: usa distancia al punto más cercano del rect (no al centro) — el mouse sobre el texto siempre restaura
+- **Save/restore**: `continueGame` ahora restaura sistemas paralelos (spider, willpower, arrebatados) igual que `loadSave`
+- **parallelSystems**: campo en `useSaveSystem` para guardar/restaurar estado de todos los sistemas paralelos
+
+### Fixes — UI
+- **StatsPanel z-index**: subido a z-[150], queda visible sobre minigames
+- **DebugSpawnModal z-index**: subido a z-[9999], no lo tapan las arañas
+- **centinelas.ink**: choices en `boveda_capullo` cambiados de `*` a `+` (sticky) para evitar que se quemen
+
+## v0.16.0 (2026-03-23)
+
+### Features — CrawlGame
+- **Nuevo minigame narrativo**: reemplaza apnea #2 (taquilla) con CrawlGame — sostener V arrastra al personaje, soltar recupera estamina
+- **Texto acumulativo reactivo**: hold, release, baja estamina, forced release, sustos aleatorios, hitos de progreso
+- **VFX**: vignette rojo, manchas de sangre como blobs CSS progresivos, shake, degradación de texto, scare flash
+- **SFX**: heartbeat_loop, 3 groans situacionales con pitch variation via Web Audio API (detune independiente)
+- **Balance**: 14%/s drain, 4.5%/s progreso, 45s time limit
+
+---
+
+## v0.15.0 (2026-03-23)
+
+### Security
+- **Encryption key rotation**: Move hardcoded key to `BARDO_ENCRYPTION_KEY` env var. Old key burned from git history. `encrypt-story.cjs`, `crypto.rs`, and `build-game.cjs` all read from `.env` or environment.
+
+### Fixes — Engine Correctness
+- **Forced click**: Replace hardcoded `makeChoice(1)` with last-choice selection
+- **useHeavyCursor**: Replace `innerHTML` with `createElement` (XSS prevention)
+- **useSpiderInfestation**: Track `squashSpider` setTimeout in `pendingTimeoutsRef`
+- **useStats**: Fix setState during render → `useEffect` with ref
+- **useGameSystems**: Remove dead minigame branch (handled by `useTagProcessor`)
+- **ForcedClickOverlay**: Replace 50ms `setInterval` polling with `MutationObserver` + `ResizeObserver`
+- **App.jsx**: Add try/catch for localStorage quota on dev story import
+
+### Fixes — Performance
+- **useAudio**: Remove hardcoded `SOUNDS`/`MUSIC` registries, use dynamic path resolution (`/sounds/{id}.mp3`)
+
+### Mobile + Accessibility
+- **QTEGame**: Add touch/click support on key display (mobile playable)
+- **useModalA11y**: New hook — focus trap, Escape key, ARIA attributes, focus restore
+- **Modals**: Apply `useModalA11y` to SaveLoadModal, OptionsModal, ExtrasMenu, HistoryLog
+- **MinigameOverlay**: Add keyboard dismiss for result screen
+
+### UX Polish
+- **OptionsModal**: Fix typewriter speed labels (Instantáneo↔Lento), add two-step RESET confirmation
+- **TextDisplay**: Allow text selection, change cursor to default
+- **Player**: Use CSS truncation for mobile title instead of `split(' ')[0]`
+- **ChoiceButton**: Show "Seguí haciendo click" hint on first resistance click
+- **SaveLoadModal**: Improve overwrite section header (orange tint)
+- **RelationshipsPanel**: Add close button to desktop panel
+- **useStoryState**: Add missing `continueLabel` to TypeScript interface
+
+---
+
+## v0.14.1 (2026-03-22)
+
+### Critical Fixes
+- **MinigameOverlay**: `hasCommittedRef` guard prevents double `onFinish` from timeout+click race
+- **cancelGame**: Now commits failure result (0) to prevent permanent story deadlock
+- **useAudio**: `stopMusic` captures Howl locally + `fadeTimeoutRef` prevents killing new tracks
+- **ExtrasMenu**: Only stops music if user was on jukebox page, preserves game BGM
+
+### Other Fixes
+- **QTEGame**: Move `finish()` out of state updater into `useEffect` (StrictMode safe)
+- **Player**: Disable save/load button during active minigame
+- **App**: Remove duplicate `useStoryLoader`, sync storyId from AppContent to parent
+- **useStoryState**: Clear choices and end story on critical Ink error
+- **useAchievements**: Eliminate double `loadUnlocked()` on init
+
+---
+
+## v0.14.0 (2026-03-22)
+
+### UI/UX Overhaul (7 stages)
+- **Stage 1**: Remove emoji from title, add intro config, translate minigame strings to Spanish, remove footer and console.log spam
+- **Stage 2**: Configurable branding — game title in header, roleLabel for stats, input label prop, hide Continue when no save
+- **Stage 3**: Modal consistency — unified backgrounds, borders, border-radius, inline delete confirmation
+- **Stage 4**: SVG icon system via `lucide-react` — replace 18 UI emoji with cross-platform SVG icons
+- **Stage 5**: UX flow — minigame result timing 800→1500ms, QTE ¡YA! flash state, HistoryLog scroll position, styled error card, Arkanoid configurable rows/cols, inventory close button
+- **Stage 6**: Cross-browser polish — `color-mix()` fallbacks, serif font fix, GalleryPage React fix, Jukebox music continuity
+- **Stage 7 (Centinelas)**: 5 achievements, 19-track jukebox, achievement tags in ink, SFX audit
+
+---
+
+## v0.13.0 (2026-03-21)
+
+### Features
+- **Typewriter skip progresivo**: 2-phase skip system. First press fast-forwards text (8 chars/frame via rAF), second press shows all text instantly. Short text (<100 chars) skips instantly on first press.
+- Floating indicator updates during fast-forward: "Presioná de nuevo para saltar"
+
+### Fixes
+- **QTE countdown race condition**: Countdown got stuck at "Ready? 2" due to `setGameState` being called inside `setReadyCountdown` updater. Separated state transition into its own effect.
+
+---
+
+## v0.12.1
+
+- fix(engine): Dev story selector uses fresh JSON instead of localStorage cache
+
+---
+
+## v0.12.0
+
+- feat(centinelas): ApneaGame como knot virtual + fix resultado minigame
+

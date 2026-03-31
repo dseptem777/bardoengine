@@ -64,10 +64,14 @@ export function useMinigameController(onResultCommit) {
      * Cancel the current minigame without result
      */
     const cancelGame = useCallback(() => {
-        console.log('[MinigameController] Game cancelled')
+        console.log('[MinigameController] Game cancelled — committing failure result')
+        resultRef.current = 0
         setState('idle')
         setConfig(null)
-    }, [])
+        if (onResultCommit) {
+            onResultCommit(0)
+        }
+    }, [onResultCommit])
 
     /**
      * Reset controller to initial state

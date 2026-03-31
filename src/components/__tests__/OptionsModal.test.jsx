@@ -127,11 +127,16 @@ describe('OptionsModal', () => {
             expect(onClose).toHaveBeenCalled()
         })
 
-        it('should call resetSettings when reset clicked', () => {
+        it('should call resetSettings when reset confirmed (two clicks)', () => {
             render(<OptionsModal isOpen={true} onClose={vi.fn()} />)
 
+            // First click shows confirmation
             fireEvent.click(screen.getByText('RESET'))
+            expect(mockResetSettings).not.toHaveBeenCalled()
+            expect(screen.getByText('CONFIRMAR?')).toBeInTheDocument()
 
+            // Second click confirms
+            fireEvent.click(screen.getByText('CONFIRMAR?'))
             expect(mockResetSettings).toHaveBeenCalled()
         })
     })

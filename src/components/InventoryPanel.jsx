@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Backpack } from 'lucide-react'
 
 /**
  * InventoryPanel - Displays player inventory
@@ -72,7 +73,7 @@ export default function InventoryPanel({
                             {/* Header */}
                             <div className="flex items-center justify-between px-4 py-2 border-b border-bardo-accent/20">
                                 <h3 className="text-bardo-accent font-bold flex items-center gap-2">
-                                    <span>🎒</span> INVENTARIO
+                                    <Backpack size={16} /> INVENTARIO
                                 </h3>
                                 <div className="flex items-center gap-3">
                                     <span className="text-xs text-gray-500">
@@ -124,9 +125,10 @@ export default function InventoryPanel({
                     onClick={handleToggle}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    aria-label="Inventario"
                 >
                     <div className="flex items-center gap-2">
-                        <span className="text-xl">🎒</span>
+                        <Backpack size={18} />
                         {itemCount > 0 && (
                             <span className="bg-bardo-accent text-black text-xs font-bold px-1.5 py-0.5 rounded-full">
                                 {itemCount}
@@ -155,11 +157,20 @@ export default function InventoryPanel({
                         {/* Header */}
                         <div className="flex items-center justify-between p-3 border-b border-bardo-accent/20">
                             <h3 className="text-bardo-accent font-bold flex items-center gap-2">
-                                <span>🎒</span> INVENTARIO
+                                <Backpack size={16} /> INVENTARIO
                             </h3>
-                            <span className="text-xs text-gray-500">
-                                {itemCount}/{inventoryConfig.maxSlots}
-                            </span>
+                            <div className="flex items-center gap-3">
+                                <span className="text-xs text-gray-500">
+                                    {itemCount}/{inventoryConfig.maxSlots}
+                                </span>
+                                <button
+                                    onClick={handleToggle}
+                                    className="text-gray-400 hover:text-white text-lg leading-none"
+                                    aria-label="Cerrar inventario"
+                                >
+                                    ✕
+                                </button>
+                            </div>
                         </div>
 
                         {/* Items List */}

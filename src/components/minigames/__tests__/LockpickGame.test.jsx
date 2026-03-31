@@ -44,21 +44,21 @@ describe('LockpickGame', () => {
         it('should render game title', () => {
             render(<LockpickGame params={[0.2, 1.1]} onFinish={vi.fn()} />)
 
-            expect(screen.getByText('Precision Unlock')).toBeInTheDocument()
+            expect(screen.getByText('GANZÚA DE PRECISIÓN')).toBeInTheDocument()
         })
 
         it('should show instructions when playing', () => {
             render(<LockpickGame params={[0.2, 1.1]} onFinish={vi.fn()} />)
 
-            expect(screen.getByText(/CLICK or/)).toBeInTheDocument()
-            expect(screen.getByText('SPACE')).toBeInTheDocument()
+            expect(screen.getByText(/CLICK o/)).toBeInTheDocument()
+            expect(screen.getByText('ESPACIO')).toBeInTheDocument()
         })
 
         it('should show LOCKED and ENGAGED labels', () => {
             render(<LockpickGame params={[0.2, 1.1]} onFinish={vi.fn()} />)
 
-            expect(screen.getByText('LOCKED')).toBeInTheDocument()
-            expect(screen.getByText('ENGAGED')).toBeInTheDocument()
+            expect(screen.getByText('CERRADO')).toBeInTheDocument()
+            expect(screen.getByText('TRABADO')).toBeInTheDocument()
         })
     })
 
@@ -67,7 +67,7 @@ describe('LockpickGame', () => {
             const onFinish = vi.fn()
             render(<LockpickGame params={[0.2, 1.1]} onFinish={onFinish} />)
 
-            const gameArea = screen.getByText('Precision Unlock').closest('div')
+            const gameArea = screen.getByText('GANZÚA DE PRECISIÓN').closest('div')
             fireEvent.click(gameArea)
 
             expect(onFinish).toHaveBeenCalled()
@@ -110,14 +110,14 @@ describe('LockpickGame', () => {
             render(<LockpickGame params={[]} onFinish={onFinish} />)
 
             // Game should render without errors
-            expect(screen.getByText('Precision Unlock')).toBeInTheDocument()
+            expect(screen.getByText('GANZÚA DE PRECISIÓN')).toBeInTheDocument()
         })
 
         it('should accept custom difficulty', () => {
             render(<LockpickGame params={[0.8, 1.0]} onFinish={vi.fn()} />)
 
             // Higher difficulty = smaller zone, but game should still render
-            expect(screen.getByText('Precision Unlock')).toBeInTheDocument()
+            expect(screen.getByText('GANZÚA DE PRECISIÓN')).toBeInTheDocument()
         })
     })
 })

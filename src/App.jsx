@@ -9,17 +9,20 @@ import HistoryLog from './components/HistoryLog'
 import VFXLayer from './components/VFXLayer'
 import StatsPanel from './components/StatsPanel'
 import InventoryPanel from './components/InventoryPanel'
+import RelationshipsPanel from './components/RelationshipsPanel'
 import ExtrasMenu from './components/ExtrasMenu'
 import AchievementToast from './components/AchievementToast'
 import MinigameOverlay from './components/MinigameOverlay'
 import InputOverlay from './components/InputOverlay'
+import DebugSpawnModal from './components/DebugSpawnModal'
 import HorrorVFXLayer from './components/HorrorVFXLayer'
 import WillpowerMeter from './components/WillpowerMeter'
-import ForcedClickOverlay from './components/ForcedClickOverlay'
 import SpiderOverlay from './components/SpiderOverlay'
 import { useHeavyCursor } from './hooks/useHeavyCursor'
 import { useStoryLoader } from './hooks/useStoryLoader'
 import { useBardoEngine } from './hooks/useBardoEngine'
+import { processChoiceRequirements } from './utils/choiceRequirements'
+import { getDominantStat } from './utils/getDominantStat'
 import { SettingsProvider, useSettings } from './hooks/useSettings'
 import { useIsMobile } from './hooks/useMediaQuery'
 
@@ -33,6 +36,7 @@ import toyboxStory from './stories/toybox.json'
 import apneaStory from './stories/apnea.json'
 import vampiroStory from './stories/vampiro.json'
 import spiderDemoStory from './stories/spider_demo.json'
+import museoDemoStory from './stories/museo_demo.json'
 
 // Dev mode stories
 const DEV_STORIES = {
@@ -42,18 +46,9 @@ const DEV_STORIES = {
     toybox: toyboxStory,
     apnea: apneaStory,
     vampiro: vampiroStory,
-    spider_demo: spiderDemoStory
+    spider_demo: spiderDemoStory,
+    museo_demo: museoDemoStory
 }
-
-const AVAILABLE_STORIES = [
-    { id: 'vampiro', title: '🧛 EL PESO DE LA VOLUNTAD (Meta-Horror Demo)', data: vampiroStory },
-    { id: 'centinelas', title: '🚨 CENTINELAS DEL SUR', data: centinelasStory },
-    { id: 'toybox', title: '📦 BARDO TOYBOX (Minigames)', data: toyboxStory },
-    { id: 'apnea', title: '🫁 APNEA', data: apneaStory },
-    { id: 'serruchin', title: '🪚 SERRUCHÍN', data: serruchinStory },
-    { id: 'partuza', title: 'Tu nombre en clave es Partuza', data: partuzaStory },
-    { id: 'spider_demo', title: '🕷️ INFESTACIÓN (Spider Demo)', data: spiderDemoStory }
-]
 
 // Inner App component that uses settings context
 function AppContent({ onStorySelect }) {
@@ -70,10 +65,55 @@ function AppContent({ onStorySelect }) {
     const [optionsOpen, setOptionsOpen] = useState(false)
     const [historyOpen, setHistoryOpen] = useState(false)
     const [inventoryOpen, setInventoryOpen] = useState(false)
+    const [relationshipsOpen, setRelationshipsOpen] = useState(false)
     const [extrasOpen, setExtrasOpen] = useState(false)
     const [showEditor, setShowEditor] = useState(false)
     const [choicesVisible, setChoicesVisible] = useState(false)  // True when Player's typewriter is done
     const [meterRevealed, setMeterRevealed] = useState(false)    // True once bar has been shown for first time
+    const [debugUnlocked, setDebugUnlocked] = useState(false)
+    const [showDebugSpawn, setShowDebugSpawn] = useState(false)
+
+    // Dev story list (persisted in localStorage, all imported via .ink)
+    const [devStoryList, setDevStoryList] = useState(() => {
+        try {
+            const stored = localStorage.getItem('bardo_dev_stories')
+            if (!stored) return []
+            return JSON.parse(stored)
+        } catch { return [] }
+    })
+
+    const handleImportInk = useCallback(async (name, title, inkSource) => {
+        const { Compiler } = await import('inkjs/compiler/Compiler')
+        const { Story } = await import('inkjs')
+        const compiler = new Compiler(inkSource)
+        const compiled = compiler.Compile()
+        const jsonStr = compiled.ToJson()
+        // Validate it actually works as a Story
+        new Story(jsonStr)
+
+        const storyData = JSON.parse(jsonStr)
+        const id = name.replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase()
+        const entry = { id, title, data: storyData }
+
+        setDevStoryList(prev => {
+            const filtered = prev.filter(s => s.id !== id)
+            const next = [...filtered, entry]
+            try {
+                localStorage.setItem('bardo_dev_stories', JSON.stringify(next))
+            } catch (e) {
+                console.error('[App] localStorage quota exceeded — story too large to persist:', e)
+            }
+            return next
+        })
+    }, [])
+
+    const handleRemoveStory = useCallback((id) => {
+        setDevStoryList(prev => {
+            const next = prev.filter(s => s.id !== id)
+            localStorage.setItem('bardo_dev_stories', JSON.stringify(next))
+            return next
+        })
+    }, [])
 
     // Story loader with environment detection
     const { stories, isLoading: storyLoading, error: storyError, isProductionMode } = useStoryLoader({
@@ -84,6 +124,13 @@ function AppContent({ onStorySelect }) {
     const currentStoryId = isProductionMode && stories.length > 0
         ? stories[0].id
         : selectedStory?.id
+
+    // Sync currentStoryId to parent (for SettingsProvider)
+    useEffect(() => {
+        if (onStorySelect && currentStoryId) {
+            onStorySelect(currentStoryId)
+        }
+    }, [currentStoryId, onStorySelect])
 
     // Get current story data
     const getCurrentStoryData = () => {
@@ -107,19 +154,18 @@ function AppContent({ onStorySelect }) {
 
     // Destructure for convenience
     const {
-        story, text, choices, canContinue, isEnded, history,
+        story, text, choices, canContinue, continueLabel, isEnded, history,
         actions, subsystems, config
     } = engine
-    const { audio, vfx, saveSystem, gameSystems, achievementsSystem, minigameController, willpower, spiderInfestation } = subsystems
+    const { audio, vfx, saveSystem, gameSystems, achievementsSystem, minigameController, willpower, spiderInfestation, scrollFriction, bossController, visualDamage, scrollContainerRef, genjutsu } = subsystems
 
-    // Track if we've auto-submitted due to zero willpower
-    const [hasAutoSubmitted, setHasAutoSubmitted] = useState(false)
-    const [showForcedClick, setShowForcedClick] = useState(false)
-
-    // Reset auto-submit flag and reveal state when choices or text change
+    // Keep debug unlocked in sync with dev mode
     useEffect(() => {
-        setHasAutoSubmitted(false)
-        setShowForcedClick(false)
+        if (!isProductionMode) setDebugUnlocked(true)
+    }, [isProductionMode])
+
+    // Reset reveal state when choices or text change
+    useEffect(() => {
         setChoicesVisible(false)
         // Do NOT reset meterRevealed here. It is now strictly controlled by 'active' state.
     }, [choices, currentStoryId, text])
@@ -132,24 +178,17 @@ function AppContent({ onStorySelect }) {
         setMeterRevealed(false)
     }, [willpower?.state?.active])
 
-    // Trigger forced click animation when willpower reaches 0
-    useEffect(() => {
-        if (willpower?.state?.active &&
-            willpower?.state?.value <= 0 &&
-            choices.length >= 2 &&
-            !hasAutoSubmitted) {
-            console.log('[Willpower] Zero willpower - starting forced click takeover')
-            setHasAutoSubmitted(true)
-            setShowForcedClick(true)
-        }
-    }, [willpower?.state?.value, willpower?.state?.active, choices.length, hasAutoSubmitted, actions])
+    // ==================
+    // Spider Infestation — Pause when any modal is open
+    // ==================
+    const isMenuOpen = saveModalMode !== null || optionsOpen || historyOpen
+        || inventoryOpen || relationshipsOpen || extrasOpen
 
-    // Handle forced click completion
-    const handleForcedClickComplete = useCallback(() => {
-        console.log('[Willpower] Forced click complete - selecting ceder')
-        setShowForcedClick(false)
-        actions.makeChoice(1)  // Index 1 = second option = ceder
-    }, [actions])
+    useEffect(() => {
+        if (!spiderInfestation?.actions) return
+        if (isMenuOpen) spiderInfestation.actions.pause()
+        else spiderInfestation.actions.resume()
+    }, [isMenuOpen, spiderInfestation?.actions])
 
     // ==================
     // Heavy Cursor Effect (Meta-Horror)
@@ -158,7 +197,7 @@ function AppContent({ onStorySelect }) {
     const horrorEffect = vfx.vfxState?.horrorEffect
     const willpowerActive = willpower?.state?.active
 
-    const shouldActivateHeavyCursor = (willpowerActive && (meterRevealed || showForcedClick)) ||
+    const shouldActivateHeavyCursor = (willpowerActive && meterRevealed) ||
         horrorEffect === 'static_mind' ||
         horrorEffect === 'blur_vignette' ||
         horrorEffect === 'submission_fade'
@@ -218,11 +257,24 @@ function AppContent({ onStorySelect }) {
         return targetKnot ? gameSystems.hubs.isBurned(targetKnot) : false
     }, [gameSystems])
 
+    // Helper to check if a choice is locked by requirements
+    const checkChoiceLocked = useCallback((choice) => {
+        if (!gameSystems) return null
+        return processChoiceRequirements(choice, gameSystems)
+    }, [gameSystems])
+
     // Dev mode: select story
+    // If a compiled import exists in DEV_STORIES, prefer it over the
+    // localStorage copy so that recompiled .ink files are picked up
+    // without having to re-import the story manually.
     const selectStoryDev = useCallback((storyInfo) => {
-        setSelectedStory(storyInfo)
+        const freshData = DEV_STORIES[storyInfo.id]
+        const resolved = freshData
+            ? { ...storyInfo, data: freshData }
+            : storyInfo
+        setSelectedStory(resolved)
         if (onStorySelect) {
-            onStorySelect(storyInfo.id)
+            onStorySelect(resolved.id)
         }
     }, [onStorySelect])
 
@@ -266,6 +318,7 @@ function AppContent({ onStorySelect }) {
     // Keyboard shortcuts
     useEffect(() => {
         const handleKeyDown = (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
             if (e.key.toLowerCase() === 'o') {
                 e.preventDefault()
                 setOptionsOpen(prev => !prev)
@@ -310,20 +363,12 @@ function AppContent({ onStorySelect }) {
             {/* Parallel Willpower Meter - Shows after first reveal, stays until inactive */}
             <WillpowerMeter
                 active={willpower?.state?.active && meterRevealed && !minigameController.isPlaying}
-                initialValue={100}
+                value={willpower?.state?.value ?? 100}
                 decayRate={willpower?.state?.decayRate || 'normal'}
                 targetKey={willpower?.state?.targetKey || 'V'}
-                onValueChange={willpower?.updateValue}
-                position="left"
-            />
-
-            {/* Forced Click Animation - When willpower reaches 0 */}
-            <ForcedClickOverlay
-                active={showForcedClick}
-                targetSelector='[data-choice-index="1"]'
-                choicesVisible={choicesVisible}
-                onComplete={handleForcedClickComplete}
-                message="Ya no tenés control..."
+                boostValue={willpower?.boostValue}
+                volumeMultiplier={getMusicVolume()}
+                genjutsuActive={genjutsu?.active ?? false}
             />
 
             {/* Spider Infestation Overlay - Parasitic horror on story UI */}
@@ -367,6 +412,16 @@ function AppContent({ onStorySelect }) {
                             ? story?.variablesState?.[gameSystems.statsConfig.playerNameVariable] || ''
                             : null
                     }
+                    nickname={
+                        gameSystems.statsConfig?.nicknameVariable
+                            ? story?.variablesState?.[gameSystems.statsConfig.nicknameVariable] || ''
+                            : null
+                    }
+                    chapterName={
+                        gameSystems.statsConfig?.chapterVariable
+                            ? story?.variablesState?.[gameSystems.statsConfig.chapterVariable] || ''
+                            : null
+                    }
                     isMobile={isMobile}
                 />
             )}
@@ -384,6 +439,18 @@ function AppContent({ onStorySelect }) {
                 />
             )}
 
+            {/* Relationships Panel */}
+            {showPlayer && (
+                <RelationshipsPanel
+                    stats={gameSystems.stats}
+                    relationshipDefs={gameSystems.statsConfig?.definitions?.filter(d => d.displayType === 'relationship')}
+                    isOpen={relationshipsOpen}
+                    onToggle={() => setRelationshipsOpen(prev => !prev)}
+                    isMobile={isMobile}
+                    hideToggle={isMobile}
+                />
+            )}
+
             {/* Loading state */}
             {!isReady && (
                 <div className="flex items-center justify-center min-h-screen bg-black">
@@ -393,18 +460,42 @@ function AppContent({ onStorySelect }) {
 
             {/* Error state */}
             {storyError && (
-                <div className="flex items-center justify-center min-h-screen">
-                    <div className="text-red-500 text-xl">Error: {storyError}</div>
+                <div className="flex items-center justify-center min-h-screen bg-bardo-bg">
+                    <div className="max-w-md w-full mx-4 p-8 border border-red-800/50 bg-red-950/30 text-center"
+                        style={{ borderRadius: 'var(--ui-border-radius)' }}>
+                        <p className="text-red-400 text-xl font-bold mb-2">Error de carga</p>
+                        <p className="text-red-600 text-sm font-mono mb-6 break-all">{storyError}</p>
+                        <div className="flex gap-3 justify-center">
+                            <button
+                                onClick={() => window.location.reload()}
+                                className="px-4 py-2 border border-red-700 text-red-400 hover:bg-red-900/30 text-sm transition-colors"
+                                style={{ borderRadius: 'var(--ui-border-radius)' }}
+                            >
+                                Reintentar
+                            </button>
+                            {!isProductionMode && (
+                                <button
+                                    onClick={backToStorySelector}
+                                    className="px-4 py-2 border border-neutral-700 text-neutral-400 hover:bg-neutral-800/30 text-sm transition-colors"
+                                    style={{ borderRadius: 'var(--ui-border-radius)' }}
+                                >
+                                    Volver al selector
+                                </button>
+                            )}
+                        </div>
+                    </div>
                 </div>
             )}
 
             {/* Story Selector (dev mode only) */}
             {!storyLoading && !storyError && showStorySelector && (
                 <StorySelector
-                    stories={AVAILABLE_STORIES}
+                    stories={devStoryList}
                     onSelect={selectStoryDev}
                     hasSave={() => false}
                     onOpenEditor={() => setShowEditor(true)}
+                    onImportInk={handleImportInk}
+                    onRemoveStory={handleRemoveStory}
                 />
             )}
 
@@ -432,6 +523,8 @@ function AppContent({ onStorySelect }) {
                     onExtras={() => setExtrasOpen(true)}
                     onOpenEditor={null} // Removed: editor only from main selector
                     onBack={!isProductionMode ? backToStorySelector : null}
+                    onCheatCode={() => setDebugUnlocked(true)}
+                    gameVersion={config.gameVersion}
                 />
             )}
 
@@ -445,12 +538,16 @@ function AppContent({ onStorySelect }) {
                     onRestart={actions.restart}
                     onFinish={actions.finishGame}
                     onBack={backToStartScreen}
+                    onContinueFromSave={saveSystem.hasContinue ? handleContinue : null}
+                    onLoadSave={() => setSaveModalMode('load')}
                     onSave={() => setSaveModalMode('save')}
                     onLoad={() => setSaveModalMode('load')}
                     onContinue={actions.continueStory}
                     canContinue={canContinue}
+                    continueLabel={continueLabel}
                     onOptions={() => setOptionsOpen(true)}
                     onToggleHistory={() => setHistoryOpen(prev => !prev)}
+                    gameTitle={getGameTitle()}
                     // Settings
                     typewriterDelay={getTypewriterDelay()}
                     fontSize={settings.fontSize}
@@ -462,6 +559,7 @@ function AppContent({ onStorySelect }) {
                     onMinigameReady={actions.handleMinigameStart}
                     minigameAutoStart={minigameController.config?.autoStart}
                     checkBurned={checkChoiceBurned}
+                    checkLocked={checkChoiceLocked}
                     // Willpower system - pass difficulty level for random resistance scaling
                     willpowerActive={willpower?.state?.active}
                     choiceResistanceLevel={willpower?.state?.active ? willpower?.state?.decayRate || 'normal' : 'none'}
@@ -479,6 +577,27 @@ function AppContent({ onStorySelect }) {
                     inventoryEnabled={!!gameSystems.inventoryConfig?.enabled}
                     onToggleInventory={() => setInventoryOpen(prev => !prev)}
                     inventoryItemCount={gameSystems.getItemsWithInfo?.()?.length || 0}
+                    relationshipsEnabled={gameSystems.statsConfig?.definitions?.some(d => d.displayType === 'relationship')}
+                    onToggleRelationships={() => setRelationshipsOpen(prev => !prev)}
+                    // Scroll container ref (shared with scroll friction hook)
+                    scrollContainerRef={scrollContainerRef}
+                    // Boss fight props
+                    bossState={bossController?.state}
+                    scrollFriction={scrollFriction}
+                    onBossPhaseComplete={bossController?.handleBossPhaseComplete}
+                    onBossPlayerDeath={bossController?.handleBossPlayerDeath}
+                    sabiduria={gameSystems?.stats?.sabiduria}
+                    genjutsuBreak={genjutsu?.break ?? null}
+                    dominantStat={getDominantStat(
+                        Object.fromEntries(
+                            Object.entries(gameSystems.stats || {}).filter(([key]) =>
+                                gameSystems.statsConfig?.definitions?.find(d => d.id === key)?.displayType === 'value'
+                            )
+                        )
+                    )}
+                    willpowerValue={willpower?.state?.value ?? 100}
+                    onBreakGenjutsu={genjutsu?.breakGenjutsu}
+                    onGenjutsuTypingComplete={genjutsu?.onTypingComplete}
                 />
             )}
 
@@ -516,13 +635,43 @@ function AppContent({ onStorySelect }) {
             <InputOverlay
                 isOpen={!!subsystems.input.pendingInput}
                 placeholder={subsystems.input.pendingInput?.placeholder}
+                label={subsystems.input.pendingInput?.label}
                 onCommit={subsystems.input.commitInput}
-                onCancel={() => { }} // Could implement a cancel that just resumes without setting var
+            />
+
+            {/* Debug Spawn Button */}
+            {debugUnlocked && story && (
+                <button
+                    onClick={() => setShowDebugSpawn(true)}
+                    className="fixed bottom-4 right-4 z-50 bg-gray-900/90 border border-bardo-accent/40 text-bardo-accent text-xs font-mono px-3 py-2 rounded hover:bg-bardo-accent/20 hover:border-bardo-accent transition-all"
+                    title="Debug Spawn (jump to any knot)"
+                >
+                    [DEBUG]
+                </button>
+            )}
+
+            {/* Debug Spawn Modal */}
+            <DebugSpawnModal
+                isOpen={showDebugSpawn}
+                onClose={() => setShowDebugSpawn(false)}
+                knots={story ? actions.getKnotList() : []}
+                variables={story ? actions.getVariables() : {}}
+                onSpawn={(knotName, vars) => {
+                    actions.spawnAtKnot(knotName, vars)
+                    setShowDebugSpawn(false)
+                }}
+                onSaveVariables={(vars) => {
+                    actions.debugSetVariables(vars)
+                }}
             />
 
             {/* Bardo Editor Overlay - Only visible in Story Selector view */}
             {showEditor && showStorySelector && (
-                <Suspense fallback={<div className="fixed inset-0 z-[200] bg-black text-white flex items-center justify-center font-mono">LOADING THE LOOM...</div>}>
+                <Suspense fallback={
+                    <div className="fixed inset-0 z-[200] bg-[#0a0a0a] flex items-center justify-center">
+                        <p className="text-yellow-400 text-xl tracking-widest animate-pulse">LOADING BARDOEDITOR...</p>
+                    </div>
+                }>
                     <BardoEditor onClose={() => setShowEditor(false)} />
                 </Suspense>
             )}
@@ -534,16 +683,8 @@ function AppContent({ onStorySelect }) {
 function App() {
     const [selectedStoryId, setSelectedStoryId] = useState(null)
 
-    const { stories, isLoading, isProductionMode } = useStoryLoader({
-        devStories: DEV_STORIES
-    })
-
-    const currentStoryId = isProductionMode && stories.length > 0
-        ? stories[0].id
-        : selectedStoryId
-
     return (
-        <SettingsProvider storyId={currentStoryId}>
+        <SettingsProvider storyId={selectedStoryId}>
             <AppContent
                 onStorySelect={setSelectedStoryId}
                 selectedStoryId={selectedStoryId}

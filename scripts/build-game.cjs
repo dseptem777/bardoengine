@@ -19,6 +19,21 @@ const { execSync, spawn } = require('child_process');
 const STORIES_DIR = path.join(__dirname, '..', 'src', 'stories');
 const TAURI_CONF = path.join(__dirname, '..', 'src-tauri', 'tauri.conf.json');
 
+// Load .env file for BARDO_ENCRYPTION_KEY (needed for both encrypt-story and Rust compile)
+function loadDotEnv() {
+    const envPath = path.join(__dirname, '..', '.env');
+    if (fs.existsSync(envPath)) {
+        const lines = fs.readFileSync(envPath, 'utf8').split('\n');
+        for (const line of lines) {
+            const match = line.match(/^([A-Z_]+)=(.+)$/);
+            if (match && !process.env[match[1]]) {
+                process.env[match[1]] = match[2].trim();
+            }
+        }
+    }
+}
+loadDotEnv();
+
 // Platform targets mapping
 const PLATFORM_TARGETS = {
     windows: 'nsis',
@@ -84,7 +99,7 @@ function updateTauriConfig(storyId, title, version) {
     console.log(`   Versión: ${version}`);
 }
 
-function runCommand(cmd, description) {
+function runCommand(cmd, description, extraEnv = {}) {
     console.log(`\n▶ ${description}...`);
     try {
         execSync(cmd, {
@@ -92,7 +107,8 @@ function runCommand(cmd, description) {
             cwd: path.join(__dirname, '..'),
             env: {
                 ...process.env,
-                Path: `${process.env.Path};${process.env.USERPROFILE}\\.cargo\\bin`
+                Path: `${process.env.Path};${process.env.USERPROFILE}\\.cargo\\bin`,
+                ...extraEnv
             }
         });
         return true;
@@ -109,7 +125,7 @@ function isAndroidConfigured() {
     return hasJavaHome && hasAndroidHome && hasNdkHome;
 }
 
-function checkAndroidPrerequisites() {
+function checkAndroidPrerequisites(expectedIdentifier) {
     if (!isAndroidConfigured()) {
         console.error('\n✗ Android no está configurado.');
         console.error('  Ejecutá primero: powershell .\\scripts\\setup-android.ps1');
@@ -117,12 +133,38 @@ function checkAndroidPrerequisites() {
         return false;
     }
 
-    // Check for Tauri Android project
+    // Check for Tauri Android project — auto-reinit if missing or stale identifier
     const genAndroidPath = path.join(__dirname, '..', 'src-tauri', 'gen', 'android');
-    if (!fs.existsSync(genAndroidPath)) {
-        console.error('\n✗ Proyecto Android de Tauri no inicializado.');
-        console.error('  Ejecutá: npm run tauri android init\n');
-        return false;
+    let needsInit = !fs.existsSync(genAndroidPath);
+
+    if (!needsInit && expectedIdentifier) {
+        // Check if the existing gen/android matches the current identifier
+        // Identifier com.bardoengine.foo → expects .../java/com/bardoengine/foo/
+        const parts = expectedIdentifier.split('.');
+        const expectedDir = path.join(genAndroidPath, 'app', 'src', 'main', 'java', ...parts);
+        if (!fs.existsSync(expectedDir)) {
+            console.log(`\n⚠ gen/android fue generado para otro juego (no existe ${parts.join('.')})`);
+            needsInit = true;
+        }
+    }
+
+    if (needsInit) {
+        // Delete stale gen/android if it exists
+        if (fs.existsSync(genAndroidPath)) {
+            console.log('  → Eliminando gen/android viejo...');
+            fs.rmSync(genAndroidPath, { recursive: true, force: true });
+        }
+        console.log('  → Inicializando proyecto Android con tauri android init...');
+        try {
+            execSync('npx tauri android init', {
+                stdio: 'inherit',
+                cwd: path.join(__dirname, '..'),
+            });
+            console.log('  ✓ Proyecto Android inicializado\n');
+        } catch (e) {
+            console.error(`\n✗ Error inicializando Android: ${e.message}`);
+            return false;
+        }
     }
 
     return true;
@@ -155,18 +197,26 @@ async function main() {
         const config = getGameConfig(s);
         console.log(`  [${i + 1}] ${s} (v${config.version}) - "${config.title}"`);
     });
+    console.log(`\n  [E] BardoEditor (standalone editor)`);
 
     // Get user selection for story
-    const selection = await prompt('\n¿Qué historia querés empaquetar? (número): ');
-    const index = parseInt(selection) - 1;
+    const selection = await prompt('\n¿Qué querés empaquetar? (número o E): ');
 
-    if (isNaN(index) || index < 0 || index >= stories.length) {
-        console.error('Selección inválida');
-        process.exit(1);
+    const isEditorBuild = selection.toLowerCase() === 'e';
+    let storyId, gameConfig;
+
+    if (isEditorBuild) {
+        storyId = 'editor';
+        gameConfig = { title: 'BardoEditor', version: '1.0.0' };
+    } else {
+        const index = parseInt(selection) - 1;
+        if (isNaN(index) || index < 0 || index >= stories.length) {
+            console.error('Selección inválida');
+            process.exit(1);
+        }
+        storyId = stories[index];
+        gameConfig = getGameConfig(storyId);
     }
-
-    const storyId = stories[index];
-    const gameConfig = getGameConfig(storyId);
 
     // Platform selection
     const currentPlatform = detectCurrentPlatform();
@@ -200,9 +250,6 @@ async function main() {
         case '4':
             targetPlatform = 'Android';
             isAndroid = true;
-            if (!checkAndroidPrerequisites()) {
-                process.exit(1);
-            }
             break;
         case '5':
             targetPlatform = 'Todas (Desktop)';
@@ -222,11 +269,31 @@ async function main() {
     console.log(`═══════════════════════════════════════\n`);
 
     // Step 1: Update Tauri config
-    updateTauriConfig(storyId, gameConfig.title, gameConfig.version);
+    if (isEditorBuild) {
+        const config = JSON.parse(fs.readFileSync(TAURI_CONF, 'utf8'));
+        config.productName = 'BardoEditor';
+        config.version = gameConfig.version;
+        config.identifier = 'com.bardoengine.editor';
+        config.app.windows[0].title = 'BardoEditor';
+        fs.writeFileSync(TAURI_CONF, JSON.stringify(config, null, 2));
+        console.log(`✓ Configuración actualizada para BardoEditor`);
+    } else {
+        updateTauriConfig(storyId, gameConfig.title, gameConfig.version);
+    }
 
-    // Step 2: Encrypt story
-    if (!runCommand(`node scripts/encrypt-story.cjs ${storyId} --title "${gameConfig.title}"`, 'Encriptando historia')) {
-        process.exit(1);
+    // Step 1b: For Android, check/reinit gen/android after config is updated
+    if (isAndroid) {
+        const config = JSON.parse(fs.readFileSync(TAURI_CONF, 'utf8'));
+        if (!checkAndroidPrerequisites(config.identifier)) {
+            process.exit(1);
+        }
+    }
+
+    // Step 2: Encrypt story (skip for editor builds — no story needed)
+    if (!isEditorBuild) {
+        if (!runCommand(`node scripts/encrypt-story.cjs ${storyId} --title "${gameConfig.title}"`, 'Encriptando historia')) {
+            process.exit(1);
+        }
     }
 
     // Step 3: Build Tauri with selected target
@@ -354,7 +421,8 @@ async function main() {
         // Desktop build flow
         console.log('\n▶ Compilando aplicación Tauri (esto puede tardar unos minutos)...\n');
         const buildCmd = bundleFlag ? `npm run tauri:build -- ${bundleFlag}` : 'npm run tauri:build';
-        if (!runCommand(buildCmd, `Build de Tauri para ${targetPlatform}`)) {
+        const buildEnv = isEditorBuild ? { VITE_EDITOR_STANDALONE: '1' } : {};
+        if (!runCommand(buildCmd, `Build de Tauri para ${targetPlatform}`, buildEnv)) {
             process.exit(1);
         }
     }
@@ -464,6 +532,7 @@ async function main() {
             }
         }
     }
+
 }
 
 main().catch(console.error);

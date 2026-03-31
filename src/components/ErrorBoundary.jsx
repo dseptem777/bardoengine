@@ -9,6 +9,7 @@
  */
 
 import React from 'react';
+import { AlertTriangle, RotateCcw, Home, ClipboardCopy } from 'lucide-react';
 import { logger } from '../utils/logger';
 
 class ErrorBoundary extends React.Component {
@@ -77,7 +78,7 @@ class ErrorBoundary extends React.Component {
             return (
                 <div className="error-boundary">
                     <div className="error-content">
-                        <div className="error-icon">💀</div>
+                        <div className="error-icon"><AlertTriangle size={48} /></div>
                         <h1>Algo salió mal</h1>
                         <p className="error-message">
                             El juego encontró un error inesperado.
@@ -95,13 +96,13 @@ class ErrorBoundary extends React.Component {
 
                         <div className="error-actions">
                             <button onClick={this.handleRestart} className="error-btn primary">
-                                🔄 Reiniciar Juego
+                                <RotateCcw size={16} className="inline mr-2" />Reiniciar Juego
                             </button>
                             <button onClick={this.handleGoToMenu} className="error-btn secondary">
-                                🏠 Volver al Menú
+                                <Home size={16} className="inline mr-2" />Volver al Menú
                             </button>
                             <button onClick={this.handleCopyLogs} className="error-btn tertiary">
-                                📋 Copiar Logs
+                                <ClipboardCopy size={16} className="inline mr-2" />Copiar Logs
                             </button>
                         </div>
 

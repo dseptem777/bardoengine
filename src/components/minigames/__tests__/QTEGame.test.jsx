@@ -32,13 +32,13 @@ describe('QTEGame', () => {
         it('should render game title', () => {
             render(<QTEGame params={['SPACE', 2]} onFinish={vi.fn()} />)
 
-            expect(screen.getByText('RAPID REACTION')).toBeInTheDocument()
+            expect(screen.getByText('REACCIÓN RÁPIDA')).toBeInTheDocument()
         })
 
         it('should show ready countdown initially', () => {
             render(<QTEGame params={['SPACE', 2]} onFinish={vi.fn()} />)
 
-            expect(screen.getByText(/READY/)).toBeInTheDocument()
+            expect(screen.getByText(/LISTO/)).toBeInTheDocument()
         })
 
         it('should display the target key', () => {
@@ -60,17 +60,23 @@ describe('QTEGame', () => {
 
             // Fast forward through countdown
             act(() => {
-                vi.advanceTimersByTime(1200) // 2 x 600ms countdown
+                vi.advanceTimersByTime(1200) // countdown
+            })
+            act(() => {
+                vi.advanceTimersByTime(200) // go state // 2 x 600ms countdown
             })
 
-            expect(screen.getByText(/PRESS/)).toBeInTheDocument()
+            expect(screen.getByText(/PRESIONÁ/)).toBeInTheDocument()
         })
 
         it('should show target key instruction when playing', () => {
             render(<QTEGame params={['K', 2]} onFinish={vi.fn()} />)
 
             act(() => {
-                vi.advanceTimersByTime(1200)
+                vi.advanceTimersByTime(1200) // countdown
+            })
+            act(() => {
+                vi.advanceTimersByTime(200) // go state
             })
 
             expect(screen.getByText('[K]')).toBeInTheDocument()
@@ -82,9 +88,12 @@ describe('QTEGame', () => {
             const onFinish = vi.fn()
             render(<QTEGame params={['E', 2]} onFinish={onFinish} />)
 
-            // Fast forward through countdown
+            // Fast forward through countdown + go state
             act(() => {
-                vi.advanceTimersByTime(1200)
+                vi.advanceTimersByTime(1200) // countdown
+            })
+            act(() => {
+                vi.advanceTimersByTime(200) // go state
             })
 
             // Press the correct key
@@ -98,12 +107,15 @@ describe('QTEGame', () => {
             render(<QTEGame params={['E', 2]} onFinish={onFinish} />)
 
             act(() => {
-                vi.advanceTimersByTime(1200)
+                vi.advanceTimersByTime(1200) // countdown
+            })
+            act(() => {
+                vi.advanceTimersByTime(200) // go state
             })
 
             fireEvent.keyDown(window, { key: 'e' })
 
-            expect(screen.getByText(/SUCCESS/)).toBeInTheDocument()
+            expect(screen.getByText(/ÉXITO/)).toBeInTheDocument()
         })
     })
 
@@ -112,11 +124,13 @@ describe('QTEGame', () => {
             const onFinish = vi.fn()
             render(<QTEGame params={['SPACE', 1]} onFinish={onFinish} />)
 
-            // Fast forward through countdown + game time
+            // Fast forward through countdown + go state + game time
             act(() => {
                 vi.advanceTimersByTime(1200) // countdown
             })
-
+            act(() => {
+                vi.advanceTimersByTime(200) // go state
+            })
             act(() => {
                 vi.advanceTimersByTime(1100) // game time expires
             })
@@ -129,14 +143,16 @@ describe('QTEGame', () => {
             render(<QTEGame params={['SPACE', 1]} onFinish={onFinish} />)
 
             act(() => {
-                vi.advanceTimersByTime(1200)
+                vi.advanceTimersByTime(1200) // countdown
             })
-
             act(() => {
-                vi.advanceTimersByTime(1100)
+                vi.advanceTimersByTime(200) // go state
+            })
+            act(() => {
+                vi.advanceTimersByTime(1100) // game time expires
             })
 
-            expect(screen.getByText(/FAILED/)).toBeInTheDocument()
+            expect(screen.getByText(/FALLIDO/)).toBeInTheDocument()
         })
     })
 
@@ -152,7 +168,7 @@ describe('QTEGame', () => {
             render(<QTEGame params={['E']} onFinish={onFinish} />)
 
             act(() => {
-                vi.advanceTimersByTime(1200) // countdown
+                vi.advanceTimersByTime(1400) // countdown
             })
 
             // After 1.5s, game should still be playing

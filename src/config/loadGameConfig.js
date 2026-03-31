@@ -54,7 +54,14 @@ export async function loadGameConfig(storyId) {
     try {
         // Dynamic import of JSON config file
         const configModule = await import(`../stories/${storyId}.config.json`)
-        const config = { ...DEFAULT_CONFIG, ...configModule.default }
+        const gameConfig = configModule.default
+        const config = {
+            ...DEFAULT_CONFIG,
+            ...gameConfig,
+            intro: { ...DEFAULT_CONFIG.intro, ...gameConfig.intro },
+            stats: { ...DEFAULT_CONFIG.stats, ...gameConfig.stats },
+            inventory: { ...DEFAULT_CONFIG.inventory, ...gameConfig.inventory },
+        }
 
         // Cache for future use
         configCache[storyId] = config

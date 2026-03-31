@@ -1,10 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getMinigameComponent } from '../config/minigameRegistry'
 
+// Minigame types that render immersively (no backdrop, no frame, no result screen)
+const IMMERSIVE_TYPES = new Set(['apnea'])
+
 /**
  * MinigameOverlay - Renders the active minigame
- * 
+ *
  * Props:
  * - isPlaying: boolean - Whether a game is active
  * - config: { type, params } - Game configuration
@@ -21,32 +24,65 @@ export default function MinigameOverlay({
 }) {
     const [result, setResult] = useState(null)
     const [showingResult, setShowingResult] = useState(false)
+    const resultTimeoutRef = useRef(null)
+    const hasCommittedRef = useRef(false)
+
+    const isImmersive = config && IMMERSIVE_TYPES.has(config.type?.toLowerCase())
+
+    // Allow any key press to dismiss result screen
+    const commitResultRef = useRef(null)
+    useEffect(() => {
+        if (!showingResult) return
+        const handleKey = () => { if (commitResultRef.current) commitResultRef.current(result) }
+        window.addEventListener('keydown', handleKey)
+        return () => window.removeEventListener('keydown', handleKey)
+    }, [showingResult, result])
 
     // Reset result state when a new game starts
     useEffect(() => {
         if (isPlaying) {
             setResult(null)
             setShowingResult(false)
+            hasCommittedRef.current = false
+            if (resultTimeoutRef.current) {
+                clearTimeout(resultTimeoutRef.current)
+                resultTimeoutRef.current = null
+            }
         }
     }, [isPlaying])
 
     if (!isPlaying && !showingResult) return null
 
+    const commitResult = (finalResult) => {
+        if (hasCommittedRef.current) return
+        hasCommittedRef.current = true
+        if (resultTimeoutRef.current) {
+            clearTimeout(resultTimeoutRef.current)
+            resultTimeoutRef.current = null
+        }
+        setShowingResult(false)
+        setResult(null)
+        onFinish(finalResult)
+    }
+    commitResultRef.current = commitResult
+
     const handleGameFinish = (outcome) => {
         const numericResult = (outcome === true || outcome === 1) ? 1 : 0
+
+        if (isImmersive) {
+            onFinish(numericResult)
+            return
+        }
 
         if (showResultScreen) {
             setResult(numericResult)
             setShowingResult(true)
+            hasCommittedRef.current = false
 
-            // Brief result display, then commit
-            setTimeout(() => {
-                setShowingResult(false)
-                setResult(null)
-                onFinish(numericResult)
-            }, 800)
+            resultTimeoutRef.current = setTimeout(() => {
+                commitResult(numericResult)
+            }, 1500)
         } else {
-            // Immediate commit, no result screen
             onFinish(numericResult)
         }
     }
@@ -71,6 +107,26 @@ export default function MinigameOverlay({
                     Close
                 </button>
             </div>
+        )
+    }
+
+    // Immersive mode: no backdrop, no frame, no spring animation, no result screen.
+    // The game component renders inside the content flow and Player's header stays visible.
+    if (isImmersive) {
+        return (
+            <AnimatePresence>
+                {isPlaying && (
+                    <motion.div
+                        className="fixed inset-0 z-[60]"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        {renderGame()}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         )
     }
 
@@ -99,9 +155,11 @@ export default function MinigameOverlay({
                         {/* Result Screen */}
                         {showingResult && (
                             <motion.div
-                                className="flex flex-col items-center justify-center py-16 bg-zinc-900/95 border-2 border-bardo-accent shadow-2xl shadow-bardo-accent/20"
+                                className="flex flex-col items-center justify-center py-16 bg-bardo-bg/95 border-[var(--ui-border-width)] border-bardo-accent/50 shadow-2xl shadow-bardo-accent/20 cursor-pointer"
+                                style={{ borderRadius: 'var(--ui-border-radius)' }}
                                 initial={{ opacity: 0, scale: 0.8 }}
                                 animate={{ opacity: 1, scale: 1 }}
+                                onClick={() => commitResult(result)}
                             >
                                 <motion.h2
                                     className={`text-5xl font-black tracking-tight mb-2 ${result === 1 ? 'text-bardo-accent' : 'text-red-500'
@@ -113,7 +171,7 @@ export default function MinigameOverlay({
                                 </motion.h2>
                                 <div className="h-0.5 w-32 bg-bardo-accent/40 mb-4" />
                                 <p className="text-gray-500 font-mono text-sm animate-pulse">
-                                    Continuando...
+                                    Tocá o presioná una tecla...
                                 </p>
                             </motion.div>
                         )}

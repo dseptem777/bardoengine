@@ -1,45 +1,10 @@
 import { useCallback, useRef, useEffect, useMemo } from 'react'
 import { Howl, Howler } from 'howler'
 
-// ============================================
-// SFX REGISTRY - Short one-shot sound effects
-// ============================================
-const SOUNDS = {
-    // Serruchín SFX
-    serrucho: '/sounds/serrucho.mp3',
-    serrucho_hueso: '/sounds/serrucho_hueso.mp3',
-    grito: '/sounds/grito.mp3',
-    carne: '/sounds/carne.mp3',
-
-    // Shared SFX
-    victory: '/sounds/victory.mp3',
-
-    // Partuza SFX
-    resaca: '/sounds/resaca.mp3',
-    paparazzi: '/sounds/paparazzi.mp3',
-    super_ambience: '/sounds/super_ambience.mp3',
-    disco: '/sounds/disco.mp3',
-    sirena_poli: '/sounds/sirena_poli.mp3',
-    invitacion: '/sounds/invitacion.mp3',
-}
-
-// ============================================
-// MUSIC REGISTRY - Looping background tracks
-// ============================================
-const MUSIC = {
-    // Serruchín tracks
-    horror_ambient: '/music/horror_ambient.mp3',
-    tension_drone: '/music/tension_drone.mp3',
-
-    // Partuza tracks
-    morning_hangover: '/music/morning_hangover.mp3',
-    supermarket_muzak: '/music/supermarket_muzak.mp3',
-    rave_electronic: '/music/rave_electronic.mp3',
-
-    // Shared/Generic
-    victory_fanfare: '/music/victory_fanfare.mp3',
-    game_over: '/music/game_over.mp3',
-}
+// Audio paths are resolved dynamically from the ID:
+// SFX: /sounds/{id}.mp3
+// Music: /music/{id}.mp3
+// No hardcoded registry needed — just place .mp3 files in public/sounds/ or public/music/
 
 // Default volumes (used as fallback)
 const DEFAULT_SFX_VOLUME = 0.7
@@ -50,6 +15,8 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
     const soundsRef = useRef({})
     const musicRef = useRef(null)
     const currentTrackRef = useRef(null)
+    const pendingMusicRef = useRef(null)
+    const fadeTimeoutRef = useRef(null)
     const audioUnlockedRef = useRef(false)
 
     // Store current volumes in refs for real-time updates
@@ -107,24 +74,38 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
         }
     }, [unlockAudio])
 
+    // Cleanup all Howl instances on unmount to prevent memory leaks
+    useEffect(() => {
+        return () => {
+            Object.values(soundsRef.current).forEach(sound => sound.unload())
+            soundsRef.current = {}
+            if (pendingMusicRef.current) {
+                pendingMusicRef.current.unload()
+                pendingMusicRef.current = null
+            }
+            if (musicRef.current) {
+                musicRef.current.unload()
+                musicRef.current = null
+            }
+            currentTrackRef.current = null
+        }
+    }, [])
+
     // ==================
     // SFX Functions
     // ==================
     const playSfx = useCallback((id) => {
         console.log(`[Audio] Play SFX: ${id}`)
 
-        if (!SOUNDS[id]) {
-            console.warn(`[Audio] Unknown SFX ID: ${id}`)
-            return
-        }
+        const sfxSrc = `/sounds/${id}.mp3`
 
         // Lazy-load: create Howl instance on first play
         if (!soundsRef.current[id]) {
             soundsRef.current[id] = new Howl({
-                src: [SOUNDS[id]],
+                src: [sfxSrc],
                 volume: sfxVolumeRef.current,
                 onloaderror: (soundId, error) => {
-                    console.error(`[Audio] Failed to load SFX ${id}:`, error)
+                    console.warn(`[Audio] Failed to load SFX ${id}:`, error)
                 },
                 onplayerror: (soundId, error) => {
                     console.error(`[Audio] Failed to play SFX ${id}:`, error)
@@ -153,37 +134,50 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
             return
         }
 
-        // Stop current music with fade
-        if (musicRef.current) {
-            const oldMusic = musicRef.current
-            oldMusic.fade(oldMusic.volume(), 0, FADE_DURATION)
-            setTimeout(() => oldMusic.unload(), FADE_DURATION)
+        // Cancel any pending fade-out from a previous stopMusic call
+        if (fadeTimeoutRef.current) {
+            clearTimeout(fadeTimeoutRef.current)
+            fadeTimeoutRef.current = null
         }
 
-        if (!MUSIC[id]) {
-            console.warn(`[Audio] Unknown Music ID: ${id}`)
-            return
+        // Cancel any pending load to prevent orphaned Howl instances
+        if (pendingMusicRef.current) {
+            pendingMusicRef.current.unload()
+            pendingMusicRef.current = null
         }
 
-        // Create new music instance
-        musicRef.current = new Howl({
-            src: [MUSIC[id]],
+        const musicSrc = `/music/${id}.mp3`
+
+        // Create new music instance — only kill old track once new one loads
+        const newMusic = new Howl({
+            src: [musicSrc],
             volume: fadeIn ? 0 : musicVolumeRef.current,
             loop: true,
+            onload: () => {
+                pendingMusicRef.current = null
+                // New track loaded OK — now fade out the old one
+                const oldMusic = musicRef.current
+                if (oldMusic) {
+                    oldMusic.fade(oldMusic.volume(), 0, FADE_DURATION)
+                    setTimeout(() => oldMusic.unload(), FADE_DURATION)
+                }
+                musicRef.current = newMusic
+                currentTrackRef.current = id
+                newMusic.play()
+                if (fadeIn) {
+                    newMusic.fade(0, musicVolumeRef.current, FADE_DURATION)
+                }
+            },
             onloaderror: (soundId, error) => {
-                console.error(`[Audio] Failed to load music ${id}:`, error)
+                console.warn(`[Audio] Failed to load music ${id}, keeping current track:`, error)
+                pendingMusicRef.current = null
+                newMusic.unload()
             },
             onplayerror: (soundId, error) => {
                 console.error(`[Audio] Failed to play music ${id}:`, error)
             }
         })
-
-        currentTrackRef.current = id
-        musicRef.current.play()
-
-        if (fadeIn) {
-            musicRef.current.fade(0, musicVolumeRef.current, FADE_DURATION)
-        }
+        pendingMusicRef.current = newMusic
     }, [])
 
     const stopMusic = useCallback((fadeOut = true) => {
@@ -191,19 +185,19 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
 
         if (!musicRef.current) return
 
+        const currentMusic = musicRef.current
+        musicRef.current = null
+        currentTrackRef.current = null
+
         if (fadeOut) {
-            musicRef.current.fade(musicRef.current.volume(), 0, FADE_DURATION)
-            setTimeout(() => {
-                musicRef.current?.stop()
-                musicRef.current?.unload()
-                musicRef.current = null
-                currentTrackRef.current = null
+            currentMusic.fade(currentMusic.volume(), 0, FADE_DURATION)
+            fadeTimeoutRef.current = setTimeout(() => {
+                currentMusic.stop()
+                currentMusic.unload()
             }, FADE_DURATION)
         } else {
-            musicRef.current.stop()
-            musicRef.current.unload()
-            musicRef.current = null
-            currentTrackRef.current = null
+            currentMusic.stop()
+            currentMusic.unload()
         }
     }, [])
 

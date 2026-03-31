@@ -9,6 +9,7 @@ export interface ItemDefinition {
     icon?: string;
     stackable?: boolean;
     category?: string;
+    persistent?: boolean;
     [key: string]: any;
 }
 
@@ -148,6 +149,17 @@ export function useInventory(config: GameConfigWithInventory | null) {
     }, [])
 
     /**
+     * Clear non-persistent items (for mission transitions)
+     * Items with persistent: true in their definition are kept
+     */
+    const clearNonPersistent = useCallback(() => {
+        setItems(prev => prev.filter(item => {
+            const def = getItemDef(item.id)
+            return def.persistent === true
+        }))
+    }, [getItemDef])
+
+    /**
      * Load inventory from saved data
      */
     const loadInventory = useCallback((savedItems: any) => {
@@ -174,6 +186,7 @@ export function useInventory(config: GameConfigWithInventory | null) {
         getItemsWithInfo,
         getItemsByCategory,
         clearInventory,
+        clearNonPersistent,
         loadInventory,
         exportInventory
     }), [
@@ -186,6 +199,7 @@ export function useInventory(config: GameConfigWithInventory | null) {
         getItemsWithInfo,
         getItemsByCategory,
         clearInventory,
+        clearNonPersistent,
         loadInventory,
         exportInventory
     ])

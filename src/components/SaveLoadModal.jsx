@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Save, FolderOpen, Trash2 } from 'lucide-react'
+import { useModalA11y } from '../hooks/useModalA11y'
 
 /**
  * Generate a default save name with current date/time
@@ -30,7 +32,9 @@ export default function SaveLoadModal({
     const [saveName, setSaveName] = useState('')
     const [selectedSave, setSelectedSave] = useState(null)
     const [activeTab, setActiveTab] = useState(initialMode) // Internal tab state
+    const [deleteConfirmId, setDeleteConfirmId] = useState(null)
     const inputRef = useRef(null)
+    const modalRef = useModalA11y(isOpen, onClose)
 
     // Sync internal tab with prop when modal opens
     useEffect(() => {
@@ -54,8 +58,6 @@ export default function SaveLoadModal({
         }
     }, [isOpen, activeTab])
 
-    if (!isOpen) return null
-
     const handleSave = () => {
         if (!saveName.trim()) return
         onSave(saveName.trim())
@@ -70,9 +72,18 @@ export default function SaveLoadModal({
 
     const handleDelete = (save, e) => {
         e.stopPropagation()
-        if (confirm(`¿Eliminar "${save.name}"?`)) {
-            onDelete(save.id)
-        }
+        setDeleteConfirmId(save.id)
+    }
+
+    const confirmDelete = (id, e) => {
+        e.stopPropagation()
+        onDelete(id)
+        setDeleteConfirmId(null)
+    }
+
+    const cancelDelete = (e) => {
+        e.stopPropagation()
+        setDeleteConfirmId(null)
     }
 
     const formatDate = (timestamp) => {
@@ -87,7 +98,9 @@ export default function SaveLoadModal({
 
     return (
         <AnimatePresence>
+            {isOpen && (
             <motion.div
+                key="save-load-backdrop"
                 className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -95,7 +108,12 @@ export default function SaveLoadModal({
                 onClick={onClose}
             >
                 <motion.div
-                    className="bg-gray-900 border-2 border-bardo-accent/50 rounded-lg w-full max-w-md mx-4 overflow-hidden"
+                    ref={modalRef}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Guardar y cargar"
+                    className="bg-bardo-bg border-[var(--ui-border-width)] border-bardo-accent/50 w-full max-w-md mx-4 overflow-hidden"
+                    style={{ borderRadius: 'var(--ui-border-radius)' }}
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.9, opacity: 0 }}
@@ -106,21 +124,21 @@ export default function SaveLoadModal({
                         <div className="flex gap-4">
                             <button
                                 onClick={() => setActiveTab('save')}
-                                className={`text-lg font-bold transition-colors ${activeTab === 'save'
+                                className={`flex items-center gap-2 text-lg font-bold transition-colors ${activeTab === 'save'
                                     ? 'text-bardo-accent'
                                     : 'text-gray-500 hover:text-gray-300'
                                     }`}
                             >
-                                💾 GUARDAR
+                                <Save size={16} /> GUARDAR
                             </button>
                             <button
                                 onClick={() => setActiveTab('load')}
-                                className={`text-lg font-bold transition-colors ${activeTab === 'load'
+                                className={`flex items-center gap-2 text-lg font-bold transition-colors ${activeTab === 'load'
                                     ? 'text-bardo-accent'
                                     : 'text-gray-500 hover:text-gray-300'
                                     }`}
                             >
-                                📂 CARGAR
+                                <FolderOpen size={16} /> CARGAR
                             </button>
                         </div>
                         <button
@@ -167,7 +185,7 @@ export default function SaveLoadModal({
                         {saves.length > 0 ? (
                             <div className="space-y-2">
                                 {activeTab === 'save' && saves.length > 0 && (
-                                    <p className="text-gray-500 text-sm mb-2">O sobrescribir:</p>
+                                    <p className="text-orange-400/70 text-sm mb-2 font-medium">O sobrescribir una partida existente:</p>
                                 )}
                                 {saves.map(save => (
                                     <motion.div
@@ -193,13 +211,30 @@ export default function SaveLoadModal({
                                                 {formatDate(save.timestamp)}
                                             </div>
                                         </div>
-                                        <button
-                                            onClick={(e) => handleDelete(save, e)}
-                                            className="ml-2 text-gray-600 hover:text-red-500 text-lg"
-                                            title="Eliminar"
-                                        >
-                                            🗑️
-                                        </button>
+                                        {deleteConfirmId === save.id ? (
+                                            <div className="ml-2 flex gap-1 items-center" onClick={e => e.stopPropagation()}>
+                                                <button
+                                                    onClick={(e) => confirmDelete(save.id, e)}
+                                                    className="text-xs px-2 py-1 bg-red-600 text-white hover:bg-red-500 transition-colors"
+                                                >
+                                                    ✓
+                                                </button>
+                                                <button
+                                                    onClick={cancelDelete}
+                                                    className="text-xs px-2 py-1 border border-gray-600 text-gray-400 hover:text-white transition-colors"
+                                                >
+                                                    ✕
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={(e) => handleDelete(save, e)}
+                                                className="ml-2 text-gray-600 hover:text-red-500 transition-colors"
+                                                title="Eliminar"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        )}
                                     </motion.div>
                                 ))}
                             </div>
@@ -225,6 +260,7 @@ export default function SaveLoadModal({
                     </div>
                 </motion.div>
             </motion.div>
+            )}
         </AnimatePresence>
     )
 }

@@ -3,14 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 /**
  * KeyMashGame - Willpower Resistance Minigame
- * 
+ *
  * The player must mash a key (default: V) to resist the vampire's
  * mind control. Visual feedback shows the struggle:
  * - Willpower bar that fills with each press
  * - Mental static effect while resisting
  * - Pulsing red vignette on failure
  * - Escalating text: "FIGHT..." → "RESIST..." → "FREE!"
- * 
+ *
  * Narrative mechanic: Dialog choices are DISABLED until the player
  * completes the mashing. They must FIGHT to even have the option to choose.
  */
@@ -302,7 +302,7 @@ export default function KeyMashGame({ params = {}, onFinish }) {
                     0%, 100% { opacity: 0.2; }
                     50% { opacity: 0.4; }
                 }
-                
+
                 @keyframes text-pulse {
                     0%, 100% { opacity: 0.8; }
                     50% { opacity: 1; }

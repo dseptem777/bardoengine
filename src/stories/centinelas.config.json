@@ -1,6 +1,6 @@
 {
-    "title": "🚨 CENTINELAS DEL SUR",
-    "version": "0.1.0",
+    "title": "CENTINELAS DEL SUR",
+    "version": "0.10.0",
     "theme": {
         "primaryColor": "#8b5cf6",
         "bgColor": "#030712",
@@ -29,9 +29,17 @@
             "borderWidth": "1px"
         }
     },
+    "intro": {
+        "titleMusic": "misterio_ambient",
+        "titleSubtitle": "Ficción Interactiva Sobrenatural",
+        "titleBackground": "/games/centinelas/title.png"
+    },
     "stats": {
         "enabled": true,
         "playerNameVariable": "nombre_personaje",
+        "nicknameVariable": "apodo_personaje",
+        "roleLabel": "Centinela",
+        "chapterVariable": "capitulo_actual",
         "definitions": [
             {
                 "id": "hp",
@@ -49,7 +57,7 @@
                 "icon": "✨",
                 "displayType": "value",
                 "min": 0,
-                "max": 100,
+                "max": 60,
                 "initial": 0
             },
             {
@@ -58,7 +66,7 @@
                 "icon": "💪",
                 "displayType": "value",
                 "min": 0,
-                "max": 100,
+                "max": 60,
                 "initial": 0
             },
             {
@@ -67,8 +75,26 @@
                 "icon": "📚",
                 "displayType": "value",
                 "min": 0,
-                "max": 100,
+                "max": 60,
                 "initial": 0
+            },
+            {
+                "id": "misiones_completadas",
+                "label": "Misiones",
+                "displayType": "hidden",
+                "min": 0,
+                "max": 99,
+                "initial": 0
+            },
+            {
+                "id": "amistad_jesus",
+                "label": "Jesús",
+                "icon": "🐆",
+                "displayType": "relationship",
+                "min": 0,
+                "max": 6,
+                "initial": 0,
+                "color": "#f59e0b"
             }
         ]
     },
@@ -99,6 +125,115 @@
             "description": "Información táctica sobre los híbridos marinos.",
             "icon": "📝",
             "category": "documentos"
+        },
+        "machete_bosque": {
+            "name": "Machete de Juan",
+            "description": "Un mapa dibujado por Juan con el recorrido hasta la guarida del monstruo.",
+            "icon": "🗺️",
+            "category": "documentos"
+        },
+        "info_invocacion_demoniaca": {
+            "name": "Info: Invocación Demoníaca",
+            "description": "Las estatuas del sótano representan los cuatro obispos del 7mo círculo del infierno.",
+            "icon": "👹",
+            "category": "documentos"
+        },
+        "teoria_vampiros": {
+            "name": "Teoría: Vampiros Superiores",
+            "description": "Análisis de los casos anteriores. Las víctimas muestran marcas de colmillos y sonrisas de placer. Clásico ataque de Vampiro Superior.",
+            "icon": "🧛",
+            "category": "documentos"
+        },
+        "favor_tuco": {
+            "name": "Favor del Sgto. Tuco",
+            "description": "El Sargento Tuco te debe un favor. Uno solo. Remarcó la unicidad del favor con todos los objetivos posibles.",
+            "icon": "📞",
+            "category": "claves"
+        },
+        "cementerio_correcto": {
+            "name": "Pista: Lomas de Paz",
+            "description": "Un familiar de las víctimas fue enterrado recientemente en el cementerio Lomas de Paz. Podría ser el caballo de Troya vampírico.",
+            "icon": "🗺️",
+            "category": "documentos"
+        },
+        "teoria_sacrificio": {
+            "name": "Teoría: Sacrificio de Bebés",
+            "description": "Un hechizo vampírico requiere sacrificar siete bebés para caminar bajo la luz del sol. Los bebés desaparecidos encajan en el patrón.",
+            "icon": "📜",
+            "category": "documentos"
+        },
+        "cruz_plata": {
+            "name": "Cruz de Plata",
+            "description": "Una cruz de plata inmaculada encontrada entre los montículos de objetos religiosos. Pesada y resplandeciente.",
+            "icon": "✝️",
+            "category": "items"
+        },
+        "placa_amor": {
+            "name": "Placa de Amor",
+            "description": "\"Mientras mi corazón siga latiendo, lo hará al ritmo de tu nombre\". Una placa funeraria con una dedicatoria de amor puro.",
+            "icon": "💌",
+            "category": "items"
+        },
+        "buda_oro": {
+            "name": "Buda de Oro",
+            "description": "Una estatua de Buda de oro macizo. Excentricidad de algún oligarca con demasiado tiempo libre.",
+            "icon": "🪷",
+            "category": "items"
         }
+    },
+    "achievements": [
+        {
+            "id": "centinela_magica",
+            "title": "La Chispa",
+            "description": "Elegiste despertar con el poder de la magia.",
+            "icon": "✨"
+        },
+        {
+            "id": "centinela_combate",
+            "title": "Pura Adrenalina",
+            "description": "Elegiste despertar en medio del combate.",
+            "icon": "⚡"
+        },
+        {
+            "id": "centinela_conocimiento",
+            "title": "La Obsesión",
+            "description": "Elegiste despertar buscando conocimiento prohibido.",
+            "icon": "📚"
+        },
+        {
+            "id": "primer_caso",
+            "title": "Un Cadáver Sin Nombre",
+            "description": "Completaste el Capítulo 0 y comenzaste tu primera investigación.",
+            "icon": "🔍"
+        },
+        {
+            "id": "nuevo_amanecer",
+            "title": "El Nuevo Amanecer",
+            "description": "Alcanzaste el Capítulo 2B — El Nuevo Amanecer.",
+            "icon": "🌅"
+        }
+    ],
+    "extras": {
+        "jukebox": [
+            { "id": "misterio_ambient", "title": "Misterio", "unlockedBy": null },
+            { "id": "city_ambient", "title": "Ciudad Nocturna", "unlockedBy": null },
+            { "id": "city_ambient_b", "title": "Ciudad Nocturna II", "unlockedBy": null },
+            { "id": "escuela_ambient", "title": "Escuela", "unlockedBy": null },
+            { "id": "escuela_ambient_b", "title": "Escuela II", "unlockedBy": null },
+            { "id": "escuela_ambient_c", "title": "Escuela III", "unlockedBy": null },
+            { "id": "horror_ambient", "title": "Tensión", "unlockedBy": null },
+            { "id": "horror_ambient_b", "title": "Tensión II", "unlockedBy": null },
+            { "id": "playa_ambient", "title": "Playa", "unlockedBy": null },
+            { "id": "playa_ambient_b", "title": "Playa II", "unlockedBy": null },
+            { "id": "supermarket_muzak", "title": "Supermercado", "unlockedBy": null },
+            { "id": "rave_electronic", "title": "Rave Electrónico", "unlockedBy": null },
+            { "id": "tension_drone", "title": "Tensión Profunda", "unlockedBy": null },
+            { "id": "morning_hangover", "title": "La Resaca", "unlockedBy": null },
+            { "id": "crank_up", "title": "Crank Up", "unlockedBy": null },
+            { "id": "crank_up_b", "title": "Crank Up II", "unlockedBy": null },
+            { "id": "terror_ambient", "title": "Terror", "unlockedBy": "primer_caso" },
+            { "id": "terror_ambient_b", "title": "Terror II", "unlockedBy": "primer_caso" },
+            { "id": "victory_fanfare", "title": "Himno de la Victoria", "unlockedBy": "nuevo_amanecer" }
+        ]
     }
 }

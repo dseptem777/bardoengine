@@ -1,11 +1,11 @@
-import { useCallback, useState, useEffect, useMemo } from 'react'
+import { useCallback, useState, useEffect, useRef, useMemo } from 'react'
 
 const STORAGE_KEY = 'bardo_saves'
 const MAX_SAVES = 10
 
 /**
  * useSaveSystem - Multi-slot save system for BardoEngine
- * 
+ *
  * Features:
  * - Multiple named save slots
  * - Autosave on every decision
@@ -14,11 +14,8 @@ const MAX_SAVES = 10
 export function useSaveSystem(storyId) {
     const [saves, setSaves] = useState([])
     const [lastSaveId, setLastSaveId] = useState(null)
-
-    // Load saves from localStorage on mount
-    useEffect(() => {
-        loadSavesFromStorage()
-    }, [storyId])
+    const savesRef = useRef(saves)
+    savesRef.current = saves
 
     const loadSavesFromStorage = useCallback(() => {
         try {
@@ -40,6 +37,11 @@ export function useSaveSystem(storyId) {
             console.error('Failed to load saves:', e)
         }
     }, [storyId])
+
+    // Load saves from localStorage when storyId changes
+    useEffect(() => {
+        loadSavesFromStorage()
+    }, [storyId, loadSavesFromStorage])
 
     const saveSavesToStorage = useCallback((newSaves, newLastId = null) => {
         try {
@@ -66,7 +68,7 @@ export function useSaveSystem(storyId) {
     /**
      * Create a new save or overwrite existing
      */
-    const saveGame = useCallback((name, stateJson, currentText = '', gameSystems = null, overwriteId = null) => {
+    const saveGame = useCallback((name, stateJson, currentText = '', gameSystems = null, overwriteId = null, parallelSystems = null) => {
         const saveData = {
             id: overwriteId || `save_${Date.now()}`,
             name: name,
@@ -74,27 +76,27 @@ export function useSaveSystem(storyId) {
             timestamp: Date.now(),
             state: stateJson,
             text: currentText,
-            gameSystems: gameSystems
+            gameSystems: gameSystems,
+            parallelSystems: parallelSystems,
         }
 
+        const currentSaves = savesRef.current
         let newSaves
         if (overwriteId) {
-            // Overwrite existing
-            newSaves = saves.map(s => s.id === overwriteId ? saveData : s)
+            newSaves = currentSaves.map(s => s.id === overwriteId ? saveData : s)
         } else {
-            // Add new (respect max limit)
-            newSaves = [saveData, ...saves].slice(0, MAX_SAVES)
+            newSaves = [saveData, ...currentSaves].slice(0, MAX_SAVES)
         }
 
         saveSavesToStorage(newSaves, saveData.id)
         console.log(`[Save] Saved: ${name}`)
         return saveData.id
-    }, [storyId, saves, saveSavesToStorage])
+    }, [storyId, saveSavesToStorage])
 
     /**
      * Quick autosave (overwrites autosave slot)
      */
-    const autoSave = useCallback((stateJson, currentText = '', gameSystems = null) => {
+    const autoSave = useCallback((stateJson, currentText = '', gameSystems = null, parallelSystems = null) => {
         const autosaveId = `autosave_${storyId}`
         const autosaveData = {
             id: autosaveId,
@@ -104,35 +106,37 @@ export function useSaveSystem(storyId) {
             state: stateJson,
             text: currentText,
             gameSystems: gameSystems,
+            parallelSystems: parallelSystems,
             isAutosave: true
         }
 
-        // Find and replace autosave, or add it
-        const existingIndex = saves.findIndex(s => s.id === autosaveId)
+        const currentSaves = savesRef.current
+        const existingIndex = currentSaves.findIndex(s => s.id === autosaveId)
         let newSaves
         if (existingIndex >= 0) {
-            newSaves = saves.map(s => s.id === autosaveId ? autosaveData : s)
+            newSaves = currentSaves.map(s => s.id === autosaveId ? autosaveData : s)
         } else {
-            newSaves = [autosaveData, ...saves]
+            newSaves = [autosaveData, ...currentSaves]
         }
 
         saveSavesToStorage(newSaves, autosaveId)
-    }, [storyId, saves, saveSavesToStorage])
+    }, [storyId, saveSavesToStorage])
 
     /**
      * Load a specific save
      */
     const loadSave = useCallback((saveId) => {
-        const save = saves.find(s => s.id === saveId)
+        const save = savesRef.current.find(s => s.id === saveId)
         if (save) {
             return {
                 state: save.state,
                 text: save.text || '',
-                gameSystems: save.gameSystems || null
+                gameSystems: save.gameSystems || null,
+                parallelSystems: save.parallelSystems || null,
             }
         }
         return null
-    }, [saves])
+    }, [])
 
     /**
      * Load the most recent save (for "Continue" button)
@@ -146,9 +150,9 @@ export function useSaveSystem(storyId) {
      * Delete a save
      */
     const deleteSave = useCallback((saveId) => {
-        const newSaves = saves.filter(s => s.id !== saveId)
+        const newSaves = savesRef.current.filter(s => s.id !== saveId)
         saveSavesToStorage(newSaves)
-    }, [saves, saveSavesToStorage])
+    }, [saveSavesToStorage])
 
     /**
      * Clear all saves for this story (used on "Finish Game")

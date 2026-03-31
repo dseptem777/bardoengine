@@ -21,12 +21,14 @@ const ChoiceButton = forwardRef(function ChoiceButton({
     onClick,
     disabled = false,
     resistanceLevel = 'none',
-    onResistanceClick
+    onResistanceClick,
+    lockedRequirement = null
 }, ref) {
     const [isReady, setIsReady] = useState(false)
     const [clicksRemaining, setClicksRemaining] = useState(0)
     const [totalClicks, setTotalClicks] = useState(0)
     const [isStruggling, setIsStruggling] = useState(false)
+    const [showHint, setShowHint] = useState(false)
     const clicksRemainingRef = useRef(0)
     const choiceProcessedRef = useRef(false) // Prevent double submit
 
@@ -51,6 +53,9 @@ const ChoiceButton = forwardRef(function ChoiceButton({
         choiceProcessedRef.current = false
     }, [initialResistance])
 
+    const isLocked = !!lockedRequirement
+    const effectiveDisabled = disabled || isLocked
+
     // Struggle animation
     const triggerStruggle = useCallback(() => {
         setIsStruggling(true)
@@ -66,11 +71,16 @@ const ChoiceButton = forwardRef(function ChoiceButton({
 
     // Core click handler
     const processClick = useCallback(() => {
-        if (!isReady || disabled || choiceProcessedRef.current) return false
+        if (!isReady || effectiveDisabled || choiceProcessedRef.current) return false
 
         if (clicksRemainingRef.current > 0) {
             clicksRemainingRef.current -= 1
             setClicksRemaining(clicksRemainingRef.current)
+
+            // Show hint on first resistance click
+            if (!showHint && clicksRemainingRef.current === totalClicks - 1) {
+                setShowHint(true)
+            }
 
             triggerStruggle()
 
@@ -91,7 +101,7 @@ const ChoiceButton = forwardRef(function ChoiceButton({
         choiceProcessedRef.current = true
         onClick()
         return true  // Click complete
-    }, [isReady, disabled, triggerStruggle, onResistanceClick, onClick])
+    }, [isReady, disabled, lockedRequirement, triggerStruggle, onResistanceClick, onClick])
 
     // Expose simulateClick for keyboard navigation
     useImperativeHandle(ref, () => ({
@@ -120,10 +130,12 @@ const ChoiceButton = forwardRef(function ChoiceButton({
             }}
             transition={{ delay: index * 0.1 }}
             onClick={handleClick}
-            disabled={disabled}
+            disabled={effectiveDisabled}
             className={`choice-button w-full text-left p-4 md:p-5 relative overflow-hidden
                  rounded-lg border-2 transition-all duration-200
-                 ${disabled
+                 ${isLocked
+                    ? 'bg-gray-900/30 border-gray-600/40 cursor-not-allowed opacity-60'
+                    : disabled
                     ? 'bg-gray-900/50 border-gray-700 cursor-not-allowed opacity-50 grayscale'
                     : hasResistance
                         ? `bg-bardo-bg cursor-pointer group ${isAlmostDone
@@ -160,7 +172,9 @@ const ChoiceButton = forwardRef(function ChoiceButton({
             )}
 
             <motion.div animate={controls} className="relative z-10 flex items-center">
-                <span className={`font-mono mr-3 opacity-60 ${disabled
+                <span className={`font-mono mr-3 opacity-60 ${isLocked
+                    ? 'text-gray-500'
+                    : disabled
                     ? 'text-gray-500'
                     : hasResistance
                         ? 'text-red-400 group-hover:opacity-100'
@@ -168,7 +182,9 @@ const ChoiceButton = forwardRef(function ChoiceButton({
                     }`}>
                     [{index + 1}]
                 </span>
-                <span className={`font-narrative text-lg flex-1 ${disabled
+                <span className={`font-narrative text-lg flex-1 ${isLocked
+                    ? 'text-gray-400 line-through decoration-gray-500/60'
+                    : disabled
                     ? 'text-gray-500 line-through decoration-gray-600'
                     : hasResistance
                         ? 'text-bardo-text/80'
@@ -177,8 +193,20 @@ const ChoiceButton = forwardRef(function ChoiceButton({
                     {text}
                 </span>
 
+                {lockedRequirement && (
+                    <span className="ml-3 flex-shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-gray-800/80 border border-gray-600/30 text-xs text-gray-400 font-mono">
+                        <span className="text-sm">🔒</span>
+                        {lockedRequirement}
+                    </span>
+                )}
+
                 {hasResistance && (
                     <div className="ml-3 flex items-center gap-1">
+                        {showHint && clicksRemaining > 0 && (
+                            <span className="text-red-400/70 text-xs mr-2 animate-pulse">
+                                Seguí haciendo click
+                            </span>
+                        )}
                         <div className="flex gap-0.5">
                             {Array.from({ length: Math.min(totalClicks, 8) }).map((_, i) => (
                                 <div

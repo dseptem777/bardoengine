@@ -71,14 +71,14 @@ describe('ErrorBoundary', () => {
             expect(screen.getByText(/El juego encontró un error inesperado/)).toBeInTheDocument()
         })
 
-        it('should show skull icon', () => {
-            render(
+        it('should show error icon', () => {
+            const { container } = render(
                 <ErrorBoundary>
                     <BrokenComponent />
                 </ErrorBoundary>
             )
 
-            expect(screen.getByText('💀')).toBeInTheDocument()
+            expect(container.querySelector('.error-icon')).toBeInTheDocument()
         })
     })
 

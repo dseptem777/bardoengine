@@ -10,6 +10,9 @@ import { useTagProcessor } from './useTagProcessor'
 import { useStoryState } from './useStoryState'
 import { useWillpowerSystem } from './useWillpowerSystem'
 import { useSpiderInfestation } from './useSpiderInfestation'
+import { useScrollFriction } from './useScrollFriction'
+import { useBossController } from './useBossController'
+import { useVisualDamage } from './useVisualDamage'
 
 interface BardoEngineOptions {
     storyId: string;
@@ -48,6 +51,7 @@ export function useBardoEngine({
         text,
         choices,
         canContinue,
+        continueLabel,
         isEnded,
         history,
         initStory: initStoryState,
@@ -55,7 +59,11 @@ export function useBardoEngine({
         makeChoice: makeChoiceState,
         setGlobalVariable,
         getGlobalVariable,
-        resetStoryState
+        restoreMinigameState,
+        resetStoryState,
+        spawnAtKnot: rawSpawnAtKnot,
+        getKnotList,
+        getVariables
     } = storyState
 
     // ==================
@@ -78,6 +86,9 @@ export function useBardoEngine({
             continueStoryRef.current()
         }
     }, [pendingInput, setGlobalVariable])
+
+    // Scroll container ref (shared with Player for scroll manipulation)
+    const scrollContainerRef = useRef<HTMLElement | null>(null)
 
     // ==================
     // Sub-systems
@@ -134,15 +145,28 @@ export function useBardoEngine({
         const numericResult = (result === true || result === 1) ? 1 : 0
         console.log(`[Ink Bridge] Committing result: ${numericResult}`)
 
+        // Restore Ink state to before the Continue() that produced the MINIGAME tag.
+        // inkjs evaluates diverts and conditionals inside a single Continue() call,
+        // so by the time we detect the tag, Ink has already branched on minigame_result=-1.
+        // Restoring the snapshot lets the conditional re-evaluate with the correct value.
+        const restored = restoreMinigameState()
+
         setGlobalVariable("minigame_result", numericResult)
         const verified = getGlobalVariable("minigame_result")
         console.log(`[Ink Bridge] Verified value in Ink: ${verified}`)
+
+        if (restored && storyRef.current) {
+            // Advance past the MINIGAME tag line so continueStory() doesn't re-trigger it.
+            // This single Continue() re-processes the knot (now with the correct result),
+            // following the divert and conditional into the right branch.
+            storyRef.current.Continue()
+        }
 
         // Auto-continue after minigame
         if (continueStoryRef.current) {
             continueStoryRef.current()
         }
-    }, [setGlobalVariable, getGlobalVariable])
+    }, [setGlobalVariable, getGlobalVariable, restoreMinigameState])
 
     const minigameController = useMinigameController(handleMinigameResult)
 
@@ -155,6 +179,25 @@ export function useBardoEngine({
 
     const [willpowerState, willpowerActions] = useWillpowerSystem(onWillpowerCheckCallback)
 
+    // ==================
+    // Genjutsu Vampírico (Illusion Break System)
+    // ==================
+    const [genjutsuBreak, setGenjutsuBreak] = useState<{
+        stat: string
+        text: string
+        targetKnot: string
+    } | null>(null)
+    const genjutsuActive = genjutsuBreak !== null
+    const genjutsuBreakRef = useRef(genjutsuBreak)
+    genjutsuBreakRef.current = genjutsuBreak
+
+    // Typing-ready gate: auto-surrender only fires after fisura paragraph finishes typing
+    const [genjutsuTextReady, setGenjutsuTextReady] = useState(false)
+    const genjutsuFrozenDecayRateRef = useRef<string>('normal')
+    const genjutsuFrozenTargetKeyRef = useRef<string>('V')
+    const genjutsuReactionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const GENJUTSU_REACTION_MS = 2000
+
     const handleWillpowerStart = useCallback((config: { decayRate?: string, targetKey?: string, initialValue?: number }) => {
         willpowerActions.startWillpower({
             decayRate: config.decayRate || 'normal',
@@ -165,15 +208,23 @@ export function useBardoEngine({
 
     const handleWillpowerStop = useCallback(() => {
         willpowerActions.stopWillpower()
+        setGenjutsuBreak(null)
+        setGenjutsuTextReady(false)
+        if (genjutsuReactionTimerRef.current) {
+            clearTimeout(genjutsuReactionTimerRef.current)
+            genjutsuReactionTimerRef.current = null
+        }
     }, [willpowerActions])
 
     const handleWillpowerCheck = useCallback((threshold: number): boolean => {
         return willpowerActions.checkWillpower(threshold)
     }, [willpowerActions])
 
+    const willpowerValueRef = useRef(willpowerState.value)
+    willpowerValueRef.current = willpowerState.value
     const getWillpowerValue = useCallback((): number => {
-        return willpowerState.value
-    }, [willpowerState.value])
+        return willpowerValueRef.current
+    }, [])
 
     // ==================
     // Spider Infestation System (Non-blocking)
@@ -190,7 +241,8 @@ export function useBardoEngine({
     }, [spiderInfestation.actions])
 
     const handleSpiderCheck = useCallback((threshold: number) => {
-        const survived = spiderInfestation.actions.checkKills(threshold)
+        // threshold = % clean text required (0-100)
+        const survived = spiderInfestation.actions.checkCorruption(threshold)
         // Set variable in Ink
         if (storyRef?.current) {
             try {
@@ -201,16 +253,167 @@ export function useBardoEngine({
             }
         }
         // Auto-select gate choice 0 after brief delay (Ink timing fix)
-        setTimeout(() => {
+        const tid = setTimeout(() => {
             if (makeChoiceRef.current) {
                 makeChoiceRef.current(0)
             }
         }, 2000)
+        pendingTimersRef.current.push(tid)
     }, [spiderInfestation.actions])
 
     const handleSpiderDifficulty = useCallback((difficulty: string) => {
         spiderInfestation.actions.changeDifficulty(difficulty)
     }, [spiderInfestation.actions])
+
+    // ==================
+    // Scroll Friction System (Arrebatados)
+    // ==================
+    const [arrebatadosCount, setArrebatadosCount] = useState(0)
+    const [arrebatadosEnabled, setArrebatadosEnabled] = useState(false)
+    const [arrebatadosFuerza, setArrebatadosFuerza] = useState(10)
+
+    const scrollFriction = useScrollFriction({
+        scrollContainerRef,
+        enabled: arrebatadosEnabled,
+        arrebatadosCount,
+        fuerza: arrebatadosFuerza,
+    })
+
+    const handleArrebatadosStart = useCallback((config: { count: number, fuerza: number }) => {
+        setArrebatadosEnabled(true)
+        setArrebatadosCount(config.count)
+        setArrebatadosFuerza(config.fuerza)
+    }, [])
+
+    const handleArrebatadosAdd = useCallback((count: number) => {
+        setArrebatadosCount(prev => prev + count)
+    }, [])
+
+    const handleArrebatadosStop = useCallback(() => {
+        setArrebatadosEnabled(false)
+        setArrebatadosCount(0)
+    }, [])
+
+    // Build snapshot of all active parallel systems for save data
+    const buildParallelSystemsSaveState = useCallback(() => {
+        const spider = spiderInfestation.actions.getSaveState()
+        const willpower = willpowerState.active ? {
+            value: willpowerState.value,
+            decayRate: willpowerState.decayRate,
+            targetKey: willpowerState.targetKey,
+        } : null
+        const arrebatados = arrebatadosEnabled ? {
+            count: arrebatadosCount,
+            fuerza: arrebatadosFuerza,
+        } : null
+        const genjutsu = genjutsuBreak ? {
+            stat: genjutsuBreak.stat,
+            text: genjutsuBreak.text,
+            targetKnot: genjutsuBreak.targetKnot,
+        } : null
+
+        if (!spider && !willpower && !arrebatados && !genjutsu) return null
+        return { spider, willpower, arrebatados, genjutsu }
+    }, [spiderInfestation.actions, willpowerState, arrebatadosEnabled, arrebatadosCount, arrebatadosFuerza, genjutsuBreak])
+
+    // ==================
+    // Boss Controller System
+    // ==================
+    const bossController = useBossController()
+
+    const handleBossStart = useCallback((config: { name: string; hp: number }) => {
+        bossController.actions.startBoss(config)
+    }, [bossController.actions])
+
+    const handleBossPhase = useCallback((phase: number) => {
+        bossController.actions.setPhase(phase)
+    }, [bossController.actions])
+
+    const handleBossDamage = useCallback((amount: number) => {
+        bossController.actions.damage(amount)
+    }, [bossController.actions])
+
+    const handleBossCheck = useCallback((): boolean => {
+        return bossController.actions.checkBoss()
+    }, [bossController.actions])
+
+    const handleBossStop = useCallback(() => {
+        bossController.actions.stopBoss()
+    }, [bossController.actions])
+
+    // Boss phase completion — damages boss and auto-selects gate choice,
+    // then flags for transition gate auto-advance
+    const handleBossPhaseComplete = useCallback((damage: number) => {
+        bossController.actions.damage(damage)
+        // Check if boss is now defeated and set Ink variable BEFORE story continues
+        // (Ink conditionals evaluate during continuation, before tags are processed)
+        const defeated = bossController.actions.checkBoss()
+        if (defeated) {
+            setGlobalVariable('boss_defeated', true)
+        }
+        // Flag: after this gate choice, auto-advance the transition gate too
+        bossTransitionPendingRef.current = true
+        // Auto-select the current phase's gate choice [→]
+        const tid = setTimeout(() => {
+            if (makeChoiceRef.current) {
+                makeChoiceRef.current(0)
+            }
+        }, 800)
+        pendingTimersRef.current.push(tid)
+    }, [bossController.actions, setGlobalVariable])
+
+    // Boss phase 3 player death — auto-select gate choice to reach derrota
+    const handleBossPlayerDeath = useCallback(() => {
+        bossController.actions.playerDied()
+        bossTransitionPendingRef.current = true
+        const tid = setTimeout(() => {
+            if (makeChoiceRef.current) {
+                makeChoiceRef.current(0)
+            }
+        }, 1000)
+        pendingTimersRef.current.push(tid)
+    }, [bossController.actions])
+
+    // Track whether we're waiting for a transition gate auto-advance
+    const bossTransitionPendingRef = useRef(false)
+
+    // Track pending auto-choice timeouts so they can be cleared on restart/unmount
+    const pendingTimersRef = useRef<ReturnType<typeof setTimeout>[]>([])
+
+    // Auto-select gate choices [→] that appear in transition knots AFTER a phase completes.
+    // We set bossTransitionPendingRef=true in handleBossPhaseComplete/handleBossPlayerDeath,
+    // then when the next gate choice appears, we auto-select it.
+    useEffect(() => {
+        if (!bossTransitionPendingRef.current) return
+        if (choices.length !== 1) return
+        const choiceText = choices[0]?.text?.trim()
+        if (choiceText !== '→') return
+
+        const timer = setTimeout(() => {
+            bossTransitionPendingRef.current = false
+            if (makeChoiceRef.current) {
+                makeChoiceRef.current(0)
+            }
+        }, 1500) // pause to display transition text
+
+        return () => clearTimeout(timer)
+    }, [choices])
+
+    // ==================
+    // Visual Damage System (Persistent)
+    // ==================
+    const visualDamage = useVisualDamage(storyId)
+
+    const visualDamageRef = useRef(visualDamage)
+    visualDamageRef.current = visualDamage
+
+    const handleVisualDamage = useCallback((config: { grayscale?: number, reset?: boolean }) => {
+        if (config.reset) {
+            visualDamageRef.current.resetDamage()
+        } else {
+            visualDamageRef.current.recordDeath()
+        }
+    }, [])
 
     // ==================
     // Tag Processing
@@ -219,6 +422,69 @@ export function useBardoEngine({
     // Keep a stable ref of the story instance
     const storyRef = useRef<any>(null)
     storyRef.current = story
+
+    // ── Genjutsu: tag handler ───────────────────────────────────────────────
+    const handleGenjutsuBreak = useCallback((stat: string, targetKnot: string, fisuraText: string) => {
+        // fisuraText comes directly from the GENJUTSU_BREAK tag — no story.currentText needed
+        console.log(`[Genjutsu] BREAK: stat=${stat}, target=${targetKnot}, fisura="${fisuraText}"`)
+
+        // Save decay config before freezing — needed to resume after typing completes
+        genjutsuFrozenDecayRateRef.current = willpowerState.decayRate
+        genjutsuFrozenTargetKeyRef.current = willpowerState.targetKey
+
+        // Freeze willpower while text types — player cannot click the fisura yet
+        willpowerActions.stopWillpower()
+
+        if (genjutsuReactionTimerRef.current) clearTimeout(genjutsuReactionTimerRef.current)
+        setGenjutsuTextReady(false)
+        setGenjutsuBreak({ stat, text: fisuraText, targetKnot })
+    }, [willpowerState.decayRate, willpowerState.targetKey, willpowerActions])
+
+    // ── Genjutsu: called by Player when TextDisplay finishes typing the fisura ─
+    const onGenjutsuTypingComplete = useCallback(() => {
+        if (!genjutsuBreakRef.current) return  // player already broke the illusion
+
+        // Start at WP=65: already below the visibility threshold (80), so fisura is
+        // immediately slightly visible. Difficulty still scales via decay rate.
+        console.log('[Genjutsu] Typing complete — starting WP countdown at 65')
+        willpowerActions.startWillpower({
+            value: 65,
+            decayRate: genjutsuFrozenDecayRateRef.current,
+            targetKey: genjutsuFrozenTargetKeyRef.current,
+        })
+        setGenjutsuTextReady(true)
+    }, [willpowerActions])
+
+    // ── Genjutsu: break action ──────────────────────────────────────────────
+    const breakGenjutsu = useCallback(() => {
+        const gb = genjutsuBreakRef.current
+        if (!gb || !storyRef.current) return
+
+        try {
+            setGlobalVariable('genjutsu_stat_used', gb.stat)
+            setGlobalVariable('genjutsu_willpower', Math.round(willpowerValueRef.current))
+            console.log(`[Genjutsu] Broke illusion: stat=${gb.stat}, wp=${Math.round(willpowerValueRef.current)}`)
+        } catch (e) {
+            console.warn('[Genjutsu] Could not set Ink variables:', e)
+        }
+
+        setGenjutsuBreak(null)
+        setGenjutsuTextReady(false)
+        if (genjutsuReactionTimerRef.current) {
+            clearTimeout(genjutsuReactionTimerRef.current)
+            genjutsuReactionTimerRef.current = null
+        }
+        willpowerActions.stopWillpower()
+
+        try {
+            storyRef.current.ChoosePathString(gb.targetKnot)
+            if (continueStoryRef.current) {
+                continueStoryRef.current()
+            }
+        } catch (e) {
+            console.warn('[Genjutsu] Could not divert to target knot:', e)
+        }
+    }, [willpowerActions, setGlobalVariable])
 
     const { processTags } = useTagProcessor({
         // @ts-ignore
@@ -235,7 +501,17 @@ export function useBardoEngine({
         onSpiderStart: handleSpiderStart,
         onSpiderStop: handleSpiderStop,
         onSpiderCheck: handleSpiderCheck,
-        onSpiderDifficulty: handleSpiderDifficulty
+        onSpiderDifficulty: handleSpiderDifficulty,
+        onArrebatadosStart: handleArrebatadosStart,
+        onArrebatadosAdd: handleArrebatadosAdd,
+        onArrebatadosStop: handleArrebatadosStop,
+        onBossStart: handleBossStart,
+        onBossPhase: handleBossPhase,
+        onBossDamage: handleBossDamage,
+        onBossCheck: handleBossCheck,
+        onBossStop: handleBossStop,
+        onVisualDamage: handleVisualDamage,
+        onGenjutsuBreak: handleGenjutsuBreak,
     })
 
     // ==================
@@ -250,14 +526,80 @@ export function useBardoEngine({
 
         processTags(tags)
 
-        if (storyId && newText) {
-            // @ts-ignore
-            saveSystem.autoSave(story.state.toJson(), newText, gameSystems.exportGameSystems() || undefined)
+        // Notify spider system that player advanced (resets idle timer)
+        if (spiderInfestation.state.infesting) {
+            spiderInfestation.actions.notifyAdvance()
         }
-    }, [story, minigameController.isPlaying, continueStoryState, processTags, storyId, saveSystem, gameSystems])
+
+        // Don't autosave if story just ended (preserves last save before death/ending)
+        const storyEnded = !story.canContinue && story.currentChoices.length === 0
+        if (storyId && newText && !storyEnded) {
+            // @ts-ignore
+            saveSystem.autoSave(story.state.toJson(), newText, gameSystems.exportGameSystems() || undefined, buildParallelSystemsSaveState())
+        }
+    }, [story, minigameController.isPlaying, continueStoryState, processTags, spiderInfestation, storyId, saveSystem, gameSystems])
+
+    // Debug spawn wrapper — sets variables, jumps to knot, processes tags
+    const spawnAtKnot = useCallback((knotName: string, variables: Record<string, any> = {}) => {
+        if (!story) return
+
+        clearVFX()
+        const { tags } = rawSpawnAtKnot(knotName, variables)
+        processTags(tags)
+
+        // Sync any stat variables back to React state
+        syncStatsFromVariables(variables)
+    }, [story, clearVFX, rawSpawnAtKnot, processTags, gameSystems])
+
+    // Debug: set variables without spawning — updates Ink + syncs stats visually
+    const debugSetVariables = useCallback((variables: Record<string, any>) => {
+        if (!story) return
+
+        for (const [key, val] of Object.entries(variables)) {
+            try {
+                setGlobalVariable(key, val)
+            } catch (e) {
+                console.warn(`[Debug] Could not set variable ${key}:`, e)
+            }
+        }
+
+        syncStatsFromVariables(variables)
+    }, [story, setGlobalVariable, gameSystems])
+
+    // Helper: sync changed variables to useStats React state if they match stat IDs
+    function syncStatsFromVariables(variables: Record<string, any>) {
+        if (!gameSystems.statsEnabled) return
+        const statDefs = gameSystems.statsConfig?.definitions || []
+        const statIds = new Set(statDefs.map((d: any) => d.id))
+
+        for (const [key, val] of Object.entries(variables)) {
+            if (statIds.has(key) && typeof val === 'number') {
+                gameSystems.setStat(key, val)
+            }
+        }
+    }
 
     // Keep refs updated
     continueStoryRef.current = continueStory
+
+    // ==================
+    // Bidirectional stat sync: React stats → Ink variables
+    // ==================
+    useEffect(() => {
+        if (!story || !gameSystems.statsEnabled) return
+
+        const statDefs = gameSystems.statsConfig?.definitions || []
+        for (const def of statDefs) {
+            const value = gameSystems.stats[def.id]
+            if (value !== undefined) {
+                try {
+                    setGlobalVariable(def.id, value)
+                } catch (e) {
+                    // Variable may not exist in Ink, that's ok
+                }
+            }
+        }
+    }, [story, gameSystems.stats, gameSystems.statsEnabled, gameSystems.statsConfig, setGlobalVariable])
 
     // ==================
     // Story Initialization Wrapper
@@ -274,9 +616,21 @@ export function useBardoEngine({
             console.log('[NG+] Error setting new_game_plus')
         }
 
-        // Load saved game systems
+        // Load saved game systems and sync stats to Ink
         if (savedGameSystems) {
             gameSystems.loadGameSystems(savedGameSystems)
+
+            // Sync saved stats back to Ink variables so conditionals work
+            if (savedGameSystems.stats) {
+                Object.entries(savedGameSystems.stats).forEach(([statId, value]) => {
+                    try {
+                        setGlobalVariable(statId, value as number)
+                        console.log(`[Init] Synced stat ${statId} = ${value} to Ink`)
+                    } catch (e) {
+                        // Variable may not exist in Ink, that's ok
+                    }
+                })
+            }
         }
     }, [initStoryState, setGlobalVariable, achievementsSystem.hasCompletedGame, gameSystems])
 
@@ -303,7 +657,12 @@ export function useBardoEngine({
             return
         }
 
-
+        // Genjutsu: only the resist choice (last) costs willpower; ceder (first) is free
+        if (genjutsuBreakRef.current && index === choices.length - 1) {
+            const GENJUTSU_TRAP_COST = 15
+            willpowerActions.boostValue(-GENJUTSU_TRAP_COST)
+            console.log(`[Genjutsu] Trap choice selected — willpower -${GENJUTSU_TRAP_COST}`)
+        }
 
         clearVFX()
 
@@ -331,36 +690,81 @@ export function useBardoEngine({
 
         processTags(tags)
 
-        if (storyId && newText) {
-            // @ts-ignore
-            saveSystem.autoSave(story.state.toJson(), newText, gameSystems.exportGameSystems() || undefined)
+        // Notify spider system that player advanced (resets idle timer)
+        if (spiderInfestation.state.infesting) {
+            spiderInfestation.actions.notifyAdvance()
         }
-    }, [clearVFX, makeChoiceState, processTags, storyId, saveSystem, story, gameSystems])
+
+        // Don't autosave if story just ended (preserves last save before death/ending)
+        const storyEnded = !story.canContinue && story.currentChoices.length === 0
+        if (storyId && newText && !storyEnded) {
+            // @ts-ignore
+            saveSystem.autoSave(story.state.toJson(), newText, gameSystems.exportGameSystems() || undefined, buildParallelSystemsSaveState())
+        }
+    }, [clearVFX, makeChoiceState, processTags, spiderInfestation, storyId, saveSystem, story, gameSystems, willpowerActions])
 
     // Keep makeChoice ref updated for spider phase auto-select
     const makeChoiceRef = useRef<any>(null)
     makeChoiceRef.current = makeChoice
 
+    // Genjutsu: auto-surrender when willpower reaches 0 (only after fisura finishes typing)
+    useEffect(() => {
+        if (!genjutsuActive) return
+        if (!genjutsuTextReady) return      // typing not done — player can't interact yet
+        if (willpowerState.value > 0) return
+        if (!willpowerState.active) return  // only fires once willpower has been resumed
+        if (choices.length === 0) return
+
+        console.log('[Genjutsu] Willpower 0 — auto-surrendering (choice 0)')
+        if (genjutsuReactionTimerRef.current) clearTimeout(genjutsuReactionTimerRef.current)
+        // Clear ref BEFORE makeChoice to prevent trap-cost guard from firing
+        genjutsuBreakRef.current = null
+        setGenjutsuBreak(null)
+        if (makeChoiceRef.current) {
+            makeChoiceRef.current(0)
+        }
+    }, [genjutsuActive, genjutsuTextReady, willpowerState.value, willpowerState.active, choices.length])
+
     const restart = useCallback(() => {
         if (storyData && storyId) {
+            pendingTimersRef.current.forEach(clearTimeout)
+            pendingTimersRef.current = []
             clearVFX()
             stopMusic(false)
             gameSystems.resetGameSystems()
             willpowerActions.stopWillpower()
             spiderInfestation.actions.stopInfestation()
+            handleArrebatadosStop()
+            bossController.actions.stopBoss()
+            setGenjutsuBreak(null)
+            setGenjutsuTextReady(false)
+            if (genjutsuReactionTimerRef.current) {
+                clearTimeout(genjutsuReactionTimerRef.current)
+                genjutsuReactionTimerRef.current = null
+            }
             resetStoryState()
             initStory(storyData)
         }
-    }, [storyData, storyId, clearVFX, stopMusic, gameSystems, willpowerActions, resetStoryState, initStory])
+    }, [storyData, storyId, clearVFX, stopMusic, gameSystems, willpowerActions, spiderInfestation.actions, handleArrebatadosStop, bossController.actions, resetStoryState, initStory])
 
     const backToStart = useCallback(() => {
+        pendingTimersRef.current.forEach(clearTimeout)
+        pendingTimersRef.current = []
         resetStoryState()
         clearVFX()
         stopMusic()
         gameSystems.resetGameSystems()
         willpowerActions.stopWillpower()
         spiderInfestation.actions.stopInfestation()
-    }, [resetStoryState, clearVFX, stopMusic, gameSystems, willpowerActions, spiderInfestation.actions])
+        handleArrebatadosStop()
+        bossController.actions.stopBoss()
+        setGenjutsuBreak(null)
+        setGenjutsuTextReady(false)
+        if (genjutsuReactionTimerRef.current) {
+            clearTimeout(genjutsuReactionTimerRef.current)
+            genjutsuReactionTimerRef.current = null
+        }
+    }, [resetStoryState, clearVFX, stopMusic, gameSystems, willpowerActions, spiderInfestation.actions, handleArrebatadosStop, bossController.actions])
 
     const finishGame = useCallback(() => {
         achievementsSystem.markGameComplete()
@@ -389,24 +793,56 @@ export function useBardoEngine({
         const saveData = saveSystem.loadLastSave()
         if (saveData && storyData) {
             initStory(storyData, saveData.state, saveData.text, saveData.gameSystems)
+            // Restore parallel systems that were active when saved
+            const ps = saveData.parallelSystems
+            if (ps?.spider) {
+                spiderInfestation.actions.startInfestation(ps.spider)
+            }
+            if (ps?.willpower) {
+                willpowerActions.startWillpower(ps.willpower)
+            }
+            if (ps?.arrebatados) {
+                setArrebatadosEnabled(true)
+                setArrebatadosCount(ps.arrebatados.count)
+                setArrebatadosFuerza(ps.arrebatados.fuerza)
+            }
+            if (ps?.genjutsu) {
+                setGenjutsuBreak(ps.genjutsu)
+            }
             return saveData
         }
         return null
-    }, [saveSystem, storyData, initStory])
+    }, [saveSystem, storyData, initStory, spiderInfestation.actions, willpowerActions, setArrebatadosEnabled, setArrebatadosCount, setArrebatadosFuerza])
 
     const loadSave = useCallback((saveId: string) => {
         const saveData = saveSystem.loadSave(saveId)
         if (saveData && storyData) {
             initStory(storyData, saveData.state, saveData.text, saveData.gameSystems)
+            // Restore parallel systems that were active when saved
+            const ps = saveData.parallelSystems
+            if (ps?.spider) {
+                spiderInfestation.actions.startInfestation(ps.spider)
+            }
+            if (ps?.willpower) {
+                willpowerActions.startWillpower(ps.willpower)
+            }
+            if (ps?.arrebatados) {
+                setArrebatadosEnabled(true)
+                setArrebatadosCount(ps.arrebatados.count)
+                setArrebatadosFuerza(ps.arrebatados.fuerza)
+            }
+            if (ps?.genjutsu) {
+                setGenjutsuBreak(ps.genjutsu)
+            }
             return saveData
         }
         return null
-    }, [saveSystem, storyData, initStory])
+    }, [saveSystem, storyData, initStory, spiderInfestation.actions, willpowerActions, setArrebatadosEnabled, setArrebatadosCount, setArrebatadosFuerza])
 
     const manualSave = useCallback((name: string, overwriteId: string | null = null) => {
         if (!story || !storyId) return
         // @ts-ignore
-        saveSystem.saveGame(name, story.state.toJson(), text, gameSystems.exportGameSystems() || undefined, overwriteId)
+        saveSystem.saveGame(name, story.state.toJson(), text, gameSystems.exportGameSystems() || undefined, overwriteId, buildParallelSystemsSaveState())
     }, [story, storyId, text, saveSystem, gameSystems])
 
     // ==================
@@ -429,9 +865,15 @@ export function useBardoEngine({
         handleMinigameStart,
         // Input
         commitInput,
+        // Debug
+        spawnAtKnot,
+        debugSetVariables,
+        getKnotList,
+        getVariables,
     }), [
         initStory, continueStory, makeChoice, restart, backToStart, finishGame,
-        newGame, continueGame, loadSave, manualSave, handleMinigameStart, commitInput
+        newGame, continueGame, loadSave, manualSave, handleMinigameStart, commitInput,
+        spawnAtKnot, debugSetVariables, getKnotList, getVariables
     ])
 
     const subsystems = useMemo(() => ({
@@ -445,22 +887,43 @@ export function useBardoEngine({
         willpower: {
             state: willpowerState,
             actions: willpowerActions,
-            updateValue: willpowerActions.updateValue
+            updateValue: willpowerActions.updateValue,
+            boostValue: willpowerActions.boostValue
         },
-        spiderInfestation
+        spiderInfestation,
+        scrollFriction,
+        bossController: {
+            state: bossController.state,
+            actions: bossController.actions,
+            handleBossPhaseComplete,
+            handleBossPlayerDeath,
+        },
+        visualDamage,
+        scrollContainerRef,
+        genjutsu: {
+            break: genjutsuBreak,
+            active: genjutsuActive,
+            breakGenjutsu,
+            onTypingComplete: onGenjutsuTypingComplete,
+        },
     }), [
         playSfx, playMusic, stopMusic, stopAllAudio,
         vfxState, triggerVFX, clearVFX,
         saveSystem, gameSystems, achievementsSystem, minigameController, pendingInput, commitInput,
         willpowerState, willpowerActions,
-        spiderInfestation
+        spiderInfestation,
+        scrollFriction, bossController.state, bossController.actions, handleBossPhaseComplete, handleBossPlayerDeath, visualDamage,
+        genjutsuBreak, genjutsuActive, breakGenjutsu, onGenjutsuTypingComplete
     ])
+
+    const gameVersion = gameSystems.config?.version || '0.0.0'
 
     const configRef = useMemo(() => ({
         extrasConfig,
         hasExtras,
         achievementDefs,
-    }), [extrasConfig, hasExtras, achievementDefs])
+        gameVersion,
+    }), [extrasConfig, hasExtras, achievementDefs, gameVersion])
 
     const settingsHelpers = useMemo(() => ({
         getTypewriterDelay,
@@ -474,6 +937,7 @@ export function useBardoEngine({
         text,
         choices,
         canContinue,
+        continueLabel,
         isEnded,
         history,
         isThemeReady,
@@ -483,7 +947,7 @@ export function useBardoEngine({
         config: configRef,
         settingsHelpers
     }), [
-        story, text, choices, canContinue, isEnded, history, isThemeReady,
+        story, text, choices, canContinue, continueLabel, isEnded, history, isThemeReady,
         actions, subsystems, configRef, settingsHelpers
     ])
 }

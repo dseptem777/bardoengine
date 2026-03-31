@@ -54,6 +54,7 @@ export function useHeavyCursor(config: HeavyCursorConfig) {
     // Animation state
     const animFrameRef = useRef<number | null>(null)
     const [isStraining, setIsStraining] = useState(false)
+    const isStratiningRef = useRef(false)
 
     // Create cursor element on mount
     useEffect(() => {
@@ -69,11 +70,15 @@ export function useHeavyCursor(config: HeavyCursorConfig) {
         const cursor = document.createElement('div')
         cursor.id = 'horror-virtual-cursor'
         cursor.className = 'horror-cursor'
-        cursor.innerHTML = `
-            <div class="horror-cursor-core"></div>
-            <div class="horror-cursor-ring"></div>
-            <div class="horror-cursor-strain"></div>
-        `
+        const core = document.createElement('div')
+        core.className = 'horror-cursor-core'
+        const ring = document.createElement('div')
+        ring.className = 'horror-cursor-ring'
+        const strain = document.createElement('div')
+        strain.className = 'horror-cursor-strain'
+        cursor.appendChild(core)
+        cursor.appendChild(ring)
+        cursor.appendChild(strain)
         document.body.appendChild(cursor)
         cursorRef.current = cursor
 
@@ -148,7 +153,8 @@ export function useHeavyCursor(config: HeavyCursorConfig) {
             // Detect straining (player fighting the resistance)
             const strainMagnitude = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
             const newIsStraining = strainMagnitude > 50 && resistanceLevel !== 'none'
-            if (newIsStraining !== isStraining) {
+            if (newIsStraining !== isStratiningRef.current) {
+                isStratiningRef.current = newIsStraining
                 setIsStraining(newIsStraining)
             }
 
@@ -189,7 +195,7 @@ export function useHeavyCursor(config: HeavyCursorConfig) {
                 cancelAnimationFrame(animFrameRef.current)
             }
         }
-    }, [enabled, resistanceLevel, magnetTarget, magnetStrength, handleMouseMove, isStraining])
+    }, [enabled, resistanceLevel, magnetTarget, magnetStrength, handleMouseMove])
 
     return {
         virtualPos,

@@ -117,14 +117,15 @@ describe('JukeboxPage', () => {
             expect(onBack).toHaveBeenCalled()
         })
 
-        it('should stop music when leaving', () => {
+        it('should not stop music when navigating back (ExtrasMenu handles stop on close)', () => {
             const stopMusic = vi.fn()
             const onBack = vi.fn()
             render(<JukeboxPage {...defaultProps} stopMusic={stopMusic} onBack={onBack} />)
 
             fireEvent.click(screen.getByText('← Volver'))
 
-            expect(stopMusic).toHaveBeenCalled()
+            expect(stopMusic).not.toHaveBeenCalled()
+            expect(onBack).toHaveBeenCalled()
         })
     })
 

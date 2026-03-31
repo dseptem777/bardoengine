@@ -1,0 +1,58 @@
+{
+    "title": "EL OCASO EN EL MUSEO",
+    "version": "1.0.0",
+    "theme": {
+        "primaryColor": "#a855f7",
+        "bgColor": "#0a0a0a",
+        "description": "Purple - dimensional horror"
+    },
+    "stats": {
+        "enabled": true,
+        "definitions": [
+            {
+                "id": "hp",
+                "label": "Vida",
+                "icon": "❤️",
+                "displayType": "bar",
+                "min": 0,
+                "max": 100,
+                "initial": 100,
+                "color": "#ef4444"
+            },
+            {
+                "id": "fuerza",
+                "label": "Fuerza",
+                "icon": "💪",
+                "displayType": "value",
+                "min": 0,
+                "max": 50,
+                "initial": 10
+            },
+            {
+                "id": "magia",
+                "label": "Magia",
+                "icon": "✨",
+                "displayType": "value",
+                "min": 0,
+                "max": 50,
+                "initial": 10
+            },
+            {
+                "id": "sabiduria",
+                "label": "Sabiduría",
+                "icon": "📖",
+                "displayType": "value",
+                "min": 0,
+                "max": 50,
+                "initial": 10
+            }
+        ]
+    },
+    "inventory": {
+        "enabled": false
+    },
+    "intro": {
+        "enabled": false
+    },
+    "achievements": []
+}

@@ -52,8 +52,8 @@ describe('SaveLoadModal', () => {
             )
 
             // Should not find the active tab or content
-            expect(screen.queryByText(/💾 GUARDAR/)).not.toBeInTheDocument()
-            expect(screen.queryByText(/📂 CARGAR/)).not.toBeInTheDocument()
+            expect(screen.queryByText(/GUARDAR/)).not.toBeInTheDocument()
+            expect(screen.queryByText(/CARGAR/)).not.toBeInTheDocument()
         })
     })
 
@@ -71,7 +71,7 @@ describe('SaveLoadModal', () => {
                 />
             )
 
-            expect(screen.getByText(/📂 CARGAR/)).toBeInTheDocument()
+            expect(screen.getByText(/CARGAR/)).toBeInTheDocument()
         })
 
         it('should display save slots', () => {
@@ -143,7 +143,7 @@ describe('SaveLoadModal', () => {
                 />
             )
 
-            expect(screen.getByText(/💾 GUARDAR/)).toBeInTheDocument()
+            expect(screen.getAllByText(/GUARDAR/).length).toBeGreaterThan(0)
         })
 
         it('should show save name input with default value', () => {
@@ -178,7 +178,9 @@ describe('SaveLoadModal', () => {
                 />
             )
 
-            expect(screen.getByText('GUARDAR')).toBeInTheDocument()
+            // Submit button (the form GUARDAR button, not the tab)
+            const guardarButtons = screen.getAllByText('GUARDAR')
+            expect(guardarButtons.length).toBeGreaterThanOrEqual(1)
         })
 
         it('should call onSave when save button clicked', () => {
@@ -198,7 +200,9 @@ describe('SaveLoadModal', () => {
 
             const input = screen.getByRole('textbox')
             fireEvent.change(input, { target: { value: 'My Save' } })
-            fireEvent.click(screen.getByText('GUARDAR'))
+            // Click the form submit button (last GUARDAR, after the tab button)
+            const guardarButtons = screen.getAllByText('GUARDAR')
+            fireEvent.click(guardarButtons[guardarButtons.length - 1])
 
             expect(onSave).toHaveBeenCalledWith('My Save')
         })

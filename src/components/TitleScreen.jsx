@@ -110,15 +110,20 @@ export default function TitleScreen({
                     }}
                 />
 
+                {/* Rain overlay */}
+                {backgroundImage && (
+                    <>
+                        <div className="absolute inset-0 pointer-events-none z-[5] title-rain" />
+                        <div className="absolute inset-0 pointer-events-none z-[5] title-rain title-rain-delay" />
+                    </>
+                )}
+
                 {/* Content - Title only, no "press to start" here */}
-                <div className={`relative z-10 flex flex-col items-center gap-8 ${hideTitle ? 'justify-end h-full pb-32' : ''}`}>
+                <div className={`relative z-10 flex flex-col items-center gap-8 ${hideTitle ? 'justify-end h-full pb-32' : backgroundImage ? 'mb-auto mt-[68vh]' : ''}`}>
                     {/* Game Title - hidden when background has title */}
                     {!hideTitle && (
                         <motion.h1
-                            className="text-5xl md:text-7xl lg:text-8xl font-bold text-bardo-accent text-center tracking-wider"
-                            style={{
-                                textShadow: '0 0 40px color-mix(in srgb, var(--bardo-accent) 60%, transparent), 0 0 80px color-mix(in srgb, var(--bardo-accent) 30%, transparent)'
-                            }}
+                            className="text-5xl md:text-7xl lg:text-8xl font-bold text-bardo-accent text-center tracking-wider accent-text-shadow-title"
                             initial={{ opacity: 0, y: -30, scale: 0.9 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -156,11 +161,13 @@ export default function TitleScreen({
                     </motion.p>
                 )}
 
-                {/* Decorative corners */}
-                <div className="absolute top-4 left-4 w-16 h-16 border-l-2 border-t-2 border-bardo-accent/30" />
-                <div className="absolute top-4 right-4 w-16 h-16 border-r-2 border-t-2 border-bardo-accent/30" />
-                <div className="absolute bottom-4 left-4 w-16 h-16 border-l-2 border-b-2 border-bardo-accent/30" />
-                <div className="absolute bottom-4 right-4 w-16 h-16 border-r-2 border-b-2 border-bardo-accent/30" />
+                {/* Decorative corners — hidden when background image is present */}
+                {!backgroundImage && <>
+                    <div className="absolute top-4 left-4 w-16 h-16 border-l-2 border-t-2 border-bardo-accent/30" />
+                    <div className="absolute top-4 right-4 w-16 h-16 border-r-2 border-t-2 border-bardo-accent/30" />
+                    <div className="absolute bottom-4 left-4 w-16 h-16 border-l-2 border-b-2 border-bardo-accent/30" />
+                    <div className="absolute bottom-4 right-4 w-16 h-16 border-r-2 border-b-2 border-bardo-accent/30" />
+                </>}
             </motion.div>
         </AnimatePresence>
     )

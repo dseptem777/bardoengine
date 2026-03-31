@@ -120,7 +120,7 @@ describe('useMinigameController', () => {
     })
 
     describe('cancelGame', () => {
-        it('should return to idle without calling onResultCommit', () => {
+        it('should return to idle and commit failure result', () => {
             const onResultCommit = vi.fn()
             const { result } = renderHook(() => useMinigameController(onResultCommit))
 
@@ -134,7 +134,7 @@ describe('useMinigameController', () => {
 
             expect(result.current.state).toBe('idle')
             expect(result.current.config).toBeNull()
-            expect(onResultCommit).not.toHaveBeenCalled()
+            expect(onResultCommit).toHaveBeenCalledWith(0)
         })
     })
 

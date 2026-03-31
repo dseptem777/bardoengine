@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, useAnimation } from 'framer-motion'
 
 export default function QTEGame({ params = [], onFinish }) {
@@ -6,21 +6,31 @@ export default function QTEGame({ params = [], onFinish }) {
     const duration = parseFloat(params[1]) || 2.0
 
     const [timeLeft, setTimeLeft] = useState(duration)
-    const [gameState, setGameState] = useState('ready') // ready, playing, win, lose
+    const [gameState, setGameState] = useState('ready') // ready, go, playing, win, lose
     const [readyCountdown, setReadyCountdown] = useState(2)
+    const expiredRef = useRef(false)
 
     const finish = useCallback((success) => {
         setGameState(success ? 'win' : 'lose')
         onFinish(success ? 1 : 0)
     }, [onFinish])
 
+    // Transition to 'go' flash then 'playing' when countdown reaches 0
     useEffect(() => {
+        if (gameState === 'ready' && readyCountdown <= 0) {
+            setGameState('go')
+            setTimeout(() => setGameState('playing'), 200)
+        }
+    }, [gameState, readyCountdown])
+
+    useEffect(() => {
+        if (gameState === 'go') return
+
         if (gameState === 'ready') {
             const timer = setInterval(() => {
                 setReadyCountdown(prev => {
                     if (prev <= 1) {
                         clearInterval(timer)
-                        setGameState('playing')
                         return 0
                     }
                     return prev - 1
@@ -35,7 +45,7 @@ export default function QTEGame({ params = [], onFinish }) {
             setTimeLeft(prev => {
                 if (prev <= 0.05) {
                     clearInterval(timer)
-                    finish(false)
+                    expiredRef.current = true
                     return 0
                 }
                 return prev - 0.05
@@ -57,11 +67,19 @@ export default function QTEGame({ params = [], onFinish }) {
         }
     }, [gameState, targetKey, finish])
 
+    // Fire finish outside state updater (safe for StrictMode)
+    useEffect(() => {
+        if (expiredRef.current && gameState === 'playing') {
+            expiredRef.current = false
+            finish(false)
+        }
+    }, [timeLeft, gameState, finish])
+
     const progress = (timeLeft / duration) * 100
 
     return (
         <div className="bg-zinc-900 border-2 border-bardo-accent p-12 flex flex-col items-center justify-center gap-8 shadow-2xl">
-            <h2 className="text-3xl font-bold text-bardo-accent tracking-widest">RAPID REACTION</h2>
+            <h2 className="text-3xl font-bold text-bardo-accent tracking-widest">REACCIÓN RÁPIDA</h2>
 
             <div className="relative w-48 h-48 flex items-center justify-center">
                 {/* Timer Circle */}
@@ -88,20 +106,27 @@ export default function QTEGame({ params = [], onFinish }) {
                     />
                 </svg>
 
-                <div className="z-10 bg-bardo-accent text-zinc-900 text-5xl font-black w-24 h-24 flex items-center justify-center rounded-lg shadow-lg">
+                <div
+                    className="z-10 bg-bardo-accent text-zinc-900 text-5xl font-black w-24 h-24 flex items-center justify-center rounded-lg shadow-lg cursor-pointer active:scale-95 transition-transform"
+                    onClick={() => gameState === 'playing' && finish(true)}
+                    role="button"
+                    aria-label={`Presionar ${targetKey}`}
+                >
                     {targetKey === 'SPACE' ? '⎵' : targetKey}
                 </div>
             </div>
 
             <p className="text-gray-400 font-mono text-center">
                 {gameState === 'ready' ? (
-                    <span className="text-bardo-accent text-3xl font-black animate-ping">READY? {readyCountdown}</span>
+                    <span className="text-bardo-accent text-3xl font-black animate-pulse">¿LISTO? {readyCountdown}</span>
+                ) : gameState === 'go' ? (
+                    <span className="text-green-400 text-4xl font-black animate-ping">¡YA!</span>
                 ) : gameState === 'playing' ? (
-                    <>PRESS <span className="text-bardo-accent font-bold">[{targetKey}]</span> NOW!</>
+                    <>¡PRESIONÁ <span className="text-bardo-accent font-bold">[{targetKey}]</span> AHORA!</>
                 ) : gameState === 'win' ? (
-                    <span className="text-green-500 font-bold scale-125 inline-block transition-transform">✓ SUCCESS</span>
+                    <span className="text-green-500 font-bold scale-125 inline-block transition-transform">✓ ¡ÉXITO!</span>
                 ) : (
-                    <span className="text-red-500 font-bold animate-pulse">FAILED</span>
+                    <span className="text-red-500 font-bold animate-pulse">FALLIDO</span>
                 )}
             </p>
         </div>

@@ -119,10 +119,10 @@ describe('ExtrasMenu', () => {
     })
 
     describe('close button', () => {
-        it('should call onClose when X clicked', () => {
+        it('should call onClose when Cerrar clicked', () => {
             const onClose = vi.fn()
             render(<ExtrasMenu {...defaultProps} onClose={onClose} />)
-            fireEvent.click(screen.getByText('✕'))
+            fireEvent.click(screen.getByText('← Cerrar'))
             expect(onClose).toHaveBeenCalled()
         })
     })

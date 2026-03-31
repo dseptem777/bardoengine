@@ -82,6 +82,7 @@ fn list_available_stories(app_handle: tauri::AppHandle) -> Result<Vec<String>, S
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_dialog::init())
         .invoke_handler(tauri::generate_handler![decrypt_story, list_available_stories])
         .setup(|app| {
             if cfg!(debug_assertions) {
