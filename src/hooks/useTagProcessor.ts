@@ -17,7 +17,7 @@ interface TagProcessorOptions {
     onWillpowerCheck?: (threshold: number) => boolean;
     getWillpowerValue?: () => number;
     // Genjutsu break callback
-    onGenjutsuBreak?: (stat: string, targetKnot: string) => void;
+    onGenjutsuBreak?: (stat: string, targetKnot: string, fisuraText: string) => void;
     // Spider infestation callbacks
     onSpiderStart?: (config: { difficulty?: string, fuerza?: number, magia?: number, sabiduria?: number }) => void;
     onSpiderStop?: () => void;
@@ -184,12 +184,13 @@ export function useTagProcessor({
 
             if (tag.toUpperCase().startsWith('GENJUTSU_BREAK:')) {
                 const payload = tag.substring('GENJUTSU_BREAK:'.length).trim()
-                const [rawStat, rawTarget] = payload.split(':').map(s => s.trim())
-                const stat = rawStat?.toLowerCase() || ''
-                const targetKnot = rawTarget || ''
-                console.log(`[Tags] GENJUTSU_BREAK: stat=${stat}, target=${targetKnot}`)
+                const parts = payload.split(':').map(s => s.trim())
+                const stat = parts[0]?.toLowerCase() || ''
+                const targetKnot = parts[1] || ''
+                const fisuraText = parts.slice(2).join(':').trim()  // rest is the fisura phrase
+                console.log(`[Tags] GENJUTSU_BREAK: stat=${stat}, target=${targetKnot}, fisura="${fisuraText}"`)
                 if (onGenjutsuBreak) {
-                    onGenjutsuBreak(stat, targetKnot)
+                    onGenjutsuBreak(stat, targetKnot, fisuraText)
                 }
                 return
             }

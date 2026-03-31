@@ -588,9 +588,16 @@ function AppContent({ onStorySelect }) {
                     onBossPlayerDeath={bossController?.handleBossPlayerDeath}
                     sabiduria={gameSystems?.stats?.sabiduria}
                     genjutsuBreak={genjutsu?.break ?? null}
-                    dominantStat={getDominantStat(gameSystems.stats || {})}
+                    dominantStat={getDominantStat(
+                        Object.fromEntries(
+                            Object.entries(gameSystems.stats || {}).filter(([key]) =>
+                                gameSystems.statsConfig?.definitions?.find(d => d.id === key)?.displayType === 'value'
+                            )
+                        )
+                    )}
                     willpowerValue={willpower?.state?.value ?? 100}
                     onBreakGenjutsu={genjutsu?.breakGenjutsu}
+                    onGenjutsuTypingComplete={genjutsu?.onTypingComplete}
                 />
             )}
 

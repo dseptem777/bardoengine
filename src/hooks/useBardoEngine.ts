@@ -191,6 +191,13 @@ export function useBardoEngine({
     const genjutsuBreakRef = useRef(genjutsuBreak)
     genjutsuBreakRef.current = genjutsuBreak
 
+    // Typing-ready gate: auto-surrender only fires after fisura paragraph finishes typing
+    const [genjutsuTextReady, setGenjutsuTextReady] = useState(false)
+    const genjutsuFrozenDecayRateRef = useRef<string>('normal')
+    const genjutsuFrozenTargetKeyRef = useRef<string>('V')
+    const genjutsuReactionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const GENJUTSU_REACTION_MS = 2000
+
     const handleWillpowerStart = useCallback((config: { decayRate?: string, targetKey?: string, initialValue?: number }) => {
         willpowerActions.startWillpower({
             decayRate: config.decayRate || 'normal',
@@ -202,6 +209,11 @@ export function useBardoEngine({
     const handleWillpowerStop = useCallback(() => {
         willpowerActions.stopWillpower()
         setGenjutsuBreak(null)
+        setGenjutsuTextReady(false)
+        if (genjutsuReactionTimerRef.current) {
+            clearTimeout(genjutsuReactionTimerRef.current)
+            genjutsuReactionTimerRef.current = null
+        }
     }, [willpowerActions])
 
     const handleWillpowerCheck = useCallback((threshold: number): boolean => {
@@ -412,11 +424,36 @@ export function useBardoEngine({
     storyRef.current = story
 
     // ── Genjutsu: tag handler ───────────────────────────────────────────────
-    const handleGenjutsuBreak = useCallback((stat: string, targetKnot: string) => {
-        const rawText = story?.currentText?.trim() || ''
-        console.log(`[Genjutsu] BREAK point: stat=${stat}, target=${targetKnot}, text="${rawText.substring(0, 50)}..."`)
-        setGenjutsuBreak({ stat, text: rawText, targetKnot })
-    }, [story])
+    const handleGenjutsuBreak = useCallback((stat: string, targetKnot: string, fisuraText: string) => {
+        // fisuraText comes directly from the GENJUTSU_BREAK tag — no story.currentText needed
+        console.log(`[Genjutsu] BREAK: stat=${stat}, target=${targetKnot}, fisura="${fisuraText}"`)
+
+        // Save decay config before freezing — needed to resume after typing completes
+        genjutsuFrozenDecayRateRef.current = willpowerState.decayRate
+        genjutsuFrozenTargetKeyRef.current = willpowerState.targetKey
+
+        // Freeze willpower while text types — player cannot click the fisura yet
+        willpowerActions.stopWillpower()
+
+        if (genjutsuReactionTimerRef.current) clearTimeout(genjutsuReactionTimerRef.current)
+        setGenjutsuTextReady(false)
+        setGenjutsuBreak({ stat, text: fisuraText, targetKnot })
+    }, [willpowerState.decayRate, willpowerState.targetKey, willpowerActions])
+
+    // ── Genjutsu: called by Player when TextDisplay finishes typing the fisura ─
+    const onGenjutsuTypingComplete = useCallback(() => {
+        if (!genjutsuBreakRef.current) return  // player already broke the illusion
+
+        // Start at WP=65: already below the visibility threshold (80), so fisura is
+        // immediately slightly visible. Difficulty still scales via decay rate.
+        console.log('[Genjutsu] Typing complete — starting WP countdown at 65')
+        willpowerActions.startWillpower({
+            value: 65,
+            decayRate: genjutsuFrozenDecayRateRef.current,
+            targetKey: genjutsuFrozenTargetKeyRef.current,
+        })
+        setGenjutsuTextReady(true)
+    }, [willpowerActions])
 
     // ── Genjutsu: break action ──────────────────────────────────────────────
     const breakGenjutsu = useCallback(() => {
@@ -432,6 +469,11 @@ export function useBardoEngine({
         }
 
         setGenjutsuBreak(null)
+        setGenjutsuTextReady(false)
+        if (genjutsuReactionTimerRef.current) {
+            clearTimeout(genjutsuReactionTimerRef.current)
+            genjutsuReactionTimerRef.current = null
+        }
         willpowerActions.stopWillpower()
 
         try {
@@ -615,8 +657,8 @@ export function useBardoEngine({
             return
         }
 
-        // Genjutsu: trap choice costs willpower
-        if (genjutsuBreakRef.current) {
+        // Genjutsu: only the resist choice (last) costs willpower; ceder (first) is free
+        if (genjutsuBreakRef.current && index === choices.length - 1) {
             const GENJUTSU_TRAP_COST = 15
             willpowerActions.boostValue(-GENJUTSU_TRAP_COST)
             console.log(`[Genjutsu] Trap choice selected — willpower -${GENJUTSU_TRAP_COST}`)
@@ -665,21 +707,23 @@ export function useBardoEngine({
     const makeChoiceRef = useRef<any>(null)
     makeChoiceRef.current = makeChoice
 
-    // Genjutsu: auto-surrender when willpower reaches 0
+    // Genjutsu: auto-surrender when willpower reaches 0 (only after fisura finishes typing)
     useEffect(() => {
         if (!genjutsuActive) return
+        if (!genjutsuTextReady) return      // typing not done — player can't interact yet
         if (willpowerState.value > 0) return
-        if (!willpowerState.active) return
+        if (!willpowerState.active) return  // only fires once willpower has been resumed
         if (choices.length === 0) return
 
         console.log('[Genjutsu] Willpower 0 — auto-surrendering (choice 0)')
+        if (genjutsuReactionTimerRef.current) clearTimeout(genjutsuReactionTimerRef.current)
         // Clear ref BEFORE makeChoice to prevent trap-cost guard from firing
         genjutsuBreakRef.current = null
         setGenjutsuBreak(null)
         if (makeChoiceRef.current) {
             makeChoiceRef.current(0)
         }
-    }, [genjutsuActive, willpowerState.value, willpowerState.active, choices.length])
+    }, [genjutsuActive, genjutsuTextReady, willpowerState.value, willpowerState.active, choices.length])
 
     const restart = useCallback(() => {
         if (storyData && storyId) {
@@ -692,6 +736,12 @@ export function useBardoEngine({
             spiderInfestation.actions.stopInfestation()
             handleArrebatadosStop()
             bossController.actions.stopBoss()
+            setGenjutsuBreak(null)
+            setGenjutsuTextReady(false)
+            if (genjutsuReactionTimerRef.current) {
+                clearTimeout(genjutsuReactionTimerRef.current)
+                genjutsuReactionTimerRef.current = null
+            }
             resetStoryState()
             initStory(storyData)
         }
@@ -708,6 +758,12 @@ export function useBardoEngine({
         spiderInfestation.actions.stopInfestation()
         handleArrebatadosStop()
         bossController.actions.stopBoss()
+        setGenjutsuBreak(null)
+        setGenjutsuTextReady(false)
+        if (genjutsuReactionTimerRef.current) {
+            clearTimeout(genjutsuReactionTimerRef.current)
+            genjutsuReactionTimerRef.current = null
+        }
     }, [resetStoryState, clearVFX, stopMusic, gameSystems, willpowerActions, spiderInfestation.actions, handleArrebatadosStop, bossController.actions])
 
     const finishGame = useCallback(() => {
@@ -848,6 +904,7 @@ export function useBardoEngine({
             break: genjutsuBreak,
             active: genjutsuActive,
             breakGenjutsu,
+            onTypingComplete: onGenjutsuTypingComplete,
         },
     }), [
         playSfx, playMusic, stopMusic, stopAllAudio,
@@ -856,7 +913,7 @@ export function useBardoEngine({
         willpowerState, willpowerActions,
         spiderInfestation,
         scrollFriction, bossController.state, bossController.actions, handleBossPhaseComplete, handleBossPlayerDeath, visualDamage,
-        genjutsuBreak, genjutsuActive, breakGenjutsu
+        genjutsuBreak, genjutsuActive, breakGenjutsu, onGenjutsuTypingComplete
     ])
 
     const gameVersion = gameSystems.config?.version || '0.0.0'
