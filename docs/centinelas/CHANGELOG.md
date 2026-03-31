@@ -1,5 +1,16 @@
 # Changelog — Centinelas del Sur
 
+## [0.11.0] — 2026-03-31
+
+### Feature: Genjutsu Vampírico (Cap 2B)
+- **4 encuentros × 3 stats**: fisura activa en `cap2b_hablar`, `cap2b_hablar_escalada`, `cap2b_convertirse`, `cap2b_improvisar`
+- **Efectos stat-specific**: `magia` = glitch chromatic aberration, `fuerza` = micro-tremor scaleX/scaleY, `conocimiento` = golden flash brightness+sepia
+- **Invisible a WP≥80**, se intensifica hasta WP=15; período 5s→1s, amplitud 0.15→1.0
+- **Fisuras reubicadas** al centro de los párrafos — 12 en total, nunca al final
+- **Ceder pasa directo**, resistir requiere multi-click y cuesta -15 WP
+
+---
+
 ## [0.10.0] — 2026-03-24
 
 ### Feature: Spider Torch & Corruption (La Bóveda)
