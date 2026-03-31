@@ -1,19 +1,5 @@
 # Changelog — BardoEngine
 
-## v0.18.0 (2026-03-31)
-
-### Features — Genjutsu Vampírico
-- **Sistema completo**: minigame narrativo donde el jugador debe encontrar y clickear una frase oculta ("fisura") antes de que el WP llegue a 0
-- **Efectos stat-specific**: `magia` = glitch con chromatic aberration (cyan/magenta split), `fuerza` = micro-tremor scaleX/scaleY, `conocimiento` = golden flash brightness+sepia
-- **Intensidad dinámica**: CSS custom property `--fa` (0.15→1.0) escala amplitud según WP baja; período 5s→1s
-- **Completamente invisible a WP≥80**: fisura idéntica al texto circundante hasta ese umbral
-- **cursor: inherit**: hover sobre la fisura no delata su posición
-- **Fisuras reubicadas**: 12 frases fisura movidas de final a ~50-60% del párrafo, con texto de continuación después
-- **Trap en opción resistir**: multi-click resistance y costo WP (-15) van en la opción resistir (última), ceder pasa directo
-- **WP reset a 65**: al terminar el typewriter, WP arranca en 65 para urgencia inmediata
-- **Fix race condition**: guard `textChanged` evita que `onComplete` dispare antes de que el typewriter arranque
-- **4 encuentros × 3 stats**: `cap2b_hablar`, `cap2b_hablar_escalada`, `cap2b_convertirse`, `cap2b_improvisar`
-
 ## v0.17.0 (2026-03-24)
 
 ### Features — Spider Infestation (Torch & Corruption)
