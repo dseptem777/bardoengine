@@ -21,7 +21,7 @@ describe('GENJUTSU_BREAK tag', () => {
         )
 
         result.current.processTags(['GENJUTSU_BREAK: conocimiento:cap2b_resistencia'])
-        expect(onGenjutsuBreak).toHaveBeenCalledWith('conocimiento', 'cap2b_resistencia')
+        expect(onGenjutsuBreak).toHaveBeenCalledWith('conocimiento', 'cap2b_resistencia', '')
     })
 
     it('trims and lowercases the stat', () => {
@@ -31,7 +31,7 @@ describe('GENJUTSU_BREAK tag', () => {
         )
 
         result.current.processTags(['GENJUTSU_BREAK:  Fuerza : some_knot '])
-        expect(onGenjutsuBreak).toHaveBeenCalledWith('fuerza', 'some_knot')
+        expect(onGenjutsuBreak).toHaveBeenCalledWith('fuerza', 'some_knot', '')
     })
 
     it('ignores tag if no onGenjutsuBreak callback', () => {
