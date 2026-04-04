@@ -1,5 +1,24 @@
 # Changelog — BardoEngine
 
+## v0.18.0 (2026-04-04)
+
+### Features — Chapter Break System
+- **ChapterBreakOverlay**: nuevo componente fullscreen para title cards entre capítulos (imagen, título, subtítulo)
+- **CHAPTER_BREAK tag**: parseado en `useTagProcessor` con soporte para `title=`, `subtitle=`, `image=`, `music=` y referencias `{variable}`
+- **chapterBreakHasTextRef**: detecta si el break llegó junto a texto — en ese caso dismiss no llama a continueStory, el texto ya está cargado
+- **makeChoice path**: también setea el flag cuando el divert a un nuevo knot tiene CHAPTER_BREAK + texto
+- **chapterBreakCooldown**: 400ms cooldown post-dismiss para evitar skip accidental del siguiente contenido
+- **chapterBreakActive prop**: deshabilita keyboard navigation mientras el overlay está activo o en cooldown
+
+### Fixes — Input System
+- **Input snapshot/restore**: `processStoryLoop` guarda estado pre-Continue al detectar tag `input:`, `commitInput` restaura y replay con la variable ya seteada — texto como `"Bienvenido {nombre}"` se resuelve correctamente
+- **inputReplayingRef**: flag doble (en useStoryState + useBardoEngine) evita que el dialog se muestre de nuevo durante el replay
+
+### Fixes — Anti-Spam
+- **event.repeat guard**: `useKeyboardNavigation` y `ChapterBreakOverlay` ignoran teclas mantenidas (auto-repeat del browser)
+
+---
+
 ## v0.17.0 (2026-03-24)
 
 ### Features — Spider Infestation (Torch & Corruption)

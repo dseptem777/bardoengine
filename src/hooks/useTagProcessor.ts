@@ -35,6 +35,8 @@ interface TagProcessorOptions {
     onBossStop?: () => void;
     // Visual damage callbacks
     onVisualDamage?: (config: { grayscale?: number, reset?: boolean }) => void;
+    // Chapter break callback
+    onChapterBreak?: (config: { title: string, subtitle?: string, image?: string, music?: string }) => void;
 }
 
 export function useTagProcessor({
@@ -63,7 +65,8 @@ export function useTagProcessor({
     onBossDamage,
     onBossCheck,
     onBossStop,
-    onVisualDamage
+    onVisualDamage,
+    onChapterBreak
 }: TagProcessorOptions) {
     const processTags = useCallback((tags: string[]) => {
         tags.forEach(rawTag => {
@@ -372,6 +375,39 @@ export function useTagProcessor({
             }
 
             // ============================================
+            // CHAPTER BREAK — Fullscreen chapter title card
+            // Format: CHAPTER_BREAK: title=..., subtitle=..., image=..., music=...
+            // ============================================
+
+            if (tag.toUpperCase().startsWith('CHAPTER_BREAK:')) {
+                const raw = tag.substring('CHAPTER_BREAK:'.length).trim()
+                // Split on comma+space only when followed by a known key
+                const segments = raw.split(/, (?=(?:title|subtitle|image|music)=)/i)
+                const config: any = {}
+                for (const seg of segments) {
+                    const eqIdx = seg.indexOf('=')
+                    if (eqIdx === -1) continue
+                    const key = seg.substring(0, eqIdx).trim().toLowerCase()
+                    let val = seg.substring(eqIdx + 1).trim()
+                    // Resolve {variable} references from Ink state
+                    val = val.replace(/\{(\w+)\}/g, (_, varName) => {
+                        if (storyRef?.current) {
+                            try {
+                                return String(storyRef.current.variablesState[varName] ?? varName)
+                            } catch { return varName }
+                        }
+                        return varName
+                    })
+                    if (key && val) config[key] = val
+                }
+                if (config.title) {
+                    console.log('[Tags] CHAPTER_BREAK:', config)
+                    if (onChapterBreak) onChapterBreak(config)
+                }
+                return
+            }
+
+            // ============================================
             // EXISTING TAG PROCESSING
             // ============================================
 
@@ -457,7 +493,8 @@ export function useTagProcessor({
         onBossDamage,
         onBossCheck,
         onBossStop,
-        onVisualDamage
+        onVisualDamage,
+        onChapterBreak
     ])
 
     return useMemo(() => ({ processTags }), [processTags])

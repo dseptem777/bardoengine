@@ -49,6 +49,7 @@ VAR spider_survived = false
 VAR minigame_result = -1
 VAR genjutsu_stat_used = ""
 VAR genjutsu_willpower = 0
+VAR habitacion_img = ""
 
 -> capitulo_0
 
@@ -177,6 +178,8 @@ El Faro me había encontrado.
 
 ~ apodo_personaje = "Chispa"
 # stat:magia:+20 # stat:fuerza:+10 # stat:conocimiento:+10
+# next
+# CHAPTER_BREAK: title=Chispa, subtitle=Capítulo 0 — Orígenes, image=title_magia.png
 -> intermision
 
 // =========================================================
@@ -272,6 +275,8 @@ Me levanté con una misión. Yo sería quien llegaría siempre una hora antes.
 
 ~ apodo_personaje = "Madrugador"
 # stat:magia:+10 # stat:fuerza:+20 # stat:conocimiento:+10
+# next
+# CHAPTER_BREAK: title=Madrugador, subtitle=Capítulo 0 — Orígenes, image=title_fuerza.png
 -> intermision
 
 // =========================================================
@@ -445,6 +450,8 @@ Ellos te ofrecieron un trabajo y una nueva oportunidad y no pensás desperdiciar
 
 ~ apodo_personaje = "Ratoncito"
 # stat:magia:+10 # stat:fuerza:+10 # stat:conocimiento:+20
+# next
+# CHAPTER_BREAK: title=Ratoncito, subtitle=Capítulo 0 — Orígenes, image=title_conocimiento.png
 -> intermision
 
 // =========================================================
@@ -453,6 +460,22 @@ Ellos te ofrecieron un trabajo y una nueva oportunidad y no pensás desperdiciar
 
 === intermision ===
 ~ capitulo_actual = "Intermisión"
+// Determine room image from origin × trauma × max stat
+{
+- apodo_personaje == "Chispa" && traumado && magia >= 40: ~ habitacion_img = "hab_magia_max_trauma"
+- apodo_personaje == "Chispa" && magia >= 40:             ~ habitacion_img = "hab_magia_max"
+- apodo_personaje == "Chispa" && traumado:                ~ habitacion_img = "hab_magia_trauma"
+- apodo_personaje == "Chispa":                            ~ habitacion_img = "hab_magia"
+- apodo_personaje == "Madrugador" && traumado && fuerza >= 40: ~ habitacion_img = "hab_fuerza_max_trauma"
+- apodo_personaje == "Madrugador" && fuerza >= 60:             ~ habitacion_img = "hab_fuerza_max"
+- apodo_personaje == "Madrugador" && traumado:                ~ habitacion_img = "hab_fuerza_trauma"
+- apodo_personaje == "Madrugador":                            ~ habitacion_img = "hab_fuerza"
+- apodo_personaje == "Ratoncito" && traumado && conocimiento >= 40: ~ habitacion_img = "hab_conocimiento_max_trauma"
+- apodo_personaje == "Ratoncito" && conocimiento >= 40:             ~ habitacion_img = "hab_conocimiento_max"
+- apodo_personaje == "Ratoncito" && traumado:                ~ habitacion_img = "hab_conocimiento_trauma"
+- apodo_personaje == "Ratoncito":                            ~ habitacion_img = "hab_conocimiento"
+}
+# CHAPTER_BREAK: title=Costa Alegre, subtitle=Intermisión, image={habitacion_img}.jpg, music=ciudad_ambient
 # music:ciudad_ambient
 
 // ---- Texto contextual según progreso ----
@@ -529,6 +552,7 @@ Te queda un poco de tiempo para tu siguiente misión. Tal vez podés hacer algo 
 
 === capitulo_1 ===
 ~ capitulo_actual = "Cap. 1 — Un cadáver sin nombre"
+# CHAPTER_BREAK: title=Un cadáver sin nombre, subtitle=Capítulo 1, music=misterio_ambient
 # inv:clear_mission
 # achievement:unlock:primer_caso
 # music:misterio_ambient
@@ -580,9 +604,9 @@ El único ruido proviene del escritorio de la secretaria, la Sra. Enríquez, que
 === mision_profe ===
 - — El Profesor lo espera en el piso de arriba para darle su primera misión de campo. Por favor, no la arruine. Ya llené un formulario con sus datos y no quiero perder tiempo destruyendo el formulario… y llenando los formularios correspondientes para justificar la destrucción de documentación.
 # next
-El Profesor, Enríquez. Ninguno era un nombre real. Todos los guardianes de El Faro usan alias para proteger su vida civil. 
+El Profesor, Enríquez. Ninguno era un nombre real. Todos los guardianes de El Faro usan alias para proteger su vida civil.
 Vos también. ¿Cuál es?
-
+# next
 # input:nombre_personaje:Tu nombre en clave...
 # next
 — Bienvenido {nombre_personaje}. Lo estaba esperando.
@@ -1149,6 +1173,7 @@ Utiliza una mezcla de medicina occidental junto con hierbas, cantos y rituales e
 -> inter_misiones
 
 === inter_misiones ===
+# CHAPTER_BREAK: title=Elige tu misión, subtitle=Intermisión, music=misterio_ambient
 # music:misterio_ambient
 El Faro te informó de dos situaciones que se están dando y sería conveniente que un Guardián se ponga a investigar. Aun así, el tiempo es tirano y es imposible hacer las dos misiones a la vez. Vas a tener que elegir qué es más importante.
 
@@ -1169,6 +1194,7 @@ Vas a la escena del crimen. Algo huele a ritual desde aquí.
 
 === capitulo_2a ===
 ~ capitulo_actual = "Cap. 2 — Pequeños inocentes"
+# CHAPTER_BREAK: title=Pequeños inocentes, subtitle=Capítulo 2, music=campo_ambient
 # inv:clear_mission
 # music:campo_ambient
 Manejaste más de tres horas. A esta distancia el ruido y las luces de la ciudad son un espejismo lejano. El olor salado del mar fue cambiado por la frangancia de eucaliptos (y, vamos a confesarlo, por el pesado olor a bosta de vaca). Cada tanto, a lo lejos, se ve la silueta de un peón rural haciendo alguna tarea. Pero sin duda la población de ganado supera ampliamente a la humana.
@@ -2201,6 +2227,7 @@ FIN DEL EPISODIO.
 
 === capitulo_2b ===
 ~ capitulo_actual = "Cap. 2 — El nuevo amanecer"
+# CHAPTER_BREAK: title=El nuevo amanecer, subtitle=Capítulo 2, music=city_ambient
 # inv:clear_mission
 # achievement:unlock:nuevo_amanecer
 # music:city_ambient

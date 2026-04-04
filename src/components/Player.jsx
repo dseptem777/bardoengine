@@ -34,6 +34,7 @@ export default function Player({
     autoAdvance = false,
     autoAdvanceDelay = 4,
     isMinigameActive = false,
+    chapterBreakActive = false,
     hasPendingMinigame = false,
     onMinigameReady = null,
     minigameAutoStart = true,
@@ -244,7 +245,7 @@ export default function Player({
         onSkip: handleSkip,
         onBack,
         onContinue,
-        disabled: isMinigameActive,
+        disabled: isMinigameActive || chapterBreakActive,
         resistanceActive: willpowerActive,
         onResistanceKeyPress: handleResistanceKeyPress
     })

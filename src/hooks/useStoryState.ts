@@ -23,6 +23,7 @@ export interface UseStoryStateReturn {
     setGlobalVariable: (varName: string, value: any) => void;
     getGlobalVariable: (varName: string) => any;
     restoreMinigameState: () => boolean;
+    restoreInputState: () => boolean;
     resetStoryState: () => void;
     spawnAtKnot: (knotName: string, variables?: Record<string, any>) => { text: string; tags: string[] };
     getKnotList: () => string[];
@@ -46,6 +47,9 @@ export function useStoryState(): UseStoryStateReturn {
     // (which is -1 at that point). Restoring this snapshot after the game lets the conditional
     // re-evaluate with the correct result.
     const minigameStateSnapshotRef = useRef<string | null>(null)
+    const inputStateSnapshotRef = useRef<string | null>(null)
+    // Flag: when true, processStoryLoop skips the input break (used during commitInput replay)
+    const inputReplayingRef = useRef(false)
 
     // Helper to process story continuation until a stop condition
     const processStoryLoop = useCallback((currentStory: Story) => {
@@ -65,6 +69,18 @@ export function useStoryState(): UseStoryStateReturn {
                 fullText += nextBatch + '\n\n'
                 allTags.push(...tags)
 
+                // Break for input — save pre-Continue snapshot so commitInput
+                // can restore and replay Continue() with the variable set.
+                // Skip during replay (inputReplayingRef=true) so we don't re-show the dialog.
+                if (tags.some((t: string) => t.trim().toLowerCase().startsWith('input:'))) {
+                    if (!inputReplayingRef.current) {
+                        inputStateSnapshotRef.current = preState
+                        break
+                    }
+                    // Replaying — clear flag and fall through to pagination/normal processing
+                    inputReplayingRef.current = false
+                }
+
                 // Break for pagination (supports optional label: # next: Open the door)
                 const paginationTag = tags.find((t: string) => {
                     const tag = t.trim().toLowerCase()
@@ -74,6 +90,11 @@ export function useStoryState(): UseStoryStateReturn {
                     const colonIdx = paginationTag.indexOf(':')
                     const label = colonIdx !== -1 ? paginationTag.substring(colonIdx + 1).trim() : null
                     setContinueLabel(label || null)
+                    break
+                }
+
+                // Break for chapter break — pause story loop so overlay displays before next content
+                if (tags.some((t: string) => t.trim().toUpperCase().startsWith('CHAPTER_BREAK:'))) {
                     break
                 }
 
@@ -206,6 +227,24 @@ export function useStoryState(): UseStoryStateReturn {
         }
     }, [])
 
+    // Restore Ink state to just before the Continue() that produced the INPUT tag.
+    // This lets Continue() replay with the variable set, so text like
+    // "Bienvenido {nombre}" renders correctly instead of with an empty variable.
+    const restoreInputState = useCallback(() => {
+        const snapshot = inputStateSnapshotRef.current
+        if (!snapshot || !storyRef.current) return false
+        try {
+            storyRef.current.state.LoadJson(snapshot)
+            inputStateSnapshotRef.current = null
+            // Set replay flag so processStoryLoop skips the input break on next run
+            inputReplayingRef.current = true
+            return true
+        } catch (e) {
+            console.warn('[StoryState] Failed to restore input state snapshot:', e)
+            return false
+        }
+    }, [])
+
     const setGlobalVariable = useCallback((varName: string, value: any) => {
         if (storyRef.current) {
             try {
@@ -298,6 +337,7 @@ export function useStoryState(): UseStoryStateReturn {
         setGlobalVariable,
         getGlobalVariable,
         restoreMinigameState,
+        restoreInputState,
         resetStoryState,
         spawnAtKnot,
         getKnotList,
@@ -317,6 +357,7 @@ export function useStoryState(): UseStoryStateReturn {
         setGlobalVariable,
         getGlobalVariable,
         restoreMinigameState,
+        restoreInputState,
         resetStoryState,
         spawnAtKnot,
         getKnotList,

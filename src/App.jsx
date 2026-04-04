@@ -18,6 +18,7 @@ import DebugSpawnModal from './components/DebugSpawnModal'
 import HorrorVFXLayer from './components/HorrorVFXLayer'
 import WillpowerMeter from './components/WillpowerMeter'
 import SpiderOverlay from './components/SpiderOverlay'
+import ChapterBreakOverlay from './components/ChapterBreakOverlay'
 import { useHeavyCursor } from './hooks/useHeavyCursor'
 import { useStoryLoader } from './hooks/useStoryLoader'
 import { useBardoEngine } from './hooks/useBardoEngine'
@@ -157,7 +158,7 @@ function AppContent({ onStorySelect }) {
         story, text, choices, canContinue, continueLabel, isEnded, history,
         actions, subsystems, config
     } = engine
-    const { audio, vfx, saveSystem, gameSystems, achievementsSystem, minigameController, willpower, spiderInfestation, scrollFriction, bossController, visualDamage, scrollContainerRef, genjutsu } = subsystems
+    const { audio, vfx, saveSystem, gameSystems, achievementsSystem, minigameController, willpower, spiderInfestation, scrollFriction, bossController, visualDamage, scrollContainerRef, genjutsu, chapterBreak } = subsystems
 
     // Keep debug unlocked in sync with dev mode
     useEffect(() => {
@@ -319,6 +320,7 @@ function AppContent({ onStorySelect }) {
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
+            if (chapterBreak?.data) return
             if (e.key.toLowerCase() === 'o') {
                 e.preventDefault()
                 setOptionsOpen(prev => !prev)
@@ -334,7 +336,7 @@ function AppContent({ onStorySelect }) {
         }
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [story])
+    }, [story, chapterBreak])
 
     // ==================
     // Screen Logic
@@ -555,6 +557,7 @@ function AppContent({ onStorySelect }) {
                     autoAdvanceDelay={settings.autoAdvanceDelay}
                     // Minigame integration
                     isMinigameActive={minigameController.isPlaying}
+                    chapterBreakActive={!!chapterBreak?.data || !!chapterBreak?.cooldown}
                     hasPendingMinigame={minigameController.isPending}
                     onMinigameReady={actions.handleMinigameStart}
                     minigameAutoStart={minigameController.config?.autoStart}
@@ -637,6 +640,16 @@ function AppContent({ onStorySelect }) {
                 placeholder={subsystems.input.pendingInput?.placeholder}
                 label={subsystems.input.pendingInput?.label}
                 onCommit={subsystems.input.commitInput}
+            />
+
+            {/* Chapter Break Overlay */}
+            <ChapterBreakOverlay
+                key={chapterBreak?.data?._key || 'none'}
+                isOpen={!!chapterBreak?.data}
+                title={chapterBreak?.data?.title || ''}
+                subtitle={chapterBreak?.data?.subtitle}
+                image={chapterBreak?.data?.image}
+                onDismiss={chapterBreak?.dismiss}
             />
 
             {/* Debug Spawn Button */}
