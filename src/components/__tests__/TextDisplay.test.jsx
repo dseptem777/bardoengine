@@ -71,7 +71,7 @@ describe('TextDisplay', () => {
 
         it('should call onComplete immediately when isTyping is false', () => {
             const onComplete = vi.fn()
-            render(<TextDisplay text="Test" isTyping={false} onComplete={onComplete} />)
+            render(<TextDisplay text="Test" isTyping={false} typewriterDelay={0} onComplete={onComplete} />)
 
             expect(onComplete).toHaveBeenCalled()
         })

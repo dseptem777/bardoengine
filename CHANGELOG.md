@@ -1,5 +1,19 @@
 # Changelog — BardoEngine
 
+## v0.18.1 / Centinelas v0.12.1 (2026-04-04)
+
+### Fixes — Music Tags (centinelas.ink)
+- `ciudad_ambient` → `city_ambient` (archivo existente)
+- `orfanato_ambient` → `orfanato` (archivo existente)
+- `cueva_ambient` → `cueva_arañas` (archivo existente)
+
+### Fixes — Tests
+- `useTagProcessor.genjutsu`: tests actualizados para la firma de 3 args `(stat, knot, fisuraText)`
+- `TextDisplay.genjutsu`: `data-testid="genjutsu-break"` movido al `<span>` de GenjutsuFisura; opacity aplicado incondicionalmente (no gateado por `active`/rAF)
+- `TextDisplay`: test `onComplete when isTyping=false` usa `typewriterDelay={0}` para modo instantáneo
+
+---
+
 ## v0.18.0 (2026-04-04)
 
 ### Features — Chapter Break System

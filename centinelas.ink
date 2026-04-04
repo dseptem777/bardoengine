@@ -475,8 +475,8 @@ Ellos te ofrecieron un trabajo y una nueva oportunidad y no pensás desperdiciar
 - apodo_personaje == "Ratoncito" && traumado:                ~ habitacion_img = "hab_conocimiento_trauma"
 - apodo_personaje == "Ratoncito":                            ~ habitacion_img = "hab_conocimiento"
 }
-# CHAPTER_BREAK: title=Costa Alegre, subtitle=Intermisión, image={habitacion_img}.jpg, music=ciudad_ambient
-# music:ciudad_ambient
+# CHAPTER_BREAK: title=Costa Alegre, subtitle=Intermisión, image={habitacion_img}.jpg, music=city_ambient
+# music:city_ambient
 
 // ---- Texto contextual según progreso ----
 {
@@ -1252,7 +1252,7 @@ La tarea bajó por la cadena de mando de El Faro hasta llegar al encargado de ha
 
 === frente_orfanato ===
 # next: Frente a la entrada del orfanato
-# music:orfanato_ambient
+# music:orfanato
 El predio del Orfanato era gigante, rodeado por un muro de más de dos metros. Si bien no era tan sorprendente para mí, sin duda era una barrera infranqueable para un niño.
 Al lado de la reja robusta, protegida por una fuerte cadena con un candado del tamaño de mi puño, había una estatua de una santa abrazada a un cordero.
 Santa Inés (la placa a los pies me desasnó) era la santa patrona de la pureza, los jóvenes….y por alguna razón también de los jardineros, lo cual parecía una inteligente expansión del mercado.
@@ -1755,7 +1755,7 @@ Golpeas. Primero un par de golpes de cortesía. Luego más fuerte. Por último t
 // =========================================================
 
 === cueva_entrada ===
-# music:cueva_ambient
+# music:cueva_arañas
 # SPIDER_START: difficulty=slow, fuerza={fuerza}, magia={magia}, sabiduria={conocimiento}
 La cueva no fue pensada para seres humanos. El techo es demasiado bajo, por lo que tenes que avanzar en cuclillas a costa del bienestar de tus rodillas. Al llegar al primer doblez las paredes se estrechan obligándote a pasar por un minúsculo agujero del cual solo te llevas un arañazo en tu rodilla y un fuerte sabor a tierra humedad en la boca.
 La presencia de tela de arañas es total, hilos duros y pegajosos que dificultan tu avance y se pegan a tu cuerpo. Sin duda cuando salgas de esta cueva vas a quemar toda tu ropa, sentís que nunca va a poder estar limpia.
