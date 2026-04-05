@@ -2813,7 +2813,6 @@ El peso de la espada en tu mano te da la confianza que necesitabas. Avanzás hac
         Sus ojos son como un cielo estrellado, hermosos y ajenos. Su rostro no denota ninguna expresión, sin duda no hay sorpresa por tu ataque.
         Tu mano cede y la espada cae al piso, en el mismo momento que todo tu coraje se desvanece.
         # stat:hp:-10
-        # MINIGAME: type=qte
         ~ vampiro_muerto = true
     - else:
         En tu cabeza escuchás los consejos de Cabral. Hay bichos que es vital no errar el primer golpe. Principalmente porque no vas a estar vivo para dar el segundo. Los Vampiros Superiores, de noche, son ese caso.
@@ -2978,7 +2977,9 @@ No promete que va a dejar de ser un asesino de personas, pero está bien, tampoc
 # next
 Con una simple patada rompés el círculo. El viento se lleva los pedazos que formaban tu protección. Él sonríe y habla, con el tono entrecortado fruto del jugueteo de su lengua contra sus dientes.
 \- Muy bien, pero esto de jurar por la sed y la sangre me puso un poco juguetón. Creo que debería probar un tentempié para el viaje.
-# MINIGAME: type=qte
+# next
+Lo esperabas. Por supuesto que lo esperabas. Cuando el círculo se rompió ya tenías la estaca en la mano, apoyada contra la palma con el filo hacia adelante. Dejaste que él se encargara de la distancia.
+El sonido fue desagradable. La sensación en la muñeca, peor. Pero el resultado fue el esperado: el Vampiro se detuvo con los ojos abiertos, sin entender, y se fue convirtiendo lentamente en polvo como si siempre hubiera estado hecho de él.
 ~ vampiro_muerto = true
 -> cap2b_frente_cubil
 
