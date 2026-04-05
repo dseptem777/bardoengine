@@ -1,5 +1,23 @@
 # Changelog — BardoEngine
 
+## v0.19.0 / Centinelas v0.13.0 (2026-04-05)
+
+### Features — Centinelas: Intermisión 2
+- **Intermisión 2 hub**: nueva intermisión post-cap2 con intro narrativa (insomnio, pesadillas, preocupación por la Secta) y 5 opciones de actividad
+- **inter2_playa**: encuentro con el mar hostil, ola gigante
+- **inter2_tarot**: casa de tarotista vacía con mensaje meta-demo (4th wall)
+- **inter2_enfermeria**: Mary Shelley y sustancia orgánica restauradora (+5 hp)
+- **inter2_abuelita**: cacería de súcubo con la Abuelita — 3 sub-ramas:
+  - Cocina (entrada trasera): seducción del súcubo, check `fuerza >= 20`, `conocimiento >= 25` lore — `amistad_abuela +2`
+  - Escándalo: fracaso en la puerta, policía — `amistad_abuela +0`
+  - Banda "Vieja Loca": show en escenario, check `conocimiento >= 20` (bajo) — `amistad_abuela +2`
+- **inter2_siguiente**: mission gate con CHAPTER_BREAK hacia Capítulo 3
+- **capitulo_3**: placeholder "PRÓXIMAMENTE — El Museo"
+- **Routing**: cap2a y cap2b_epilogo ahora fluyen a `intermision_2` en lugar de `-> END`
+- **amistad_abuela**: nuevo stat relationship en config (max 6, color púrpura)
+
+---
+
 ## v0.18.1 / Centinelas v0.12.2 (2026-04-05)
 
 ### Fixes — Centinelas

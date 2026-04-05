@@ -16,6 +16,7 @@ VAR tiene_mano = false
 VAR tiene_descripcion = false
 VAR new_game_plus = false
 VAR amistad_jesus = 0
+VAR amistad_abuela = 0
 VAR visito_cura = false
 VAR tiene_info_belen = false
 VAR tiene_machete = false
@@ -2219,7 +2220,7 @@ Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tom
 }
 
 FIN DEL EPISODIO.
--> END
+-> intermision_2
 
 // =========================================================
 // CAPÍTULO 2B: EL NUEVO AMANECER
@@ -3585,4 +3586,424 @@ Cerrás los ojos y dejás que la luz del sol te bañe. Padre sol que quema a las
 }
 
 FIN DEL EPISODIO.
+-> intermision_2
+
+// ============================================================
+// INTERMISIÓN 2
+// ============================================================
+
+=== intermision_2 ===
+~ capitulo_actual = "Intermisión"
+~ misiones_completadas = misiones_completadas + 1
+// Determine room image from origin × trauma × max stat
+{
+- apodo_personaje == "Chispa" && traumado && magia >= 40: ~ habitacion_img = "hab_magia_max_trauma"
+- apodo_personaje == "Chispa" && magia >= 40:             ~ habitacion_img = "hab_magia_max"
+- apodo_personaje == "Chispa" && traumado:                ~ habitacion_img = "hab_magia_trauma"
+- apodo_personaje == "Chispa":                            ~ habitacion_img = "hab_magia"
+- apodo_personaje == "Madrugador" && traumado && fuerza >= 40: ~ habitacion_img = "hab_fuerza_max_trauma"
+- apodo_personaje == "Madrugador" && fuerza >= 60:             ~ habitacion_img = "hab_fuerza_max"
+- apodo_personaje == "Madrugador" && traumado:                ~ habitacion_img = "hab_fuerza_trauma"
+- apodo_personaje == "Madrugador":                            ~ habitacion_img = "hab_fuerza"
+- apodo_personaje == "Ratoncito" && traumado && conocimiento >= 40: ~ habitacion_img = "hab_conocimiento_max_trauma"
+- apodo_personaje == "Ratoncito" && conocimiento >= 40:             ~ habitacion_img = "hab_conocimiento_max"
+- apodo_personaje == "Ratoncito" && traumado:                ~ habitacion_img = "hab_conocimiento_trauma"
+- apodo_personaje == "Ratoncito":                            ~ habitacion_img = "hab_conocimiento"
+}
+# CHAPTER_BREAK: title=Costa Alegre, subtitle=Intermisión, image={habitacion_img}.jpg, music=city_ambient
+# music:city_ambient
+
+Suena la alarma de tu celular antes de que el sol entre por la ventana. Fue una noche entera de insomnio y dar vueltas en la cama. En cada rincón oscuro de la habitación te pareció ver los horrores contra los cuales combatiste en la misión anterior.
+
+En tu mesita de luz hay un blíster de medicación que te dejó Mary Shelley pero sospechás que es un camino de ida. No querés que tu vida pase a ser una sucesión de pastillas para bajar y pastillas para subir mientras tu hígado se convierte en un pedazo de desecho orgánico.
+# next
+
+Tu última misión mostró los horrores que se esconden en las sombras y se aprovechan de los más vulnerables. Pero, a pesar de todo, no dejan de ser monstruos desorganizados que pudieron ser contenidos por un solo Guardián.
+
+Lo que te preocupa es la Secta que está llevando adelante los sacrificios humanos. Con solo recordar el cuerpo mutilado, imaginás que está al lado tuyo en la cama. La idea te obliga a salir con temor al bulto que forman las dos almohadas bajo las sábanas.
+
+La Secta está organizada, tiene poder para actuar con impunidad en el mundo humano, y sin duda está haciendo alianzas con otra entidad. Esos son el verdadero problema contra el cual tiene que enfrentarse El Faro. Solo esperás que tenga la fuerza para ganar el conflicto.
+# next
+
+Abrís la ventana de tu departamento y entra un poco de aire acompañado por el olor a sal del agua. El viento trae unos gritos de diversión y alegría.
+
+Te queda un poco de tiempo antes de tu siguiente misión. Tal vez podés hacer algo antes de ir.
+
++ [Bajar a la playa]
+    -> inter2_playa
++ [Recorrer lo sobrenatural]
+    -> inter2_tarot
++ [Ayudar a otro Guardián]
+    -> inter2_abuelita
++ [Ir a enfermería]
+    -> inter2_enfermeria
++ [Ir a la siguiente misión]
+    -> inter2_siguiente
+
+// ============================================================
+// PLAYA
+// ============================================================
+
+=== inter2_playa ===
+# music:playa_ambient
+
+Costa Alegre está sufriendo la peor plaga que puede azotar a una ciudad: una invasión de turistas. Hay algún tipo de fin de semana largo o algo por el estilo — tu vida se volvió tan caótica que tardás un par de meses en recordar en qué mes estás — así que cada centímetro de arena es un campo de batalla entre turistas que intentan marcar posiciones a fuerza de sombrillas e infiltrarse entre las líneas enemigas extendiendo mantas y empujando ojotas.
+# next
+
+Encontrás un lugar alejado en un espigón que corta las olas del mar. A medida que te acercás a su límite, sentís cómo tu piel se moja fruto del viento. Al llegar al final te sentás e intentás meditar, pero el mar se embravece con tu presencia.
+# next
+
+Intentás ignorar la situación pero de repente notás que todo es sombras a tu alrededor. Una ola gigante se eleva tapando el sol y cae sobre tu cabeza. Son segundos enteros de agua y su fuerza azotando tu cuerpo.
+
+Terminás mojado, salado, y entendiendo que el mar no te quiere presente.
+# next
+
+-> intermision_2
+
+// ============================================================
+// TAROT
+// ============================================================
+
+=== inter2_tarot ===
+# music:misterio_ambient
+
+Salís a caminar y te dejás llevar por el flujo de energías, por las pequeñas señales que hay en todas las ciudades. Cuando hay una bifurcación, basta lanzar una moneda al aire para saber por dónde seguir. Antes de darte cuenta, estás en la periferia de la ciudad.
+# next
+
+Es de noche pero la mayoría de las farolas no funcionan, solo una en la esquina está parpadeando. Vas hacia ella y mirás el camino. De nuevo, otra farola parpadeando a lo lejos. Seguís el circuito y terminás frente a una casa pintada de un verde loro, con la puerta abierta. Al lado hay una pizarra que dice "Tarot. Lectura de Cartas. Adivine su futuro".
+
+De las entrañas de la casa se siente fluir, pesado y electrificante, un poco de poder real.
+# next
+
+El hogar de la tarotista está vacío. Solo hay un sobre en la mesa con tu nombre escrito en el lomo. Obviamente lo abrís.
+
+"No voy a volver a aparecer durante la Demo. Lo único que veo en tu futuro ahora es que prontamente vas a tener la versión completa del juego, y ahí te voy a estar esperando".
+
+No entendés mucho lo que quiere decir, pero no es raro — la mayoría de las profecías son crípticas y solo se entienden después de que ocurran los hechos.
+# next
+
+-> intermision_2
+
+// ============================================================
+// ENFERMERÍA
+// ============================================================
+
+=== inter2_enfermeria ===
+
+Entrás al laboratorio de Mary Shelley a esperarla. Como la científica oficial de El Faro, a ella le toca realizar las curaciones necesarias. Notás que su laboratorio está lleno de plantas que parecen haber sido castigadas por una plaga de insectos — las hojas tienen una sucesión de agujeros pero están siendo tratadas con una sustancia mucosa semitransparente que repara las heridas.
+
+Solo con ver la sustancia se te revuelve el estómago y, al acercarte y olerla, la situación no mejora.
+# next
+
+— Veo que estás apreciando mi nueva invención, una sustancia orgánica autónoma restauradora — saltás del susto cuando Mary Shelley aparece detrás de vos.
+
+— ¿Solo sirve en plantas?
+
+— Estamos listos para pasar a pruebas con humanos.
+
+— En serio, ¿y quién va a ser el conejillo de indias?
+# next
+
+Mary Shelley te mira durante cinco segundos y te das cuenta de la idiotez que acabás de preguntar. Vos sos el conejillo de indias.
+
+— Al menos decime, ¿duele mucho?
+
+— Las plantas nunca se quejaron — contesta Mary Shelley con una sonrisa.
+# stat:hp:+5
+# next
+
+-> intermision_2
+
+// ============================================================
+// ABUELITA — HUB
+// ============================================================
+
+=== inter2_abuelita ===
+# music:city_ambient_b
+
+Un nuevo mensaje: otro Guardián está complicado con su misión. Parece ser un tema menor pero que, con la presencia de otro par de manos, se podría solucionar en una noche. Preferís estar ocupado — te sentís un inútil haciendo nada y el tiempo ocioso solo hace que tu mente camine hacia recuerdos oscuros.
+
+Al menos vas a distraerte, o conseguir nuevos recuerdos oscuros para atormentarte.
+# next
+
+Te citan en la puerta de un garito frente al mar. En cuanto llegás al lugar te das cuenta de que no estás a la moda. No conocés la música que sale de las entrañas del local (es una mezcla de géneros que, para vos, hace el mismo ruido que el lavarropas que se te rompió), la gente tiene diez años menos que vos y no entendés cómo están tan ligeros de ropa cuando la brisa fría del mar castiga tu piel y llega hasta los huesos.
+
+Es entonces cuando escuchás un carraspeo atrás tuyo y notás que el Guardián que requirió tu ayuda aún está menos apto que vos para entrar al lugar.
+# next
+
+Su aspecto es el de una abuelita. Piel arrugada, una cabellera larga canosa que forma un rodete en su cabeza, un traje sastre negro que parece haber sobrevivido la década del cincuenta (y tiene el olor a naftalina para acreditarlo) y un tono de voz dulce y poco amenazante.
+
+— Bueno joven, creo que usted ha venido a darme una mano.
+
+— Buenas noches. Dígame cuál es la situación y no se preocupe, yo me encargo — intentás no decirlo de forma condescendiente, pero simplemente no hay forma de decirlo sin sonar así.
+
+— Créame jovencito, si uno llega a mi edad en este trabajo, no hay ningún tipo de situación de la cual no se pueda encargar.
+# next
+
+— Tiene razón.
+
+— Le recuerdo que la mitad de los cementerios están llenos de jóvenes ansiosos como usted.
+
+— Tiene razón — cuando saliste a la misión no esperabas terminar siendo retado por una abuelita mientras te azotaba la brisa marina.
+
+— Por otro lado, la otra mitad de los cementerios está llena de viejas con artritis como yo. Salgamos de la intemperie y busquemos un lugar cálido donde le pueda contar lo que ocurre.
+# next
+
+A dos cuadras hay un café que cierra tarde. Mientras intentás entrar en calor con una taza de café doble, tu compañera está tomando un té de tilo con un par de galletitas.
+
+— Hace unas semanas que estoy de cacería, jovencito, persiguiendo a un predador peligroso que se alimenta de adolescentes.
+
+— Y yo estoy acá para ayudarla, señora.
+
+— No se confunda, no necesito su ayuda para cazarlo. Es más, diría que su presencia hasta sería contraproducente. Lo que estoy intentando cazar es un súcubo.
+# next
+
+{conocimiento >= 25:
+    Sabés que los súcubos son parásitos, primos lejanos de los vampiros, que se alimentan de la energía sexual de las personas al momento de tener relaciones íntimas. Si bien suena divertido, lo más probable es que un encuentro con un súcubo termine en un infarto, o al menos en un envejecimiento repentino.
+}
+
+— Y tiene miedo de que no me pueda resistir a sus encantos sexuales.
+
+— Eres un hombre joven, estoy segura de que no te podrás resistir a los encantos sexuales de ninguna mujer. Y estoy hablando de los encantos normales que todas tenemos de joven — la abuelita se ríe por lo bajo — mucho menos si a eso le agregamos la capa de poderes sobrenaturales que tiene un súcubo.
+# next
+
+— Claro, por eso mandan a una mujer a cumplir este trabajo.
+
+— Por eso mandan a una septuagenaria a cumplir este trabajo. ¿Conocés esa palabra o ya no se la enseñan en el colegio? — la abuela te apuñala verbalmente con una sonrisa y sigue sin parar — El concepto de heterosexualidad no existe ante un súcubo, aparte yo fui joven en los sesenta y... bueno, no nos desviemos del tema.
+
+— Claro, yendo al punto, ¿para qué me necesita?
+
+— Creo que ya debería ser claro: para que me ayudes a entrar al lugar. Hace tiempo que no entro a una confitería bailable y la seguridad cree que no doy el target.
+# next
+
+Ves la puerta del garito que el súcubo usa de coto de caza. El guardia de seguridad, un tipo gigante que parece aún más masivo porque está sentado sobre un banquito que parece robado de un jardín de infantes, decide de forma más o menos arbitraria quién entra y quién no.
+
+Luego de verlo actuar un par de minutos te das cuenta de que entrar es muy fácil si sos joven o atractivo. La suma de ambas te permite entrar caminando. Lamentablemente, esta dupla de trabajo es exactamente lo contrario.
+
+Así que hay que buscar opciones alternativas.
+
++ [Buscar una entrada trasera]
+    -> inter2_abuela_cocina
++ [Hacer un escándalo en la puerta]
+    -> inter2_abuela_escandalo
++ [Hacerse pasar por una banda]
+    -> inter2_abuela_banda
+
+// ============================================================
+// ABUELITA — COCINA (entrada trasera)
+// ============================================================
+
+=== inter2_abuela_cocina ===
+
+Das la vuelta al local y, el destino te ama, encontrás una puerta abierta. Al lado se encuentra fumando un empleado con un delantal de cocina y un aspecto de tener ganas de estar en cualquier lugar menos ahí.
+
+Te acercás directo a la puerta, intentando poner cara de que pertenecés, pero a la vez caminando lento para no dejar atrás a la abuelita que tiene una leve cojera en su pierna derecha.
+
+El empleado de cocina te mira.
+# next
+
+No sabés cuánto le pagan, pero sin duda es una miseria. Se limita a mirarte, saludarte con la cabeza y prenderse otro pucho. Te da la impresión de que ni una invasión extraterrestre le haría cortar su descanso.
+
+Se encuentran en una cocina (que no pasaría un examen de bromatología) y siguen avanzando. Dice mucho del lugar que una abuela entrando por la cocina no le llame la atención al personal. Te hace preguntar qué cosas más raras han visto.
+# next
+
+De la cocina pasan a una barra y de ahí a la pista. Es un mar de cuerpos sudorosos chocando unos con otros, con vestimenta que los hace ver más sugerentes que la desnudez. La imagen de la pista se convierte en una serie de fotogramas a medida que el iluminador decide bombardear el lugar con flashes de luz blanca.
+
+¿Ahora qué hacemos?
+# next
+
+Le susurrás la pregunta al oído a la abuelita (y luego, por obvios motivos, pasás del susurro al grito).
+
+— Observar, esperar e intervenir cuando nuestra presa baje la guardia.
+
+Tu compañera avanza con seguridad costeando los bordes de la pista, buscando pistas que vos no conocés. A pesar de todo — el rodete, las gafas gruesas y la ropa más vieja que cualquiera de los presentes — la seguridad le da un aire de pertenecer que es envidiable.
+# next
+
+A falta de mejor plan, te ponés a bailar. Y de paso tomás un trago dado que el calor hace que tu ropa se pegue al cuerpo. El trago fomenta que bailes mucho mejor (o se relajen tus estándares) pero produce más transpiración, lo cual te obliga a tomar otro trago.
+
+Notás un patrón.
+# next
+# music:rave_electronic
+
+Ella aparece bailando al lado tuyo. No importa cuánto la mires, no podés contener toda su belleza en una sola imagen mental. Solo procesás partes: el largo cabello ondulado detrás del cual esconde su rostro, una sonrisa pícara acompañada por una lengua juguetona que recorre el labio superior, ojos gatunos de un color que no tiene nombre, una cintura que se achica para quebrar su cuerpo en todas las formas interesantes.
+
+Tu cerebro no puede procesar la suma de las partes.
+# next
+# music:horror_ambient
+
+Estás prisionero entre un colchón y el cuerpo sudoroso de tu compañera de baile. Y no tenés ninguna intención de liberarte.
+
+Ella te besa pero no es lo que esperás. Sus labios están fríos y se sienten como besar vidrio roto. Desde tus labios salen olas de dolor, como hilos con anzuelo que llegan a los extremos más recónditos de tu cuerpo y rascan los bordes.
+
+Encontraste al súcubo. O, mejor dicho, el súcubo te encontró a vos.
+# next
+
+Pensás en buscar tu celular y llamar a tu compañera pero el siguiente beso es avasallante. Raspa contra el fondo de tu cuerpo y anula tu voluntad.
+
+{fuerza >= 20:
+    Juntás tus últimas fuerzas en tus extremidades y lográs empujarla contra la otra punta de la habitación. Ella se levanta con un movimiento fluido y se pone a horcajadas encima tuyo. Intentás forcejear pero es una pelea que no podés ganar, que no querés ganar.
+- else:
+    Intentás resistirte pero no hay energía. Cada beso te va vaciando más. Dentro de poco vas a ser un cascarón de carne.
+    # stat:hp:-5
+}
+# next
+
+En algún momento te desmayaste. Te levantás tranquilo; al lado tuyo está la abuelita con una taza de té.
+
+— Tomalo, es revigorizante. Siempre salgo de casa con varios saquitos en la cartera.
+# next
+
+Es la misma habitación, pero el ambiente es completamente diferente. Respirás y te concentrás, primero en vos. Estás cansado pero (mayormente) sano, solo algo... ¿humillado?
+
+Tu compañera se ve satisfecha. Detrás de ella ves la puerta del baño entreabierta; por lo poco que ves notás una sangre oscura, signos de pelea y algo que debería estar dentro de un cuerpo. Sentís desde adentro la clara fragancia de la muerte.
+# next
+
+— Ponerte a vos mismo en la posición de carnada no fue lo más inteligente del mundo, menos con tan poca preparación — la abuelita toma un sorbo de té, sospechás que para dejar de criticarte — pero bueno, esto solo deja claro que yo soy la persona indicada para estas misiones.
+
+— ¿Lo logramos?
+
+— Es una forma de decir. Tuviste tu colaboración. Lo importante es que hay un predador menos en Costa Alegre. Vamos a quedarnos con esa idea.
+# stat:amistad_abuela:+2
+# next
+
+-> intermision_2
+
+// ============================================================
+// ABUELITA — ESCÁNDALO
+// ============================================================
+
+=== inter2_abuela_escandalo ===
+
+Van con la abuelita hasta la puerta con toda la intención de hacer un escándalo. Hay algo en sus rostros que los delata: los jóvenes que están esperando para entrar al garito se corren para los costados y los miran de forma desafiante, mientras el guardia de seguridad pone su inmensidad frente a la puerta con los brazos cruzados y los mira desde arriba. Recién ahora, cuando se para del banquito, te das cuenta de lo alto que es.
+
+Tardás unos segundos en darte cuenta de que te encontrás rodeado.
+# next
+
+— Dejaron entrar a nuestra hija, es menor de edad y tiene un problema médico que le impide tomar alcohol. Necesitamos ya parar todo y entrar a buscarla — antes de terminar la frase te das cuenta de que no va a servir para nada.
+
+— No dejamos entrar a menores al lugar — miente el guardia tan bien que casi parece verdad — y tampoco les servimos alcohol a menores. Así que tu hija, que no está adentro, tampoco está tomando alcohol.
+
+La discusión se torna cíclica, solo que cada vez más alta y con más insultos decorando la idea principal. Un joven se acerca para entrar al lugar y piensa aprovechar la oportunidad para darle un empujón a la abuelita, pero basta una mirada de ella para que reconsidere, haga una torsión rara con su cuerpo, y avance sin tocarla.
+
+En algún momento alguien del público dice "parece que no dejan entrar porque hay problemas con una chica".
+# next
+
+La masa va distorsionando la idea. Un chico alto con una mota de pelo azul dice "parece que hoy no dejan entrar chicas, es noche gay". Por otro lugar, un par de amigas discuten a los gritos sobre "la red de trata que opera en el sótano del lugar y secuestró una chica". Por último, alguien vestido con una chaqueta de cuero (y solo una chaqueta de cuero) señala a la abuelita y dice "era una niña hasta que tomó una droga adentro y quedó así".
+
+La histeria se convierte en pánico y, a lo lejos, se escucha cómo a toda velocidad se acerca una sirena de policía.
+# next
+
+En cuanto la sirena deja de ser solo ruido y se convierte en una patrulla que se acerca por la calle, la gente sale corriendo en todas direcciones. El guardia da un paso atrás y se pone ocupando la totalidad del marco de la puerta del lugar, con una mano en la manija esperando una orden para cerrar.
+
+De repente vos y la abuelita están muy solos, sin nadie a su alrededor, y afuera del lugar donde se suponía que iban a entrar.
+# next
+
+Un policía baja de la patrulla y se acerca hacia ustedes. Tu compañera dice por lo bajo que la dejes hablar y su tono cambia. Se pone más dulce y medio entrecortado, una anciana a toda regla. Ante esto el policía no sabe qué hacer y vuelve a la patrulla confundido.
+
+— No solo no entramos al lugar — la abuelita volvió a su tono normal, tal vez un poco más filoso de lo que te gustaría — sino que hicimos suficiente escándalo como para advertirle a nuestra presa que la estábamos buscando. Voy a tener que empezar todo de cero.
+
+— Lo lamento, no era mi intención.
+
+— Sin duda, sino serías un traidor. Lamento que hayas venido hoy, pero no pudo salir.
+# next
+
+-> intermision_2
+
+// ============================================================
+// ABUELITA — BANDA
+// ============================================================
+
+=== inter2_abuela_banda ===
+
+— ¿De la banda? ¿Ustedes? — el guardia tiene un tono de voz chillón que contrasta con las horas de gimnasio con las que castiga su físico.
+
+— Claro, Vieja Loca. Con una sola S — y al terminar tu frase señalás a la abuelita, que procede a sacar la lengua mientras guiña un ojo — Es todo un show imperativo en el cual se mezcla música con otras artes — y esperás seriamente que el guardia no te pregunte cuáles porque todavía no llegaste a armar esa mentira.
+
+— Sí, había escuchado que hoy era un día medio "freak" — el guardia logra pronunciar todas las letras convirtiendo la palabra en inglés en algo más parecido al chino — pasen, que las bandas ya están arrancando a tocar.
+# next
+# music:rave_electronic
+
+Una vez dentro, el lugar es un mar de cuerpos transpirados y lo suficientemente vestidos como para acentuar e insinuar su desnudez. Estómagos expuestos, piernas largas que insinúan su fin y escotes prominentes. Entre la oscuridad, el humo, la música industrial y los flashes de luz brillante que cada tanto te enceguecen, es complicado mantener contacto con la abuelita, mucho menos encontrar al súcubo.
+
+Aun así, tu compañera parece saber algo que vos no. Acomodándose las gafas, protegidas por un hilo alrededor de su cuello, observa con calma el lugar buscando señales que vos no detectás.
+# next
+
+— Es su turno — un joven rapado, salvo por un mechón azul, te grita al oído mientras te la llena de baba.
+
+— ¿Qué?
+
+— Para tocar. Tienen quince minutos, así que a romperla.
+
+— ¿¿Qué??
+
+— Te dejamos el bajo preparado. ¿Vos tocabas el bajo y la anciana cantaba, o era al revés?
+
+— ¿¿¿Qué???
+
+De todas las mentiras que dijiste en tu vida, resulta que es la más creíble.
+# next
+
+Una marea humana te empuja hacia el escenario. En el medio recibís una cerveza, palmadas, y alguien grita algo de romperte una pierna, que no entendés bien si es aliento o amenaza. Tu compañera avanza con más seguridad que vos mientras se toma un vodka que alguien le colocó en una mano.
+
+Mientras están subiendo al escenario te susurra al oído:
+
+— Excelente plan. Desde acá podemos vigilar todo el lugar y encontrar más fácilmente a nuestra presa.
+
+— Fue mi plan desde el principio — mentís mientras alguien coloca un bajo en tus manos.
+# next
+
+Durante unos segundos todo el ruido del lugar se detiene y tenés quinientos pares de ojos observándote. Las personas dejan de parecer individuos y pasan a ser una masa expectante y amenazante.
+
+Es pésimo momento para descubrir que tenés pánico escénico.
+
+Es la abuelita quien toma el control de la situación. Toma el micrófono y empieza a recitar poesía. Hay algo en sus palabras entre sensual y nostálgico que te hace pensar en amores que no fueron e historias truncadas. El público responde, empieza a mover su cuerpo al compás de la métrica de la poesía.
+
+Por mucho que tu compañera sea toda una Patti Smith, te toca hacer lo tuyo.
+# next
+
+{conocimiento >= 20:
+    Por suerte tomaste clases de bajo cuando eras joven (tomaste al menos una clase de todo). Podés improvisar una base que va siguiendo el poema de tu compañera y que parece agradar al público. A medida que el movimiento de tus dedos se convierte en música, te relajás y perdés el miedo.
+
+    Estás tan absorto en la situación que no te das cuenta cuando la abuelita se lanzó desde el escenario al público, como un ave de presa que baja en picada.
+- else:
+    No sabés qué hacer. Uno de tus dedos acaricia una cuerda y sale un sonido chillón completamente disonante con la poesía. Intentás parar las cuerdas pero solo lográs proyectar una maraña de ruido. Alguien se enoja y te lanza una lata de cerveza que da justo en tu cabeza. Es la antesala a un mar de silbidos y puteadas.
+
+    Abandonás el escenario tan rápido que no te das cuenta de que la abuelita se lanzó al público, como un ave de presa que baja en picada.
+    # stat:hp:-5
+}
+# next
+
+Son las cuatro de la mañana y estás tomando una cerveza mientras mirás el océano y dejás que la brisa del mar te refresque, y posiblemente conjugue una gripe en tu organismo. El celular vibra en tu bolsillo, un mensaje de la abuelita:
+
+"Buena cacería, el problema del súcubo fue solucionado. Si no nos subíamos al escenario nunca la iba a encontrar. Sus métodos son poco ortodoxos pero divertidos. Espero que trabajemos juntos de nuevo".
+
+El mensaje está acompañado por una foto de ella saludando con la mano derecha, mientras en la izquierda tiene un machete bañado en una sangre negra viscosa. Sospechás que la abuelita no es alguien con quien joder.
+# stat:amistad_abuela:+2
+# next
+
+-> intermision_2
+
+// ============================================================
+// MISIÓN SIGUIENTE — GATE AL MUSEO
+// ============================================================
+
+=== inter2_siguiente ===
+
+Desde El Faro te llaman de urgencia. Parece que hay un problema y, entre todas las disculpas que mandan respecto a cuánto lamentan volver a requerirte en una misión de campo, dan a entender que sos la persona más apta para solucionarlo.
+
+De vuelta a la pista de baile.
+
+# CHAPTER_BREAK: title=Visita al Museo, subtitle=Capítulo 3, music=misterio_ambient
+
+-> capitulo_3
+
+// ============================================================
+// CAPÍTULO 3 — PLACEHOLDER
+// ============================================================
+
+=== capitulo_3 ===
+~ capitulo_actual = "Cap. 3 — El Museo"
+
+PRÓXIMAMENTE — Recuperá un objeto de poder en el Museo de Historia de Costa Alegre que puede ayudarte a conocer dónde se esconde la Secta que está sacrificando humanos.
+
 -> END
