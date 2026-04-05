@@ -1,6 +1,6 @@
 {
     "title": "CENTINELAS DEL SUR",
-    "version": "0.12.2",
+    "version": "0.13.0",
     "theme": {
         "primaryColor": "#8b5cf6",
         "bgColor": "#030712",
@@ -95,6 +95,16 @@
                 "max": 6,
                 "initial": 0,
                 "color": "#f59e0b"
+            },
+            {
+                "id": "amistad_abuela",
+                "label": "Abuelita",
+                "icon": "👵",
+                "displayType": "relationship",
+                "min": 0,
+                "max": 6,
+                "initial": 0,
+                "color": "#a855f7"
             }
         ]
     },
