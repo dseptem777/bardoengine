@@ -1,6 +1,6 @@
 # Changelog — BardoEngine
 
-## v0.19.0 / Centinelas v0.13.0 (2026-04-05)
+## v0.18.1 / Centinelas v0.13.0 (2026-04-05)
 
 ### Features — Centinelas: Intermisión 2
 - **Intermisión 2 hub**: nueva intermisión post-cap2 con intro narrativa (insomnio, pesadillas, preocupación por la Secta) y 5 opciones de actividad
