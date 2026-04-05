@@ -1,6 +1,6 @@
 # Changelog — BardoEngine
 
-## Centinelas v0.12.2 (2026-04-04)
+## v0.18.1 / Centinelas v0.12.2 (2026-04-05)
 
 ### Fixes — Centinelas
 - Eliminados los 2 QTE de la rama del vampiro (no aptos para mobile, sin lugar narrativo)
