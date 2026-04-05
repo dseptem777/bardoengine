@@ -1,5 +1,13 @@
 # Changelog — BardoEngine
 
+## Centinelas v0.12.2 (2026-04-04)
+
+### Fixes — Centinelas
+- Eliminados los 2 QTE de la rama del vampiro (no aptos para mobile, sin lugar narrativo)
+- Agregado texto de transición en `cap2b_trampa_liberar`: el jugador ya tenía la estaca lista cuando liberó el círculo
+
+---
+
 ## v0.18.1 / Centinelas v0.12.1 (2026-04-04)
 
 ### Fixes — Music Tags (centinelas.ink)
