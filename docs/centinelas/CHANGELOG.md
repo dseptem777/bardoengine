@@ -1,5 +1,52 @@
 # Changelog — Centinelas del Sur
 
+## [0.13.0] — 2026-04-05
+
+### Feature: Intermisión 2
+- **Hub post-cap2**: nueva intermisión con intro narrativa (insomnio, pesadillas, preocupación por la Secta) y 5 opciones de actividad
+- **inter2_playa**: encuentro con el mar hostil — ola gigante, el mar te rechaza
+- **inter2_tarot**: farolas que parpadean → casa de tarotista vacía → sobre con mensaje meta-demo (4th wall)
+- **inter2_enfermeria**: Mary Shelley y sustancia orgánica restauradora experimental (`hp +5`)
+- **inter2_abuelita**: cacería de súcubo con la Abuelita septuagenaria — 3 sub-ramas:
+  - **Cocina** (entrada trasera): empleado indiferente, pista de baile, seducción del súcubo, check `fuerza >= 20` / `conocimiento >= 25` lore → `amistad_abuela +2`
+  - **Escándalo**: histeria de multitud, policía, fracasan y alertan a la presa → `amistad_abuela +0`
+  - **Banda "Vieja Loca"** (con una sola S): guardia los deja pasar, escenario, abuelita recita poesía sensual, check `conocimiento >= 20` para el bajo → `amistad_abuela +2`
+- **inter2_siguiente**: mission gate con CHAPTER_BREAK hacia Capítulo 3
+- **capitulo_3**: placeholder "PRÓXIMAMENTE — El Museo de Historia de Costa Alegre"
+- **Routing**: cap2a y cap2b_epilogo ahora fluyen a `intermision_2` en lugar de `-> END`
+- **amistad_abuela**: nuevo stat relationship (max 6, color púrpura `#a855f7`)
+
+---
+
+## [0.12.2] — 2026-04-05
+
+### Fix: Eliminación de QTEs de la rama vampiro
+- Eliminados los 2 QTE de la rama del vampiro (Cap 2B) — no aptos para mobile, sin lugar narrativo
+- Agregado texto de transición en `cap2b_trampa_liberar`: el jugador ya tenía la estaca lista cuando liberó el círculo
+
+---
+
+## [0.12.1] — 2026-04-04
+
+### Fix: Music tags
+- `ciudad_ambient` → `city_ambient`
+- `orfanato_ambient` → `orfanato`
+- `cueva_ambient` → `cueva_arañas`
+
+---
+
+## [0.12.0] — 2026-04-04
+
+### Feature: Chapter Breaks + Imágenes de Habitación + Soundtrack
+- **Chapter Break en Intermisión 1**: CHAPTER_BREAK tag con imagen dinámica según origen × trauma × stat dominante (12 variantes: `hab_magia`, `hab_fuerza`, `hab_conocimiento` × normal/trauma/max/max_trauma)
+- **Chapter Break en Capítulo 1**: `# CHAPTER_BREAK: title=Un Cadáver Sin Nombre, subtitle=Capítulo 1, image=city.jpg, music=city_ambient`
+- **Chapter Break en Capítulo 2A**: `# CHAPTER_BREAK: title=Pequeños Inocentes, subtitle=Capítulo 2A, ...`
+- **Chapter Break en Capítulo 2B**: `# CHAPTER_BREAK: title=El Nuevo Amanecer, subtitle=Capítulo 2B, ...`
+- **Soundtrack completo**: 16 tracks asignados a knots en todo el juego (`city_ambient`, `escuela_ambient`, `horror_ambient`, `playa_ambient`, `rave_electronic`, `tension_drone`, etc.)
+- **Achievement tag**: `# achievement:unlock:nuevo_amanecer` en la entrada al Capítulo 2B
+
+---
+
 ## [0.11.0] — 2026-03-31
 
 ### Feature: Genjutsu Vampírico (Cap 2B)
