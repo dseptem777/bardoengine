@@ -1,6 +1,6 @@
 {
     "title": "CENTINELAS DEL SUR",
-    "version": "0.13.0",
+    "version": "0.13.1",
     "theme": {
         "primaryColor": "#8b5cf6",
         "bgColor": "#030712",
@@ -32,7 +32,7 @@
     "intro": {
         "titleMusic": "misterio_ambient",
         "titleSubtitle": "Ficción Interactiva Sobrenatural",
-        "titleBackground": "/games/centinelas/title.png"
+        "titleBackground": "/games/centinelas/title.jpg"
     },
     "stats": {
         "enabled": true,

@@ -180,7 +180,7 @@ El Faro me había encontrado.
 ~ apodo_personaje = "Chispa"
 # stat:magia:+20 # stat:fuerza:+10 # stat:conocimiento:+10
 # next
-# CHAPTER_BREAK: title=Chispa, subtitle=Capítulo 0 — Orígenes, image=title_magia.png
+# CHAPTER_BREAK: title=Chispa, subtitle=Capítulo 0 — Orígenes, image=title_magia.jpg
 -> intermision
 
 // =========================================================
@@ -277,7 +277,7 @@ Me levanté con una misión. Yo sería quien llegaría siempre una hora antes.
 ~ apodo_personaje = "Madrugador"
 # stat:magia:+10 # stat:fuerza:+20 # stat:conocimiento:+10
 # next
-# CHAPTER_BREAK: title=Madrugador, subtitle=Capítulo 0 — Orígenes, image=title_fuerza.png
+# CHAPTER_BREAK: title=Madrugador, subtitle=Capítulo 0 — Orígenes, image=title_fuerza.jpg
 -> intermision
 
 // =========================================================
@@ -452,7 +452,7 @@ Ellos te ofrecieron un trabajo y una nueva oportunidad y no pensás desperdiciar
 ~ apodo_personaje = "Ratoncito"
 # stat:magia:+10 # stat:fuerza:+10 # stat:conocimiento:+20
 # next
-# CHAPTER_BREAK: title=Ratoncito, subtitle=Capítulo 0 — Orígenes, image=title_conocimiento.png
+# CHAPTER_BREAK: title=Ratoncito, subtitle=Capítulo 0 — Orígenes, image=title_conocimiento.jpg
 -> intermision
 
 // =========================================================
@@ -553,7 +553,7 @@ Te queda un poco de tiempo para tu siguiente misión. Tal vez podés hacer algo 
 
 === capitulo_1 ===
 ~ capitulo_actual = "Cap. 1 — Un cadáver sin nombre"
-# CHAPTER_BREAK: title=Un cadáver sin nombre, subtitle=Capítulo 1, music=misterio_ambient
+# CHAPTER_BREAK: title=Un cadáver sin nombre, subtitle=Capítulo 1, image=title_cap1_cadaver.jpg, music=misterio_ambient
 # inv:clear_mission
 # achievement:unlock:primer_caso
 # music:misterio_ambient
@@ -1195,7 +1195,7 @@ Vas a la escena del crimen. Algo huele a ritual desde aquí.
 
 === capitulo_2a ===
 ~ capitulo_actual = "Cap. 2 — Pequeños inocentes"
-# CHAPTER_BREAK: title=Pequeños inocentes, subtitle=Capítulo 2, music=campo_ambient
+# CHAPTER_BREAK: title=Pequeños inocentes, subtitle=Capítulo 2, image=title_cap2a_inocentes.jpg, music=campo_ambient
 # inv:clear_mission
 # music:campo_ambient
 Manejaste más de tres horas. A esta distancia el ruido y las luces de la ciudad son un espejismo lejano. El olor salado del mar fue cambiado por la frangancia de eucaliptos (y, vamos a confesarlo, por el pesado olor a bosta de vaca). Cada tanto, a lo lejos, se ve la silueta de un peón rural haciendo alguna tarea. Pero sin duda la población de ganado supera ampliamente a la humana.
