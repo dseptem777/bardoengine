@@ -1,5 +1,14 @@
 # Changelog — Centinelas del Sur
 
+## [0.13.1] — 2026-04-06
+
+### Fix: Imágenes de title breaks
+- Imágenes de chapter break convertidas de `.png` a `.jpg` (`title_magia`, `title_fuerza`, `title_conocimiento`, `title`)
+- Agregadas imágenes para Cap 1 (`title_cap1_cadaver.jpg`) y Cap 2A (`title_cap2a_inocentes.jpg`)
+- Referencias actualizadas en `centinelas.ink` y `centinelas.config.json`
+
+---
+
 ## [0.13.0] — 2026-04-05
 
 ### Feature: Intermisión 2
