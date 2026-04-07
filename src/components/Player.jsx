@@ -327,8 +327,8 @@ export default function Player({
                                 : (isMobile ? 'BARDO' : `BARDO ENGINE v${engineVersion}`)
                             }
                         </h1>
-                        {/* Mobile: value stats inline in header */}
-                        {isMobile && headerStatsProps && (
+                        {/* Compact viewports: value stats inline in header */}
+                        {headerStatsProps && (
                             <HeaderStats {...headerStatsProps} />
                         )}
                     </div>

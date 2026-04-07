@@ -25,7 +25,7 @@ import { useBardoEngine } from './hooks/useBardoEngine'
 import { processChoiceRequirements } from './utils/choiceRequirements'
 import { getDominantStat } from './utils/getDominantStat'
 import { SettingsProvider, useSettings } from './hooks/useSettings'
-import { useIsMobile } from './hooks/useMediaQuery'
+import { useIsMobile, useIsNarrowViewport } from './hooks/useMediaQuery'
 
 const BardoEditor = React.lazy(() => import('./editor/BardoEditor'))
 
@@ -58,6 +58,7 @@ function AppContent({ onStorySelect }) {
 
     // Mobile detection
     const isMobile = useIsMobile()
+    const isNarrowViewport = useIsNarrowViewport()
 
     // Screen state (NOT delegated to hook - UI concerns)
     const [selectedStory, setSelectedStory] = useState(null)
@@ -424,7 +425,7 @@ function AppContent({ onStorySelect }) {
                             ? story?.variablesState?.[gameSystems.statsConfig.chapterVariable] || ''
                             : null
                     }
-                    isMobile={isMobile}
+                    isMobile={isMobile || isNarrowViewport}
                 />
             )}
 
@@ -572,10 +573,10 @@ function AppContent({ onStorySelect }) {
                     onWillpowerHintVisible={() => setMeterRevealed(true)}
                     // Layout props
                     isMobile={isMobile}
-                    hasDesktopStatsPanel={!isMobile && gameSystems.statsConfig?.enabled &&
+                    hasDesktopStatsPanel={!isMobile && !isNarrowViewport && gameSystems.statsConfig?.enabled &&
                         (!gameSystems.statsConfig.playerNameVariable ||
                          !!story?.variablesState?.[gameSystems.statsConfig.playerNameVariable])}
-                    headerStatsProps={isMobile && gameSystems.statsConfig?.enabled ? {
+                    headerStatsProps={(isMobile || isNarrowViewport) && gameSystems.statsConfig?.enabled ? {
                         stats: gameSystems.stats,
                         statsConfig: gameSystems.statsConfig,
                         getAllStatsInfo: gameSystems.getAllStatsInfo
