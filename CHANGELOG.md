@@ -1,5 +1,16 @@
 # Changelog — BardoEngine
 
+## v0.18.3 (2026-04-07)
+
+### Fixes
+- **StatsPanel layout (fix definitivo)**: la ID card ya no tapa el texto en ningún viewport
+  - `maxWidth: 280px` en la card — impide que los stats en fila expandan la card más allá del inset asumido
+  - Nuevo hook `useIsNarrowViewport` (≤1023px): viewports 640-1023px ahora muestran slim bars en lugar de la ID card
+  - `--stats-panel-inset` actualizado a 320px para el nuevo ancho máximo de la card
+  - `HeaderStats` visible en el header para viewports 640-1023px cuando la card está oculta
+
+---
+
 ## v0.18.2 (2026-04-07)
 
 ### Fixes

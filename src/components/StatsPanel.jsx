@@ -76,7 +76,8 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
                     className="bg-gradient-to-br from-gray-900 to-gray-950 border-2 border-bardo-accent/50 backdrop-blur-sm overflow-hidden shadow-lg shadow-bardo-accent/20"
                     style={{
                         borderRadius: 'var(--ui-border-radius)',
-                        minWidth: '220px'
+                        minWidth: '220px',
+                        maxWidth: '280px'
                     }}
                 >
                     {/* ID Card Header with Name */}

@@ -30,8 +30,8 @@
   /* top-14 + status bar */
   --inventory-right: 1rem;
   /* right-4 */
-  --stats-panel-inset: 260px;
-  /* stats-left + card min-width + gap */
+  --stats-panel-inset: 320px;
+  /* stats-left (16px) + card max-width (280px) + gap (24px) */
 
   /* UI Style Defaults */
   --ui-border-radius: 0.5rem;
@@ -696,6 +696,16 @@ input[type='range']::-moz-range-thumb {
 .horror-cursor-active * {
   cursor: none !important;
 }/* ============================================
+   MEDIUM VIEWPORT — collapse ID card to slim bars
+   ============================================ */
+
+@media (max-width: 1023px) {
+  :root {
+    --stats-panel-inset: 0px;
+  }
+}
+
+/* ============================================
    MOBILE RESPONSIVE LAYOUT
    ============================================ */
 
