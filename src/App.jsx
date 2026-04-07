@@ -570,8 +570,11 @@ function AppContent({ onStorySelect }) {
                     onChoicesVisibleChange={setChoicesVisible}
                     // Notify when the willpower mashing hint starts typing
                     onWillpowerHintVisible={() => setMeterRevealed(true)}
-                    // Mobile layout props
+                    // Layout props
                     isMobile={isMobile}
+                    hasDesktopStatsPanel={!isMobile && gameSystems.statsConfig?.enabled &&
+                        (!gameSystems.statsConfig.playerNameVariable ||
+                         !!story?.variablesState?.[gameSystems.statsConfig.playerNameVariable])}
                     headerStatsProps={isMobile && gameSystems.statsConfig?.enabled ? {
                         stats: gameSystems.stats,
                         statsConfig: gameSystems.statsConfig,

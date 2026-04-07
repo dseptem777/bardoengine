@@ -50,8 +50,9 @@ export default function Player({
     willpowerValue = 100,
     onBreakGenjutsu = null,
     onGenjutsuTypingComplete = null,
-    // Mobile props
+    // Layout props
     isMobile = false,
+    hasDesktopStatsPanel = false,
     headerStatsProps = null,         // { stats, statsConfig, getAllStatsInfo }
     inventoryEnabled = false,
     onToggleInventory = null,
@@ -413,8 +414,12 @@ export default function Player({
                 */}
                 <div
                     ref={contentRef}
-                    className="mx-auto w-full px-4 sm:px-6 md:px-12 pt-[10vh] sm:pt-[15vh] pb-[20vh]"
-                    style={{ maxWidth: 'var(--player-max-width, 48rem)' }}
+                    className={`w-full px-4 sm:px-6 md:px-12 pt-[10vh] sm:pt-[15vh] pb-[20vh] ${hasDesktopStatsPanel ? '' : 'mx-auto'}`}
+                    style={hasDesktopStatsPanel ? {
+                        maxWidth: 'var(--player-max-width, 48rem)',
+                        marginLeft: 'max(calc((100% - var(--player-max-width, 48rem)) / 2), var(--stats-panel-inset, 260px))',
+                        marginRight: 'auto',
+                    } : { maxWidth: 'var(--player-max-width, 48rem)' }}
                 >
                     {/* Text area - Fixed position from top, grows downward only */}
                     <div

@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## v0.18.2 (2026-04-07)
+
+### Fixes
+- **StatsPanel layout**: fix ID card overlapping story text on medium-width viewports (768px–1288px) using CSS `max()` to ensure text container never sits under the fixed card
+
+---
+
 ## v0.18.1 / Centinelas v0.13.0 (2026-04-05)
 
 ### Features — Centinelas: Intermisión 2
