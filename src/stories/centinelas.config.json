@@ -106,7 +106,14 @@
                 "initial": 0,
                 "color": "#a855f7"
             }
-        ]
+        ],
+        "onZero": {
+            "hp": {
+                "action": "end",
+                "knotName": "muerte",
+                "message": "La enfermería quedaba a dos cuadras."
+            }
+        }
     },
     "inventory": {
         "enabled": true,

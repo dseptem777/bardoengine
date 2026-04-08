@@ -1,5 +1,14 @@
 # Changelog — BardoEngine
 
+## v0.18.5 (2026-04-08)
+
+### Fixes
+- **hp=0 → muerte**: `checkZeroStats` nunca se llamaba después de procesar tags de stat. Ahora `continueStory` sincroniza stats Ink→React después de `processTags` y evalúa condiciones `onZero` leyendo `story.variablesState` directo (no React state async). Fix también aplicado en `debugSetVariables`.
+- **Ink variable `hp` no declarada**: `centinelas.ink` declaraba `VAR salud` pero los tags usaban `stat:hp:` — inkjs rechazaba silenciosamente la escritura. Renombrado a `VAR hp = 100`.
+- **`useStats.ts`**: tipo `onZero` extiende con campos `knotName` y `message`.
+
+---
+
 ## Centinelas v0.14.0 (2026-04-07)
 
 ### Fixes
