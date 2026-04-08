@@ -656,9 +656,9 @@ export function useBardoEngine({
                             try {
                                 // Redirect to death knot — next continueStory call will process it
                                 // (chapter break + ironic text show properly in the normal flow)
+                                // Loop prevention: story.canContinue = false after muerte's -> END,
+                                // so this check is skipped on subsequent calls automatically.
                                 story.ChoosePathString(knotName || 'game_over')
-                                // Reset stat above min so this check doesn't re-fire on next beat
-                                story.variablesState[def.id] = (def.min ?? 0) + 1
                             } catch { /* knot not found — story ends naturally */ }
                             break
                         }
@@ -716,7 +716,6 @@ export function useBardoEngine({
                     if (val <= (def.min ?? 0)) {
                         const { action, knotName } = onZero[def.id]
                         if (action === 'end') {
-                            story.variablesState[def.id] = (def.min ?? 0) + 1
                             try {
                                 const { tags: deathTags } = rawSpawnAtKnot(knotName || 'game_over')
                                 processTags(deathTags)
