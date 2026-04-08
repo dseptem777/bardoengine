@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## Centinelas v0.14.0 (2026-04-07)
+
+### Fixes
+- **intermision_playa**: agregado `# next` entre el bloque de texto condicional y el divert — ahora aparece el botón "siguiente" antes de transicionar al knot destino
+
+---
+
 ## v0.18.3 (2026-04-07)
 
 ### Fixes

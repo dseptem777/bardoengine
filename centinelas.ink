@@ -546,6 +546,7 @@ Te queda un poco de tiempo para tu siguiente misión. Tal vez podés hacer algo 
     Te refregás los ojos durante unos minutos y volvés a ver bien. Es solo un tronco con un poco de algas marinas.
     Este trabajo está empezando a afectar tu salud mental.
 }
+# next
 {
 - misiones_completadas == 0: -> capitulo_1
 - misiones_completadas >= 1: -> inter_misiones
