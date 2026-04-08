@@ -643,7 +643,8 @@ export function useBardoEngine({
         }
 
         // Check zero-stat conditions — read Ink vars directly (React state is still async here)
-        if (gameSystems.statsEnabled && story) {
+        // Only run while story can still progress (prevents re-trigger after death knot redirect)
+        if (gameSystems.statsEnabled && story && story.canContinue) {
             const defs = gameSystems.statsConfig?.definitions || []
             const onZero = gameSystems.statsConfig?.onZero || {}
             for (const def of defs) {
@@ -653,9 +654,12 @@ export function useBardoEngine({
                         const { action, knotName } = onZero[def.id]
                         if (action === 'end') {
                             try {
-                                const { tags: deathTags } = rawSpawnAtKnot(knotName || 'game_over')
-                                processTags(deathTags)
-                            } catch { /* knot not found */ }
+                                // Redirect to death knot — next continueStory call will process it
+                                // (chapter break + ironic text show properly in the normal flow)
+                                story.ChoosePathString(knotName || 'game_over')
+                                // Reset stat above min so this check doesn't re-fire on next beat
+                                story.variablesState[def.id] = (def.min ?? 0) + 1
+                            } catch { /* knot not found — story ends naturally */ }
                             break
                         }
                     }
@@ -703,7 +707,7 @@ export function useBardoEngine({
         syncStatsFromVariables(variables)
 
         // Check zero-stat conditions — read Ink vars directly
-        if (gameSystems.statsEnabled && story) {
+        if (gameSystems.statsEnabled && story && story.canContinue) {
             const defs = gameSystems.statsConfig?.definitions || []
             const onZero = gameSystems.statsConfig?.onZero || {}
             for (const def of defs) {
@@ -712,6 +716,7 @@ export function useBardoEngine({
                     if (val <= (def.min ?? 0)) {
                         const { action, knotName } = onZero[def.id]
                         if (action === 'end') {
+                            story.variablesState[def.id] = (def.min ?? 0) + 1
                             try {
                                 const { tags: deathTags } = rawSpawnAtKnot(knotName || 'game_over')
                                 processTags(deathTags)
