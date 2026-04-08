@@ -1177,7 +1177,6 @@ Utiliza una mezcla de medicina occidental junto con hierbas, cantos y rituales e
 -> inter_misiones
 
 === inter_misiones ===
-# CHAPTER_BREAK: title=Elige tu misión, subtitle=Intermisión, music=misterio_ambient
 # music:misterio_ambient
 El Faro te informó de dos situaciones que se están dando y sería conveniente que un Guardián se ponga a investigar. Aun así, el tiempo es tirano y es imposible hacer las dos misiones a la vez. Vas a tener que elegir qué es más importante.
 
