@@ -631,6 +631,35 @@ export function useBardoEngine({
             processTags(tags)
         }
 
+        // Sync stats from Ink variables to React state (tags update Ink directly, bypassing React)
+        if (gameSystems.statsEnabled && story) {
+            const defs = gameSystems.statsConfig?.definitions || []
+            const syncVars: Record<string, any> = {}
+            defs.forEach((def: any) => {
+                const val = story.variablesState[def.id]
+                if (typeof val === 'number') syncVars[def.id] = val
+            })
+            if (Object.keys(syncVars).length > 0) syncStatsFromVariables(syncVars)
+        }
+
+        // Check zero-stat conditions — read Ink vars directly (React state is still async here)
+        if (gameSystems.statsEnabled && story) {
+            const defs = gameSystems.statsConfig?.definitions || []
+            const onZero = gameSystems.statsConfig?.onZero || {}
+            for (const def of defs) {
+                if (def.displayType === 'bar' && onZero[def.id]) {
+                    const val = (story.variablesState[def.id] as number) ?? (def.min ?? 0)
+                    if (val <= (def.min ?? 0)) {
+                        const { action, knotName } = onZero[def.id]
+                        if (action === 'end') {
+                            try { rawSpawnAtKnot(knotName || 'game_over') } catch { /* knot not found */ }
+                            break
+                        }
+                    }
+                }
+            }
+        }
+
         // Notify spider system that player advanced (resets idle timer)
         if (spiderInfestation.state.infesting) {
             spiderInfestation.actions.notifyAdvance()
@@ -669,7 +698,25 @@ export function useBardoEngine({
         }
 
         syncStatsFromVariables(variables)
-    }, [story, setGlobalVariable, gameSystems])
+
+        // Check zero-stat conditions — read Ink vars directly
+        if (gameSystems.statsEnabled && story) {
+            const defs = gameSystems.statsConfig?.definitions || []
+            const onZero = gameSystems.statsConfig?.onZero || {}
+            for (const def of defs) {
+                if (def.displayType === 'bar' && onZero[def.id]) {
+                    const val = (story.variablesState[def.id] as number) ?? (def.min ?? 0)
+                    if (val <= (def.min ?? 0)) {
+                        const { action, knotName } = onZero[def.id]
+                        if (action === 'end') {
+                            try { rawSpawnAtKnot(knotName || 'game_over') } catch { /* knot not found */ }
+                            break
+                        }
+                    }
+                }
+            }
+        }
+    }, [story, setGlobalVariable, gameSystems, rawSpawnAtKnot])
 
     // Helper: sync changed variables to useStats React state if they match stat IDs
     function syncStatsFromVariables(variables: Record<string, any>) {

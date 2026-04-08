@@ -1,5 +1,15 @@
 # Changelog — Centinelas del Sur
 
+## [0.14.4] — 2026-04-08
+
+### Fix: muerte por hp = 0
+- Agregado `VAR hp = 100` (renombrado desde `VAR salud`) — los tags `# stat:hp:` ahora escriben correctamente a la variable Ink
+- Agregado `onZero.hp` en `centinelas.config.json` → salta al knot `muerte` al llegar a 0
+- Nuevo knot `=== muerte ===` con CHAPTER_BREAK (`muerte.jpg`) y 6 textos irónicos en shuffle
+- Imagen `public/games/centinelas/muerte.jpg` agregada
+
+---
+
 ## [0.14.3] — 2026-04-07
 
 ### Fix: Pantalla "Elige tu misión" eliminada

@@ -9,7 +9,7 @@ VAR apodo_personaje = ""
 VAR magia = 0
 VAR fuerza = 0
 VAR conocimiento = 0
-VAR salud = 100
+VAR hp = 100
 VAR entrada_temprana = false
 VAR tiene_fotos = false
 VAR tiene_mano = false
@@ -4012,4 +4012,13 @@ De vuelta a la pista de baile.
 
 PRÓXIMAMENTE — Recuperá un objeto de poder en el Museo de Historia de Costa Alegre que puede ayudarte a conocer dónde se esconde la Secta que está sacrificando humanos.
 
+-> END
+
+// ============================================================
+// MUERTE — game over por hp = 0
+// ============================================================
+
+=== muerte ===
+# CHAPTER_BREAK: title=Misión fallida, subtitle=Fin, image=muerte.jpg
+{~La enfermería quedaba a dos cuadras. Qué lástima.|Debiste haber ido a la enfermería antes de esto.|El parte de novedades va a decir simplemente: "baja en combate".|El sargento va a tener que dar muchas explicaciones.|Sobreviviste todo lo anterior para terminar así. Ironías de la vida.|En la academia te enseñaron primeros auxilios. Extraño que no lo recordaras ahora.}
 -> END
