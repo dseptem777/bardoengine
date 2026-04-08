@@ -652,7 +652,10 @@ export function useBardoEngine({
                     if (val <= (def.min ?? 0)) {
                         const { action, knotName } = onZero[def.id]
                         if (action === 'end') {
-                            try { rawSpawnAtKnot(knotName || 'game_over') } catch { /* knot not found */ }
+                            try {
+                                const { tags: deathTags } = rawSpawnAtKnot(knotName || 'game_over')
+                                processTags(deathTags)
+                            } catch { /* knot not found */ }
                             break
                         }
                     }
@@ -709,7 +712,10 @@ export function useBardoEngine({
                     if (val <= (def.min ?? 0)) {
                         const { action, knotName } = onZero[def.id]
                         if (action === 'end') {
-                            try { rawSpawnAtKnot(knotName || 'game_over') } catch { /* knot not found */ }
+                            try {
+                                const { tags: deathTags } = rawSpawnAtKnot(knotName || 'game_over')
+                                processTags(deathTags)
+                            } catch { /* knot not found */ }
                             break
                         }
                     }
