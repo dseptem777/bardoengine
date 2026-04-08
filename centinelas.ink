@@ -589,13 +589,15 @@ No es necesario ser un gran practicante de magia para darse cuenta de la gran ca
 El único ruido proviene del escritorio de la secretaria, la Sra. Enríquez, que está tipeando algo en su máquina de escribir.
 
 + [¿Por qué no pasamos a computadoras?]
-    — El tiempo no es una construcción social que todos intentamos acatar. En especial cuando se realiza tareas complejas. Y todas las tareas de El Faro son complejas.
-    Enríquez te da una mirada que te hace sospechar que el título de "secretaria" es menospreciar la totalidad de su capacidad.
-    Intentás justificarte pero levanta la mano para callarte. Un gesto simple pero efectivo.
     { entrada_temprana:
+        — El tiempo no es una construcción social que todos intentamos acatar. En especial cuando se realiza tareas complejas. Y todas las tareas de El Faro son complejas.
+        Enríquez te da una mirada que te hace sospechar que el título de "secretaria" es menospreciar la totalidad de su capacidad.
+        Intentás justificarte pero levanta la mano para callarte. Un gesto simple pero efectivo.
         — Tal vez la hora de tu llegada era clave y al adelantarte arruinaste todo. Que no se repita, por favor.
-        Y respecto al tema de las computadoras. Yo ya trabajaba acá cuando cualquier mago de todo por dos pesos intentaba mezclar la protección astral con internet. Después del incidente del 2007 pasé a medios totalmente analógicos.
+    - else:
+        Enríquez deja de tipear y te mira por encima de sus anteojos.
     }
+    — Yo ya trabajaba acá cuando cualquier mago de todo por dos pesos intentaba mezclar la protección astral con internet. Después del incidente del 2007 pasé a medios totalmente analógicos.
     -> mision_profe
 
 + [Toser un poco hasta que ella se fije en vos]
