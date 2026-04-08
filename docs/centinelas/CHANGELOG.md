@@ -1,5 +1,12 @@
 # Changelog — Centinelas del Sur
 
+## [0.14.3] — 2026-04-07
+
+### Fix: Pantalla "Elige tu misión" eliminada
+- Se removió el CHAPTER_BREAK de `inter_misiones` — la decisión de misión queda directa en el flujo narrativo sin pantalla intermedia
+
+---
+
 ## [0.14.2] — 2026-04-07
 
 ### Fix: Pregunta sobre computadoras en hall_central (Cap. 1)
