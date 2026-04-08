@@ -2393,10 +2393,14 @@ Por suerte no estás ante el miembro más brillante de las fuerzas de seguridad.
 { paso_tiempo_casa >= 3:
     -> cap2b_araca_la_cana
 }
-Una vez que entrás a la casa te tomás unos segundos para escuchar el ambiente. Parece que, por ahora, no hay ningún agente de la policía en la propiedad. No sabés si eso significa que llegaste tarde o temprano, pero tenés una ventana de tiempo para realizar tu propia investigación con una mirada que receptúe lo sobrenatural.
-# next
-La casa es la típica estructura chorizo. Una puerta al frente que da a la calle y una al fondo que da al patio trasero. Delante de todo hay un zaguán y al fondo una cocina, en el pasillo conector una serie de habitaciones.
-¿Qué hay que ver primero?
+{cap2b_dentro_casa == 1:
+    Una vez que entrás a la casa te tomás unos segundos para escuchar el ambiente. Parece que, por ahora, no hay ningún agente de la policía en la propiedad. No sabés si eso significa que llegaste tarde o temprano, pero tenés una ventana de tiempo para realizar tu propia investigación con una mirada que receptúe lo sobrenatural.
+    # next
+    La casa es la típica estructura chorizo. Una puerta al frente que da a la calle y una al fondo que da al patio trasero. Delante de todo hay un zaguán y al fondo una cocina, en el pasillo conector una serie de habitaciones.
+    ¿Qué hay que ver primero?
+- else:
+    ¿Y ahora a dónde?
+}
 
 + {not cap2b_casa_zaguan} [El zaguán] -> cap2b_casa_zaguan
 + {not cap2b_casa_cocina} [La cocina] -> cap2b_casa_cocina
