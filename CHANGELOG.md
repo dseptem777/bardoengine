@@ -7,6 +7,13 @@
 
 ---
 
+## v0.18.4 (2026-04-07)
+
+### Fixes
+- **useTagProcessor: stat→Ink sync**: corregido bug donde `# stat:X:+N` no sincronizaba el nuevo valor a la variable Ink — `getStatInfo` leía el React state antes del re-render (stale), escribiendo el valor viejo de vuelta. Ahora se calcula desde la variable Ink actual + delta, aplicando los mismos bounds min/max del config.
+
+---
+
 ## v0.18.3 (2026-04-07)
 
 ### Fixes
