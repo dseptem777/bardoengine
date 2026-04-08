@@ -1,5 +1,14 @@
 # Changelog — Centinelas del Sur
 
+## [0.14.2] — 2026-04-07
+
+### Fix: Pregunta sobre computadoras en hall_central (Cap. 1)
+- El reto de Enríquez por llegar temprano ahora es condicional (`entrada_temprana`); ya no se muestra si el jugador esperó la hora pactada
+- La explicación del incidente del 2007 (por qué no usan computadoras) se mueve fuera del condicional y siempre aparece al hacer la pregunta
+- Se agrega rama `else` con reacción neutra de Enríquez para el camino puntual
+
+---
+
 ## [0.14.1] — 2026-04-07
 
 ### Fix: Hub investigación casa Cap 2B
