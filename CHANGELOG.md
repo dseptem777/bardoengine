@@ -1,5 +1,13 @@
 # Changelog — BardoEngine
 
+## v0.18.6 (2026-04-08)
+
+### Fixes
+- **muerte chapter break**: `rawSpawnAtKnot` retornaba tags pero no se llamaba `processTags` — chapter break y texto de muerte nunca se mostraban. Corregido.
+- **WillpowerMeter test flaky**: test de timing dependía de `Math.random()` no mockeado — el segundo whisper podía aparecer y desvanecerse dentro del mismo `advanceTimersByTime`. Ahora usa `vi.spyOn(Math, 'random').mockReturnValue(0)` para tiempos determinísticos.
+
+---
+
 ## v0.18.5 (2026-04-08)
 
 ### Fixes

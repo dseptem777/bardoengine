@@ -86,6 +86,7 @@ describe('WillpowerMeter', () => {
 
     afterEach(() => {
         vi.useRealTimers()
+        vi.restoreAllMocks()
     })
 
     // ── Visibility ────────────────────────────────────────────────────────────
@@ -339,17 +340,20 @@ describe('WillpowerMeter', () => {
         })
 
         it('whisper disappears after 3-4 seconds then a new one appears', () => {
+            // Mock Math.random to 0 for deterministic timing:
+            // fade-out = 3000ms, interval = 4000ms, next fade-out = 10000ms
+            vi.spyOn(Math, 'random').mockReturnValue(0)
             render(<WillpowerMeter active={true} value={80} boostValue={vi.fn()} />)
 
             // First whisper shown immediately
             expect(screen.getByTestId('whisper-text')).toBeInTheDocument()
 
-            // After 4 s (max show-timeout = 3000 + 1000ms random) — whisper clears
-            act(() => { vi.advanceTimersByTime(4001) })
+            // After 3s (show-timeout with random=0) — whisper clears
+            act(() => { vi.advanceTimersByTime(3001) })
             expect(screen.queryByTestId('whisper-text')).toBeNull()
 
-            // After whisper interval passes, next whisper appears (max interval 8 s for value>60)
-            act(() => { vi.advanceTimersByTime(8001) })
+            // After 4s interval (with random=0), next whisper appears — fades at t=10s, still visible
+            act(() => { vi.advanceTimersByTime(4001) })
             expect(screen.getByTestId('whisper-text')).toBeInTheDocument()
         })
 
