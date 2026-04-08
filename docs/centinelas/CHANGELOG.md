@@ -1,5 +1,12 @@
 # Changelog — Centinelas del Sur
 
+## [0.14.1] — 2026-04-07
+
+### Fix: Hub investigación casa Cap 2B
+- El texto introductorio y "¿Qué hay que ver primero?" solo aparecen en la primera visita al hub; las vueltas muestran "¿Y ahora a dónde?"
+
+---
+
 ## [0.13.1] — 2026-04-06
 
 ### Fix: Imágenes de title breaks

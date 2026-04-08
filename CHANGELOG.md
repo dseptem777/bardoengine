@@ -1,12 +1,5 @@
 # Changelog — BardoEngine
 
-## Centinelas v0.14.1 (2026-04-07)
-
-### Fixes
-- **Hub investigación casa (Cap 2B)**: el texto introductorio y "¿Qué hay que ver primero?" solo aparecen en la primera visita; las vueltas muestran "¿Y ahora a dónde?" — evita repetir el mismo texto cada vez que el jugador regresa de explorar un cuarto
-
----
-
 ## Centinelas v0.14.0 (2026-04-07)
 
 ### Fixes
