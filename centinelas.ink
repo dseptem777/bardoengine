@@ -904,7 +904,7 @@ Al menos recuperaste una mano, mejor ir para El Faro a ver qué pueden hacer con
 -> final_morgue_exito
 
 === apnea_escondite ===
-# MINIGAME: type=apnea, waves=3, autostart=true
+# MINIGAME: type=apnea, waves=3, autostart=true, result=apnea_escondite_resultado
 
 -> apnea_escondite_resultado
 
@@ -1011,7 +1011,7 @@ Ya no es posible retroceder. Hay que seguir corriendo, nada más importa. Ganarl
 }
 
 === keymash_arrastre ===
-# MINIGAME: type=crawl, autostart=true
+# MINIGAME: type=crawl, autostart=true, result=keymash_arrastre_resultado
 
 -> keymash_arrastre_resultado
 

@@ -59,7 +59,6 @@ export function useBardoEngine({
         makeChoice: makeChoiceState,
         setGlobalVariable,
         getGlobalVariable,
-        restoreMinigameState,
         restoreInputState,
         resetStoryState,
         spawnAtKnot: rawSpawnAtKnot,
@@ -209,43 +208,59 @@ export function useBardoEngine({
 
     // Ref to break circular dependency
     const continueStoryRef = useRef<(() => void) | null>(null)
+    // Pending flag: set by handleMinigameResult, consumed by useEffect after isPlaying→false
+    const pendingMinigameResultRef = useRef(false)
+    // Captures minigame config (including result knot) for use in handleMinigameResult.
+    // Set during render from minigameController.config, read synchronously in the callback.
+    const minigameConfigRef = useRef<any>(null)
 
     // Deferred CHAPTER_BREAK tags — when a pagination tag (# next) and CHAPTER_BREAK
     // co-occur in the same Continue() batch, we defer the break to the next continueStory() call
     // so the player can read the current text first.
     const pendingChapterBreakTagsRef = useRef<string[]>([])
 
-    // Result commit handler
+    // Result commit handler.
+    // Uses ChoosePathString to jump directly to the result knot (from the MINIGAME tag's
+    // `result=` param). This is deterministic — doesn't depend on where Continue() stopped.
     const handleMinigameResult = useCallback((result: boolean | number) => {
         if (!storyRef.current) return
 
         const numericResult = (result === true || result === 1) ? 1 : 0
-        console.log(`[Ink Bridge] Committing result: ${numericResult}`)
-
-        // Restore Ink state to before the Continue() that produced the MINIGAME tag.
-        // inkjs evaluates diverts and conditionals inside a single Continue() call,
-        // so by the time we detect the tag, Ink has already branched on minigame_result=-1.
-        // Restoring the snapshot lets the conditional re-evaluate with the correct value.
-        const restored = restoreMinigameState()
+        console.log(`[Ink Bridge] Committing minigame result: ${numericResult}`)
 
         setGlobalVariable("minigame_result", numericResult)
-        const verified = getGlobalVariable("minigame_result")
-        console.log(`[Ink Bridge] Verified value in Ink: ${verified}`)
 
-        if (restored && storyRef.current) {
-            // Advance past the MINIGAME tag line so continueStory() doesn't re-trigger it.
-            // This single Continue() re-processes the knot (now with the correct result),
-            // following the divert and conditional into the right branch.
-            storyRef.current.Continue()
+        // Jump to the result knot so the conditional evaluates with the correct value.
+        const resultKnot = minigameConfigRef.current?.params?.result
+        if (resultKnot) {
+            try {
+                storyRef.current.ChoosePathString(resultKnot)
+                console.log(`[Ink Bridge] Jumped to result knot: ${resultKnot}`)
+            } catch (e) {
+                console.error(`[Ink Bridge] Failed to jump to ${resultKnot}:`, e)
+            }
+        } else {
+            console.warn('[Ink Bridge] No result= param on MINIGAME tag — story may not evaluate correctly')
         }
 
-        // Auto-continue after minigame
-        if (continueStoryRef.current) {
-            continueStoryRef.current()
-        }
-    }, [setGlobalVariable, getGlobalVariable, restoreMinigameState])
+        // Signal the useEffect below to call continueStory() once isPlaying is false.
+        pendingMinigameResultRef.current = true
+    }, [setGlobalVariable])
 
     const minigameController = useMinigameController(handleMinigameResult)
+
+    // Keep minigame config ref in sync (read by handleMinigameResult)
+    minigameConfigRef.current = minigameController.config
+
+    // Fire continueStory() after React re-renders with isPlaying=false.
+    // The story is now positioned at the result knot via ChoosePathString,
+    // so Continue() evaluates the conditional with the correct minigame_result.
+    useEffect(() => {
+        if (!minigameController.isPlaying && pendingMinigameResultRef.current) {
+            pendingMinigameResultRef.current = false
+            if (continueStoryRef.current) continueStoryRef.current()
+        }
+    }, [minigameController.isPlaying])
 
     // ==================
     // Parallel Willpower System
@@ -598,7 +613,7 @@ export function useBardoEngine({
 
     // Wrapped continue function that coordinates systems
     const continueStory = useCallback(() => {
-        if (!story || minigameController.isPlaying) return
+        if (!story || minigameController.isPlaying || minigameController.config) return
 
         // Fire deferred CHAPTER_BREAK from previous beat (player read the text, now show the overlay)
         const pendingTags = pendingChapterBreakTagsRef.current
@@ -673,12 +688,14 @@ export function useBardoEngine({
         }
 
         // Don't autosave if story just ended (preserves last save before death/ending)
+        // Don't autosave after MINIGAME break — save is past the tag, loading it skips the minigame
         const storyEnded = !story.canContinue && story.currentChoices.length === 0
-        if (storyId && newText && !storyEnded) {
+        const hasMinigameTag = tags.some((t: string) => t.trim().toLowerCase().startsWith('minigame:'))
+        if (storyId && newText && !storyEnded && !hasMinigameTag) {
             // @ts-ignore
             saveSystem.autoSave(story.state.toJson(), newText, gameSystems.exportGameSystems() || undefined, buildParallelSystemsSaveState())
         }
-    }, [story, minigameController.isPlaying, continueStoryState, processTags, spiderInfestation, storyId, saveSystem, gameSystems])
+    }, [story, minigameController.isPlaying, minigameController.config, continueStoryState, processTags, spiderInfestation, storyId, saveSystem, gameSystems])
 
     // Debug spawn wrapper — sets variables, jumps to knot, processes tags
     const spawnAtKnot = useCallback((knotName: string, variables: Record<string, any> = {}) => {
@@ -968,6 +985,7 @@ export function useBardoEngine({
         const saveData = saveSystem.loadLastSave()
         if (saveData && storyData) {
             initStory(storyData, saveData.state, saveData.text, saveData.gameSystems)
+            minigameController.reset()  // Clear stale minigame state from previous attempt
             // Restore parallel systems that were active when saved
             const ps = saveData.parallelSystems
             if (ps?.spider) {
@@ -987,12 +1005,13 @@ export function useBardoEngine({
             return saveData
         }
         return null
-    }, [saveSystem, storyData, initStory, spiderInfestation.actions, willpowerActions, setArrebatadosEnabled, setArrebatadosCount, setArrebatadosFuerza])
+    }, [saveSystem, storyData, initStory, minigameController, spiderInfestation.actions, willpowerActions, setArrebatadosEnabled, setArrebatadosCount, setArrebatadosFuerza])
 
     const loadSave = useCallback((saveId: string) => {
         const saveData = saveSystem.loadSave(saveId)
         if (saveData && storyData) {
             initStory(storyData, saveData.state, saveData.text, saveData.gameSystems)
+            minigameController.reset()  // Clear stale minigame state from previous attempt
             // Restore parallel systems that were active when saved
             const ps = saveData.parallelSystems
             if (ps?.spider) {
@@ -1012,7 +1031,7 @@ export function useBardoEngine({
             return saveData
         }
         return null
-    }, [saveSystem, storyData, initStory, spiderInfestation.actions, willpowerActions, setArrebatadosEnabled, setArrebatadosCount, setArrebatadosFuerza])
+    }, [saveSystem, storyData, initStory, minigameController, spiderInfestation.actions, willpowerActions, setArrebatadosEnabled, setArrebatadosCount, setArrebatadosFuerza])
 
     const manualSave = useCallback((name: string, overwriteId: string | null = null) => {
         if (!story || !storyId) return

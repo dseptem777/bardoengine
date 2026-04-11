@@ -1,5 +1,12 @@
 # Changelog — Centinelas del Sur
 
+## [0.14.5] — 2026-04-11
+
+### Fix: param `result=` en tags MINIGAME
+- `keymash_arrastre` y `apnea_escondite`: agregado `result=<knot>` al tag MINIGAME — el engine necesita este param para saltar al knot correcto al terminar el minigame. Sin él, CONTINUAR después de morir llevaba directo a muerte sin replay del minigame.
+
+---
+
 ## [0.14.4] — 2026-04-08
 
 ### Fix: muerte por hp = 0
