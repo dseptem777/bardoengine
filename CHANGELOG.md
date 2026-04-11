@@ -1,5 +1,13 @@
 # Changelog — BardoEngine
 
+## v0.18.9 (2026-04-11)
+
+### Fixes
+- **minigame CONTINUAR loop**: autosave se disparaba después del break por tag MINIGAME porque `story.canContinue` sigue siendo `true` en ese punto — sobrescribía el save de paginación con un estado post-tag. Al cargar con CONTINUAR, el story pointer ya había pasado el tag → iba directo a muerte sin mostrar el minigame. Corregido saltando autosave cuando se detecta tag `minigame:`.
+- **minigameController stale state**: `continueGame()` y `loadSave()` ahora llaman `minigameController.reset()` tras `initStory()` para limpiar estado residual de intentos anteriores.
+
+---
+
 ## v0.18.6 (2026-04-08)
 
 ### Fixes
