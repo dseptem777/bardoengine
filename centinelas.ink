@@ -1759,7 +1759,6 @@ Golpeas. Primero un par de golpes de cortesía. Luego más fuerte. Por último t
 
 === cueva_entrada ===
 # music:cueva_arañas
-# SPIDER_START: difficulty=slow, fuerza={fuerza}, magia={magia}, sabiduria={conocimiento}
 La cueva no fue pensada para seres humanos. El techo es demasiado bajo, por lo que tenes que avanzar en cuclillas a costa del bienestar de tus rodillas. Al llegar al primer doblez las paredes se estrechan obligándote a pasar por un minúsculo agujero del cual solo te llevas un arañazo en tu rodilla y un fuerte sabor a tierra humedad en la boca.
 La presencia de tela de arañas es total, hilos duros y pegajosos que dificultan tu avance y se pegan a tu cuerpo. Sin duda cuando salgas de esta cueva vas a quemar toda tu ropa, sentís que nunca va a poder estar limpia.
 Después del segundo dobles ya no llega más luz al interior de la cueva
@@ -1864,7 +1863,7 @@ Puteas por lo bajo. Pateas el cadáver de la araña a tus pies, y decidís segu�
 // =========================================================
 
 === boveda ===
-# SPIDER_DIFFICULTY: normal
+# SPIDER_START: difficulty=normal, fuerza={fuerza}, magia={magia}, sabiduria={conocimiento}
 # next: Llegas a una gran bóveda
 # music:boveda_ambient
 Avanzas atento. Generalmente una característica de los monstros sobrenaturales que imitan insectos es que forman parte de una gran familia, no te extrañaría enterarte que tiene unos centenares de primos esperando en algún lugar de esta cueva.

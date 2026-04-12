@@ -1,5 +1,13 @@
 # Changelog — BardoEngine
 
+## v0.18.10 (2026-04-11)
+
+### Fixes
+- **spider darkness ignora ID card**: StatsPanel subido de z-[150] a z-[820] — la oscuridad ya no tapa la tarjeta de stats (desktop e mobile)
+- **linterna arañas más grande**: radios del torch aumentados ~1.45x (slow: 200px, normal: 170px, fast: 130px, extreme: 95px)
+
+---
+
 ## v0.18.9 (2026-04-11)
 
 ### Fixes

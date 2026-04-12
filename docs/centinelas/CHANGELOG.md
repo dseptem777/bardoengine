@@ -1,5 +1,13 @@
 # Changelog — Centinelas del Sur
 
+## [0.14.6] — 2026-04-11
+
+### Fix: arañas cap 2a
+- SPIDER_START movido de `cueva_entrada` a `boveda` — el minigame ahora arranca en el nido (bóveda con capullos), no al entrar a la cueva
+- Dificultad inicial cambiada de `slow` a `normal`
+
+---
+
 ## [0.14.5] — 2026-04-11
 
 ### Fix: param `result=` en tags MINIGAME
