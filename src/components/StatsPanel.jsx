@@ -27,7 +27,7 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
         if (barStats.length === 0) return null
 
         return (
-            <div className="fixed top-0 left-0 right-0 z-[150] pointer-events-none mobile-slim-bars">
+            <div className="fixed top-0 left-0 right-0 z-[820] pointer-events-none mobile-slim-bars">
                 <div className="flex w-full">
                     {barStats.map(stat => {
                         const percentage = stat.max ? Math.max(0, Math.min(100, (stats[stat.id] / stat.max) * 100)) : 0
@@ -63,7 +63,7 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
     return (
         <AnimatePresence>
             <motion.div
-                className="fixed z-[150] pointer-events-none"
+                className="fixed z-[820] pointer-events-none"
                 style={{
                     top: 'var(--stats-top)',
                     left: 'var(--stats-left)',
