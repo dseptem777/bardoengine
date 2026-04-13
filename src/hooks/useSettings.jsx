@@ -164,7 +164,17 @@ export function SettingsProvider({ children, storyId }) {
 export function useSettings() {
     const context = useContext(SettingsContext)
     if (!context) {
-        throw new Error('useSettings must be used within a SettingsProvider')
+        // Devuelve defaults seguros cuando se usa fuera del provider (ej: tests aislados)
+        return {
+            settings: DEFAULT_SETTINGS,
+            updateSetting: () => {},
+            resetSettings: () => {},
+            isFullscreen: false,
+            toggleFullscreen: () => {},
+            getTypewriterDelay: () => SPEED_MAP[3],
+            getMusicVolume: () => DEFAULT_SETTINGS.musicVolume / 100,
+            getSfxVolume: () => DEFAULT_SETTINGS.sfxVolume / 100,
+        }
     }
     return context
 }

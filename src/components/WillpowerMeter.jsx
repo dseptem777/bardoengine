@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useWillpowerAudio } from '../hooks/useWillpowerAudio'
 import { useWillpowerCorruption } from '../hooks/useWillpowerCorruption'
+import { useSettings } from '../hooks/useSettings'
 
 /**
  * WillpowerMeter — Immersive atmospheric overlay (rewrite from HUD bar).
@@ -86,6 +87,7 @@ export default function WillpowerMeter({
     // position is intentionally ignored — everything is fixed
 }) {
     const boost = BOOST_AMOUNTS[decayRate] ?? BOOST_AMOUNTS.normal
+    const { settings } = useSettings()
 
     // Eye "fight" open pulse when V is pressed
     const [boostPulse, setBoostPulse] = useState(0)
@@ -240,11 +242,9 @@ export default function WillpowerMeter({
     const irisRadius = 6 + openness * 4   // 6–10
     const pupilRadius = 3 + (1 - openness) * 4   // 3–7
 
-    const eyeColor =
-        value > 60 ? '#e2e8f0' :
-        value > 30 ? '#f59e0b' :
-        value > 15 ? '#dc2626' :
-                     '#991b1b'
+    const eyeColor = settings.colorblindMode
+        ? (value > 60 ? '#e2e8f0' : value > 30 ? '#f59e0b' : value > 15 ? '#f97316' : '#ea580c')
+        : (value > 60 ? '#e2e8f0' : value > 30 ? '#f59e0b' : value > 15 ? '#dc2626' : '#991b1b')
 
     const whisperColor =
         value > 60 ? 'text-red-300/40' :

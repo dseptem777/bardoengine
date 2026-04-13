@@ -47,10 +47,11 @@ describe('useSettings', () => {
             expect(result.current.settings.vfxEnabled).toBe(true)
         })
 
-        it('should throw error when used outside provider', () => {
-            expect(() => {
-                renderHook(() => useSettings())
-            }).toThrow('useSettings must be used within a SettingsProvider')
+        it('should return defaults when used outside provider', () => {
+            const { result } = renderHook(() => useSettings())
+            expect(result.current.settings.musicVolume).toBe(40)
+            expect(result.current.settings.colorblindMode).toBe(false)
+            expect(result.current.settings.dyslexicMode).toBe(false)
         })
     })
 

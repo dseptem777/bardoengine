@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
+import { useSettings } from '../hooks/useSettings'
 
 /**
  * StatsPanel - Displays game stats as an "ID Card" (desktop) or slim bar strip (mobile)
@@ -161,6 +162,7 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
  */
 export function HeaderStats({ stats, statsConfig, getAllStatsInfo }) {
     if (!statsConfig?.enabled) return null
+    const { settings } = useSettings()
 
     const allStats = getAllStatsInfo().filter(s => s && s.displayType !== 'relationship')
     const valueStats = allStats.filter(s => s.displayType === 'value')
@@ -173,8 +175,10 @@ export function HeaderStats({ stats, statsConfig, getAllStatsInfo }) {
                 const value = stats[stat.id]
                 const displayValue = value >= 0 ? `+${value}` : value
                 const isKarmaStyle = stat.id === 'karma'
+                const karmaPos = settings.colorblindMode ? '#3b82f6' : '#22c55e'
+                const karmaNeg = settings.colorblindMode ? '#f97316' : '#ef4444'
                 const color = isKarmaStyle
-                    ? (value > 0 ? '#22c55e' : value < 0 ? '#ef4444' : '#9ca3af')
+                    ? (value > 0 ? karmaPos : value < 0 ? karmaNeg : '#9ca3af')
                     : (stat.color || '#facc15')
 
                 return (
@@ -252,6 +256,9 @@ function StatBar({ stat, value }) {
 function StatValue({ stat, value }) {
     const displayValue = value >= 0 ? `+${value}` : value
     const isKarmaStyle = stat.id === 'karma'
+    const { settings } = useSettings()
+    const karmaPos = settings.colorblindMode ? '#3b82f6' : '#22c55e'
+    const karmaNeg = settings.colorblindMode ? '#f97316' : '#ef4444'
 
     return (
         <motion.div
@@ -264,7 +271,7 @@ function StatValue({ stat, value }) {
                 className="font-mono font-bold"
                 style={{
                     color: isKarmaStyle
-                        ? (value > 0 ? '#22c55e' : value < 0 ? '#ef4444' : '#9ca3af')
+                        ? (value > 0 ? karmaPos : value < 0 ? karmaNeg : '#9ca3af')
                         : (stat.color || '#facc15')
                 }}
             >
