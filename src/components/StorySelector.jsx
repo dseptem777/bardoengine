@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { version as engineVersion } from '../../package.json'
 
-export default function StorySelector({ stories, onSelect, hasSave, onOpenEditor, onImportInk, onRemoveStory }) {
+export default function StorySelector({ stories, onSelect, hasSave, onImportInk, onRemoveStory }) {
     const fileInputRef = useRef(null)
     const [importError, setImportError] = useState(null)
 
@@ -128,15 +128,7 @@ export default function StorySelector({ stories, onSelect, hasSave, onOpenEditor
                 Powered by Ink &bull; Built with React
             </p>
 
-            {/* Editor Button (Dev) */}
-            {onOpenEditor && (
-                <button
-                    onClick={onOpenEditor}
-                    className="absolute bottom-4 right-4 z-20 text-bardo-accent hover:text-white transition-colors font-mono text-xs uppercase tracking-widest border border-bardo-accent/30 px-3 py-1 rounded hover:bg-bardo-accent/20"
-                >
-                    [BardoEditor]
-                </button>
-            )}
+
         </div>
     )
 }
