@@ -3,6 +3,25 @@
 @tailwind utilities;
 
 /* ============================================
+   GAME HARDENING — disable browser interactions
+   ============================================ */
+* {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+html, body, #root {
+  -webkit-context-menu: none;
+}
+
+/* Allow text selection inside input fields */
+input, textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* ============================================
    CSS VARIABLES - Dynamic Theming
    These can be overridden per-game via JS
    ============================================ */
@@ -30,6 +49,8 @@
   /* top-14 + status bar */
   --inventory-right: 1rem;
   /* right-4 */
+  --stats-panel-inset: 320px;
+  /* stats-left (16px) + card max-width (280px) + gap (24px) */
 
   /* UI Style Defaults */
   --ui-border-radius: 0.5rem;
@@ -694,6 +715,16 @@ input[type='range']::-moz-range-thumb {
 .horror-cursor-active * {
   cursor: none !important;
 }/* ============================================
+   MEDIUM VIEWPORT — collapse ID card to slim bars
+   ============================================ */
+
+@media (max-width: 1023px) {
+  :root {
+    --stats-panel-inset: 0px;
+  }
+}
+
+/* ============================================
    MOBILE RESPONSIVE LAYOUT
    ============================================ */
 
@@ -703,6 +734,7 @@ input[type='range']::-moz-range-thumb {
     --stats-left: 0.5rem;
     --inventory-top: calc(2.5rem + var(--safe-area-top));
     --inventory-right: 0.5rem;
+    --stats-panel-inset: 0px;
   }
 
   /* Slim stat bars at viewport top, below system status bar */

@@ -16,10 +16,10 @@ import { useState, useCallback, useRef, useEffect, useMemo } from 'react'
  */
 
 const DIFFICULTY = {
-    slow:    { torchRadius: 140, corruptionRate: 5,  spiderCount: 4,  spiderSpeed: 28, idleDecayRate: 4  },
-    normal:  { torchRadius: 115, corruptionRate: 9,  spiderCount: 7,  spiderSpeed: 42, idleDecayRate: 7  },
-    fast:    { torchRadius: 90,  corruptionRate: 15, spiderCount: 10, spiderSpeed: 58, idleDecayRate: 11 },
-    extreme: { torchRadius: 65,  corruptionRate: 22, spiderCount: 15, spiderSpeed: 72, idleDecayRate: 16 },
+    slow:    { torchRadius: 200, corruptionRate: 5,  spiderCount: 4,  spiderSpeed: 28, idleDecayRate: 4  },
+    normal:  { torchRadius: 170, corruptionRate: 9,  spiderCount: 7,  spiderSpeed: 42, idleDecayRate: 7  },
+    fast:    { torchRadius: 130, corruptionRate: 15, spiderCount: 10, spiderSpeed: 58, idleDecayRate: 11 },
+    extreme: { torchRadius: 95,  corruptionRate: 22, spiderCount: 15, spiderSpeed: 72, idleDecayRate: 16 },
 }
 
 const IDLE_THRESHOLD_MS = 5000

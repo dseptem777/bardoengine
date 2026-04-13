@@ -1,6 +1,6 @@
 {
     "title": "CENTINELAS DEL SUR",
-    "version": "0.11.0",
+    "version": "0.15.0",
     "theme": {
         "primaryColor": "#8b5cf6",
         "bgColor": "#030712",
@@ -32,7 +32,7 @@
     "intro": {
         "titleMusic": "misterio_ambient",
         "titleSubtitle": "Ficción Interactiva Sobrenatural",
-        "titleBackground": "/games/centinelas/title.png"
+        "titleBackground": "/games/centinelas/title.jpg"
     },
     "stats": {
         "enabled": true,
@@ -95,8 +95,25 @@
                 "max": 6,
                 "initial": 0,
                 "color": "#f59e0b"
+            },
+            {
+                "id": "amistad_abuela",
+                "label": "Abuelita",
+                "icon": "👵",
+                "displayType": "relationship",
+                "min": 0,
+                "max": 6,
+                "initial": 0,
+                "color": "#a855f7"
             }
-        ]
+        ],
+        "onZero": {
+            "hp": {
+                "action": "end",
+                "knotName": "muerte",
+                "message": "La enfermería quedaba a dos cuadras."
+            }
+        }
     },
     "inventory": {
         "enabled": true,
@@ -186,31 +203,183 @@
             "id": "centinela_magica",
             "title": "La Chispa",
             "description": "Elegiste despertar con el poder de la magia.",
-            "icon": "✨"
+            "icon": "✨",
+            "image": "/games/centinelas/achievements/chispa badge.jpg"
         },
         {
             "id": "centinela_combate",
             "title": "Pura Adrenalina",
             "description": "Elegiste despertar en medio del combate.",
-            "icon": "⚡"
+            "icon": "⚡",
+            "image": "/games/centinelas/achievements/madrugador badge.jpg"
         },
         {
             "id": "centinela_conocimiento",
             "title": "La Obsesión",
             "description": "Elegiste despertar buscando conocimiento prohibido.",
-            "icon": "📚"
+            "icon": "📚",
+            "image": "/games/centinelas/achievements/ratoncito badge.jpg"
         },
         {
             "id": "primer_caso",
             "title": "Un Cadáver Sin Nombre",
             "description": "Completaste el Capítulo 0 y comenzaste tu primera investigación.",
-            "icon": "🔍"
+            "icon": "🔍",
+            "image": "/games/centinelas/achievements/cadaver sin badge.jpg"
         },
         {
             "id": "nuevo_amanecer",
             "title": "El Nuevo Amanecer",
             "description": "Alcanzaste el Capítulo 2B — El Nuevo Amanecer.",
-            "icon": "🌅"
+            "icon": "🌅",
+            "image": "/games/centinelas/achievements/nuevo amanecer badge.jpg"
+        },
+        {
+            "id": "elegir_orfanato",
+            "title": "El Hogar de los Olvidados",
+            "description": "Elegiste investigar en el orfanato.",
+            "icon": "🏚️",
+            "image": "/games/centinelas/achievements/orfanato badge.jpg"
+        },
+        {
+            "id": "juan_salvado",
+            "title": "Nadie Se Queda Atrás",
+            "description": "Salvaste a Juan.",
+            "icon": "🤝",
+            "image": "/games/centinelas/achievements/salvar juan badge.jpg"
+        },
+        {
+            "id": "juan_muerto",
+            "title": "Solo Se Va Solo",
+            "description": "Juan no lo logró.",
+            "icon": "💀",
+            "image": "/games/centinelas/achievements/muere juan badge.jpg"
+        },
+        {
+            "id": "alegria_vive",
+            "title": "¡Qué Alegría...!",
+            "description": "La Hermana Alegría sobrevivió.",
+            "icon": "🕊️",
+            "image": "/games/centinelas/achievements/alegria vive badge.jpg"
+        },
+        {
+            "id": "alegria_muere",
+            "title": "¿Qué Alegría?",
+            "description": "La Hermana Alegría no sobrevivió.",
+            "icon": "🕯️",
+            "image": "/games/centinelas/achievements/alegria muere badge.jpg"
+        },
+        {
+            "id": "ninos_todos_mueren",
+            "title": "Orfanato Vacío",
+            "description": "Todos los niños murieron.",
+            "icon": "🔥",
+            "image": "/games/centinelas/achievements/orfanato mueren badge.jpg"
+        },
+        {
+            "id": "ninos_casi_todos",
+            "title": "Pequeños Caídos",
+            "description": "Casi todos los niños murieron.",
+            "icon": "😔",
+            "image": "/games/centinelas/achievements/casi todos badge.jpg"
+        },
+        {
+            "id": "ninos_mitad",
+            "title": "Miti y Miti",
+            "description": "La mitad de los niños sobrevivió.",
+            "icon": "⚖️",
+            "image": "/games/centinelas/achievements/miti y miti badge.jpg"
+        },
+        {
+            "id": "ninos_ninguno",
+            "title": "Milagro en el Orfanato",
+            "description": "Ningún niño murió esta noche.",
+            "icon": "✨",
+            "image": "/games/centinelas/achievements/santo centinela badge.jpg"
+        },
+        {
+            "id": "belen_muere",
+            "title": "La Última Vela",
+            "description": "Belén no sobrevivió.",
+            "icon": "🕯️",
+            "image": "/games/centinelas/achievements/belen muere badge.jpg"
+        },
+        {
+            "id": "morgue_sin_mordisco",
+            "title": "Repelente de Tiburones",
+            "description": "Saliste de la morgue sin un mordisco.",
+            "icon": "🦈",
+            "image": "/games/centinelas/achievements/intacto badge.jpg"
+        },
+        {
+            "id": "mordio_profundo",
+            "title": "Bocado de Centinela",
+            "description": "El Profundo te eligió de menú.",
+            "icon": "🩸",
+            "image": "/games/centinelas/achievements/mordido badge.jpg"
+        },
+        {
+            "id": "conociste_enriquez",
+            "title": "La Secretaria",
+            "description": "Conociste a Enríquez.",
+            "icon": "🚔",
+            "image": "/games/centinelas/achievements/enriquez badge.jpg"
+        },
+        {
+            "id": "conociste_shelley",
+            "title": "Bruja con Título",
+            "description": "Conociste a Mary Shelly.",
+            "icon": "🧪",
+            "image": "/games/centinelas/achievements/shelley badge.jpg"
+        },
+        {
+            "id": "conociste_cabral",
+            "title": "Mano a Mano",
+            "description": "Conociste al Sargento Cabral.",
+            "icon": "🤜",
+            "image": "/games/centinelas/achievements/cabral badge.jpg"
+        },
+        {
+            "id": "fuiste_tarotista",
+            "title": "Los Arcanos Hablan",
+            "description": "Consultaste a la tarotista.",
+            "icon": "🔮",
+            "image": "/games/centinelas/achievements/taroteado badge.jpg"
+        },
+        {
+            "id": "cambio_de_bando",
+            "title": "Cambiacapas Fraca",
+            "description": "Moriste queriendo ser vampiro.",
+            "icon": "🧛",
+            "image": "/games/centinelas/achievements/cambiacapas fraca badge.jpg"
+        },
+        {
+            "id": "cruz_contra_vampiros",
+            "title": "Pare de Sufrir",
+            "description": "Usaste la cruz contra los vampiros.",
+            "icon": "✝️",
+            "image": "/games/centinelas/achievements/pare de sufrir badge.jpg"
+        },
+        {
+            "id": "favor_tuco",
+            "title": "Una Mano Lava la Otra...",
+            "description": "Cobraste el favor de Tuco.",
+            "icon": "🤙",
+            "image": "/games/centinelas/achievements/favor tuco badge.jpg"
+        },
+        {
+            "id": "caer_en_cana",
+            "title": "En el Buzón",
+            "description": "Terminaste entre rejas.",
+            "icon": "🔒",
+            "image": "/games/centinelas/achievements/buzon badge.jpg"
+        },
+        {
+            "id": "gano_willpower",
+            "title": "Más Duro que Rocky",
+            "description": "Nunca cediste ante el miedo.",
+            "icon": "🧠",
+            "image": "/games/centinelas/achievements/duro rocky badge.jpg"
         }
     ],
     "extras": {

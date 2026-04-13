@@ -35,6 +35,8 @@ interface TagProcessorOptions {
     onBossStop?: () => void;
     // Visual damage callbacks
     onVisualDamage?: (config: { grayscale?: number, reset?: boolean }) => void;
+    // Chapter break callback
+    onChapterBreak?: (config: { title: string, subtitle?: string, image?: string, music?: string }) => void;
 }
 
 export function useTagProcessor({
@@ -63,7 +65,8 @@ export function useTagProcessor({
     onBossDamage,
     onBossCheck,
     onBossStop,
-    onVisualDamage
+    onVisualDamage,
+    onChapterBreak
 }: TagProcessorOptions) {
     const processTags = useCallback((tags: string[]) => {
         tags.forEach(rawTag => {
@@ -372,6 +375,39 @@ export function useTagProcessor({
             }
 
             // ============================================
+            // CHAPTER BREAK — Fullscreen chapter title card
+            // Format: CHAPTER_BREAK: title=..., subtitle=..., image=..., music=...
+            // ============================================
+
+            if (tag.toUpperCase().startsWith('CHAPTER_BREAK:')) {
+                const raw = tag.substring('CHAPTER_BREAK:'.length).trim()
+                // Split on comma+space only when followed by a known key
+                const segments = raw.split(/, (?=(?:title|subtitle|image|music)=)/i)
+                const config: any = {}
+                for (const seg of segments) {
+                    const eqIdx = seg.indexOf('=')
+                    if (eqIdx === -1) continue
+                    const key = seg.substring(0, eqIdx).trim().toLowerCase()
+                    let val = seg.substring(eqIdx + 1).trim()
+                    // Resolve {variable} references from Ink state
+                    val = val.replace(/\{(\w+)\}/g, (_, varName) => {
+                        if (storyRef?.current) {
+                            try {
+                                return String(storyRef.current.variablesState[varName] ?? varName)
+                            } catch { return varName }
+                        }
+                        return varName
+                    })
+                    if (key && val) config[key] = val
+                }
+                if (config.title) {
+                    console.log('[Tags] CHAPTER_BREAK:', config)
+                    if (onChapterBreak) onChapterBreak(config)
+                }
+                return
+            }
+
+            // ============================================
             // EXISTING TAG PROCESSING
             // ============================================
 
@@ -394,20 +430,33 @@ export function useTagProcessor({
             // Game systems tags (stats, inventory)
             const handled = gameSystems.processGameTag(tag)
 
-            // Sync stat changes back to Ink variables so Ink conditionals work
-            // Read the actual clamped value from the stats hook (not re-parsed)
+            // Sync stat changes back to Ink variables so Ink conditionals work.
+            // We compute the new value directly from the current Ink variable + delta
+            // instead of reading from the stats hook, because React state updates are
+            // async (setStats is not committed yet when getStatInfo is called here).
             if (handled && tag.trim().startsWith('stat:') && storyRef?.current) {
                 const parts = tag.trim().split(':')
                 if (parts.length >= 3) {
                     const statId = parts[1]
-                    try {
-                        const statInfo = gameSystems.getStatInfo(statId)
-                        if (statInfo) {
-                            storyRef.current.variablesState[statId] = statInfo.current
-                            console.log(`[Tags] Synced stat ${statId} = ${statInfo.current} to Ink`)
+                    const valueStr = parts[2]
+                    const delta = parseInt(valueStr, 10)
+                    if (!isNaN(delta)) {
+                        try {
+                            const currentInkValue = (storyRef.current.variablesState[statId] as number) ?? 0
+                            let newValue = (valueStr.startsWith('+') || valueStr.startsWith('-'))
+                                ? currentInkValue + delta
+                                : delta
+                            // Apply same min/max bounds as the stats system (config is static, not stale)
+                            const statInfo = gameSystems.getStatInfo(statId)
+                            if (statInfo) {
+                                if (statInfo.min !== undefined) newValue = Math.max(statInfo.min, newValue)
+                                if (statInfo.max !== undefined) newValue = Math.min(statInfo.max, newValue)
+                            }
+                            storyRef.current.variablesState[statId] = newValue
+                            console.log(`[Tags] Synced stat ${statId} = ${newValue} to Ink`)
+                        } catch (e) {
+                            console.warn(`[Tags] Could not sync stat ${statId} to Ink:`, e)
                         }
-                    } catch (e) {
-                        console.warn(`[Tags] Could not sync stat ${statId} to Ink:`, e)
                     }
                 }
             }
@@ -457,7 +506,8 @@ export function useTagProcessor({
         onBossDamage,
         onBossCheck,
         onBossStop,
-        onVisualDamage
+        onVisualDamage,
+        onChapterBreak
     ])
 
     return useMemo(() => ({ processTags }), [processTags])

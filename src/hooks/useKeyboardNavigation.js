@@ -27,6 +27,9 @@ export function useKeyboardNavigation({
     const handleKeyDown = useCallback((event) => {
         if (disabled) return;
 
+        // Ignore held keys (auto-repeat) — prevents spamming through content
+        if (event.repeat) return;
+
         // Don't intercept keys when user is typing in an input/textarea
         const tag = event.target.tagName
         if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;

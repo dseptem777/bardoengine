@@ -1,5 +1,140 @@
 # Changelog — BardoEngine
 
+## v0.19.0 (2026-04-11)
+
+### Features
+- **sistema de imágenes en achievements**: soporte para campo `image` en config — badges JPEG se muestran en el grid y modal de logros; locked muestra círculo con `?`
+- **BadgeImage component**: canvas BFS flood fill con erosion pass para eliminar fondo de badges
+- **21 nuevos achievements en Centinelas**: personajes (Enríquez, Shelley, Cabral, tarotista), compañeros (Juan, Alegría), niños (4 tiers), morgue, Cap2B (vampiro, cruz, Tuco, cana, willpower)
+- **fanzine cheat code**: además de habilitar debug mode, ahora desbloquea todos los achievements de una
+- **hardening del player**: `user-select: none` global, context menu deshabilitado, drag de assets deshabilitado
+
+---
+
+## v0.18.10 (2026-04-11)
+
+### Fixes
+- **spider darkness ignora ID card**: StatsPanel subido de z-[150] a z-[820] — la oscuridad ya no tapa la tarjeta de stats (desktop e mobile)
+- **linterna arañas más grande**: radios del torch aumentados ~1.45x (slow: 200px, normal: 170px, fast: 130px, extreme: 95px)
+
+---
+
+## v0.18.9 (2026-04-11)
+
+### Fixes
+- **minigame CONTINUAR loop**: autosave se disparaba después del break por tag MINIGAME porque `story.canContinue` sigue siendo `true` en ese punto — sobrescribía el save de paginación con un estado post-tag. Al cargar con CONTINUAR, el story pointer ya había pasado el tag → iba directo a muerte sin mostrar el minigame. Corregido saltando autosave cuando se detecta tag `minigame:`.
+- **minigameController stale state**: `continueGame()` y `loadSave()` ahora llaman `minigameController.reset()` tras `initStory()` para limpiar estado residual de intentos anteriores.
+
+---
+
+## v0.18.6 (2026-04-08)
+
+### Fixes
+- **muerte chapter break**: `rawSpawnAtKnot` retornaba tags pero no se llamaba `processTags` — chapter break y texto de muerte nunca se mostraban. Corregido.
+- **WillpowerMeter test flaky**: test de timing dependía de `Math.random()` no mockeado — el segundo whisper podía aparecer y desvanecerse dentro del mismo `advanceTimersByTime`. Ahora usa `vi.spyOn(Math, 'random').mockReturnValue(0)` para tiempos determinísticos.
+
+---
+
+## v0.18.5 (2026-04-08)
+
+### Fixes
+- **hp=0 → muerte**: `checkZeroStats` nunca se llamaba después de procesar tags de stat. Ahora `continueStory` sincroniza stats Ink→React después de `processTags` y evalúa condiciones `onZero` leyendo `story.variablesState` directo (no React state async). Fix también aplicado en `debugSetVariables`.
+- **Ink variable `hp` no declarada**: `centinelas.ink` declaraba `VAR salud` pero los tags usaban `stat:hp:` — inkjs rechazaba silenciosamente la escritura. Renombrado a `VAR hp = 100`.
+- **`useStats.ts`**: tipo `onZero` extiende con campos `knotName` y `message`.
+
+---
+
+## Centinelas v0.14.0 (2026-04-07)
+
+### Fixes
+- **intermision_playa**: agregado `# next` entre el bloque de texto condicional y el divert — ahora aparece el botón "siguiente" antes de transicionar al knot destino
+
+---
+
+## v0.18.4 (2026-04-07)
+
+### Fixes
+- **useTagProcessor: stat→Ink sync**: corregido bug donde `# stat:X:+N` no sincronizaba el nuevo valor a la variable Ink — `getStatInfo` leía el React state antes del re-render (stale), escribiendo el valor viejo de vuelta. Ahora se calcula desde la variable Ink actual + delta, aplicando los mismos bounds min/max del config.
+
+---
+
+## v0.18.3 (2026-04-07)
+
+### Fixes
+- **StatsPanel layout (fix definitivo)**: la ID card ya no tapa el texto en ningún viewport
+  - `maxWidth: 280px` en la card — impide que los stats en fila expandan la card más allá del inset asumido
+  - Nuevo hook `useIsNarrowViewport` (≤1023px): viewports 640-1023px ahora muestran slim bars en lugar de la ID card
+  - `--stats-panel-inset` actualizado a 320px para el nuevo ancho máximo de la card
+  - `HeaderStats` visible en el header para viewports 640-1023px cuando la card está oculta
+
+---
+
+## v0.18.2 (2026-04-07)
+
+### Fixes
+- **StatsPanel layout**: fix ID card overlapping story text on medium-width viewports (768px–1288px) using CSS `max()` to ensure text container never sits under the fixed card
+
+---
+
+## v0.18.1 / Centinelas v0.13.0 (2026-04-05)
+
+### Features — Centinelas: Intermisión 2
+- **Intermisión 2 hub**: nueva intermisión post-cap2 con intro narrativa (insomnio, pesadillas, preocupación por la Secta) y 5 opciones de actividad
+- **inter2_playa**: encuentro con el mar hostil, ola gigante
+- **inter2_tarot**: casa de tarotista vacía con mensaje meta-demo (4th wall)
+- **inter2_enfermeria**: Mary Shelley y sustancia orgánica restauradora (+5 hp)
+- **inter2_abuelita**: cacería de súcubo con la Abuelita — 3 sub-ramas:
+  - Cocina (entrada trasera): seducción del súcubo, check `fuerza >= 20`, `conocimiento >= 25` lore — `amistad_abuela +2`
+  - Escándalo: fracaso en la puerta, policía — `amistad_abuela +0`
+  - Banda "Vieja Loca": show en escenario, check `conocimiento >= 20` (bajo) — `amistad_abuela +2`
+- **inter2_siguiente**: mission gate con CHAPTER_BREAK hacia Capítulo 3
+- **capitulo_3**: placeholder "PRÓXIMAMENTE — El Museo"
+- **Routing**: cap2a y cap2b_epilogo ahora fluyen a `intermision_2` en lugar de `-> END`
+- **amistad_abuela**: nuevo stat relationship en config (max 6, color púrpura)
+
+---
+
+## v0.18.1 / Centinelas v0.12.2 (2026-04-05)
+
+### Fixes — Centinelas
+- Eliminados los 2 QTE de la rama del vampiro (no aptos para mobile, sin lugar narrativo)
+- Agregado texto de transición en `cap2b_trampa_liberar`: el jugador ya tenía la estaca lista cuando liberó el círculo
+
+---
+
+## v0.18.1 / Centinelas v0.12.1 (2026-04-04)
+
+### Fixes — Music Tags (centinelas.ink)
+- `ciudad_ambient` → `city_ambient` (archivo existente)
+- `orfanato_ambient` → `orfanato` (archivo existente)
+- `cueva_ambient` → `cueva_arañas` (archivo existente)
+
+### Fixes — Tests
+- `useTagProcessor.genjutsu`: tests actualizados para la firma de 3 args `(stat, knot, fisuraText)`
+- `TextDisplay.genjutsu`: `data-testid="genjutsu-break"` movido al `<span>` de GenjutsuFisura; opacity aplicado incondicionalmente (no gateado por `active`/rAF)
+- `TextDisplay`: test `onComplete when isTyping=false` usa `typewriterDelay={0}` para modo instantáneo
+
+---
+
+## v0.18.0 (2026-04-04)
+
+### Features — Chapter Break System
+- **ChapterBreakOverlay**: nuevo componente fullscreen para title cards entre capítulos (imagen, título, subtítulo)
+- **CHAPTER_BREAK tag**: parseado en `useTagProcessor` con soporte para `title=`, `subtitle=`, `image=`, `music=` y referencias `{variable}`
+- **chapterBreakHasTextRef**: detecta si el break llegó junto a texto — en ese caso dismiss no llama a continueStory, el texto ya está cargado
+- **makeChoice path**: también setea el flag cuando el divert a un nuevo knot tiene CHAPTER_BREAK + texto
+- **chapterBreakCooldown**: 400ms cooldown post-dismiss para evitar skip accidental del siguiente contenido
+- **chapterBreakActive prop**: deshabilita keyboard navigation mientras el overlay está activo o en cooldown
+
+### Fixes — Input System
+- **Input snapshot/restore**: `processStoryLoop` guarda estado pre-Continue al detectar tag `input:`, `commitInput` restaura y replay con la variable ya seteada — texto como `"Bienvenido {nombre}"` se resuelve correctamente
+- **inputReplayingRef**: flag doble (en useStoryState + useBardoEngine) evita que el dialog se muestre de nuevo durante el replay
+
+### Fixes — Anti-Spam
+- **event.repeat guard**: `useKeyboardNavigation` y `ChapterBreakOverlay` ignoran teclas mantenidas (auto-repeat del browser)
+
+---
+
 ## v0.17.0 (2026-03-24)
 
 ### Features — Spider Infestation (Torch & Corruption)

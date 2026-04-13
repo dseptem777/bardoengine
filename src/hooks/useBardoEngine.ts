@@ -59,7 +59,7 @@ export function useBardoEngine({
         makeChoice: makeChoiceState,
         setGlobalVariable,
         getGlobalVariable,
-        restoreMinigameState,
+        restoreInputState,
         resetStoryState,
         spawnAtKnot: rawSpawnAtKnot,
         getKnotList,
@@ -70,22 +70,44 @@ export function useBardoEngine({
     // Input System
     // ==================
     const [pendingInput, setPendingInput] = useState<InputRequest | null>(null)
+    // Flag to skip handleInputRequest during commitInput replay
+    const inputReplayingRef = useRef(false)
 
     const handleInputRequest = useCallback((varName: string, placeholder: string) => {
+        if (inputReplayingRef.current) return  // skip during replay
         setPendingInput({ varName, placeholder })
     }, [])
 
     const commitInput = useCallback((value: string) => {
         if (!pendingInput) return
 
+        // Restore Ink state to before the Continue() that consumed the input tag.
+        // Then set the variable so Continue() replays with the correct value
+        // (e.g. "Bienvenido {nombre}" renders correctly instead of empty).
+        inputReplayingRef.current = true
+        restoreInputState()
         setGlobalVariable(pendingInput.varName, value)
         setPendingInput(null)
 
-        // Resume story after input
+        // Resume story — Continue() replays and now evaluates the variable correctly
         if (continueStoryRef.current) {
             continueStoryRef.current()
         }
-    }, [pendingInput, setGlobalVariable])
+        inputReplayingRef.current = false
+    }, [pendingInput, setGlobalVariable, restoreInputState])
+
+    // ==================
+    // Chapter Break System
+    // ==================
+    const [chapterBreak, setChapterBreak] = useState<{
+        title: string;
+        subtitle?: string;
+        image?: string;
+        _key: number;
+    } | null>(null)
+    // Cooldown after chapter break dismiss — keeps keyboard nav disabled
+    // so spamming spacebar doesn't skip through post-break content
+    const [chapterBreakCooldown, setChapterBreakCooldown] = useState(false)
 
     // Scroll container ref (shared with Player for scroll manipulation)
     const scrollContainerRef = useRef<HTMLElement | null>(null)
@@ -100,6 +122,55 @@ export function useBardoEngine({
         musicVolume: getMusicVolume(),
     })
     const { playSfx, playMusic, stopMusic, stopAll: stopAllAudio } = audio
+
+    // Chapter Break handlers (after audio init)
+    // Counter to track break identity — used to detect if continueStory triggered a new break
+    const chapterBreakCountRef = useRef(0)
+    // True when CHAPTER_BREAK arrived in the same processStoryLoop batch as text content.
+    // On dismiss, skip continueStory — the text is already loaded behind the overlay.
+    const chapterBreakHasTextRef = useRef(false)
+
+    const handleChapterBreak = useCallback((config: { title: string, subtitle?: string, image?: string, music?: string }) => {
+        const resolvedImage = config.image
+            ? (config.image.startsWith('/') || config.image.startsWith('http')
+                ? config.image
+                : `/games/${storyId}/${config.image}`)
+            : undefined
+
+        if (config.music) {
+            playMusic(config.music)
+        }
+
+        chapterBreakCountRef.current += 1
+        setChapterBreak({
+            title: config.title,
+            subtitle: config.subtitle,
+            image: resolvedImage,
+            _key: chapterBreakCountRef.current,
+        })
+    }, [storyId, playMusic])
+
+    const dismissChapterBreak = useCallback(() => {
+        setChapterBreakCooldown(true)
+        const countAtDismiss = chapterBreakCountRef.current
+
+        if (chapterBreakHasTextRef.current) {
+            // Text is already loaded behind the overlay (same batch as CHAPTER_BREAK).
+            // Just remove the overlay — player will see the text that's already set.
+            setChapterBreak(null)
+            setTimeout(() => setChapterBreakCooldown(false), 400)
+        } else {
+            // No text behind overlay (deferred break) — advance the story.
+            if (continueStoryRef.current) continueStoryRef.current()
+            if (chapterBreakCountRef.current !== countAtDismiss) {
+                // continueStory triggered another break — overlay re-mounts with new _key.
+                setTimeout(() => setChapterBreakCooldown(false), 400)
+            } else {
+                setChapterBreak(null)
+                setTimeout(() => setChapterBreakCooldown(false), 400)
+            }
+        }
+    }, [])
 
     // VFX system
     const vfx = useVFX(
@@ -137,38 +208,59 @@ export function useBardoEngine({
 
     // Ref to break circular dependency
     const continueStoryRef = useRef<(() => void) | null>(null)
+    // Pending flag: set by handleMinigameResult, consumed by useEffect after isPlaying→false
+    const pendingMinigameResultRef = useRef(false)
+    // Captures minigame config (including result knot) for use in handleMinigameResult.
+    // Set during render from minigameController.config, read synchronously in the callback.
+    const minigameConfigRef = useRef<any>(null)
 
-    // Result commit handler
+    // Deferred CHAPTER_BREAK tags — when a pagination tag (# next) and CHAPTER_BREAK
+    // co-occur in the same Continue() batch, we defer the break to the next continueStory() call
+    // so the player can read the current text first.
+    const pendingChapterBreakTagsRef = useRef<string[]>([])
+
+    // Result commit handler.
+    // Uses ChoosePathString to jump directly to the result knot (from the MINIGAME tag's
+    // `result=` param). This is deterministic — doesn't depend on where Continue() stopped.
     const handleMinigameResult = useCallback((result: boolean | number) => {
         if (!storyRef.current) return
 
         const numericResult = (result === true || result === 1) ? 1 : 0
-        console.log(`[Ink Bridge] Committing result: ${numericResult}`)
-
-        // Restore Ink state to before the Continue() that produced the MINIGAME tag.
-        // inkjs evaluates diverts and conditionals inside a single Continue() call,
-        // so by the time we detect the tag, Ink has already branched on minigame_result=-1.
-        // Restoring the snapshot lets the conditional re-evaluate with the correct value.
-        const restored = restoreMinigameState()
+        console.log(`[Ink Bridge] Committing minigame result: ${numericResult}`)
 
         setGlobalVariable("minigame_result", numericResult)
-        const verified = getGlobalVariable("minigame_result")
-        console.log(`[Ink Bridge] Verified value in Ink: ${verified}`)
 
-        if (restored && storyRef.current) {
-            // Advance past the MINIGAME tag line so continueStory() doesn't re-trigger it.
-            // This single Continue() re-processes the knot (now with the correct result),
-            // following the divert and conditional into the right branch.
-            storyRef.current.Continue()
+        // Jump to the result knot so the conditional evaluates with the correct value.
+        const resultKnot = minigameConfigRef.current?.params?.result
+        if (resultKnot) {
+            try {
+                storyRef.current.ChoosePathString(resultKnot)
+                console.log(`[Ink Bridge] Jumped to result knot: ${resultKnot}`)
+            } catch (e) {
+                console.error(`[Ink Bridge] Failed to jump to ${resultKnot}:`, e)
+            }
+        } else {
+            console.warn('[Ink Bridge] No result= param on MINIGAME tag — story may not evaluate correctly')
         }
 
-        // Auto-continue after minigame
-        if (continueStoryRef.current) {
-            continueStoryRef.current()
-        }
-    }, [setGlobalVariable, getGlobalVariable, restoreMinigameState])
+        // Signal the useEffect below to call continueStory() once isPlaying is false.
+        pendingMinigameResultRef.current = true
+    }, [setGlobalVariable])
 
     const minigameController = useMinigameController(handleMinigameResult)
+
+    // Keep minigame config ref in sync (read by handleMinigameResult)
+    minigameConfigRef.current = minigameController.config
+
+    // Fire continueStory() after React re-renders with isPlaying=false.
+    // The story is now positioned at the result knot via ChoosePathString,
+    // so Continue() evaluates the conditional with the correct minigame_result.
+    useEffect(() => {
+        if (!minigameController.isPlaying && pendingMinigameResultRef.current) {
+            pendingMinigameResultRef.current = false
+            if (continueStoryRef.current) continueStoryRef.current()
+        }
+    }, [minigameController.isPlaying])
 
     // ==================
     // Parallel Willpower System
@@ -512,6 +604,7 @@ export function useBardoEngine({
         onBossStop: handleBossStop,
         onVisualDamage: handleVisualDamage,
         onGenjutsuBreak: handleGenjutsuBreak,
+        onChapterBreak: handleChapterBreak,
     })
 
     // ==================
@@ -520,11 +613,74 @@ export function useBardoEngine({
 
     // Wrapped continue function that coordinates systems
     const continueStory = useCallback(() => {
-        if (!story || minigameController.isPlaying) return
+        if (!story || minigameController.isPlaying || minigameController.config) return
+
+        // Fire deferred CHAPTER_BREAK from previous beat (player read the text, now show the overlay)
+        const pendingTags = pendingChapterBreakTagsRef.current
+        if (pendingTags.length > 0) {
+            pendingChapterBreakTagsRef.current = []
+            chapterBreakHasTextRef.current = false  // deferred break — no text behind overlay
+            processTags(pendingTags)
+            return
+        }
 
         const { text: newText, tags } = continueStoryState()
 
-        processTags(tags)
+        // When pagination (# next) and CHAPTER_BREAK co-occur in the same Continue() batch,
+        // defer the CHAPTER_BREAK so the player can read the current text first.
+        const hasPagination = tags.some((t: string) => {
+            const tag = t.trim().toLowerCase()
+            return tag === 'next' || tag === 'page' || tag.startsWith('next:') || tag.startsWith('page:')
+        })
+        const chapterBreakTags = tags.filter((t: string) => t.trim().toUpperCase().startsWith('CHAPTER_BREAK:'))
+
+        if (hasPagination && chapterBreakTags.length > 0) {
+            pendingChapterBreakTagsRef.current = chapterBreakTags
+            const filteredTags = tags.filter((t: string) => !t.trim().toUpperCase().startsWith('CHAPTER_BREAK:'))
+            processTags(filteredTags)
+        } else {
+            // Track if CHAPTER_BREAK arrived with text in the same batch
+            if (chapterBreakTags.length > 0) {
+                chapterBreakHasTextRef.current = !!newText.trim()
+            }
+            processTags(tags)
+        }
+
+        // Sync stats from Ink variables to React state (tags update Ink directly, bypassing React)
+        if (gameSystems.statsEnabled && story) {
+            const defs = gameSystems.statsConfig?.definitions || []
+            const syncVars: Record<string, any> = {}
+            defs.forEach((def: any) => {
+                const val = story.variablesState[def.id]
+                if (typeof val === 'number') syncVars[def.id] = val
+            })
+            if (Object.keys(syncVars).length > 0) syncStatsFromVariables(syncVars)
+        }
+
+        // Check zero-stat conditions — read Ink vars directly (React state is still async here)
+        // Only run while story can still progress (prevents re-trigger after death knot redirect)
+        if (gameSystems.statsEnabled && story && story.canContinue) {
+            const defs = gameSystems.statsConfig?.definitions || []
+            const onZero = gameSystems.statsConfig?.onZero || {}
+            for (const def of defs) {
+                if (def.displayType === 'bar' && onZero[def.id]) {
+                    const val = (story.variablesState[def.id] as number) ?? (def.min ?? 0)
+                    if (val <= (def.min ?? 0)) {
+                        const { action, knotName } = onZero[def.id]
+                        if (action === 'end') {
+                            try {
+                                // Redirect to death knot — next continueStory call will process it
+                                // (chapter break + ironic text show properly in the normal flow)
+                                // Loop prevention: story.canContinue = false after muerte's -> END,
+                                // so this check is skipped on subsequent calls automatically.
+                                story.ChoosePathString(knotName || 'game_over')
+                            } catch { /* knot not found — story ends naturally */ }
+                            break
+                        }
+                    }
+                }
+            }
+        }
 
         // Notify spider system that player advanced (resets idle timer)
         if (spiderInfestation.state.infesting) {
@@ -532,12 +688,14 @@ export function useBardoEngine({
         }
 
         // Don't autosave if story just ended (preserves last save before death/ending)
+        // Don't autosave after MINIGAME break — save is past the tag, loading it skips the minigame
         const storyEnded = !story.canContinue && story.currentChoices.length === 0
-        if (storyId && newText && !storyEnded) {
+        const hasMinigameTag = tags.some((t: string) => t.trim().toLowerCase().startsWith('minigame:'))
+        if (storyId && newText && !storyEnded && !hasMinigameTag) {
             // @ts-ignore
             saveSystem.autoSave(story.state.toJson(), newText, gameSystems.exportGameSystems() || undefined, buildParallelSystemsSaveState())
         }
-    }, [story, minigameController.isPlaying, continueStoryState, processTags, spiderInfestation, storyId, saveSystem, gameSystems])
+    }, [story, minigameController.isPlaying, minigameController.config, continueStoryState, processTags, spiderInfestation, storyId, saveSystem, gameSystems])
 
     // Debug spawn wrapper — sets variables, jumps to knot, processes tags
     const spawnAtKnot = useCallback((knotName: string, variables: Record<string, any> = {}) => {
@@ -564,7 +722,28 @@ export function useBardoEngine({
         }
 
         syncStatsFromVariables(variables)
-    }, [story, setGlobalVariable, gameSystems])
+
+        // Check zero-stat conditions — read Ink vars directly
+        if (gameSystems.statsEnabled && story && story.canContinue) {
+            const defs = gameSystems.statsConfig?.definitions || []
+            const onZero = gameSystems.statsConfig?.onZero || {}
+            for (const def of defs) {
+                if (def.displayType === 'bar' && onZero[def.id]) {
+                    const val = (story.variablesState[def.id] as number) ?? (def.min ?? 0)
+                    if (val <= (def.min ?? 0)) {
+                        const { action, knotName } = onZero[def.id]
+                        if (action === 'end') {
+                            try {
+                                const { tags: deathTags } = rawSpawnAtKnot(knotName || 'game_over')
+                                processTags(deathTags)
+                            } catch { /* knot not found */ }
+                            break
+                        }
+                    }
+                }
+            }
+        }
+    }, [story, setGlobalVariable, gameSystems, rawSpawnAtKnot])
 
     // Helper: sync changed variables to useStats React state if they match stat IDs
     function syncStatsFromVariables(variables: Record<string, any>) {
@@ -637,6 +816,9 @@ export function useBardoEngine({
     // Auto-continue on story init (when no saved text)
     useEffect(() => {
         if (story && !text) {
+            // Don't auto-continue while a chapter break overlay is active
+            if (chapterBreak) return
+
             // If already ended (e.g. short story or error), don't continue
             if (isEnded) return
 
@@ -645,7 +827,7 @@ export function useBardoEngine({
 
             continueStory()
         }
-    }, [story, text, isEnded, canContinue, choices.length, continueStory])
+    }, [story, text, isEnded, canContinue, choices.length, continueStory, chapterBreak])
 
     // ==================
     // Actions
@@ -687,6 +869,12 @@ export function useBardoEngine({
 
         // makeChoiceState updates history internally
         const { text: newText, tags } = makeChoiceState(index)
+
+        // Track if CHAPTER_BREAK arrived with text (same as in continueStory)
+        const chapterBreakTags = tags.filter((t: string) => t.trim().toUpperCase().startsWith('CHAPTER_BREAK:'))
+        if (chapterBreakTags.length > 0) {
+            chapterBreakHasTextRef.current = !!newText.trim()
+        }
 
         processTags(tags)
 
@@ -738,6 +926,9 @@ export function useBardoEngine({
             bossController.actions.stopBoss()
             setGenjutsuBreak(null)
             setGenjutsuTextReady(false)
+            setChapterBreak(null)
+            pendingChapterBreakTagsRef.current = []
+            chapterBreakHasTextRef.current = false
             if (genjutsuReactionTimerRef.current) {
                 clearTimeout(genjutsuReactionTimerRef.current)
                 genjutsuReactionTimerRef.current = null
@@ -760,6 +951,7 @@ export function useBardoEngine({
         bossController.actions.stopBoss()
         setGenjutsuBreak(null)
         setGenjutsuTextReady(false)
+        setChapterBreak(null)
         if (genjutsuReactionTimerRef.current) {
             clearTimeout(genjutsuReactionTimerRef.current)
             genjutsuReactionTimerRef.current = null
@@ -793,6 +985,7 @@ export function useBardoEngine({
         const saveData = saveSystem.loadLastSave()
         if (saveData && storyData) {
             initStory(storyData, saveData.state, saveData.text, saveData.gameSystems)
+            minigameController.reset()  // Clear stale minigame state from previous attempt
             // Restore parallel systems that were active when saved
             const ps = saveData.parallelSystems
             if (ps?.spider) {
@@ -812,12 +1005,13 @@ export function useBardoEngine({
             return saveData
         }
         return null
-    }, [saveSystem, storyData, initStory, spiderInfestation.actions, willpowerActions, setArrebatadosEnabled, setArrebatadosCount, setArrebatadosFuerza])
+    }, [saveSystem, storyData, initStory, minigameController, spiderInfestation.actions, willpowerActions, setArrebatadosEnabled, setArrebatadosCount, setArrebatadosFuerza])
 
     const loadSave = useCallback((saveId: string) => {
         const saveData = saveSystem.loadSave(saveId)
         if (saveData && storyData) {
             initStory(storyData, saveData.state, saveData.text, saveData.gameSystems)
+            minigameController.reset()  // Clear stale minigame state from previous attempt
             // Restore parallel systems that were active when saved
             const ps = saveData.parallelSystems
             if (ps?.spider) {
@@ -837,7 +1031,7 @@ export function useBardoEngine({
             return saveData
         }
         return null
-    }, [saveSystem, storyData, initStory, spiderInfestation.actions, willpowerActions, setArrebatadosEnabled, setArrebatadosCount, setArrebatadosFuerza])
+    }, [saveSystem, storyData, initStory, minigameController, spiderInfestation.actions, willpowerActions, setArrebatadosEnabled, setArrebatadosCount, setArrebatadosFuerza])
 
     const manualSave = useCallback((name: string, overwriteId: string | null = null) => {
         if (!story || !storyId) return
@@ -906,6 +1100,11 @@ export function useBardoEngine({
             breakGenjutsu,
             onTypingComplete: onGenjutsuTypingComplete,
         },
+        chapterBreak: {
+            data: chapterBreak,
+            dismiss: dismissChapterBreak,
+            cooldown: chapterBreakCooldown,
+        },
     }), [
         playSfx, playMusic, stopMusic, stopAllAudio,
         vfxState, triggerVFX, clearVFX,
@@ -913,7 +1112,8 @@ export function useBardoEngine({
         willpowerState, willpowerActions,
         spiderInfestation,
         scrollFriction, bossController.state, bossController.actions, handleBossPhaseComplete, handleBossPlayerDeath, visualDamage,
-        genjutsuBreak, genjutsuActive, breakGenjutsu, onGenjutsuTypingComplete
+        genjutsuBreak, genjutsuActive, breakGenjutsu, onGenjutsuTypingComplete,
+        chapterBreak, dismissChapterBreak, chapterBreakCooldown
     ])
 
     const gameVersion = gameSystems.config?.version || '0.0.0'

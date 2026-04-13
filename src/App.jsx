@@ -18,13 +18,14 @@ import DebugSpawnModal from './components/DebugSpawnModal'
 import HorrorVFXLayer from './components/HorrorVFXLayer'
 import WillpowerMeter from './components/WillpowerMeter'
 import SpiderOverlay from './components/SpiderOverlay'
+import ChapterBreakOverlay from './components/ChapterBreakOverlay'
 import { useHeavyCursor } from './hooks/useHeavyCursor'
 import { useStoryLoader } from './hooks/useStoryLoader'
 import { useBardoEngine } from './hooks/useBardoEngine'
 import { processChoiceRequirements } from './utils/choiceRequirements'
 import { getDominantStat } from './utils/getDominantStat'
 import { SettingsProvider, useSettings } from './hooks/useSettings'
-import { useIsMobile } from './hooks/useMediaQuery'
+import { useIsMobile, useIsNarrowViewport } from './hooks/useMediaQuery'
 
 const BardoEditor = React.lazy(() => import('./editor/BardoEditor'))
 
@@ -57,6 +58,7 @@ function AppContent({ onStorySelect }) {
 
     // Mobile detection
     const isMobile = useIsMobile()
+    const isNarrowViewport = useIsNarrowViewport()
 
     // Screen state (NOT delegated to hook - UI concerns)
     const [selectedStory, setSelectedStory] = useState(null)
@@ -157,7 +159,7 @@ function AppContent({ onStorySelect }) {
         story, text, choices, canContinue, continueLabel, isEnded, history,
         actions, subsystems, config
     } = engine
-    const { audio, vfx, saveSystem, gameSystems, achievementsSystem, minigameController, willpower, spiderInfestation, scrollFriction, bossController, visualDamage, scrollContainerRef, genjutsu } = subsystems
+    const { audio, vfx, saveSystem, gameSystems, achievementsSystem, minigameController, willpower, spiderInfestation, scrollFriction, bossController, visualDamage, scrollContainerRef, genjutsu, chapterBreak } = subsystems
 
     // Keep debug unlocked in sync with dev mode
     useEffect(() => {
@@ -319,6 +321,7 @@ function AppContent({ onStorySelect }) {
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
+            if (chapterBreak?.data) return
             if (e.key.toLowerCase() === 'o') {
                 e.preventDefault()
                 setOptionsOpen(prev => !prev)
@@ -334,7 +337,7 @@ function AppContent({ onStorySelect }) {
         }
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [story])
+    }, [story, chapterBreak])
 
     // ==================
     // Screen Logic
@@ -422,7 +425,7 @@ function AppContent({ onStorySelect }) {
                             ? story?.variablesState?.[gameSystems.statsConfig.chapterVariable] || ''
                             : null
                     }
-                    isMobile={isMobile}
+                    isMobile={isMobile || isNarrowViewport}
                 />
             )}
 
@@ -523,7 +526,7 @@ function AppContent({ onStorySelect }) {
                     onExtras={() => setExtrasOpen(true)}
                     onOpenEditor={null} // Removed: editor only from main selector
                     onBack={!isProductionMode ? backToStorySelector : null}
-                    onCheatCode={() => setDebugUnlocked(true)}
+                    onCheatCode={() => { setDebugUnlocked(true); achievementsSystem.unlockAllAchievements() }}
                     gameVersion={config.gameVersion}
                 />
             )}
@@ -555,6 +558,7 @@ function AppContent({ onStorySelect }) {
                     autoAdvanceDelay={settings.autoAdvanceDelay}
                     // Minigame integration
                     isMinigameActive={minigameController.isPlaying}
+                    chapterBreakActive={!!chapterBreak?.data || !!chapterBreak?.cooldown}
                     hasPendingMinigame={minigameController.isPending}
                     onMinigameReady={actions.handleMinigameStart}
                     minigameAutoStart={minigameController.config?.autoStart}
@@ -567,9 +571,12 @@ function AppContent({ onStorySelect }) {
                     onChoicesVisibleChange={setChoicesVisible}
                     // Notify when the willpower mashing hint starts typing
                     onWillpowerHintVisible={() => setMeterRevealed(true)}
-                    // Mobile layout props
+                    // Layout props
                     isMobile={isMobile}
-                    headerStatsProps={isMobile && gameSystems.statsConfig?.enabled ? {
+                    hasDesktopStatsPanel={!isMobile && !isNarrowViewport && gameSystems.statsConfig?.enabled &&
+                        (!gameSystems.statsConfig.playerNameVariable ||
+                         !!story?.variablesState?.[gameSystems.statsConfig.playerNameVariable])}
+                    headerStatsProps={(isMobile || isNarrowViewport) && gameSystems.statsConfig?.enabled ? {
                         stats: gameSystems.stats,
                         statsConfig: gameSystems.statsConfig,
                         getAllStatsInfo: gameSystems.getAllStatsInfo
@@ -637,6 +644,16 @@ function AppContent({ onStorySelect }) {
                 placeholder={subsystems.input.pendingInput?.placeholder}
                 label={subsystems.input.pendingInput?.label}
                 onCommit={subsystems.input.commitInput}
+            />
+
+            {/* Chapter Break Overlay */}
+            <ChapterBreakOverlay
+                key={chapterBreak?.data?._key || 'none'}
+                isOpen={!!chapterBreak?.data}
+                title={chapterBreak?.data?.title || ''}
+                subtitle={chapterBreak?.data?.subtitle}
+                image={chapterBreak?.data?.image}
+                onDismiss={chapterBreak?.dismiss}
             />
 
             {/* Debug Spawn Button */}

@@ -22,7 +22,7 @@ export interface UseStoryStateReturn {
     makeChoice: (index: number) => { text: string; tags: string[] };
     setGlobalVariable: (varName: string, value: any) => void;
     getGlobalVariable: (varName: string) => any;
-    restoreMinigameState: () => boolean;
+    restoreInputState: () => boolean;
     resetStoryState: () => void;
     spawnAtKnot: (knotName: string, variables?: Record<string, any>) => { text: string; tags: string[] };
     getKnotList: () => string[];
@@ -40,23 +40,21 @@ export function useStoryState(): UseStoryStateReturn {
     const [currentTags, setCurrentTags] = useState<string[]>([])
 
     const storyRef = useRef<Story | null>(null)
-    // Snapshot of Ink state from just before the Continue() that produced a MINIGAME tag.
-    // inkjs follows diverts and evaluates conditionals inside a single Continue() call,
-    // so by the time we detect the MINIGAME tag, Ink has already branched on minigame_result
-    // (which is -1 at that point). Restoring this snapshot after the game lets the conditional
-    // re-evaluate with the correct result.
-    const minigameStateSnapshotRef = useRef<string | null>(null)
+    const inputStateSnapshotRef = useRef<string | null>(null)
+    // Flag: when true, processStoryLoop skips the input break (used during commitInput replay)
+    const inputReplayingRef = useRef(false)
 
     // Helper to process story continuation until a stop condition
     const processStoryLoop = useCallback((currentStory: Story) => {
         let fullText = ""
         let hasCriticalError = false
         const allTags: string[] = []
+        let brokeForMinigame = false
         setContinueLabel(null)
 
         try {
             while (currentStory.canContinue) {
-                // Save state BEFORE Continue() — needed for minigame result fix
+                // Save state BEFORE Continue() — needed for input replay
                 const preState = currentStory.state.toJson()
 
                 const nextBatch = currentStory.Continue()
@@ -64,6 +62,18 @@ export function useStoryState(): UseStoryStateReturn {
 
                 fullText += nextBatch + '\n\n'
                 allTags.push(...tags)
+
+                // Break for input — save pre-Continue snapshot so commitInput
+                // can restore and replay Continue() with the variable set.
+                // Skip during replay (inputReplayingRef=true) so we don't re-show the dialog.
+                if (tags.some((t: string) => t.trim().toLowerCase().startsWith('input:'))) {
+                    if (!inputReplayingRef.current) {
+                        inputStateSnapshotRef.current = preState
+                        break
+                    }
+                    // Replaying — clear flag and fall through to pagination/normal processing
+                    inputReplayingRef.current = false
+                }
 
                 // Break for pagination (supports optional label: # next: Open the door)
                 const paginationTag = tags.find((t: string) => {
@@ -77,10 +87,20 @@ export function useStoryState(): UseStoryStateReturn {
                     break
                 }
 
-                // Break for minigame — save the pre-Continue snapshot so handleMinigameResult
-                // can restore it and let the conditional re-evaluate with the correct result
+                // Break for chapter break — pause story loop so overlay displays before next content
+                if (tags.some((t: string) => t.trim().toUpperCase().startsWith('CHAPTER_BREAK:'))) {
+                    break
+                }
+
+                // Break for minigame.
+                // IMPORTANT: inkjs Continue() evaluates the MINIGAME tag AND the result
+                // conditional in a single call (with stale minigame_result), so by this point
+                // the story may already be at END with death text accumulated in fullText.
+                // We keep the text as-is (minigame overlay covers it) and set brokeForMinigame
+                // so isEnded stays false. handleMinigameResult uses ChoosePathString to jump
+                // to the result knot after the game, then continueStory replaces the text.
                 if (tags.some((t: string) => t.trim().toLowerCase().startsWith('minigame:'))) {
-                    minigameStateSnapshotRef.current = preState
+                    brokeForMinigame = true
                     break
                 }
             }
@@ -92,13 +112,15 @@ export function useStoryState(): UseStoryStateReturn {
 
         const trimmedText = fullText.trim()
 
-        console.log(`[StoryState] processed loop. Text len: ${trimmedText.length}. Choices: ${currentStory.currentChoices.length}. CanContinue: ${currentStory.canContinue}`)
+        console.log(`[StoryState] processed loop. Text len: ${trimmedText.length}. Choices: ${currentStory.currentChoices.length}. CanContinue: ${currentStory.canContinue}. MinigamePending: ${brokeForMinigame}`)
 
         // Update state
         setText(trimmedText)
         setChoices(hasCriticalError ? [] : [...currentStory.currentChoices])
-        setCanContinue(hasCriticalError ? false : currentStory.canContinue)
-        setIsEnded(hasCriticalError || (!currentStory.canContinue && currentStory.currentChoices.length === 0))
+        // If minigame is pending, don't expose the stale canContinue/isEnded from the
+        // conditional that evaluated with wrong minigame_result. The minigame must play first.
+        setCanContinue(hasCriticalError ? false : (brokeForMinigame ? false : currentStory.canContinue))
+        setIsEnded(hasCriticalError || (brokeForMinigame ? false : (!currentStory.canContinue && currentStory.currentChoices.length === 0)))
         setCurrentTags(allTags)
 
         // Add to history if there is text
@@ -190,18 +212,20 @@ export function useStoryState(): UseStoryStateReturn {
         }
     }, [])
 
-    // Restore Ink state to just before the Continue() that produced the MINIGAME tag.
-    // This lets the conditional (e.g. { minigame_result: - 1: -> exito }) re-evaluate
-    // with the correct value instead of the stale -1 from the initial Continue().
-    const restoreMinigameState = useCallback(() => {
-        const snapshot = minigameStateSnapshotRef.current
+    // Restore Ink state to just before the Continue() that produced the INPUT tag.
+    // This lets Continue() replay with the variable set, so text like
+    // "Bienvenido {nombre}" renders correctly instead of with an empty variable.
+    const restoreInputState = useCallback(() => {
+        const snapshot = inputStateSnapshotRef.current
         if (!snapshot || !storyRef.current) return false
         try {
             storyRef.current.state.LoadJson(snapshot)
-            minigameStateSnapshotRef.current = null
+            inputStateSnapshotRef.current = null
+            // Set replay flag so processStoryLoop skips the input break on next run
+            inputReplayingRef.current = true
             return true
         } catch (e) {
-            console.warn('[StoryState] Failed to restore minigame state snapshot:', e)
+            console.warn('[StoryState] Failed to restore input state snapshot:', e)
             return false
         }
     }, [])
@@ -297,7 +321,7 @@ export function useStoryState(): UseStoryStateReturn {
         makeChoice,
         setGlobalVariable,
         getGlobalVariable,
-        restoreMinigameState,
+        restoreInputState,
         resetStoryState,
         spawnAtKnot,
         getKnotList,
@@ -316,7 +340,7 @@ export function useStoryState(): UseStoryStateReturn {
         makeChoice,
         setGlobalVariable,
         getGlobalVariable,
-        restoreMinigameState,
+        restoreInputState,
         resetStoryState,
         spawnAtKnot,
         getKnotList,

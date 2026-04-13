@@ -14,7 +14,7 @@ export interface StatDefinition {
 export interface StatsConfig {
     enabled: boolean;
     definitions: StatDefinition[];
-    onZero?: Record<string, { action: string; [key: string]: any }>;
+    onZero?: Record<string, { action: string; knotName?: string; message?: string; [key: string]: any }>;
 }
 
 export interface GameConfigWithStats {

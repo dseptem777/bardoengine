@@ -1,5 +1,133 @@
 # Changelog — Centinelas del Sur
 
+## [0.15.0] — 2026-04-11
+
+### Feat: 21 nuevos achievements + imágenes
+
+**Nuevos achievements:**
+- `primer_caso` — primer cadáver examinado
+- `elegir_orfanato` — decisión del orfanato en Cap 1
+- `conociste_enriquez`, `conociste_shelley`, `conociste_cabral` — NPCs encontrados
+- `fuiste_tarotista` — consultó la tarotista
+- `juan_salvado` / `juan_muerto` — destino del compañero
+- `alegria_vive` / `alegria_muere` — destino de la madre
+- `ninos_ninguno` / `ninos_mitad` / `ninos_casi_todos` / `ninos_todos_mueren` / `belen_muere` — 5 outcomes del orfanato Cap 2B
+- `morgue_sin_mordisco` — escapó de la morgue sin ser mordido
+- `mordio_profundo` — recibió mordida profunda
+- `cambio_de_bando` — eligió convertirse (muerte lúcida)
+- `cruz_contra_vampiros` — usó la cruz en el ritual
+- `favor_tuco` — usó el favor del Tuco
+- `caer_en_cana` — terminó en la comisaría
+- `gano_willpower` — escapó del vampiro con willpower
+
+**Imágenes:** 26 badges JPEG agregados a `public/games/centinelas/achievements/` — todos los achievements tienen imagen pixel art
+
+---
+
+## [0.14.6] — 2026-04-11
+
+### Fix: arañas cap 2a
+- SPIDER_START movido de `cueva_entrada` a `boveda` — el minigame ahora arranca en el nido (bóveda con capullos), no al entrar a la cueva
+- Dificultad inicial cambiada de `slow` a `normal`
+
+---
+
+## [0.14.5] — 2026-04-11
+
+### Fix: param `result=` en tags MINIGAME
+- `keymash_arrastre` y `apnea_escondite`: agregado `result=<knot>` al tag MINIGAME — el engine necesita este param para saltar al knot correcto al terminar el minigame. Sin él, CONTINUAR después de morir llevaba directo a muerte sin replay del minigame.
+
+---
+
+## [0.14.4] — 2026-04-08
+
+### Fix: muerte por hp = 0
+- Agregado `VAR hp = 100` (renombrado desde `VAR salud`) — los tags `# stat:hp:` ahora escriben correctamente a la variable Ink
+- Agregado `onZero.hp` en `centinelas.config.json` → salta al knot `muerte` al llegar a 0
+- Nuevo knot `=== muerte ===` con CHAPTER_BREAK (`muerte.jpg`) y 6 textos irónicos en shuffle
+- Imagen `public/games/centinelas/muerte.jpg` agregada
+
+---
+
+## [0.14.3] — 2026-04-07
+
+### Fix: Pantalla "Elige tu misión" eliminada
+- Se removió el CHAPTER_BREAK de `inter_misiones` — la decisión de misión queda directa en el flujo narrativo sin pantalla intermedia
+
+---
+
+## [0.14.2] — 2026-04-07
+
+### Fix: Pregunta sobre computadoras en hall_central (Cap. 1)
+- El reto de Enríquez por llegar temprano ahora es condicional (`entrada_temprana`); ya no se muestra si el jugador esperó la hora pactada
+- La explicación del incidente del 2007 (por qué no usan computadoras) se mueve fuera del condicional y siempre aparece al hacer la pregunta
+- Se agrega rama `else` con reacción neutra de Enríquez para el camino puntual
+
+---
+
+## [0.14.1] — 2026-04-07
+
+### Fix: Hub investigación casa Cap 2B
+- El texto introductorio y "¿Qué hay que ver primero?" solo aparecen en la primera visita al hub; las vueltas muestran "¿Y ahora a dónde?"
+
+---
+
+## [0.13.1] — 2026-04-06
+
+### Fix: Imágenes de title breaks
+- Imágenes de chapter break convertidas de `.png` a `.jpg` (`title_magia`, `title_fuerza`, `title_conocimiento`, `title`)
+- Agregadas imágenes para Cap 1 (`title_cap1_cadaver.jpg`) y Cap 2A (`title_cap2a_inocentes.jpg`)
+- Referencias actualizadas en `centinelas.ink` y `centinelas.config.json`
+
+---
+
+## [0.13.0] — 2026-04-05
+
+### Feature: Intermisión 2
+- **Hub post-cap2**: nueva intermisión con intro narrativa (insomnio, pesadillas, preocupación por la Secta) y 5 opciones de actividad
+- **inter2_playa**: encuentro con el mar hostil — ola gigante, el mar te rechaza
+- **inter2_tarot**: farolas que parpadean → casa de tarotista vacía → sobre con mensaje meta-demo (4th wall)
+- **inter2_enfermeria**: Mary Shelley y sustancia orgánica restauradora experimental (`hp +5`)
+- **inter2_abuelita**: cacería de súcubo con la Abuelita septuagenaria — 3 sub-ramas:
+  - **Cocina** (entrada trasera): empleado indiferente, pista de baile, seducción del súcubo, check `fuerza >= 20` / `conocimiento >= 25` lore → `amistad_abuela +2`
+  - **Escándalo**: histeria de multitud, policía, fracasan y alertan a la presa → `amistad_abuela +0`
+  - **Banda "Vieja Loca"** (con una sola S): guardia los deja pasar, escenario, abuelita recita poesía sensual, check `conocimiento >= 20` para el bajo → `amistad_abuela +2`
+- **inter2_siguiente**: mission gate con CHAPTER_BREAK hacia Capítulo 3
+- **capitulo_3**: placeholder "PRÓXIMAMENTE — El Museo de Historia de Costa Alegre"
+- **Routing**: cap2a y cap2b_epilogo ahora fluyen a `intermision_2` en lugar de `-> END`
+- **amistad_abuela**: nuevo stat relationship (max 6, color púrpura `#a855f7`)
+
+---
+
+## [0.12.2] — 2026-04-05
+
+### Fix: Eliminación de QTEs de la rama vampiro
+- Eliminados los 2 QTE de la rama del vampiro (Cap 2B) — no aptos para mobile, sin lugar narrativo
+- Agregado texto de transición en `cap2b_trampa_liberar`: el jugador ya tenía la estaca lista cuando liberó el círculo
+
+---
+
+## [0.12.1] — 2026-04-04
+
+### Fix: Music tags
+- `ciudad_ambient` → `city_ambient`
+- `orfanato_ambient` → `orfanato`
+- `cueva_ambient` → `cueva_arañas`
+
+---
+
+## [0.12.0] — 2026-04-04
+
+### Feature: Chapter Breaks + Imágenes de Habitación + Soundtrack
+- **Chapter Break en Intermisión 1**: CHAPTER_BREAK tag con imagen dinámica según origen × trauma × stat dominante (12 variantes: `hab_magia`, `hab_fuerza`, `hab_conocimiento` × normal/trauma/max/max_trauma)
+- **Chapter Break en Capítulo 1**: `# CHAPTER_BREAK: title=Un Cadáver Sin Nombre, subtitle=Capítulo 1, image=city.jpg, music=city_ambient`
+- **Chapter Break en Capítulo 2A**: `# CHAPTER_BREAK: title=Pequeños Inocentes, subtitle=Capítulo 2A, ...`
+- **Chapter Break en Capítulo 2B**: `# CHAPTER_BREAK: title=El Nuevo Amanecer, subtitle=Capítulo 2B, ...`
+- **Soundtrack completo**: 16 tracks asignados a knots en todo el juego (`city_ambient`, `escuela_ambient`, `horror_ambient`, `playa_ambient`, `rave_electronic`, `tension_drone`, etc.)
+- **Achievement tag**: `# achievement:unlock:nuevo_amanecer` en la entrada al Capítulo 2B
+
+---
+
 ## [0.11.0] — 2026-03-31
 
 ### Feature: Genjutsu Vampírico (Cap 2B)

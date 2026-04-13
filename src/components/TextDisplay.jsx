@@ -105,8 +105,11 @@ function GenjutsuFisura({ text, willpowerValue, stat, onClick }) {
         return () => cancelAnimationFrame(id)
     }, [])
 
-    const style = active ? getFisuraAnimStyle(willpowerValue, stat) : { cursor: 'inherit' }
-    return <span style={style} onClick={onClick}>{text}</span>
+    const t = Math.max(0, Math.min(1, (80 - willpowerValue) / 65))
+    const opacity = 0.1 + 0.9 * t
+    const animStyle = active ? getFisuraAnimStyle(willpowerValue, stat) : {}
+    const style = { opacity, cursor: 'inherit', ...animStyle }
+    return <span data-testid="genjutsu-break" style={style} onClick={onClick}>{text}</span>
 }
 
 export default function TextDisplay({
@@ -351,7 +354,6 @@ export default function TextDisplay({
                         <p
                             key={i}
                             data-paragraph-index={i}
-                            data-testid={hasFisura ? 'genjutsu-break' : undefined}
                             className={`font-narrative ${fontSizeClass} leading-relaxed text-bardo-text`}
                         >
                             {hasFisura ? (
