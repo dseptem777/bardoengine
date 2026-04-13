@@ -77,8 +77,11 @@ export default function AchievementToast({ achievement, onDismiss, playSound }) 
                     >
                         {/* Achievement Icon */}
                         <div className="flex-shrink-0 w-14 h-14 flex items-center justify-center
-                                        bg-bardo-accent/20 rounded-full border border-bardo-accent/40">
-                            <span className="text-3xl">{displayedAchievement.icon || '🏆'}</span>
+                                        bg-bardo-accent/20 rounded-full border border-bardo-accent/40 overflow-hidden">
+                            {displayedAchievement.image
+                                ? <img src={displayedAchievement.image} alt={displayedAchievement.title} className="w-full h-full object-cover" />
+                                : <span className="text-3xl">{displayedAchievement.icon || '🏆'}</span>
+                            }
                         </div>
 
                         {/* Text Content */}

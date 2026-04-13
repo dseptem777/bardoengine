@@ -669,6 +669,7 @@ Tu primera misión. Sacrificios humanos, cadáveres, figuras misteriosas. ¿Est�
 + [Visitar a Mary Shelley (Magia)] -> ayuda_shelley
 
 === ayuda_enriquez ===
+# achievement:unlock:conociste_enriquez
 Antes de salir pasás por su escritorio. Ella sigue tipeando en su máquina de escribir en un claro intento de ignorarte. Cada paso que das, tipea con más fuerza.
 — Perdón — tenés que levantar la voz para ganarle al quejido mecánico de las teclas — Voy a salir a mi primer misión de campo y El Profesor recomendó…
 # next
@@ -685,6 +686,7 @@ Leés sobre la sabiduría de los anteriores Guardianes de El Faro. Aprendés muc
 -> en_la_morgue
 
 === ayuda_cabral ===
+# achievement:unlock:conociste_cabral
 El campo de entrenamiento se encuentra en el subsuelo del edificio. Es una mezcla ecléctica entre un dojo, un gimnasio y un campo de tiro ubicado aún más abajo. Cabral se encuentra de espaldas pero, en cuanto ponés un pie en el dojo, se da cuenta de tu presencia.
 — Bienvenido Guardián. Es tu primera vez en el campo de entrenamiento, así que la tradición dicta que tengamos un sparring amistoso.
 # next
@@ -701,6 +703,7 @@ Cabral te somete a una sesión de entrenamiento completa. Practican un par de go
 -> en_la_morgue
 
 === ayuda_shelley ===
+# achievement:unlock:conociste_shelley
 Antes de abrir la puerta del laboratorio te golpea una mezcla fuerte de olor a desinfectante, propio de cualquier hospital, con una mezcla de hierbas que no podés descifrar pero te parecen más propias de la cocina de una abuela.
 Adentro el cuadro es aún más caótico. Mientras en una esquina tenés equipo médico moderno, en la otra hay cristales y pentagramas. En una de las camillas se encuentra un cuerpo (tapado por una sábana por suerte) y por el bulto que se puede ver, notás que no es algo humano.
 # next
@@ -977,6 +980,7 @@ Todavía no estás a la altura de este enemigo. En este contexto sobrevivir es u
 El ataque es épico. El ataque es valiente. Pero el ataque es inútil. La entidad es más alta que vos, retrocede un poco y sube la cabeza, haciendo que tu ataque rebote contra su mejilla.
 # next
 Entonces te muerde. Durante unos segundos el mundo es un borrón de imágenes y velocidad. Todo tu torso explota de dolor.
+# achievement:unlock:mordio_profundo
 Luego se calma y te encontrás en el piso. Todo está húmedo y sentís lentamente cómo tu cuerpo se empieza a sentir frío y ajeno, como algo sobre lo cual ya no tenés control.
 Estás muriendo. Y en tu primera misión de campo. Deberías sentir vergüenza o indignación pero ya no tenés energías como para sentir algo. Solo sueño…
 # next
@@ -1032,6 +1036,7 @@ MORISTE. FIN DEL JUEGO.
 -> END
 
 === final_morgue_exito ===
+# achievement:unlock:morgue_sin_mordisco
 # music:misterio_ambient
 Entraste al edificio de El Faro y la Sra. Enríquez continuaba sentada en su escritorio tipeando en la máquina de escribir. Dejás la mano del NN sobre su escritorio, que estaba en una bolsa marrón que fue adquiriendo un tono negruzco.
 Enríquez te mira, mira al bulto apestoso que dejaste en su escritorio, y comienza a tipear con más fuerza la máquina de escribir.
@@ -1076,6 +1081,7 @@ Pero esos son problemas para el {nombre_personaje} del futuro. Ahora te toca dor
 -> intermision
 
 === inter_tarot ===
+# achievement:unlock:fuiste_tarotista
 Salís a caminar y te dejás llevar, por el flujo de energías, por las pequeñas señales que hay en todas las ciudades. Cuando hay una bifurcación basta lanzar una moneda al aire para saber por dónde seguir.
 Antes de darte cuenta, estás en la periferia de la ciudad.
 # next
@@ -1131,6 +1137,7 @@ En el piso notás el cadáver de una mujer de unos treinta años, su garganta de
 # next
 Jesús vuelve a su forma humana y mira decepcionado el cadáver a tus pies.
 — Creo que pudimos hacer eso mucho mejor — hay amargura y crítica en sus palabras y, a pesar de que usa el plural, sabés que van dirigidas a vos.
+# achievement:unlock:juan_salvado
 -> inter_misiones
 
 === jesus_distraccion ===
@@ -1148,6 +1155,7 @@ El vampiro es una montaña de polvo en una esquina del galpón (notás que tambi
 La mujer está sentada contra una de las paredes, con un poco de sangre brotando de una herida superficial de un brazo.
 — Bueno, pudo haber salido mejor, pero pudo haber salido mucho peor. Muchas gracias compañero.
 # stat:amistad_jesus:+1
+# achievement:unlock:juan_salvado
 -> inter_misiones
 
 === jesus_sigilo ===
@@ -1165,6 +1173,7 @@ La mujer grita cuando la tackleás e inmovilizás en el suelo. Atrás tuyo se es
 La mujer patalea, llora y te araña. Te promete la muerte de formas horribles mientras se retuerce en su llanto. El síndrome de abstinencia va a ser horrible pero está viva. Y eso siempre es una promesa de futuro.
 — Lo logramos — Jesús aparece atrás tuyo de forma humana — gracias Guardián, nunca olvidaré esto.
 # stat:amistad_jesus:+2
+# achievement:unlock:juan_salvado
 -> inter_misiones
 
 === inter_enfermeria ===
@@ -1254,6 +1263,7 @@ La tarea bajó por la cadena de mando de El Faro hasta llegar al encargado de ha
 // =========================================================
 
 === frente_orfanato ===
+# achievement:unlock:elegir_orfanato
 # next: Frente a la entrada del orfanato
 # music:orfanato
 El predio del Orfanato era gigante, rodeado por un muro de más de dos metros. Si bien no era tan sorprendente para mí, sin duda era una barrera infranqueable para un niño.
@@ -1911,7 +1921,8 @@ Los minutos dejan de tener sentido y el tiempo se cuenta solamente en las compre
 }
 # next
 { not llego_a_tiempo:
-    Pero no pasa nada. Llegaste tarde y Juan esta muerto. Por el borde de tus ojos ves brillos entre la oscuridad. Las arañas viéndote fallar. Si bien su forma de pensar debe ser considerablemente alienígena (al fin y al cabo son demonios y eligieron forma de araña), de cierta forma sentís que se burlan de tu fracaso.
+    Pero no pasa nada. Llegaste tarde y Juan esta muerto. Por el borde de tus ojos ves brillos entre la oscuridad.
+    # achievement:unlock:juan_muerto Las arañas viéndote fallar. Si bien su forma de pensar debe ser considerablemente alienígena (al fin y al cabo son demonios y eligieron forma de araña), de cierta forma sentís que se burlan de tu fracaso.
     Te cargas el cuerpo de Juan, te sorprende lo poco que pesa su cuerpo. Frágil y liviano, no entendes como hay gente que le puede hacer daño a los niños. Al menos te vas a asegurar que tenga un entierro decente.
 - else:
     ~ juan_vive = true
@@ -2009,6 +2020,7 @@ Te das cuenta en cuestión de segundos que las arañas pequeñas (contextualment
 
 === no_ayudar_madre ===
 ~ madre_alegria_vive = false
+# achievement:unlock:alegria_muere
 La Madre Alegría grita dia veces, la primera cuando una araña la muerde en la pantorrilla y la segunda cuando el golpe la hace caer de rodillas. Rápidamente es superada. Cuatro arañas les clavan sus colmillos, una en cada extremidad. Las arañas comienzan a moverse y subir por una de las paredes, dejando atrás un rastro de sangre. Aún así la Madre Alegría no grita más, se limita a repetir una plegaria en latín.
 En cuestión de segundos las arañas están caminando por el techo, haciendo colgar su cuerpo en el vacío. De repente todas las arañas de ponen a tirar a la vez.
 # flash_red
@@ -2193,12 +2205,14 @@ Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tom
 { ninos_capilla:
     Abrís la puerta de la capilla y todos los niños están ahí, sin un rasguño, a los pies de una estatua de Santa Inés. La Capilla funcionó
     Belén se acerca y te abraza. Luego todos los niños la siguen
+    # achievement:unlock:ninos_ninguno
 - else:
     { ninos_habitacion:
         Cuando subis al primer piso tu corazón da un vuelco. La puerta de una de las habitaciones fue arrancada de su marco, tirada por telas de arañas.
         Entras y ves a los chicos amontonados en una esquina, llorando. En el centro de la habitación están los cadáveres de 3 arañas…y de más de diez chicos.
         Los dejaste a su suerte e hicieron lo mejor que pudieron.
         Belén, en la esquina de la habitación y te mira con odio en la mirada.
+        # achievement:unlock:ninos_mitad
     }
     { ninos_cocina:
         Abris la puerta de la cocina, pasando por arriba del cadáver de una araña que ni recordas haber matado.
@@ -2206,18 +2220,25 @@ Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tom
         Tiras el cadáver del animal al costado, con la misma sutileza que le darías a una bolsa de basura.
         Los niños salen, ilesos, de sus escondites debajo de las mesas o dentro de los cajones.
         Belén se acerca y le dan un beso en la frente a la hermana que se sacrificó por ellos. El resto de los chicos la imitan
+        # achievement:unlock:ninos_ninguno
     }
     { ninos_pelear:
         Recorres el campo de batalla y es un paisaje de pesadilla. Dantesco. Mas allá de cualquier adjetivo.
         Pedazos de cuerpos de niños juntos a pedazos de arañas, como un rompecabezas morboso. Niños sin cabeza, niños arrastrados por los techos dejando tras de si un rastro de sangre arterial. Ese fue tu ejército
         Encontrás a Belén casi al final, muerta al lago de y araña a la cual le rompió la cabeza con una lámpara. Al principio dudas, tal vez esta desmayada. No se notan heridas
         Eso hasta que giras su cuerpo y notas que, donde debería estar la espalda, hay solo sangre y horror.
+        # achievement:unlock:belen_muere
+        # achievement:unlock:ninos_todos_mueren
     }
     { ninos_huir:
         Recorres el bosque. El camino a la puerta de salida está marcado por niños muertos y redes de tela de araña. Fue una masacre. Sus piernitas no le podían ganar nunca a las arañas.
         Al final, todavía agarrada al portón, está Belén.
         Le gritas pero no te contesta. Los dedos de su mano están rojos del esfuerzo y, a pesar de que lo intentas, no suelta el portón. No te responde y sus ojos miran sin mirar, perdidos en los horrores que queman su memoria
+        # achievement:unlock:ninos_casi_todos
     }
+}
+{ madre_alegria_vive:
+    # achievement:unlock:alegria_vive
 }
 
 FIN DEL EPISODIO.
@@ -2480,6 +2501,7 @@ Notás, al lado de la cama, un sacaleche y unas mamaderas. ¿También había un 
 // ---------------------------------------------------------
 
 === cap2b_araca_la_cana ===
+# achievement:unlock:caer_en_cana
 Tus pensamientos son interrumpidos por una serie de ruidos que vienen de la calle. Coches parando en la puerta de la casa y voces de hombres toscas y violentas. Acostumbrados a dar órdenes y respaldar sus palabras con acero. Podrían ser criminales pero al escuchar que se saludan usando rangos, te das cuenta de que es la policía.
 Seguramente están viniendo a profundizar su investigación de la escena de crimen. Tus pesquisas ya terminaron, esperás tener suficiente información para continuar con el caso.
 Ahora lo importante es ver cómo hacer para salir de la casa sin que te vean.
@@ -2594,6 +2616,7 @@ Pedís tu llamada. Esperás que se nieguen y estás preparando tus argumentos cu
 # next
 No pasan ni cinco minutos desde que cortás. En cuanto llegás a la celda ya vienen a buscarte. Sin mucho preámbulo un policía colorado se acerca, abre la celda, y con un gesto de la cabeza te indica que vayas para la calle.
 ~ uso_favor_tuco = true
+# achievement:unlock:favor_tuco
 # inv:remove:favor_tuco
 -> cap2b_en_la_calle
 
@@ -3025,6 +3048,7 @@ Al final estás flotando. En un mar rojizo con un oleaje cada vez más tranquilo
 # WILLPOWER_STOP
 # MOUSE_RESISTANCE: none
 # UI_EFFECT: none
+# achievement:unlock:gano_willpower
 # flash_white
 # shake
 Usás toda tu concentración para volver a sentir tu brazo derecho. Se siente torpe y entumecido, como si estuvieses medio dormido. Lentamente lo lográs mover, primero unos centímetros torpes, pero luego con mayor precisión. La suficiente para encontrar la daga que está en tu cinturón.
@@ -3048,6 +3072,7 @@ Es como estar encerrado detrás de un vidrio, mirando cómo te matan. Sabés que
 Lo último que pensás, con una claridad cruel, es que morís sabiendo exactamente cómo salvarte.
 # next
 ESTÁS MUERTO.
+# achievement:unlock:cambio_de_bando
 -> END
 
 // ---------------------------------------------------------
@@ -3472,6 +3497,7 @@ La energía que se concentraba en el techo simplemente se evapora, dejando atrá
 # next
 Simplemente ya no tenés una cruz en tu mano. Tus dedos se relajan porque no hay nada más que agarrar. Solamente hay luz adelante, un fogonazo de la primera luz del universo.
 Cuando podés volver a ver, después de un buen tiempo, delante tuyo solo hay una pila de cenizas.
+# achievement:unlock:cruz_contra_vampiros
 -> cap2b_epilogo
 
 === cap2b_ritual_buda ===

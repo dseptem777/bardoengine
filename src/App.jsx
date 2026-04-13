@@ -526,7 +526,7 @@ function AppContent({ onStorySelect }) {
                     onExtras={() => setExtrasOpen(true)}
                     onOpenEditor={null} // Removed: editor only from main selector
                     onBack={!isProductionMode ? backToStorySelector : null}
-                    onCheatCode={() => setDebugUnlocked(true)}
+                    onCheatCode={() => { setDebugUnlocked(true); achievementsSystem.unlockAllAchievements() }}
                     gameVersion={config.gameVersion}
                 />
             )}
