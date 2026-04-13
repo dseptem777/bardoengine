@@ -1,5 +1,23 @@
 # Changelog — BardoEngine
 
+## v0.20.1 (2026-04-13)
+
+### Fixes
+- **modo daltónico — cambios de color reales**: rojo → naranja (`#ef4444` → `#f97316`), verde → azul (`#22c55e` → `#3b82f6`) en karma (StatsPanel), WillpowerMeter (ojo SVG), CSS global para clases Tailwind semánticas; paleta deuteranopia
+- **preview de colores en Opciones**: swatch animado debajo del toggle "Modo Daltónico" — muestra color actual de Peligro y Éxito, cambia en tiempo real al activar
+- **useSettings fuera de provider**: devuelve defaults seguros en lugar de lanzar error, evita crashes en tests unitarios sin wrapper
+
+---
+
+## v0.20.0 (2026-04-13)
+
+### Features
+- **modo daltónico**: toggle en Opciones → Accesibilidad; agrega indicadores no-color en WillpowerMeter (porcentaje numérico), StatsPanel karma (flechas ↑↓—), LockpickGame (icono ✗ en fallo); implementado via `data-colorblind` attribute + CSS helpers
+- **modo disléxico**: toggle en Opciones → Accesibilidad; cambia fuente narrativa a Atkinson Hyperlegible, aumenta letter-spacing/line-height, reemplaza itálicas con negrita; implementado via `data-dyslexic` attribute + CSS global
+- **Atkinson Hyperlegible**: cargada desde Google Fonts en `index.html`
+
+---
+
 ## v0.19.1 (2026-04-13)
 
 ### Refactor

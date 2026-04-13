@@ -125,6 +125,17 @@ export default function OptionsModal({ isOpen, onClose }) {
                                 value={settings.fontSize}
                                 onChange={(v) => updateSetting('fontSize', v)}
                             />
+                            <ToggleSetting
+                                label="Modo Daltónico"
+                                value={settings.colorblindMode}
+                                onChange={(v) => updateSetting('colorblindMode', v)}
+                            />
+                            <ColorblindSwatches active={settings.colorblindMode} />
+                            <ToggleSetting
+                                label="Modo Disléxico"
+                                value={settings.dyslexicMode}
+                                onChange={(v) => updateSetting('dyslexicMode', v)}
+                            />
                         </SettingsSection>
 
                         {/* Display Section */}
@@ -224,6 +235,26 @@ function ToggleSetting({ label, value, onChange }) {
                     `}
                 />
             </button>
+        </div>
+    )
+}
+
+function ColorblindSwatches({ active }) {
+    const pairs = [
+        { label: 'Peligro', from: '#ef4444', to: '#f97316' },
+        { label: 'Éxito',   from: '#22c55e', to: '#3b82f6' },
+    ]
+    return (
+        <div className="flex gap-4 pl-1 mt-1">
+            {pairs.map(({ label, from, to }) => (
+                <div key={label} className="flex items-center gap-1.5 text-xs text-gray-500">
+                    <span>{label}:</span>
+                    <span
+                        className="w-3.5 h-3.5 rounded-sm inline-block transition-colors duration-300"
+                        style={{ backgroundColor: active ? to : from }}
+                    />
+                </div>
+            ))}
         </div>
     )
 }

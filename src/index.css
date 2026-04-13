@@ -780,3 +780,65 @@ input[type='range']::-moz-range-thumb {
   animation-delay: -0.4s;
   opacity: 0.5;
 }
+
+/* ============================================
+   Modo Disléxico
+   ============================================ */
+[data-dyslexic] {
+  --bardo-font-main: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  --bardo-font-header: 'Atkinson Hyperlegible', system-ui, sans-serif;
+}
+
+[data-dyslexic] .font-narrative,
+[data-dyslexic] p,
+[data-dyslexic] .text-bardo-text {
+  font-family: 'Atkinson Hyperlegible', system-ui, sans-serif !important;
+  letter-spacing: 0.04em;
+  word-spacing: 0.1em;
+  line-height: 1.9 !important;
+}
+
+[data-dyslexic] em,
+[data-dyslexic] i,
+[data-dyslexic] .italic {
+  font-style: normal !important;
+  font-weight: 700;
+}
+
+/* ============================================
+   Modo Daltónico
+   Paleta deuteranopia: rojo → naranja, verde → azul
+   ============================================ */
+
+/* Clases de Tailwind con semántica de color */
+[data-colorblind] .text-green-500 { color: #3b82f6 !important; }
+[data-colorblind] .text-green-400 { color: #60a5fa !important; }
+[data-colorblind] .text-red-500   { color: #f97316 !important; }
+[data-colorblind] .text-red-400   { color: #fb923c !important; }
+[data-colorblind] .text-red-300   { color: #fdba74 !important; }
+[data-colorblind] .text-red-200   { color: #fed7aa !important; }
+
+[data-colorblind] .bg-red-500\/20  { background-color: rgba(249,115,22,0.2) !important; }
+[data-colorblind] .border-red-500  { border-color: #f97316 !important; }
+
+/* Spider overlay — survived verde → azul, corrupted purple ok */
+[data-colorblind] .spider-phase-result.survived {
+  background: radial-gradient(ellipse at center, rgba(59,130,246,0.2) 0%, transparent 70%) !important;
+  border-color: rgba(59,130,246,0.4) !important;
+}
+[data-colorblind] .spider-phase-result.survived .result-text { color: #60a5fa !important; }
+
+/* WillpowerMeter whisper — naranja en vez de rojo */
+[data-colorblind] .text-red-300\/40 { color: rgba(253,186,116,0.4) !important; }
+[data-colorblind] .text-red-400\/60 { color: rgba(251,146,60,0.6) !important; }
+[data-colorblind] .text-red-200\/80 { color: rgba(254,215,170,0.8) !important; }
+
+/* Indicadores auxiliares (símbolo + %) */
+.wp-colorblind-pct  { display: none; }
+[data-colorblind] .wp-colorblind-pct { display: block; }
+
+.karma-arrow        { display: none; }
+[data-colorblind] .karma-arrow { display: inline; }
+
+.lockpick-fail-icon { display: none; }
+[data-colorblind] .lockpick-fail-icon { display: inline; }

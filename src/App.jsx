@@ -352,7 +352,11 @@ function AppContent({ onStorySelect }) {
     // ==================
 
     return (
-        <div className="min-h-screen bg-bardo-bg relative overflow-hidden transition-colors duration-500">
+        <div
+            className="min-h-screen bg-bardo-bg relative overflow-hidden transition-colors duration-500"
+            data-colorblind={settings.colorblindMode ? 'true' : undefined}
+            data-dyslexic={settings.dyslexicMode ? 'true' : undefined}
+        >
             <VFXLayer vfxState={vfx.vfxState} />
 
             {/* Horror VFX Layer - Extended effects for meta-horror */}
