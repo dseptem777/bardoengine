@@ -125,6 +125,16 @@ export default function OptionsModal({ isOpen, onClose }) {
                                 value={settings.fontSize}
                                 onChange={(v) => updateSetting('fontSize', v)}
                             />
+                            <ToggleSetting
+                                label="Modo Daltónico"
+                                value={settings.colorblindMode}
+                                onChange={(v) => updateSetting('colorblindMode', v)}
+                            />
+                            <ToggleSetting
+                                label="Modo Disléxico"
+                                value={settings.dyslexicMode}
+                                onChange={(v) => updateSetting('dyslexicMode', v)}
+                            />
                         </SettingsSection>
 
                         {/* Display Section */}

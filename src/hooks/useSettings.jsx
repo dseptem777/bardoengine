@@ -16,6 +16,8 @@ const DEFAULT_SETTINGS = {
     // Accessibility
     vfxEnabled: true,
     fontSize: 'normal', // 'small' | 'normal' | 'large'
+    colorblindMode: false,
+    dyslexicMode: false,
 }
 
 // Speed mapping: setting value -> milliseconds delay

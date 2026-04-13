@@ -780,3 +780,42 @@ input[type='range']::-moz-range-thumb {
   animation-delay: -0.4s;
   opacity: 0.5;
 }
+
+/* ============================================
+   Modo Disléxico
+   ============================================ */
+[data-dyslexic] {
+  --bardo-font-main: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  --bardo-font-header: 'Atkinson Hyperlegible', system-ui, sans-serif;
+}
+
+[data-dyslexic] .font-narrative,
+[data-dyslexic] p,
+[data-dyslexic] .text-bardo-text {
+  font-family: 'Atkinson Hyperlegible', system-ui, sans-serif !important;
+  letter-spacing: 0.04em;
+  word-spacing: 0.1em;
+  line-height: 1.9 !important;
+}
+
+[data-dyslexic] em,
+[data-dyslexic] i,
+[data-dyslexic] .italic {
+  font-style: normal !important;
+  font-weight: 700;
+}
+
+/* ============================================
+   Modo Daltónico — helpers
+   ============================================ */
+.wp-colorblind-pct  { display: none; }
+[data-colorblind] .wp-colorblind-pct { display: block; }
+
+.karma-arrow        { display: none; }
+[data-colorblind] .karma-arrow { display: inline; }
+
+.spider-integrity-label { display: none; }
+[data-colorblind] .spider-integrity-label { display: inline; }
+
+.lockpick-fail-icon { display: none; }
+[data-colorblind] .lockpick-fail-icon { display: inline; }

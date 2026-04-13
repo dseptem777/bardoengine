@@ -262,6 +262,15 @@ export default function WillpowerMeter({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
             >
+                {/* Porcentaje numérico — visible en modo daltónico */}
+                <div
+                    className="wp-colorblind-pct font-mono text-xs mb-1 text-center"
+                    style={{ color: eyeColor }}
+                    aria-hidden="true"
+                >
+                    {Math.round(value)}%
+                </div>
+
                 {/* SVG Eye — also responds to touch */}
                 <motion.div
                     animate={isCritical ? { scale: [1, 1.05, 1] } : {}}

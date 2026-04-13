@@ -182,6 +182,7 @@ export function HeaderStats({ stats, statsConfig, getAllStatsInfo }) {
                         {index > 0 && <span className="text-gray-600 mx-0.5">|</span>}
                         <span>{stat.icon}</span>
                         <span className="font-bold" style={{ color }}>
+                            {isKarmaStyle && <span className="karma-arrow">{value > 0 ? '↑' : value < 0 ? '↓' : '—'} </span>}
                             {isKarmaStyle ? displayValue : value}
                         </span>
                         {!isKarmaStyle && stat.max != null && (
@@ -267,6 +268,7 @@ function StatValue({ stat, value }) {
                         : (stat.color || '#facc15')
                 }}
             >
+                {isKarmaStyle && <span className="karma-arrow">{value > 0 ? '↑' : value < 0 ? '↓' : '—'} </span>}
                 {isKarmaStyle ? displayValue : value}
             </span>
             {!isKarmaStyle && stat.max != null && (

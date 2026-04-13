@@ -85,7 +85,7 @@ export default function LockpickGame({ params = [], onFinish }) {
                     ) : gameState === 'win' ? (
                         <span className="text-green-500 font-bold text-2xl">✓ ¡DESBLOQUEADO!</span>
                     ) : (
-                        <span className="text-red-500 font-bold text-2xl animate-pulse">FALLIDO</span>
+                        <span className="text-red-500 font-bold text-2xl animate-pulse"><span className="lockpick-fail-icon">✗ </span>FALLIDO</span>
                     )}
                 </p>
 

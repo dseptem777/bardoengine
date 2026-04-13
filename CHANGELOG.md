@@ -1,5 +1,14 @@
 # Changelog — BardoEngine
 
+## v0.20.0 (2026-04-13)
+
+### Features
+- **modo daltónico**: toggle en Opciones → Accesibilidad; agrega indicadores no-color en WillpowerMeter (porcentaje numérico), StatsPanel karma (flechas ↑↓—), LockpickGame (icono ✗ en fallo); implementado via `data-colorblind` attribute + CSS helpers
+- **modo disléxico**: toggle en Opciones → Accesibilidad; cambia fuente narrativa a Atkinson Hyperlegible, aumenta letter-spacing/line-height, reemplaza itálicas con negrita; implementado via `data-dyslexic` attribute + CSS global
+- **Atkinson Hyperlegible**: cargada desde Google Fonts en `index.html`
+
+---
+
 ## v0.19.1 (2026-04-13)
 
 ### Refactor
