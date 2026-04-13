@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## v0.19.1 (2026-04-13)
+
+### Refactor
+- **eliminación de BardoEditor**: borrado todo el código del editor visual (`src/editor/`, lazy import, estado `showEditor`, botón en StorySelector) — era código muerto deprecado, nunca se usará en producción
+
+---
+
 ## v0.19.0 (2026-04-11)
 
 ### Features
