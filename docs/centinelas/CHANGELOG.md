@@ -1,5 +1,29 @@
 # Changelog — Centinelas del Sur
 
+## [0.15.0] — 2026-04-11
+
+### Feat: 21 nuevos achievements + imágenes
+
+**Nuevos achievements:**
+- `primer_caso` — primer cadáver examinado
+- `elegir_orfanato` — decisión del orfanato en Cap 1
+- `conociste_enriquez`, `conociste_shelley`, `conociste_cabral` — NPCs encontrados
+- `fuiste_tarotista` — consultó la tarotista
+- `juan_salvado` / `juan_muerto` — destino del compañero
+- `alegria_vive` / `alegria_muere` — destino de la madre
+- `ninos_ninguno` / `ninos_mitad` / `ninos_casi_todos` / `ninos_todos_mueren` / `belen_muere` — 5 outcomes del orfanato Cap 2B
+- `morgue_sin_mordisco` — escapó de la morgue sin ser mordido
+- `mordio_profundo` — recibió mordida profunda
+- `cambio_de_bando` — eligió convertirse (muerte lúcida)
+- `cruz_contra_vampiros` — usó la cruz en el ritual
+- `favor_tuco` — usó el favor del Tuco
+- `caer_en_cana` — terminó en la comisaría
+- `gano_willpower` — escapó del vampiro con willpower
+
+**Imágenes:** 26 badges JPEG agregados a `public/games/centinelas/achievements/` — todos los achievements tienen imagen pixel art
+
+---
+
 ## [0.14.6] — 2026-04-11
 
 ### Fix: arañas cap 2a

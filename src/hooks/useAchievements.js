@@ -120,6 +120,15 @@ export function useAchievements(gameId, rawDefinitions = []) {
     }, [])
 
     /**
+     * Unlock all achievements at once (cheat/debug)
+     */
+    const unlockAllAchievements = useCallback(() => {
+        const allIds = achievementDefinitions.map(a => a.id)
+        setUnlockedIds(allIds)
+        console.log(`[Achievements] Cheat: unlocked all ${allIds.length} achievements`)
+    }, [achievementDefinitions])
+
+    /**
      * Reset all achievements (with confirmation required externally)
      * WARNING: This action is irreversible
      */
@@ -170,6 +179,7 @@ export function useAchievements(gameId, rawDefinitions = []) {
     return useMemo(() => ({
         achievements,
         unlockAchievement,
+        unlockAllAchievements,
         isUnlocked,
         resetAllAchievements,
         clearToast,

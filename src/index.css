@@ -3,6 +3,25 @@
 @tailwind utilities;
 
 /* ============================================
+   GAME HARDENING — disable browser interactions
+   ============================================ */
+* {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+html, body, #root {
+  -webkit-context-menu: none;
+}
+
+/* Allow text selection inside input fields */
+input, textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* ============================================
    CSS VARIABLES - Dynamic Theming
    These can be overridden per-game via JS
    ============================================ */

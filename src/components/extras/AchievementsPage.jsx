@@ -23,7 +23,7 @@ export default function AchievementsPage({
                     <span className="text-bardo-accent/70">
                         {stats.unlocked}/{stats.total}
                     </span>
-                    <div className="w-32 h-2 bg-neutral-800 rounded-full overflow-hidden">
+                    <div className="w-32 h-2 bg-neutral-800 rounded-xl overflow-hidden">
                         <motion.div
                             className="h-full bg-bardo-accent"
                             initial={{ width: 0 }}
@@ -36,7 +36,7 @@ export default function AchievementsPage({
             </div>
 
             {/* Achievement Grid */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden pr-2">
                 {achievements.length === 0 ? (
                     <div className="flex items-center justify-center h-40 text-neutral-500">
                         Este juego no tiene logros definidos.
@@ -52,13 +52,17 @@ export default function AchievementsPage({
                                         : 'bg-neutral-900/50 border-neutral-700/50 hover:border-neutral-600'
                                     }`}
                                 onClick={() => setSelectedAchievement(achievement)}
-                                whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >
-                                <span className={`text-3xl mb-2 ${!achievement.unlocked && 'grayscale opacity-40'}`}>
-                                    {achievement.icon || '🏆'}
-                                </span>
-                                <span className={`text-xs text-center truncate w-full
+                                {achievement.image
+                                    ? achievement.unlocked
+                                        ? <img src={achievement.image} alt={achievement.displayTitle} className="w-full aspect-square object-cover rounded-full mb-2" />
+                                        : <div className="w-full aspect-square rounded-xl mb-2 bg-neutral-800 flex items-center justify-center border border-neutral-700">
+                                            <span className="text-2xl font-bold text-neutral-500">?</span>
+                                          </div>
+                                    : <span className={`text-3xl mb-2 ${!achievement.unlocked ? 'grayscale opacity-40' : ''}`}>{achievement.icon || '🏆'}</span>
+                                }
+                                <span className={`text-xs text-center w-full leading-tight
                                     ${achievement.unlocked ? 'text-bardo-accent' : 'text-neutral-500'}`}>
                                     {achievement.displayTitle}
                                 </span>
@@ -108,16 +112,21 @@ export default function AchievementsPage({
                             exit={{ scale: 0.9, opacity: 0 }}
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <div className="flex items-center gap-4 mb-4">
-                                <span className={`text-5xl ${!selectedAchievement.unlocked && 'grayscale opacity-40'}`}>
-                                    {selectedAchievement.icon || '🏆'}
-                                </span>
-                                <div>
-                                    <h3 className={`text-xl font-bold 
+                            <div className="flex flex-col items-center gap-3 mb-4">
+                                {selectedAchievement.image
+                                    ? selectedAchievement.unlocked
+                                        ? <img src={selectedAchievement.image} alt={selectedAchievement.displayTitle} className="w-80 h-80 object-cover rounded-full" />
+                                        : <div className="w-80 h-80 rounded-xl bg-neutral-800 flex items-center justify-center border border-neutral-700">
+                                            <span className="text-8xl font-bold text-neutral-500">?</span>
+                                          </div>
+                                    : <span className={`text-5xl ${!selectedAchievement.unlocked ? 'grayscale opacity-40' : ''}`}>{selectedAchievement.icon || '🏆'}</span>
+                                }
+                                <div className="text-center">
+                                    <h3 className={`text-xl font-bold
                                         ${selectedAchievement.unlocked ? 'text-bardo-accent' : 'text-neutral-400'}`}>
                                         {selectedAchievement.displayTitle}
                                     </h3>
-                                    <span className={`text-sm 
+                                    <span className={`text-sm
                                         ${selectedAchievement.unlocked ? 'text-green-400' : 'text-neutral-500'}`}>
                                         {selectedAchievement.unlocked ? '✓ Desbloqueado' : '🔒 Bloqueado'}
                                     </span>

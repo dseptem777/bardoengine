@@ -1,5 +1,16 @@
 # Changelog — BardoEngine
 
+## v0.19.0 (2026-04-11)
+
+### Features
+- **sistema de imágenes en achievements**: soporte para campo `image` en config — badges JPEG se muestran en el grid y modal de logros; locked muestra círculo con `?`
+- **BadgeImage component**: canvas BFS flood fill con erosion pass para eliminar fondo de badges
+- **21 nuevos achievements en Centinelas**: personajes (Enríquez, Shelley, Cabral, tarotista), compañeros (Juan, Alegría), niños (4 tiers), morgue, Cap2B (vampiro, cruz, Tuco, cana, willpower)
+- **fanzine cheat code**: además de habilitar debug mode, ahora desbloquea todos los achievements de una
+- **hardening del player**: `user-select: none` global, context menu deshabilitado, drag de assets deshabilitado
+
+---
+
 ## v0.18.10 (2026-04-11)
 
 ### Fixes
