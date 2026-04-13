@@ -95,7 +95,7 @@ export default function OptionsModal({ isOpen, onClose }) {
                                 onChange={(v) => updateSetting('typewriterSpeed', v)}
                                 min={0}
                                 max={5}
-                                labels={['Instantáneo', '', '', '', '', 'Lento']}
+                                labels={['Instantáneo', '', '', '', '', 'Rápido']}
                             />
                             <ToggleSetting
                                 label="Auto-avance"
