@@ -1,5 +1,15 @@
 # Changelog — Centinelas del Sur
 
+## [0.17.2] — 2026-04-21
+
+### Fix: assets de audio + limpieza
+
+- Tag `paso_agua` removido del ink — el sonido existe pero no encajó narrativamente en ningún beat.
+- 87 archivos `.mp3` en `public/sounds/` ahora commiteados (SFX con variantes multi-take para todo el sistema de audio).
+- Achievement badges actualizados (`duro rocky`, `ratoncito`); carpeta `old/` eliminada.
+
+---
+
 ## [0.17.1] — 2026-04-21
 
 ### Fix: SFX random variants + tags faltantes

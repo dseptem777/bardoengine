@@ -1,5 +1,13 @@
 # Changelog — BardoEngine
 
+## v0.22.2 (2026-04-21)
+
+### Fixes
+- **audio assets committed**: 87 archivos `.mp3` en `public/sounds/` (SFX con variantes multi-take) ahora rastreados en git. Tag `paso_agua` removido del ink — el sonido existe pero no encajó narrativamente.
+- **achievement badges**: imágenes actualizadas (`duro rocky`, `ratoncito`), carpeta `old/` eliminada.
+
+---
+
 ## v0.22.1 (2026-04-21)
 
 ### Features
