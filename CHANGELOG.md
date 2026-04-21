@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## v0.21.0 (2026-04-20)
+
+### Features
+- **cobertura de audio Centinelas — Tier 1 + Tier 2**: +~120 cues `music:` de ambiente por locación (orfanato, bóveda, cuevas, cementerio, cubil, pasillo, ritual, intermisión) + 7 inserciones `stop_music` en beats dramáticos clave (epílogo, conversión a vampiro, muerte lúcida). Cobertura sube de ~11% a ~50% del árbol narrativo. Minijuegos excluidos por diseño.
+
+---
+
 ## v0.20.1 (2026-04-13)
 
 ### Fixes
