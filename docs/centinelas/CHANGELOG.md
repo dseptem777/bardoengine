@@ -1,5 +1,31 @@
 # Changelog — Centinelas del Sur
 
+## [0.16.0] — 2026-04-20
+
+### Feat: cobertura de audio Tier 1 + Tier 2
+
+**Tier 1 — música por locación (~120 knots):**
+- Cap 0 preparación: `escuela_ambient` en primeras escenas de Cap 0 sin audio
+- Cap 1 investigación: `misterio_ambient` en `jesus_*`, `belen_*`, `ayuda_*`, entrevistas y diálogos
+- Cap 1 morgue: `horror_ambient` en escenas de morgue, `orfanato` al entrar al hogar
+- Cap 2a exploración: `orfanato`/`orfanato_alegre` en comedor/hab, `horror_ambient` en banos/sótano, `cueva_arañas` en cuevas, `boveda_ambient` en bóveda
+- Cap 2b investigación: `playa_oscura` en cementerio, `misterio_ambient` en comisaría/casas, `terror_ambient` en frente/cubil, `horror_ambient` en pasillos y ritual
+- Cap 2b combate: `boss_arañas` en combate directo con vampiros y ritual_fuerza/magia
+- Intermisión 2: `misterio_ambient` en enfermería/siguiente, `orfanato_alegre` en cocina abuelita, `city_ambient_b` en escándalo, `agite_museo` en cap3 teaser
+
+**Tier 2 — `stop_music` en beats dramáticos (7 knots):**
+- `pozo_muerte` — silencio total en muerte del pozo
+- `cap2b_vampiro_atacar` — corte antes del ataque con boss
+- `cap2b_trampa_convertirse` — silencio al pedir la conversión
+- `cap2b_convertirse_muerte_lucida` — silencio en muerte lúcida
+- `despues_combate` — reset post-combate → `misterio_ambient`
+- `cap2b_epilogo` — silencio dramático → `misterio_ambient`
+- (knot adicional según beat narrativo)
+
+**Cobertura total:** ~11% → ~50% del árbol narrativo. Minijuegos excluidos (manejan su propio audio).
+
+---
+
 ## [0.15.0] — 2026-04-11
 
 ### Feat: 21 nuevos achievements + imágenes
