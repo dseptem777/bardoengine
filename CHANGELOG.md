@@ -1,5 +1,13 @@
 # Changelog — BardoEngine
 
+## v0.22.1 (2026-04-21)
+
+### Features
+- **SFX random variants**: engine (`useAudio.js`) ahora selecciona aleatoriamente entre múltiples takes cuando existen (`golpe_a/b/c/d` → uno random por call). Implementado via `SFX_VARIANTS` map inline antes de `playSfx`. También resuelve mismatches de nombre (`disparos_escopeta` → `escopeta_a/b`, `explosion_magica` → `magiexplosion_a/b`) sin tocar el ink.
+- **5 SFX nuevos en ink**: `trueno_cercano` (cubil_fuerza), `boladefuego` (combate_magia), `sal_romperse` (vampiro_trampa), `cuerda_rota` (pozo_bajar), `paso_agua` (epilogo charcos).
+
+---
+
 ## v0.22.0 (2026-04-21)
 
 ### Features

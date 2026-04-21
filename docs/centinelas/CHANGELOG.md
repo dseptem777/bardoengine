@@ -1,5 +1,14 @@
 # Changelog — Centinelas del Sur
 
+## [0.17.1] — 2026-04-21
+
+### Fix: SFX random variants + tags faltantes
+
+- Engine ahora rota aleatoriamente entre múltiples takes (ej: `golpe` → `golpe_a/b/c/d` random). Mismatches de nombre (`disparos_escopeta`, `explosion_magica`) resueltos via mapa interno.
+- 5 nuevos tags insertados: `trueno_cercano` (pelea en tormenta), `boladefuego` (combate mágico araña), `sal_romperse` (trampa de sal en cementerio), `cuerda_rota` (descenso al pozo), `paso_agua` (charcos epílogo cap2b).
+
+---
+
 ## [0.17.0] — 2026-04-21
 
 ### Feat: SFX Tier 3 + Tier 4 + stingers de origen
