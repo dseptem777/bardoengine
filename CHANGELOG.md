@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## v0.22.0 (2026-04-21)
+
+### Features
+- **audio Centinelas — T3 SFX + T4 stingers + stingers de origen**: 18 nuevos tags en el ink — music gaps reparados (8 knots), 3 stingers de origen en Cap 0 (`stinger_magia`, `stinger_fuerza`, `stinger_conocimiento`), SFX T3 diegéticos (`trueno_lejano`, `canto_gutural`, `susurro_multiple`), mood stingers T4 (`sting_horror`, `sting_moral`, `sting_revelacion`, `drone_tenso`). Los archivos de audio están documentados en `memory/sfx-prompts.md` (36 entradas con prompts ElevenLabs + queries Freesound). El engine acepta tags faltantes silenciosamente — los SFX se activan al depositar los `.mp3` en `public/sounds/`.
+
+---
+
 ## v0.21.0 (2026-04-20)
 
 ### Features
