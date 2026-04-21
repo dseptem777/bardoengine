@@ -3291,7 +3291,7 @@ En el frente de la construcción se observan un par de Vampiros. Figuras etérea
     Dos Vampiros son dos más de los que te gustaría. Agradecés haberte sacado de encima el otro Vampiro que te encontraste en el Cementerio, sino la misión suicida que tenés enfrente sería... ¿más suicida?
 }
 # next
-El cielo parece haberse puesto a tono con la situación, un par de truenos son la apertura de una tormenta bíblica que empieza a caer sobre todos. Rápidamente te encontrás mojado, irritado, y con la ropa pegada al cuerpo. En contraposición, los Vampiros parecen emitir un aura que mantiene el agua alejada de su piel (malditos sobrenaturales con ventajas innecesarias). # play_sfx:trueno_lejano
+El cielo parece haberse puesto a tono con la situación, un par de truenos son la apertura de una tormenta bíblica que empieza a caer sobre todos. Rápidamente te encontrás mojado, irritado, y con la ropa pegada al cuerpo. # play_sfx:trueno_lejano En contraposición, los Vampiros parecen emitir un aura que mantiene el agua alejada de su piel (malditos sobrenaturales con ventajas innecesarias).
 # next
 Cada par de segundos el rugido de un trueno tapa todos los ruidos, hasta los latidos de tu corazón, hasta la voz en tu cabeza que te dice que si no lográs idear un plan pronto esto va a ser un desastre.
 Es entonces cuando escuchás un grito proveniente del interior de la cripta. Lo reconocés de inmediato, es el llanto de un bebé. El ruido hace eco en tus huesos y te obliga a una respuesta.
@@ -3809,7 +3809,7 @@ ESTÁS MUERTO.
 # UI_EFFECT: none
 # MOUSE_RESISTANCE: none
 # WILLPOWER_STOP
-Cuando salís de la cripta la lluvia ya es solo un recuerdo, presente en un par de charcos en el piso y un poco de barro. # play_sfx:paso_agua Las primeras luces del amanecer le dan otro aspecto al cementerio, más calmo, sin luces oscuras donde acechan monstruos.
+Cuando salís de la cripta la lluvia ya es solo un recuerdo, presente en un par de charcos en el piso y un poco de barro. Las primeras luces del amanecer le dan otro aspecto al cementerio, más calmo, sin luces oscuras donde acechan monstruos.
 {todos_guardias_mueren:
     # next
     Tenés que caminar con cuidado, en el piso no solo hay agua. Brazos, tripas y cosas que deberías tomar una clase de anatomía para saber qué son. Los restos de los guardias que mandaste al matadero para poder entrar en la cripta. Estas vidas van a pesar en tu consciencia.
