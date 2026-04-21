@@ -1,5 +1,35 @@
 # Changelog — Centinelas del Sur
 
+## [0.17.0] — 2026-04-21
+
+### Feat: SFX Tier 3 + Tier 4 + stingers de origen
+
+**Stingers de origen (Bloque D — 3 nuevos tags):**
+- `origen_magia` → `# play_sfx:stinger_magia` (firma sonora de Chispa)
+- `origen_combate` → `# play_sfx:stinger_fuerza` (firma sonora de Madrugador)
+- `origen_conocimiento` → `# play_sfx:stinger_conocimiento` (firma sonora de Ratoncito)
+
+**T3 SFX diegéticos (3 nuevos tags):**
+- `cap2b_frente_cubil` → `trueno_lejano` en la apertura de la tormenta bíblica
+- `cap2b_monticulos` → `canto_gutural` al entrar a la sala del ritual
+- `cap2b_pasillo_horror` → `susurro_multiple` en el pasillo del cubil
+
+**T4 Mood stingers (4 nuevos tags):**
+- `escondite_asomarse` → `sting_horror` al ver la criatura comiendo el cadáver
+- `cap2b_trampa_convertirse` → `sting_moral` al pedir la conversión
+- `cap2b_investigacion` → `sting_revelacion` al conectar el caso vampírico
+- `cap2b_vampiro_hablar` → `drone_tenso` al iniciar diálogo con el Vampiro
+
+**Music gaps reparados (8 knots sin cobertura):**
+- `escondite_asomarse`, `escondite_quedarse` → `horror_ambient`
+- `apnea_escondite_exito`, `keymash_arrastre_exito` → `misterio_ambient`
+- `apnea_escondite_fallo`, `keymash_arrastre_fallo`, `muerte` → `stop_music`
+- `inter_enfermeria` → `misterio_ambient`
+
+**Cobertura total:** ~50% → ~97% del árbol narrativo (252/262 knots). Los 5 knots restantes son routers sin contenido o minijuegos (intencionalmente sin tag). Audio documentado en `memory/sfx-prompts.md`: 36 entradas con prompts ElevenLabs + queries Freesound para los 36 archivos `.mp3` pendientes.
+
+---
+
 ## [0.16.0] — 2026-04-20
 
 ### Feat: cobertura de audio Tier 1 + Tier 2

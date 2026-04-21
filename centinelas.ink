@@ -81,6 +81,7 @@ VAR habitacion_img = ""
 === origen_magia ===
 # music:escuela_ambient
 # achievement:unlock:centinela_magica
+# play_sfx:stinger_magia
 El reloj nunca se movió tan rápido. Y eso que estaba en clase de matemática con el Profesor Schmit, que siempre se convertía en un torneo de bostezos y ronquidos.
 
 Jorge había prometido que me iba a esperar después de clase para matarme a golpes, desde principio de año venía haciéndome la vida imposible pero esta vez sus palabras habían tenido una entonación especial. Filosas.
@@ -193,6 +194,7 @@ El Faro me había encontrado.
 === origen_combate ===
 # music:horror_ambient
 # achievement:unlock:centinela_combate
+# play_sfx:stinger_fuerza
 Mierda. Mierda. Mierda. La manija de la puerta se resbalaba en mi mano. Escucho a alguien llorar en el piso de arriba de la cabaña y yo no puedo abrir la puta puerta.
 
 Me miro las manos. Están húmedas. Sangre. ¿De quién es esta sangre? ¿Miguel? ¿Claudia?
@@ -292,6 +294,7 @@ Me levanté con una misión. Yo sería quien llegaría siempre una hora antes.
 === origen_conocimiento ===
 # music:misterio_ambient
 # achievement:unlock:centinela_conocimiento
+# play_sfx:stinger_conocimiento
 \- No sé si me siento cómodo robando un libro.
 
 \- No lo pienses tanto como que lo estamos robando, prefiero decir que lo estamos liberando – dijo Julieta mientras su sonrisa dejaba ver los hoyuelos que me metieron en tantos problemas.
@@ -918,13 +921,15 @@ Luego empieza un sonido que puede ser tanto diente contra diente como filo contr
 + [Quedarte quieto donde estás] -> escondite_quedarse
 
 === escondite_asomarse ===
+# music:horror_ambient
 Lentamente tomás lo que puede ser la peor decisión de tu vida y te asomás un poco. Lo ves de costado, la comisura de su boca va de oreja a oreja (textualmente) y su mandíbula se ensanchó hacia adelante dejando ver una hilera de dientes filosos y encorvados. Te hace pensar en un tiburón.
-Se está... comiendo... el cadáver...
+Se está... comiendo... el cadáver... # play_sfx:sting_horror
 Ya terminó con los dos brazos y está por mandarse la cabeza y el torso en una sola mordida.
 Entrás para adentro de tu escondite poniendo las manos en tu boca para contener el grito.
 -> apnea_escondite
 
 === escondite_quedarse ===
+# music:horror_ambient
 Esperás cinco minutos. La mole se vuelve a mover, escuchás el poco mobiliario que sigue en pie quejándose y ser destruido por su peso.
 Y luego esperás cinco minutos más. Diez minutos. Hasta que la sensación de miedo abandona tu cuerpo.
 # next
@@ -944,11 +949,13 @@ Al menos recuperaste una mano, mejor ir para El Faro a ver qué pueden hacer con
 }
 
 === apnea_escondite_exito ===
+# music:misterio_ambient
 La criatura se retira. Esperás una eternidad más para estar seguro. Te arrastrás para salir. El cadáver del NN ya no está. Esa cosa se lo comió.
 Al menos recuperaste una mano, mejor ir para El Faro a ver qué pueden hacer con eso.
 -> final_morgue_exito
 
 === apnea_escondite_fallo ===
+# stop_music
 # shake # flash_red # play_sfx:jumpscare
 La puerta del privado se abre de golpe. Garras oscuras se cierran alrededor de tu tobillo y te sacan arrastrando.
 Lo último que ves es esa boca inmensa abriéndose de oreja a oreja.
@@ -1057,11 +1064,13 @@ Ya no es posible retroceder. Hay que seguir corriendo, nada más importa. Ganarl
 }
 
 === keymash_arrastre_exito ===
+# music:misterio_ambient
 Abrís la puerta del auto con dedos que ya casi no sentís. Arrancás. No mirás atrás.
 Te dirigís a El Faro.
 -> final_morgue_exito
 
 === keymash_arrastre_fallo ===
+# stop_music
 # flash_red
 MORISTE. FIN DEL JUEGO.
 -> END
@@ -1213,6 +1222,7 @@ La mujer patalea, llora y te araña. Te promete la muerte de formas horribles mi
 -> inter_misiones
 
 === inter_enfermeria ===
+# music:misterio_ambient
 Mary Shelley da un gritito de alegría cuando pasás a verla a El Faro. Siendo la médica oficial (y también chamán y científica loca) le toca a ella realizarte las curaciones necesarias.
 Utiliza una mezcla de medicina occidental junto con hierbas, cantos y rituales extraños.
 — Lindo cuerpo — dice para sí misma mientras te sutura una herida — si morís intentá por favor mantener las extremidades pegadas al torso que es un tedio volver a conectar los nervios y las venas.
@@ -2833,7 +2843,7 @@ Te das media vuelta y lo dejás hablando solo. Durante los primeros segundos sen
 Después de todas tus aventuras dejás que tus piernas te lleven en piloto automático mientras tu cabeza procesa toda la información que tenés. Es de noche y llegás hasta una playa. El mar se ve oscuro y agazapado, como una gran fiera dispuesta a saltar sobre su presa.
 Teniendo en consideración tu último caso, es muy posible que realmente sea eso.
 # next
-Es claro que tenés un problema de Vampiros. Y los Vampiros hacen su nido en la gran mayoría en los cementerios. El único problema es que en Costa Alegre hay tres cementerios diferentes e ir al equivocado puede generar una pérdida de tiempo peligrosa.
+Es claro que tenés un problema de Vampiros. Y los Vampiros hacen su nido en la gran mayoría en los cementerios. El único problema es que en Costa Alegre hay tres cementerios diferentes e ir al equivocado puede generar una pérdida de tiempo peligrosa. # play_sfx:sting_revelacion
 -> cap2b_elegir_cementerio
 
 === cap2b_elegir_cementerio ===
@@ -3026,6 +3036,7 @@ El peso de la espada en tu mano te da la confianza que necesitabas. Avanzás hac
 
 === cap2b_vampiro_hablar ===
 # music:misterio_ambient
+# play_sfx:drone_tenso
 Salís de entre las criptas y le dirigís la palabra con un tono de voz que sale menos firme de lo que esperabas.
 \- Veo que no soy el único que aprecia la belleza del cementerio bajo la luz de la Luna. ¿Qué cripta pretende ver?
 # next
@@ -3198,6 +3209,7 @@ El sonido fue desagradable. La sensación en la muñeca, peor. Pero el resultado
 === cap2b_trampa_convertirse ===
 # stop_music
 # music:horror_ambient
+# play_sfx:sting_moral
 \- Lo quiero – la frase sale entrecortada de tu boca, ahogada por la culpa y el miedo – Quiero ser inmortal. No morir nunca, no tener miedo jamás.
 El Vampiro te mira, mientras ladea la cabeza para el lado contrario. Ninguna expresión de emoción, solamente se limita a extender su brazo y señalar a sus pies.
 # next
@@ -3277,7 +3289,7 @@ En el frente de la construcción se observan un par de Vampiros. Figuras etérea
     Dos Vampiros son dos más de los que te gustaría. Agradecés haberte sacado de encima el otro Vampiro que te encontraste en el Cementerio, sino la misión suicida que tenés enfrente sería... ¿más suicida?
 }
 # next
-El cielo parece haberse puesto a tono con la situación, un par de truenos son la apertura de una tormenta bíblica que empieza a caer sobre todos. Rápidamente te encontrás mojado, irritado, y con la ropa pegada al cuerpo. En contraposición, los Vampiros parecen emitir un aura que mantiene el agua alejada de su piel (malditos sobrenaturales con ventajas innecesarias).
+El cielo parece haberse puesto a tono con la situación, un par de truenos son la apertura de una tormenta bíblica que empieza a caer sobre todos. Rápidamente te encontrás mojado, irritado, y con la ropa pegada al cuerpo. En contraposición, los Vampiros parecen emitir un aura que mantiene el agua alejada de su piel (malditos sobrenaturales con ventajas innecesarias). # play_sfx:trueno_lejano
 # next
 Cada par de segundos el rugido de un trueno tapa todos los ruidos, hasta los latidos de tu corazón, hasta la voz en tu cabeza que te dice que si no lográs idear un plan pronto esto va a ser un desastre.
 Es entonces cuando escuchás un grito proveniente del interior de la cripta. Lo reconocés de inmediato, es el llanto de un bebé. El ruido hace eco en tus huesos y te obliga a una respuesta.
@@ -3477,6 +3489,7 @@ Avanzás por un pasillo con ataúdes a intervalos regulares, sin duda el lugar d
 
 === cap2b_pasillo_horror ===
 # music:horror_ambient
+# play_sfx:susurro_multiple
 La única luz viene del fondo del pasillo, del mismo lugar que provienen unas voces profundas que entonan un canto rítmico y gutural. Algo que nunca es buena señal.
 Avanzás a tientas, con el temor de que una luz llame la atención.
 Es entonces cuando un pequeño desnivel amenaza con hacerte caer. Te llevás una mano a la boca, para contener el grito reflejo que nació en tu garganta, y la otra se agarra de la pared para evitar que caigas al piso.
@@ -3508,6 +3521,7 @@ Lo importante es que decidís que preferís no saber qué es la sustancia pegajo
 
 === cap2b_monticulos ===
 # music:terror_ambient
+# play_sfx:canto_gutural
 Las voces van tejiendo un canto que se hace cada vez más presente, casi tangible. El aire se vuelve espeso y te empieza a doler la cabeza. Te sentís embotado, como si te hubieses despertado en mitad de un sueño, con la mente confundida y las extremidades debilitadas.
 Es entonces cuando escuchás el ruido metálico, a la entrada de la habitación donde se está realizando el ritual hay pilas y pilas de adornos y decoración religiosa robada de otras criptas.
 # next
@@ -4272,6 +4286,7 @@ PRÓXIMAMENTE — Recuperá un objeto de poder en el Museo de Historia de Costa 
 // ============================================================
 
 === muerte ===
+# stop_music
 # CHAPTER_BREAK: title=Misión fallida, subtitle=Fin, image=muerte.jpg
 {~La enfermería quedaba a dos cuadras. Qué lástima.|Debiste haber ido a la enfermería antes de esto.|El parte de novedades va a decir simplemente: "baja en combate".|El sargento va a tener que dar muchas explicaciones.|Sobreviviste todo lo anterior para terminar así. Ironías de la vida.|En la academia te enseñaron primeros auxilios. Extraño que no lo recordaras ahora.}
 -> END
