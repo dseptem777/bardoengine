@@ -1731,6 +1731,7 @@ Llegas lo más cerca del borde que te permite tu coraje. Plantas los pies bien f
 
 === pozo_bajar ===
 # music:cueva_arañas
+# play_sfx:cuerda_rota
 Te preparas para bajar al pozo, en lo cual puede ser una de las peores decisiones de tu vida. Te cercioras tres veces que el nudo que ata la soga a la estatua este bien ajustado. Es muy curioso que toda una vida pueda depender de algo tan pequeño.
 Con mucho esfuerzo le das la espalda al pozo. Se te erizan los pelos de la nuca y durante unos segundos esperas que el pozo se estire como la trompa de un animal gigante y te engulla. Pero no pasa nada. Retrocedes unos pasos hasta llegar al borde del pozo y comenzás a bajar
 # next: Bajando
@@ -2212,7 +2213,7 @@ MORISTE. FIN DEL JUEGO.
 === combate_magia ===
 # music:boss_arañas
 Concentras toda tu energía, mostras tus palmas a la araña gigante y recitas las palabras correctas. A pesar del miedo y la adrenalina, tu lengua baila pronunciando las palabras correctas sin trabarse y en tu nombre permanece grabada, como corresponde, una imagen de un sol sobre un fondo negro.
-Es entonces cuando el fuego empieza a salir de tus manos
+Es entonces cuando el fuego empieza a salir de tus manos # play_sfx:boladefuego
 # next
 # flash_yellow
 Llamarla una bola de fuego es incorrecto, es más parecido a un lanzallamas. Sentís como el aire de calienta, tus brazos empiezan a transpirar pero, a la vez, tu cuerpo se siente cada vez más frío y liviano. Cómo si estaría vaciando tus entrañas para alimentar la llama.
@@ -3157,6 +3158,7 @@ Pero tu estrategia da resultado. Luego de un par de giros el Vampiro llega a la 
 
 === cap2b_vampiro_trampa ===
 # music:terror_ambient
+# play_sfx:sal_romperse
 Te escurrís entre dos criptas y avanzás a paso rápido entre lo que parece ser una calle paralela. Llegás primero a una esquina donde el Vampiro tiene que doblar así que aprovechás los segundos que tenés para trazar un semicírculo de sal y esconderte detrás de una estatua. La idea es que entre dentro de la figura y, cuando esté adentro, tirar una capa más de sal para convertirlo en un círculo y dejarlo encerrado.
 (Sí, en tu mochila hay sal, ajo, mandrágora, amaranta y demás hierbas, suficiente para ser un buen cazador de monstruos o un chef de primer nivel.)
 # next
@@ -3309,7 +3311,7 @@ Eso sí, si terminás muerto mucho no lo podrías ayudar. Tenés que pensar en a
 
 === cap2b_cubil_fuerza ===
 # music:boss_arañas
-Dejás que pase un rayo, y la luz que trae, y salís a la carga. Está húmedo y estás mojado, así que tu avance épico es más un chapoteo infantil en los charcos. El primero de los Vampiros detecta tu presencia, hace un débil movimiento estirando la cabeza para adelante y un costado mientras sus ojos brillan como dos faroles en la oscuridad. Vos confirmás su punto disparando un tiro de escopeta directo a su pecho.
+Dejás que pase un rayo, y la luz que trae, y salís a la carga. # play_sfx:trueno_cercano Está húmedo y estás mojado, así que tu avance épico es más un chapoteo infantil en los charcos. El primero de los Vampiros detecta tu presencia, hace un débil movimiento estirando la cabeza para adelante y un costado mientras sus ojos brillan como dos faroles en la oscuridad. Vos confirmás su punto disparando un tiro de escopeta directo a su pecho.
 # next
 El Vampiro recibe el disparo como si fuera una cachetada. La fuerza cinética del golpe apenas lo hace retroceder unos centímetros. Responde abriendo su boca, dejando salir un rugido animal y mostrándote unos colmillos que prometen dolor. Una movida atemorizante pero también un desperdicio de tiempo, y en un combate tan cercano cualquier minuto es clave.
 Vos no perdés el tiempo, cortás la distancia con un salto y descargás un golpe con tu espada directo al cuello de tu rival. Antes de terminar el movimiento, su cuerpo se dispersa en una nube de polvo que se lleva la lluvia.
@@ -3807,7 +3809,7 @@ ESTÁS MUERTO.
 # UI_EFFECT: none
 # MOUSE_RESISTANCE: none
 # WILLPOWER_STOP
-Cuando salís de la cripta la lluvia ya es solo un recuerdo, presente en un par de charcos en el piso y un poco de barro. Las primeras luces del amanecer le dan otro aspecto al cementerio, más calmo, sin luces oscuras donde acechan monstruos.
+Cuando salís de la cripta la lluvia ya es solo un recuerdo, presente en un par de charcos en el piso y un poco de barro. # play_sfx:paso_agua Las primeras luces del amanecer le dan otro aspecto al cementerio, más calmo, sin luces oscuras donde acechan monstruos.
 {todos_guardias_mueren:
     # next
     Tenés que caminar con cuidado, en el piso no solo hay agua. Brazos, tripas y cosas que deberías tomar una clase de anatomía para saber qué son. Los restos de los guardias que mandaste al matadero para poder entrar en la cripta. Estas vidas van a pesar en tu consciencia.
