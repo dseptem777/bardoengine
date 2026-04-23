@@ -4283,10 +4283,56 @@ De vuelta a la pista de baile.
 
 === capitulo_3 ===
 ~ capitulo_actual = "Cap. 3 — El Museo"
-# music:agite_museo
+# music:centinelas_base
 
-PRÓXIMAMENTE — Recuperá un objeto de poder en el Museo de Historia de Costa Alegre que puede ayudarte a conocer dónde se esconde la Secta que está sacrificando humanos.
+-> cap3_llegada_elfaro
 
+=== cap3_llegada_elfaro ===
+# next: Visita al Museo
+
+Te citan a El Faro a las 6 de la mañana. Es tan temprano que el campus universitario donde se encuentra el edificio esta vacío, ni el estudiante más aplicado va a aparecer a esta hora. Vos lograste llegar puntual dado que tenes el esquema de sueño completamente roto y las pesadillas no te dejan dormir. No es difícil madrugar cuando nunca te fuiste a dormir.
+# next
+
+Entras a El Faro y te sorprende no encontrar a Enriquez sentada tras su escritorio en la recepción. Hasta donde sabias, ella estaba biológicamente conectada a la silla (lo cual es sarcasmo, aunque no dudas que en este lugar eso sea posible). Notas que la puerta que lleva al laboratorio de Mary Shelley está abierta y de su interior se escuchan dos voces solamente. Parece que es muy temprano hasta para los otros Guardianes de El Faro.
+# next
+
+¿Qué hacés?
+* [Recorrer el lugar intentando encontrar a Enriquez]
+    -> cap3_recorrer_elfaro
+* [Meterte en la oficina del Profesor]
+    -> cap3_espiar_oficina
+* [Acercarte sigilosamente al laboratorio]
+    -> cap3_espiar_lab
+
+=== cap3_recorrer_elfaro ===
+Recorres el edificio, o las partes que podes entrar al menos. El baño esta vacío, la cocina parece desierta y la heladera solo contiene ese tapper que está en el fondo desde que empezaste a trabajar acá y nadie logra descifrar que es su contenido marrón semilíquido. Por muchas vueltas que des, Enriquez parece estar en su día libre asi que no te queda más opción que dejar de perder el tiempo.
+# next
+-> cap3_briefing_lab
+
+=== cap3_espiar_oficina ===
+Te descalzas para hacer menos ruido y subís por la escalera que da a su oficina. Crees que estás haciendo un muy buen trabajo, los escalones no chirrearon ni una sola vez bajo tu peso.
+# next
+Justo cuando estas por poner tu mano en la manija, suena tu celular. ¿Cómo es posible? Siempre lo tenes en silenció justo por situaciones como esta.
+# next
+Lo sacas y lees un mensaje de El Profesor Buen intento, pero no hay forma que puedas entrar. Deja de jugar y veinte al laboratorio. Te estamos esperando.
+# next
+-> cap3_briefing_lab
+
+=== cap3_espiar_lab ===
+~ espiaste_lab = true
+Avanzas lo más sigilo posible, haciendo tu cuerpo pequeño y prestando especial atención adonde pones los pies. Al principio lo conversación te llega como murmullos inentendibles.
+# next
+Estiras tu cuello un poco más y empezás a entender algunas palabras sueltas peligros, prohibido y locura. Es lamentable que, cuando espías, nunca escuchas cosas lindas como torta de chocolate o fiesta sorprensa.
+# next
+Es entonces cuando la voz de El Profesor te llega fuerte y claro.
+# next
+Deja de escuchar y entra de una vez NOMBRE DE PERSONAJE. Queremos hablar con vos y no tengo ganas de estar a los gritos.
+# achievement:unlock:espia_elfaro
+# next
+-> cap3_briefing_lab
+
+=== cap3_briefing_lab ===
+// TODO: Task 4 — briefing con Mary Shelley y El Profesor
 -> END
 
 // ============================================================
