@@ -52,6 +52,13 @@ VAR genjutsu_stat_used = ""
 VAR genjutsu_willpower = 0
 VAR habitacion_img = ""
 
+// Cap 3 — Museo
+VAR item_enojo_enriquez = false
+VAR cabral_al_museo = false
+VAR voz_conocida = false
+VAR momia_robada = true
+VAR espiaste_lab = false
+
 -> capitulo_0
 
 // Stat principal del personaje (prioridad en empate: magia > fuerza > conocimiento)
@@ -81,7 +88,6 @@ VAR habitacion_img = ""
 === origen_magia ===
 # music:escuela_ambient
 # achievement:unlock:centinela_magica
-# play_sfx:stinger_magia
 El reloj nunca se movió tan rápido. Y eso que estaba en clase de matemática con el Profesor Schmit, que siempre se convertía en un torneo de bostezos y ronquidos.
 
 Jorge había prometido que me iba a esperar después de clase para matarme a golpes, desde principio de año venía haciéndome la vida imposible pero esta vez sus palabras habían tenido una entonación especial. Filosas.
@@ -184,6 +190,7 @@ El Faro me había encontrado.
 ~ apodo_personaje = "Chispa"
 # stat:magia:+20 # stat:fuerza:+10 # stat:conocimiento:+10
 # next
+# play_sfx:stinger_magia
 # CHAPTER_BREAK: title=Chispa, subtitle=Capítulo 0 — Orígenes, image=title_magia.jpg
 -> intermision
 
@@ -194,7 +201,6 @@ El Faro me había encontrado.
 === origen_combate ===
 # music:horror_ambient
 # achievement:unlock:centinela_combate
-# play_sfx:stinger_fuerza
 Mierda. Mierda. Mierda. La manija de la puerta se resbalaba en mi mano. Escucho a alguien llorar en el piso de arriba de la cabaña y yo no puedo abrir la puta puerta.
 
 Me miro las manos. Están húmedas. Sangre. ¿De quién es esta sangre? ¿Miguel? ¿Claudia?
@@ -273,7 +279,6 @@ Una raíz casi me hace perder el equilibrio. Trastabillo y siento sus ¿tentácu
 Pero no fue suficiente. Antes de darme cuenta estaba con la cabeza en el piso sufriendo una oleada de dolor que superó a la carga de adrenalina en mi cuerpo.
 
 Recordaba los gritos de dolor de mi amigo muriendo en el piso de arriba de la cabaña. Le temía a la muerte, le temía más al dolor. Pero simplemente no podía más.
-// TODO: crudo label "RUIDO DE DISPARO" — agregar SFX de disparo como evento al click
 # play_sfx:disparo # flash_yellow
 El ruido hizo eco por todo el bosque. La… cosa… chilló atrás mío. Sonó como estática de radio a todo volumen, como el ruido original del universo. Y sentí la tierra temblar abajo mío cuando su cuerpo cayó al piso.
 
@@ -284,6 +289,7 @@ Me levanté con una misión. Yo sería quien llegaría siempre una hora antes.
 ~ apodo_personaje = "Madrugador"
 # stat:magia:+10 # stat:fuerza:+20 # stat:conocimiento:+10
 # next
+# play_sfx:stinger_fuerza
 # CHAPTER_BREAK: title=Madrugador, subtitle=Capítulo 0 — Orígenes, image=title_fuerza.jpg
 -> intermision
 
@@ -294,7 +300,6 @@ Me levanté con una misión. Yo sería quien llegaría siempre una hora antes.
 === origen_conocimiento ===
 # music:misterio_ambient
 # achievement:unlock:centinela_conocimiento
-# play_sfx:stinger_conocimiento
 \- No sé si me siento cómodo robando un libro.
 
 \- No lo pienses tanto como que lo estamos robando, prefiero decir que lo estamos liberando – dijo Julieta mientras su sonrisa dejaba ver los hoyuelos que me metieron en tantos problemas.
@@ -467,6 +472,7 @@ Ellos te ofrecieron un trabajo y una nueva oportunidad y no pensás desperdiciar
 ~ apodo_personaje = "Ratoncito"
 # stat:magia:+10 # stat:fuerza:+10 # stat:conocimiento:+20
 # next
+# play_sfx:stinger_conocimiento
 # CHAPTER_BREAK: title=Ratoncito, subtitle=Capítulo 0 — Orígenes, image=title_conocimiento.jpg
 -> intermision
 
