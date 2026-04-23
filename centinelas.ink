@@ -4332,7 +4332,101 @@ Deja de escuchar y entra de una vez NOMBRE DE PERSONAJE. Queremos hablar con vos
 -> cap3_briefing_lab
 
 === cap3_briefing_lab ===
-// TODO: Task 4 — briefing con Mary Shelley y El Profesor
+# music:misterio_ambient
+
+No tenes duda que murió con dolor, unas marcas al costado de su rostro, como si alguien hubiese clavado repetidas veces un picahielos y jugado con la herida, te lo confirman.
+
+— Un nuevo cuerpo, la Secta sigue sacrificando gente y lanzándola al fondo del mar. Ya paso un mes desde la anterior misión, así que es claro el enfoque cíclico de su ritual
+— Así que vamos a seguir recibiendo más cuerpos si no hacemos algo — interrumpís al Profesor mientras intentas que tu odio no se vuelque en tus palabras.
+— Por eso llegó el momento de probar un enfoque más radical — Mary Shelley comienza a hablar pero se para en seco en cuanto El Profesor le da una mirada. Aprovechas el momento para meter una pregunta.
+
+* [¿Sabemos quién es?]
+    — Por suerte, al contar con el cuerpo, pude comparar el registro dental con las bases de datos del Gobierno. Martín Gimenez — Mary Shelley empieza a hablar rápido mientras hojea la información que tiene en su carpeta — 22 años, vivía en Costa Alegre hace 8 años, luego de escaparse de su hogar donde era víctima de violencia. Vino a trabajar en la industria pesquera, hace 3 años se quedó sin trabajo y se encontraba en situación de calle.
+    Tenía solo 22 años, y pensar que para vos era un hombre de mediana edad. Supongo que, para él, los años golpearon más fuerte.
+    -> cap3_briefing_lab_profundo
+
+* [El Tiburón humanoide que me encontré en la Morgue ¿Volvió a aparecer?]
+    -> cap3_briefing_lab_profundo
+
+=== cap3_briefing_lab_profundo ===
+— El Profundo — dice El Profesor poniendo voz de docente — por suerte no fue visto de nuevo. El cadáver fue encontrado por un barco pesquero que notó que algo se enganchó entre sus redes.
+— Pobres, sin duda imaginaron que habían pescado algo grande — acotó Mary Shelley.
+— Lo cual no quita que El Profundo esté dando vueltas por Costa Alegre intentando borrar las huellas de este ritual, te recomiendo estar atento.
+
+* [¿Las runas son las mismas?]
+    — Si, nuestro equipo sigue trabajando para intentar descifrarlas y darnos una mejor idea de qué están haciendo, pero es claro que se trata del mismo grupo — aclara El Profesor.
+    Te acercas al cuerpo y mirás las runas, intentas abstraerte, alejarte lo suficiente para no ver heridas sobre la piel sino símbolos sobre un lienzo.
+    { conocimiento < 30:
+        Lo único que lográs es darle nafta a tu rabia. Debés encontrar la forma de detener esto.
+    - else:
+        — Intercambio y pesca abundante — decís señalando un par de heridas juntas (tanto que a simple vista parecen una sola herida) que decidís interpretar como una palabra — No hay que ser literal por pesca abundante, me parece que es algo tan básico como un intercambio de vidas humanas por riqueza, decile al equipo que trabaje en base a esa idea.
+    }
+    -> cap3_briefing_lab_plan
+
+=== cap3_briefing_lab_plan ===
+# next
+
+— Por suerte, estábamos cocinando un plan que puede darnos una ventaja — la sonrisa de Mary Shelley contrasta fuertemente con el cadáver que tiene solo a tres pasos.
+— No uses un plural. Es tu idea y yo no pienso hacerme cargo — El Profesor vuelve a mostrar un poco de tensión en su voz que denota que estuvieron discutiendo de esto durante las últimas horas.
+— Bueno, díganme la idea de una vez — decís esperando que no vuelva a iniciar la pelea.
+— Considero que, con un hechizo que todavía no fue probado, podríamos hacer que el cadáver nos muestre un rastro psíquico de donde estuvo antes de morir, lo cual podría ser una forma de llegar a la guarida de la secta — Mary Shelley habla rápido y mirando de reojo a El Profesor, con temor a que la interrumpa.
+— Es imposible contar la cantidad de condicionales que tiene ese último párrafo, podría causarle un infarto a un profesor de Lengua y Literatura — la interrumpe El Profesor.
+— Es mejor que no hacer nada
+— Sin contar que nunca se usó el hechizo
+— Pero su teoría es muy sólida
+— Y rompe las barreras naturales entre la vida y la muerte
+— También la penicilina
+Y volvió a iniciar la pelea.
+# next
+
+Los argumentos van de punta a punta. Para El Profesor es un experimento peligroso que no tiene garantía de éxito, mientras que para Mary Shelley es la única forma de resolver el problema sin esperar que aparezcan más cuerpos.
+Y nadie tiene pinta de que va a ceder su posición.
+
+* [Te vas de la habitación, no tiene sentido perder tiempo viendo este espectáculo]
+    Salís y aprovechás para ir a la cocina. Alguien trajo un par de medialunas así que te parece gran momento para hacerte un mate y desayunar algo. Pasan unos cinco minutos (y más medialunas de las que te animás a confesar) y te llega un mensaje de El Profesor pidiendo que vuelvas al laboratorio. Parece que ya tomaron una decisión.
+    -> cap3_briefing_lab_museo
+
+* [Interrumpís la pelea. Esto no va a ningún lado.]
+    — Basta — gritas con tanta fuerza que hasta lográs que se muevan un par de cabellos de Mary Shelley — No tiene sentido discutir esto. Y no puedo decir el mal gusto que es hacerlo delante de un cadáver que al fin de cuenta es nuestra responsabilidad.
+    Tus dos interlocutores empiezan a balbucear pero no les da tiempo de decir algo.
+    — Si existe una forma de impedir otro muerto, debemos intentarla, estoy dispuesto. Cuéntenme qué están planeando.
+    -> cap3_briefing_lab_museo
+
+* [Esperás que terminen]
+    Jurás que la conversación amaga con terminar tres veces. Y las tres veces vuelve a empezar con la misma intensidad. Es como estar perdido en un laberinto argumentativo.
+    A la larga (y muy a la larga) es El Profesor quien termina cediendo. No sabés si hace eco a los argumentos esgrimidos por Mary Shelley, si simplemente tiene otras cosas que hacer o si ya pensó cómo controlar cualquier efecto secundario peligroso.
+    -> cap3_briefing_lab_museo
+
+=== cap3_briefing_lab_museo ===
+# next
+
+— Un hechizo así requiere una gran cantidad de poder — Mary Shelley está tan emocionada que habla cada vez más rápido y resulta complicado seguirla — hay pocas personas en el mundo que pueden brindar tanto poder.
+— Y seguir vivas — acota El Profesor por lo bajo.
+— Exacto — grita Mary Shelley — Y como el homicidio es malo la otra opción es encontrar un objeto que haya contenido una cantidad exorbitante de poder sobrenatural y usarlo como fuente de energía.
+— Déjame adivinar — comentás con tristeza — El objeto está en algún tipo de fortaleza custodiado por, no sé, dragones zombis que tienen ametralladoras en la boca.
+— Casi — contesta Mary Shelley — Está de visita en el Museo de Historia de Costa Alegre.
+# next
+
+— El plan entonces es que vaya al Museo de Historia de Costa Alegre y robe un objeto histórico de incontable valor.
+— Sí, una momia incaica que está en una exposición ambulante de Jujuy. Aparenta ser un objeto de gran poder — la emoción desbordaba a Mary Shelley.
+— No me gusta la palabra aparenta — acotaste a la misma vez que El Profesor.
+— Sin duda lo es. Sacrificio humano, adoración religiosa. Mierda, hasta el hecho de que sea una pieza de museo es hasta un tipo de adoración. Si mis lecturas son correctas, es una batería lo suficientemente poderosa para darle poder al ritual que tengo en mente.
+— No sé si me siento cómodo robando una pieza de arte histórico.
+— El Museo Británico lo hace todo el tiempo y nadie le dice nada, lo tuyo hasta tendría más valor dado que lo hacés para salvar vidas — Mary Shelley hablaba tan rápido que las palabras se juntaban tanto hasta parecer una única gran palabra.
+# next
+
+En menos de quince minutos estaban apoyados sobre una mesa con fotos de la momia incaica, mapas del museo y folletos de las exposiciones.
+
+¿Cómo respondés al plan de robar la Momia?
+* [Aceptar sin objeciones — la misión es la misión]
+    -> cap3_tiempo_libre
+* [Aceptar pero expresar incomodidad ética]
+    ~ conocimiento += 2
+    — No sé si me siento cómodo robando una pieza de arte histórico.
+    -> cap3_tiempo_libre
+
+=== cap3_tiempo_libre ===
+// TODO: Task 5 — 5 opciones antes del museo
 -> END
 
 // ============================================================
