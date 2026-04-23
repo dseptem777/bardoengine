@@ -4557,7 +4557,233 @@ La tarde sirve para relajar tu mente y prepararte para los retos que tengas que 
 -> cap3_museo_dia
 
 === cap3_museo_dia ===
-// TODO: Task 6 — reconocimiento diurno del museo
+# music:agite_museo
+# next
+
+DE DIA EN EL MUSEO
+El museo estaba en el medio de un parque arbolado. El día era lindo y un montón de personas habían aprovechado para salir a disfrutar de la naturaleza. Una familia estaba disfrutando un picnic (mientras un comando de hormigas se acercaba para robarle las migas), una pareja de enamorados estaban enfrascados en un abrazo tan largo que sus cuerpos habían encontrado la forma perfecta de encajar entre si y con el árbol donde se apoyaban. Tu reflexión es interrumpida por una pelota que pasa a centímetros de tu cabeza, un grupo de jóvenes estaba aprovechando el parque para improvisar un partido de futbol.
+# next
+
+El Museo, visto desde afuera, es una mole brutalista que parece más apta para ser guarida de supervillano que centro de saber. Un circulo de cemento al cual se accede subiendo por una escalera (también de cemento) atravesando en el camino estatuas (obviamente, de cemento) que representan diversos períodos históricos de Costa Alegre.
+# next
+
+Entrás al hall central del Museo y se encuentra casi vacío, solo cuenta con un mostrador detrás del cual hay un par de pasantes y una gigantografia de la Momia Incaica que está en exposición.
+Te tomás un momento para observar la momia. Generalmente cuando se escucha esa palabra uno piensa en Egipto, vendajes, sarcófagos de oro y maldiciones, pero este no era el caso con la Momia Incaica (aunque con tu suerte no estás dispuesto a descartar una maldición tan rápidamente).
+La momia era una adolescente cruzada de piernas, con ropa propia del Imperio Incaico, que había sido momificada mediante el uso de la aridez y el frio de los Andes. Su rostro miraba para abajo y el efecto de sombras dificultaba ver su expresión pero parecía estar durmiendo. Requería un esfuerzo consciente darse cuenta que uno estaba viendo un cadáver y no una obra de arte, supones que el paso del tiempo y las particularidades de la modificación generan esa distancia.
+# next
+
+Te acercás al mostrador y el pasante joven te pasa un folleto y te explica como es el recorrido del Museo. Te informa que la estructura es un círculo que se recorre de derecha a izquierda, consta de cinco salas y al final tenés una tienda para comprar recuerdos así como la posibilidad de acceder al café que se encuentra en el jardín ubicado en el centro de la estructura.
+Por último, te muestra una caja y te invita a dejar una colaboración para sostener la institución ante los cortes de financiación que lleva el Gobierno.
+
+* [Colaborás con el Museo]
+    Sacás unos billetes de tu billetera y ponés dinero en la caja de colaboración. Obviamente es de interés de toda Costa Alegre que sus instituciones educativas estén bien fundadas y te da un poco de vergüenza vivir en un país donde el Gobierno no financia la educación. Te preguntás donde va el dinero que ahorran, sin duda no están ayudando en combatir seres sobrenaturales.
+    # achievement:unlock:colaborador_museo
+    -> cap3_museo_primer_sala
+
+* [No colaborás con el Museo]
+    Sonreís y girás para la derecha, para entrar a la primera sala del Museo. Sentís que no es tu responsabilidad financiar la educación. Estás seguro que próximamente el Gobierno va a entrar en razón y librar el dinero que corresponde ¿No?, o sin duda otra persona va a venir y va a poner suficiente dinero como para compensar el día ¿No es así?
+    # achievement:unlock:no_colaborador_museo
+    -> cap3_museo_primer_sala
+
+=== cap3_museo_primer_sala ===
+La primera sala está dedicada a los Pueblos Originarios. Aparentemente eran hábiles pescadores y navegantes, en los costados ondulados de la sala se puede ver elementos de pesca, ropas tradicionales y vasijas de barro.
+En el centro de la sala hay una recreación de las canoas que usaban para navegar el mar y pescar kilómetros de la costa. Te basta ver la canoa cinco minutos, y recordar lo violento que se puede poner el mar, para darte cuenta que esta gente era mas valiente que vos.
+# next
+
+Ahora tocaba Costa Alegre en la época colonial. No tenías consciencia de que la ciudad era tan vieja pero parece que ya había un pequeño poblado en el siglo XVIII que había sido un poco un puerto de pescadores (y mucho un centro de contrabandistas).
+La mayoría de las vitrinas estaban compuestas por ropa de la época y objetos cotidianos de la Colonia donde abundaba el trabajo en plata y la iconografía cristiana.
+En el centro de la sala había un carruaje gigante con unos detalles marinos (sirenas, tritones, kraken y demás seres fantásticos). Hay que admitir que el vehículo era más elegante que cualquier cosa que te podías cruzar hoy por la calle.
+{ conocimiento >= 20:
+    En una esquina de la sala se expone una tabla de la evolución poblacional de la ciudad en esos primeros años. La mezcla de números y letra manuscrita aleja a la mayoría de la gente, pero vos te quedás un momento comparando números. Parece que los primeros pobladores de Costa Alegre la tuvieron muy duro, hambruna por las embarcaciones hundidas, crecidas repentinas del mar, pestes. El poblado estuvo cerca de desaparecer varias veces durante su primer año de existencia. Eso es hasta 1780 donde esos sucesos dejan de aparecer y el pueblo empieza a prosperar.
+    No te sorprende que la secta que estás buscando tal vez lleve actuando más de doscientos años haciendo esto y sus orígenes fueron para aplacar a las entidades que castigaban el poblado desde el fondo del mar.
+}
+# next
+
+La tercera sala correspondía a Costa Alegre en el siglo XX, la cual había crecido desde 1900 para convertirse en un parador turístico como un centro industrial.
+La mayoría de las vitrinas tenían fotos, planos o gigantografias de recortes periodísticos. Se veía fotos de la inauguración del Casino de Costa Alegre así como de los primeros hoteles sindicales que se había construido a metros del mar.
+En el centro de la sala había una maqueta que contaba la historia de la toma de los Astilleros Herrera, símbolo de la lucha sindical de los sesenta y setenta en la Ciudad. En esa época cada vez que salía un barco del astillero se cobraba la vida de un par de trabajadores que morían por las pésimas condiciones de seguridad. El conflicto llevó a la fábrica por parte de los trabajadores exigiendo condiciones dignas de trabajo y terminó con una brutal represión por parte de la dictadura militar.
+{ fuerza >= 20:
+    Viendo el mapa te das cuenta que el predio de la fábrica no era tan difícil de custodiar, el gran problema era la posibilidad que la marina haga un desembarco naval entrando desde la rampa de lanzamiento del astillero. Si vos hubieses estado encargado de la defensa del predio, con veinte hombres fuertes y un par de armas largas, podrías seguir hasta el día de hoy atrincherado en la fábrica.
+}
+# next
+
+Ya recorriste la mitad del circulo que compone el Museo y por fin llegás a la sala donde está la Momia Incaica. Aparte de la Momia (que está escondida de la vista detrás de unos biombos con información de la cultura Inca) en esta sala está la mayoría de los visitantes del museo que esperan su turno para entrar a ver la momia o dan vuelta entre las vitrinas donde se encuentran diversos objetos cotidianos propios del Imperio Inca.
+{ magia >= 20:
+    Mary Shelley tiene razón, la momia desborda de energía sobrenatural. Toda la sala se siente como un sauna, el aire está caliente y espeso y tenés que sentarte unos minutos para recuperar la compostura. La mera cercanía del objeto te hace sentir emocionado, excitado y energizado a la vez. No tenías esta mezcla tan particular desde que eras adolescente. Respirás y te concentrás en tu propio cuerpo y notás tus palmas mojadas, tu rostro colorado y tu corazón acelerado.
+    Agradecés que la comunidad sobrenatural de Costa Alegre sea bastante bruta y no visite de forma regular los Museos, sino alguien ya se hubiese dado cuenta de las particulares características de la Momia Inca y hubiese intentado robarla.
+    Aun así, te da un poco de miedo lo que puede pasar si quedás frente a frente a la Momia.
+}
+
+Se hace un hueco entre las masas de visitantes que quieren ver a la Momia Incaica. Si querés entrar a verla este es el mejor momento para hacerlo.
+
+* [Entrás a ver a la Momia Incaica]
+    -> cap3_museo_dia_momia
+
+* [Lo importante es explorar el Museo para volver a la noche, mejor terminar el recorrido]
+    -> cap3_museo_dia_recorrido_final
+
+=== cap3_museo_dia_momia ===
+Te metés entre los biombos que buscan recrear la cueva donde fue encontrada la Momia. Te sorprende lo pequeña que es, es obvio que en vida era solo una niña. Aparte su rostro, mirando hacia abajo y escondido detrás de un mechón de pelos, la hace parecer tímida e incómoda. No podés dejar de pensar que tal vez no es correcto que esté expuesta ante masas de desconocidos. Sentís que hay un doble sacrilegio, tanto al ritual religioso de su sacrificio como a la intimidad y respeto que le corresponde a los muertos.
+# next
+
+{ magia < 20:
+    La energía se siente más espesa. Tu camisa de repente está empapada de sudor y una presión aprieta tu frente. Durante unos segundos no podés actuar, pero te saca de tu ensoñación unas gotas de sangre que caen sobre tu pecho. Te llevás las manos a tu nariz, estás sangrando. Mucho.
+    Por lo menos la sangre es un vector que te pone en movimiento, te abrís paso a los empujones y vas a la siguiente sala en busca de un baño.
+    -> cap3_museo_dia_recorrido_final
+- else:
+    { magia < 30:
+        La energía de la momia es desbordante. Es como el sol o el mar. Aún más, esos conceptos tienen límites, son objetos finitos e ideas manejables. La energía de la momia es algo aun mayor, una luz rosada atraviesa todo. Los objetos, tu cuerpo, los espacios entre los átomos.
+        Sentís la energía desbordándote, difuminándote. Una sensación de vértigo y caída te inunda e intentás enfrentarla.
+        Los límites de tu ser se desdibujan e intentás torpemente mantenerlo, como un niño que dibuja unos palotes y dice que eso es una persona.
+        Es entonces cuando tu cuerpo dice basta.
+        ~ hp -= 10
+        -> cap3_museo_dia_hospital
+    - else:
+        La energía de la momia es desbordante. Se siente como tener el mejor sexo de tu vida, dentro de un auto de alta gama, que avanza a toda velocidad, por el infinito.
+        Naciste para manejar estas energías. Todo el tiempo anterior a esto, o sea toda tu vida, parece tan lenta y mundana. Gris y estática. Una pared de cemento.
+        Te emborrachás en la energía. A tu alrededor se escuchan gritos. El tono de esos gritos va más allá del miedo ¿Pánico? ¿Locura?.
+        Al olor después se le suma el olfato. Humo y el distintivo olor a carne quemada. Pero no te descompone, estás más allá de descomponerte.
+        Por último se agrega el tacto. Ahí te das cuenta que la carne que se está quemando es la tuya.
+        ~ hp -= 20
+        -> cap3_museo_dia_hospital
+    }
+}
+
+=== cap3_museo_dia_hospital ===
+Una luz gigante flotaba sobre tu cabeza. Tu primera impresión fue que habías muerto y estabas en el cielo. Estabas relajado y, por lo menos, no tenías que levantarte para ir a trabajar.
+Esa impresión duró hasta que la luz gigante titiló fruto de una falla de corriente y una polilla, confundida, huyó de la oscuridad y se chocó contra tu cara.
+Problemas de corriente, olor a desinfectante, una sábana rasposa y el tic tac constante de aparatos electrónicos.
+Estabas en el Hospital de Costa Alegre. Lejos del Cielo, con suerte estabas en su antesala.
+# next
+
+Parece que tu contacto cercano con la Momia había sobrecargado tu cuerpo. Después de hacer un análisis superficial (y carente de cualquier conocimiento técnico, simplemente te dedicaste a tocar todo lo que podías tocar para asegurar que seguía en su lugar) llegaste a la conclusión de que estabas bien.
+En cuanto te sentás en la cama tu conclusión cambia de bien a relativamente bien. Tu cabeza duele como si alguien le hubiese pegado con un martillo y tu cuerpo se siente liviano y carente de energía, sin duda por la pérdida de sangre.
+# next
+
+Es sorprendente lo fácil que es escapar de un Hospital. Teniendo en cuenta lo colapsado que está el sistema de salud de la ciudad, creo que si algún profesional de salud se da cuenta que sos un fugado solamente se alegra al saber que va a tener una cama libre para un paciente más grave. Al fin de cuentas, si tenés suficiente energía para poder escaparte, no deberías estar en un hospital en primer lugar.
+Al salir del Hospital notás una luna llena iluminando el paisaje nocturno. Tu pequeña experiencia te hizo perder todo el día y desperdiciar cualquier oportunidad de planificar el robo de la Momia.
+No te quedan más opciones que ir directo al Museo e improvisar sobre la marcha.
+# next
+-> cap3_museo_noche_entrada
+
+=== cap3_museo_dia_recorrido_final ===
+La última sala es el cuarto de recuerdos. Postales, remeras, vasos e imanes. La característica común es el sobreprecio.
+Si seguís avanzando volvés a la Sala principal y salís del Museo. A la derecha hay una arcada que da al centro del edificio, un jardín arbolado donde se instaló un café improvisado. Con ver el pizarrón con la oferta culinaria te das cuenta que el lugar también está marcado por el sobreprecio.
+Ya recorriste el lugar, antes de irte podrías dejar preparada alguna acción que te permita hacer más fácil tu incursión nocturna para robar la momia.
+
+* [Esconderte dentro del Museo es una opción. Y te ahorraría pensar cómo entrar a la noche.]
+    Intentás esconderte en el baño del Museo. Trabás la puerta de un privado y te parás sobre el inodoro para que el guardia de seguridad no se dé cuenta que estás ahí cuando haga su ronda. Tenés que hacer fuerza para contener tu risa al recordar que usaste la misma técnica para quedarte en el colegio una noche con unos amigos.
+    El plan funcionó esa vez. Lamentablemente, ya no estás en el colegio.
+    No sabés cómo se dan cuenta que estás ahí, posiblemente tengan un sistema de cámaras y les llamó la atención que alguien entró al baño y nunca salió (esperás que nadie se descomponga en el museo).
+    Un guardia con poco sentido del humor te escolta a la puerta.
+    Afuera ves una luna llena iluminando el paisaje nocturno. Tu pequeña experiencia te hizo perder todo el día y desperdiciar cualquier oportunidad de planificar el robo de la Momia.
+    No te quedan más opciones que ir directo al Museo e improvisar sobre la marcha.
+    -> cap3_museo_noche_entrada
+
+* { conocimiento >= 20 } [En las Salas hay guardias, podrías intentar robarle la llave a alguno para entrar tranquilo a la noche.]
+    El Museo no está lleno de gente. Chocarse a alguien por accidente es difícil. Así que buscás otro enfoque. Registrás el lugar y encontrás lo que buscás, te das cuenta porque no tienen el aspecto del típico visitante de un Museo, caminan demasiado rápido y hablan demasiado alto. Es una pareja de adolescentes que sin duda estaban pasando la tarde en la plaza y decidieron entrar a molestar un poco.
+    Uno de los guardias también los detecta y empieza a seguirlos, y vos lo seguís a él a unos metros (o, mejor dicho, al llavero que lleva colgado de su cinto). Al llegar a la Sala de la exposición Inca uno de los adolescentes hace una idiotez (obviamente) y golpea uno de los vidrios con sus nudillos un par de veces.
+    El guardia se acerca para retarlos y vos aprovechás para pasar por su lado y hacer la maniobra McPherson y terminás con su juego de llaves en tu bolsillo.
+    Esta noche vas a poder entrar por la puerta grande sin necesidad de tener problemas.
+    -> cap3_museo_ya_adentro
+
+* { magia >= 20 } [Un hechizo de invisibilidad y a esperar al baño.]
+    Hacerte invisible no es tan fácil como parece. Si no estás bien concentrado más que invisible sos difuso, por usar una palabra. Aparte, curiosamente, nada llama más la atención que hacerte invisible en mitad de una multitud.
+    Vas al baño y te escondés en un privado. Te concentrás mientras ejecutás una serie de precisos movimientos de manos a la par que repetís una onomatopeya de forma cada vez más baja.
+    Una vez que sos invisible (como confirma el espejo del baño) te parás en una esquina esperando no chocarte con nadie y solo te resta esperar a la noche.
+    -> cap3_museo_ya_adentro
+
+* { fuerza >= 20 } [La puerta va a estar protegida, lo más simple es entrar trepando. Buscás claraboyas y ductos de respiración.]
+    Das una nueva vuelta al museo, solamente que esta vez en lugar de observar los objetos en exposición te dedicás a estudiar el techo buscando una claraboya o los ductos de un aire acondicionado. La mayoría de las Salas carece de estos mecanismos, sospechás que para proteger las obras, pero el hall por el cual entrás tiene un ventanal gigante para facilitar la iluminación.
+    A la salida estudiás el bosque que rodea el lugar y notás un árbol con una rama convenientemente gruesa que llega cerca del techo del Museo.
+    Con un poco de suerte podrías saltar al techo del Museo, abrir el ventanal, y descolgarte con una soga. Arriesgado, pero divertido.
+    -> cap3_museo_ya_adentro
+
+* [A centímetros tuyos hay una alarma de incendio. No es necesario esperar. Simplemente generar caos y correr por la Momia.]
+    Siempre tuviste ganas de hacer esto. Ves la alarma de incendio en la pared y te parece la mejor idea del mundo. En cuanto bajás la palanca una sirena grave empieza a escucharse por todo el Museo, luego viene una luz roja parpadeante y por último los gritos de pánico de toda la gente presente.
+    La gente se convierte en una marea humana que va hacia la puerta. Vos avanzás contra corriente intentando llegar a la Sala donde se encuentra La Momia. Buscás los puntos de menor resistencia, aquella gente que parece que se va a correr a tu paso, en algún momento saltás por encima de un nene chiquito y girás todo tu cuerpo para no golpear de frente a una señora que no llegó a verte.
+    Vas a llegar. Estás seguro que vas a llegar. Por lo menos eso creés hasta que alguien te agarra con una llave por el cuello y te dice "Es para el otro lado amigo". Te encontraste con un puto héroe ¿Cuáles eran las posibilidades?.
+    Esos minutos que perdés son clave. Empezás a ver que el Museo se llena de uniformes azul (policía) y marrón (bomberos).
+    Todo se volvió demasiado público, no te queda más opción que salir del Museo y volver a intentarlo a la noche.
+    -> cap3_museo_noche_entrada
+
+=== cap3_museo_ya_adentro ===
+Tu plan fue un éxito y te encontrás dentro del Museo en cuanto cierra. Mientras avanzás bajo la semioscuridad escuchás unos ruidos en las otras Salas del Museo. Al principio no le das mucha importancia, este tipo de edificios viejos tienden a ser muy ruidosos cuando llega la noche y baja la temperatura. Sin duda es el metal de una cañería o algo por el estilo.
+Pero después te das cuenta que el ruido es demasiado continuo y parece provenir de diversos grupos en varias habitaciones. ¿Guardias de seguridad? Podría ser pero los pasos serían demasiado inconstantes.
+# next
+
+Estás en el Hall Central listo para iniciar el recorrido que te va a llevar a la Momia Incaica cuando escuchás que una puerta detrás tuyo se abre.
+Te escondés detrás del mostrador (el colmo de la falta de imaginación) mientras espiás por el filo del mueble. Un guardia de seguridad entra y recorre toda la habitación con el brillo de su linterna.
+Avanza al centro de la habitación y no se da cuenta de nada. Sos vos el que lo nota primero, detrás de él aparecieron tres maniquíes que simplemente antes no estaban ahí. Notás que su rostro es totalmente liso, carente de cualquier rasgo facial, y eso es aún más perturbador que su súbito aparecer.
+# next
+
+El guarda para unos segundos y los maniquíes comienzan a moverse. Su caminar al principio es torpe y carece de dirección clara hasta que de repente los tres a la vez aumentan su velocidad y, con su avance zigzagueante, rodean al guardia de todas las direcciones.
+La violencia generalmente ocurre muy rápido, por mucho que lo veas es increíble en qué tan poco tiempo las cosas pueden cambiar completamente para alguien. Uno de los maniquíes carga de frente, el guardia llega a darle un golpe fuerte en la cara con su pesada linterna (mala táctica, pero hay que reconocer que es valiente) pero el maniquí parece no sentir dolor.
+En cuestión de segundos el maniquí atrapó uno de sus brazos mientras que los otros dos, que llegaron por los costados, agarraron respectivamente su otro brazo y una pierna.
+Luego se dedican a tirar y doblar las extremidades.
+# next
+
+No hay malicia en la cara de los maniquíes (fácil al no haber rostro) ni emiten un sonido. Solo se escuchan los gritos desesperados del guardia que solo son superados por el ruido seco de huesos rompiéndose y carne siendo desgarrada.
+Cuando terminan su trabajo sueltan al guardia que cae pesadamente al piso. Una caída así de espalda sin duda le saca todo el aire de los pulmones y le impide seguir gritando ayuda.
+No pensás quedarte para ser la segunda víctima, aprovechás el momento y te colás en la Primera Sala del Museo mientras planeás cómo enfrentarte a esta nueva amenaza.
+# achievement:unlock:llegaste_con_ventaja
+# next
+-> cap3_museo_primera_sala
+
+=== cap3_museo_noche_entrada ===
+# music:terror_ambient
+Para tu desventaja, la noche está hermosa. Preferirías una de esas tormentas que traen el frio del mar y dejan la noche con olor a sal pero la noche es cálida con una brisa regular que llama a caminar.
+Eso significa que el parque que rodea el Museo está lleno de parejas que caminan lento y sin rumbo, adolescentes que se aburren y no hacen nada (pero prefieren hacerlo afuera de su casa) y hasta un par de familias con niños que quedaron energizados después de la visita al Museo y no se quieren ir todavía.
+Eso significa que te toca esperar un poco antes de ver cómo forzar tu entrada.
+# next
+
+Es entonces cuando te das cuenta que ya hay algo dentro del Museo. No es un ruido o una sensación sobrenatural, más una herencia genética de un pasado de cazador recolector que levanta pequeños detalles que no llegás a procesar y le da información a tu cerebro: hay algo entre esos arbustos ¿presa o peligro?.
+Que se joda la sutileza, es momento de entrar en el Museo.
+
+* { fuerza >= 20 } [Un poco de fuerza bastará para romper el mecanismo de la puerta.]
+    Te apoyás contra la puerta y empezás a forzar el mecanismo mientras empujás con tu hombro. Requiere más que un poco de fuerza pero, luego de unos minutos, escuchás el click del mecanismo rompiéndose y podés entrar al hall central del Museo.
+    -> cap3_museo_noche_convergencia
+
+* { conocimiento >= 20 } [Hace tiempo que las ganzúas no se usan. Es su momento de brillar.]
+    Las ganzúas bailan en la cerradura de la puerta haciendo un tintineo metálico. Apoyás tu oreja contra la puerta y vas escuchando el resultado de cada movimiento hasta encontrar la posición correcta. Eureka, la puerta se abre y entrás al hall central del Museo.
+    -> cap3_museo_noche_convergencia
+
+* { magia >= 20 } [Un poco de calor concentrado bastará para romper el mecanismo de la puerta.]
+    Concentrar el calor fue lo más difícil, lo que te sale más natural era prender fuego toda la puerta (y la mitad del Museo de yapa) pero este trabajo requería algo más sutil. A medida que pasaron los segundos el calor se fue concentrando y aumentando, hasta convertir el pico de la puerta en una baba candente que cayó al piso. Así, por arte de magia (textualmente) lograste entrar al hall central del Museo.
+    -> cap3_museo_noche_convergencia
+
+* [Entrás de todas formas — improvisando]
+    Rodeás el edificio buscando cualquier punto débil. Una ventana trasera con el seguro flojo cede con un poco de insistencia. No es elegante, pero funciona.
+    -> cap3_museo_noche_convergencia
+
+=== cap3_museo_noche_convergencia ===
+Te encontrás de nuevo en el hall central, bajo la tenue luz de la luna que entra por los ventanales. Tardás unos segundos en comprender lo que estás viendo, una pieza así sería más propia de un museo de arte moderno.
+En el piso hay una figura con el típico traje de guardia de seguridad, pero sus extremidades se encuentran dobladas en ángulos raros, ángulos que ningún cuerpo humano adoptaría voluntariamente.
+A su alrededor están parados tres maniquíes de aspecto humanoide pero con rostros planos, carentes de cualquier rasgo. Por alguna razón esta particularidad los hace parecer más perturbadores.
+Sospechás que, tal vez, dejaron en el hall central elementos que deben colocar en alguna vitrina mañana a primera hora para hacer una composición.
+# next
+
+Es entonces cuando escuchás un quejido en el piso. La figura con el traje de guardia de seguridad no era una maqueta ni un maniquí, era una persona que (por ese ruido) estaba en sus últimos minutos de vida.
+No tenés mucho tiempo, debés decidir cómo actuar.
+
+* [Te acercás a intentar salvar la vida al guardia de seguridad]
+    Te arrodillás al lado del guardia mientras intentás recordar los pocos conocimientos que tenés sobre primeros auxilios. Sentís que, aun si recuperás todo lo que olvidaste sobre salud, el guardia está más cerca de necesitar un milagro que un médico.
+    Solo llegás a notar cómo una sombra se mueve, antes de darte cuenta uno de los maniquíes te agarra firmemente del cuello. Movés los pies desesperadamente intentando encontrar algo sólido pero solo hay vacío. Lentamente te empezás a quedar sin aire.
+    { fuerza >= 25:
+        Sentís tus abdominales en llamas pero lográs elevar tus piernas y darle una patada al maniquí para forzar que te suelte. Corrés hacia la primera sala mientras ves delante de ti las sombras que produce el arbitrario movimiento del maniquí y escuchás detrás de ti el ruido inconexo de sus pisadas.
+        ~ hp -= 10
+    - else:
+        Es entonces cuando otro maniquí descarga un golpe contra tu estómago, dejándote sin aire mientras abrís la boca en un grito mudo.
+        Por suerte te lanza como un muñeco roto con tanta fuerza que atravesás la puerta hasta la siguiente habitación.
+        ~ hp -= 20
+    }
+    -> cap3_museo_primera_sala
+
+* [Alguien ya está en el Museo, vas a la siguiente sala para llegar rápido a la momia.]
+    -> cap3_museo_primera_sala
+
+=== cap3_museo_primera_sala ===
+// TODO: Task 7 — primera sala + combate sensorial
 -> END
 
 // ============================================================
