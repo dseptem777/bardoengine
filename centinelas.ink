@@ -54,6 +54,7 @@ VAR habitacion_img = ""
 
 // Cap 3 — Museo
 VAR item_enojo_enriquez = false
+VAR belen_sobrevive = false
 VAR cabral_al_museo = false
 VAR voz_conocida = false
 VAR momia_robada = true
@@ -4426,7 +4427,137 @@ En menos de quince minutos estaban apoyados sobre una mesa con fotos de la momia
     -> cap3_tiempo_libre
 
 === cap3_tiempo_libre ===
-// TODO: Task 5 — 5 opciones antes del museo
+
+El plan era simple. Ibas a ir esta tarde a hacer un recorrido al Museo para conocer las instalaciones y obtener un poco información. A la noche ibas a volver con el objetivo de robarte la momia y venir directo a El Faro.
+# next
+En algún momento de la planificación entra Enriquez (tarde) con cara de pocos amigos y una jarra llena de café.
+# next
+* [Le haces un comentario]
+    -> cap3_tl_comentario_enriquez
+* [No le decís nada]
+    -> cap3_tl_sin_comentario
+
+=== cap3_tl_comentario_enriquez ===
+En cuanto entra señalás el reloj de tu muñeca.
+—Buenas tardes, ¿Querés que te preste mi reloj así te organizás?
+La mirada de Enriquez es suficiente como para asesinar a alguien y te das cuenta que tiene en las manos una jarra llena de café hirviendo y no tendría dudas en usarlo.
+Esto te va a pasar factura.
+~ item_enojo_enriquez = true
+# achievement:unlock:enojo_enriquez
+# next
+-> cap3_tl_menu
+
+=== cap3_tl_sin_comentario ===
+Sos lo suficiente inteligente para darte cuenta que no te conviene tener una mala relación con Enriquez. Aparte trae café, nadie que traiga café puede ser malo. Te llenás una taza y te dedicás a ver una foto de la momia incaica hasta que la imagen queda grabada en tu memoria.
+# next
+-> cap3_tl_menu
+
+=== cap3_tl_menu ===
+
+Llega un punto que no es posible hacer más planificación desde El Faro. Solo resta que vayas al Museo y hagas una exploración en el terreno. Aún así es temprano todavía, por lo que tenés tiempo para hacer alguna acción más antes de comenzar tu misión.
+# next
+
+¿Cómo aprovechás el tiempo?
+* [Entrenar un poco con Cabral]
+    -> cap3_tl_cabral
+* [Ver si Enriquez tiene algo de conocimiento para compartir]
+    -> cap3_tl_biblioteca
+* [Hablar con Mary Shelley para afinar tus poderes sobrenaturales]
+    -> cap3_tl_mary_shelley
+* { belen_sobrevive } [Visitar a Belén en el nuevo orfanato]
+    -> cap3_tl_belen
+* { algunos_guardias_sobreviven } [Ver cómo están los guardias del cementerio]
+    -> cap3_tl_guardias
+* [No perder más tiempo — ir directo al Museo]
+    -> cap3_museo_dia
+
+=== cap3_tl_cabral ===
+Cabral adaptó el sótano para convertirlo en una verdadera pista de obstáculos. Hay vallas para saltar, un muro para escalar y una intricada red de alambre de púa pensada para que te arrastres por debajo. Visto desde afuera, todo parece increíblemente divertido.
+# next
+Eso es, obviamente, hasta que empezás a hacerlo. A los cinco minutos de recorrido tus pulmones se sienten en llamas y tus rodillas parecen hechas de cristal.
+No ayuda que cuando terminás Cabral se limita a mirar el reloj, negar con la cabeza y gritar de nuevo.
+La primera vez que grita de nuevo te enojás, la segunda querés llorar. Para la tercera tu espíritu ya está roto y hacés el recorrido a pura inercia.
+# next
+Terminás en el piso, recostado sobre un charco de tu propio sudor. Por suerte Cabral siempre sabe cómo levantar tu ánimo y ya te está acercando una botella de agua mientras te hace una pregunta clave.
+—¿Qué preferís? ¿Sanguches de milanesa o hamburguesas?
+~ fuerza += 5
+# play_sfx:stinger_fuerza
+# next
+-> cap3_museo_dia
+
+=== cap3_tl_biblioteca ===
+Te encontrás a Enriquez en su escritorio, con tan pocas ganas de sociabilizar como siempre.
+# next
+{ item_enojo_enriquez:
+    —Estuve chequeando tus pedidos de libros para estudiar y vi que hay un error burocrático. Es una lástima pero tuve que cancelar el pedido del día de hoy —Enriquez disfruta cada una de las palabras.
+    —¿Se puede hacer un nuevo pedido?
+    —Sí, tiene que ser acorde al protocolo 22-J, ¿lo conocés?
+    —Obviamente mentís.
+    —Genial. Igual tiene un plazo de 48 horas, así que hoy no vas a poder leer nada.
+    Te retirás aceptando tu derrota. Tal vez no debiste burlarte de ella.
+    # next
+- else:
+    Sobre el escritorio te espera un libro gigante con la letra H escrita en la tapa con letras doradas. Te sorprende que una letra muda en español tenga tantas palabras en el manual correspondiente.
+    # next
+    Ojeando el libro te das cuenta que hemo es el prefijo que significa sangre y pasás las siguientes horas aprendiendo sobre todas las cosas horribles que quieren beber, usar o robar tu sangre, incluido un mosquito de más de dos metros que tiene la costumbre de decapitar a las personas para poner su pico directo en la aorta.
+    # next
+    Terminás la lectura y te das cuenta lo codiciado que sos. De repente sentís que bajo la fina capa de tu piel hay un tesoro que todos quieren robar.
+    ~ conocimiento += 5
+    # play_sfx:stinger_conocimiento
+    # next
+}
+-> cap3_museo_dia
+
+=== cap3_tl_mary_shelley ===
+Mary Shelley está intentando solucionar una ecuación en su pizarrón. Parece que la manía que la desbordaba esta mañana ahora se concentró en un punto focal. Aun así, mientras mira el pizarrón no deja de golpetear el piso con su pie derecho mientras su mano izquierda juguetea con una lapicera.
+# next
+—¿Problema difícil? —preguntás.
+—Técnicamente, existe la posibilidad de que cuando haga el ritual, tal vez despierte a todos los muertos del mundo y cree una invasión zombie.
+—¿El Profesor sabe esto?
+—Tranquilo, no va a ocurrir una invasión zombie.
+—Mejor, eso sería extremadamente poco original —contestás.
+# next
+Ella está ocupada pero te da un ejercicio para fortalecer tu concentración. Te coloca sobre un pentagrama durante las próximas horas y tu única tarea es usar tu voluntad para que una pequeña moneda se mantenga flotando a la altura de tus ojos.
+# next
+En cuanto te parás sobre el pentagrama empieza a ocurrir de todo. Pasás por picos de calor a picos de frío, de repente una terrible sensación de ingravidez se instala en tu estómago. En un momento estás seguro que cientos de bichos babosos encontraron la forma de meterse entre tu ropa y reptan sobre tu piel dejando una húmeda baba a su paso. Por último, sentís un bocinazo constante detrás de ti a pesar de no poder avanzar.
+# next
+Hay momentos difíciles, pero a pesar de todo lográs sobreponerte y la moneda nunca cae al piso.
+~ magia += 5
+# play_sfx:stinger_magia
+# next
+-> cap3_museo_dia
+
+=== cap3_tl_belen ===
+El nuevo orfanato parece más feo. El edificio tiene claras marcas de descuido, vidrios rotos en la ventana, rejas oxidadas y paredes mal pintadas. El hecho de estar en una parte fea de la ciudad no ayuda mucho. Tampoco habla muy bien del lugar que, con muy poco sigilo burocrático, El Faro logró que autoricen que la visites de forma regular.
+# next
+Ella se sube a tu auto y te da un hola tímido. Siempre los primeros momentos son raros. Es verdad que una invasión de arañas demoniacas no es la mejor forma de conocer a alguien, pero en cierta forma te sentís responsable por su vida ahora. No tenés duda que algún burócrata en un sótano ya la anotó como posible futura Guardián.
+# next
+Aprovechás la mañana para comprarle un helado y dar una vuelta por la playa mientras los primeros rayos del sol expulsan el frío. La verdad es que verla bien sirve para darte cuenta lo importante de tu trabajo. Vos podés pasar por grandes cuotas de dolor físico o mental pero si al final una niña sobrevive, todo vale la pena.
+# next
+Después de un par de horas la volvés a llevar al orfanato y repetís la tradición del final de cada salida: le prometés que los monstruos no van a volver, le decís que cualquier problema puede llamarte y le pasás una bolsa de caramelos para que soborne a sus compañeros de orfanato.
+~ hp += 5
+# next
+-> cap3_museo_dia
+
+=== cap3_tl_guardias ===
+Es raro volver al Cementerio. A simple vista no se ve ninguna señal de la batalla que ocurrió acá hace unas noches. La única novedad es un cartel de un blanco impoluto sobre el cual, en grandes letras negras, se aclara que está prohibido ingresar al predio luego del atardecer. No confiás mucho en que los Vampiros tengan un respeto obsesivo por la ley como para dejarse amedrentar por un simple letrero, pero entendés que es parte de una necesidad humana para normalizar la situación y sentir que se da una respuesta. Acá pasó algo una noche, así que pusimos un cartel y nunca se va a volver a repetir, los votantes ya pueden dormir tranquilos.
+# next
+Uno de los guardias te ve venir desde la garita y te saluda efusivamente, y luego en forma de chiste te hace un saludo militar. Desde los eventos en la entrada de la cripta (apodada la batalla de la cripta por los guardias) ellos bromean que sos su Capitán, General o Teniente. Generalmente ascendés de grado conforme hay más alcohol en la reunión.
+# next
+Si bien la mayoría no sabe de la existencia de El Faro, están conscientes de que en la oscuridad acechan cosas horribles y vos pertenecés a una organización indefinida que se encarga de mantenerlas a raya.
+# next
+Antes de darte cuenta estás con dos guardias tomando mate mientras un tercero está pidiendo un par de pizzas por delivery. Existe cierta comodidad que solo se da en la camaradería producto de haber atravesado juntos algo grande.
+# next
+Mucha gente atraviesa la vida sin tener una gran aventura, y es lógico, las grandes aventuras suenan bien en papel pero cuando uno las vive se da cuenta que están compuestas por temor, sufrimiento y pérdida. Los guardias tuvieron la tragedia de tener una gran aventura, pero la suerte de encontrar en ella la fuerza para sobrevivir y el coraje para sobrepasarlo. En cierta forma, están agradecidos por la oportunidad que les diste.
+# next
+Sabés que esta es la historia que se va a contar en fiestas familiares durante generaciones y no dudás que algún nieto lleve tu nombre. Pero ahora es momento de disfrutar del calor y el cariño que solo se tiene rodeado de compañeros de armas.
+La tarde sirve para relajar tu mente y prepararte para los retos que tengas que enfrentar a futuro.
+~ hp += 5
+# next
+-> cap3_museo_dia
+
+=== cap3_museo_dia ===
+// TODO: Task 6 — reconocimiento diurno del museo
 -> END
 
 // ============================================================
