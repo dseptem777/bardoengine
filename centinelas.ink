@@ -4783,7 +4783,92 @@ No tenés mucho tiempo, debés decidir cómo actuar.
     -> cap3_museo_primera_sala
 
 === cap3_museo_primera_sala ===
-// TODO: Task 7 — primera sala + combate sensorial
+# stop_music
+# play_sfx:heartbeat_boost
+# UI_EFFECT: blur_vignette
+# play_sfx:pasos_monstruo
+
+Te encontrás de nuevo en el hall central, bajo la tenue luz de la luna que entra por los ventanales. Tardás unos segundos en comprender lo que estás viendo, una pieza así sería más propia de un museo de arte moderno.
+# next
+
+En el piso hay una figura con el típico traje de guardia de seguridad, pero sus extremidades se encuentran dobladas en ángulos raros, ángulos que ningún cuerpo humano adoptaría voluntariamente. A su alrededor están parados tres maniquíes de aspecto humanoide pero con rostros planos, carentes de cualquier rasgo. Por alguna razón esta particularidad los hace parecer más perturbadores.
+# next
+
+Es entonces cuando escuchás un quejido en el piso. La figura con el traje de guardia de seguridad no era una maqueta ni un maniquí, era una persona que —por ese ruido— estaba en sus últimos minutos de vida. No tenés mucho tiempo.
+# next
+
+El latido de tu propio corazón se amplifica en tus oídos como si alguien hubiera bajado todo el otro sonido del mundo. Los maniquíes se mueven. El clack-clack de sus articulaciones rebota contra las vitrinas de Pueblos Originarios. Tenés segundos para decidir.
+
+¿Qué hacés?
+* [Llegar a la primera sala y trabar la entrada — usar lo que encuentres] -> cap3_combate_baston
+* [Desenfundar y dispararle al maniquí de adelante] -> cap3_combate_revolver
+* [Dejar estallar la magia cruda] -> cap3_combate_magia
+
+=== cap3_combate_revolver ===
+# play_sfx:disparo
+# flash_red
+# shake
+
+El disparo es perfecto, uno de esos para estar orgullosos. Conecta justo en la frente del maniquí —entre los ojos, aunque el bicho tiene un rostro liso lo cual te quita el punto de referencia. No hay sangre, tripas ni gritos de dolor, lo cual vuelve todo bastante anticlimático. Solo el fuerte olor a plástico quemado y la cabeza moviéndose para atrás por el efecto cinético de la bala.
+# next
+
+# play_sfx:clic_arma
+{ fuerza >= 25:
+    Los otros dos maniquíes se te lanzan encima. Sabés que su estrategia es agarrar y torcer, romper o quebrar. Te movés rápido entre ellos y usás el mango del revólver como una porra. En un momento una de sus manos logra agarrar el puño de tu chaqueta; te retorcés como un animal para sacarte la prenda antes que puedan agarrar algo de carne. A pesar de todo, el combate te favorece y de repente te encontrás del otro lado. Con un claro sentido táctico, te das media vuelta y corrés con toda tu fuerza hacia la Sala con la Momia.
+    ~ hp -= 8
+- else:
+    Intentás girar para apuntarle a otro de los maniquíes pero te encontrás con un par de manos abiertas dirigidas directo a tu cuerpo. Por puro instinto te tirás al piso mientras el disparo es un eco que se pierde en el vacío. Te hacés una pelota intentando proteger tus órganos más importantes mientras los tres maniquíes te dan una tanda de patadas. Uno te agarra del cuello y te vuelve a poner sobre dos piernas —por suerte su agarre está en el cuello de tu chaqueta, no en la carne. Te retorcés como un animal y lográs sacarte la prenda. Salís corriendo hacia la Sala con la Momia mientras uno de los maniquíes atrás destroza tu chaqueta.
+    ~ hp -= 10
+}
+# next
+-> cap3_museo_momia
+
+=== cap3_combate_baston ===
+# play_sfx:golpe
+# shake
+
+Llegás a la primera Sala, la exposición de Costa Alegre en la época de los Pueblos Originarios. Ves un par de maquetas y lamentás que estas figuras con lanzas no cobren vida para ayudarte. Atrás tuyo escuchás como los pasos irregulares de los maniquíes se preparan para entrar. Cerrás la puerta de ingreso pero notás que es una madera de mala calidad —parece que el Museo estuvo desfinanciado desde su construcción. El cierre de la puerta es más una expresión de deseo que una defensa real.
+# next
+
+Tu mirada cae sobre una vitrina: báculo ceremonial de madera densa, ritualmente decorado, casi un metro de largo. Pesado. Rompés el vidrio y lo aferrás con ambas manos antes de que los golpes de los maniquíes hagan temblar la puerta.
+# play_sfx:vidrio_roto
+# next
+
+# MINIGAME: keymash key=space duration=6000 threshold=18
+# play_sfx:golpe
+
+{ minigame_result == 1:
+    Cada embiste de madera contra tu defensa hace retumbar toda la sala. Repelés la oleada con el báculo, usando las vitrinas como muralla. Los maniquíes retroceden dando espacio para avanzar. Las manos te sangran por los astillazos pero tus huesos siguen enteros.
+    ~ hp -= 6
+    ~ fuerza += 3
+- else:
+    Un maniquí se te cuela por el flanco y te clava astillas en el costillar antes que lo tirés. Sangrás pero seguís entero. Aprovechás el hueco para correr hacia la siguiente sala.
+    ~ hp -= 18
+}
+# next
+-> cap3_museo_momia
+
+=== cap3_combate_magia ===
+# play_sfx:magia_oscura
+# flash_red
+# UI_EFFECT: blood_pulse
+
+{ magia >= 15:
+    # play_sfx:magiexplosion
+    Dejás estallar la magia cruda. La sala se ilumina con un fogonazo de luz azul y naranja cegadora; el crujido del fuego tapa hasta el latido en tus oídos. Los maniquíes se calcinan en segundos. Un grito de dolor escapa tuyo —quemaste también tus propias manos, pero el camino hacia la Sala con la Momia está despejado.
+    ~ hp -= 12
+    ~ magia -= 5
+    # achievement:unlock:incineracion_museo
+- else:
+    La magia se te escapa mal canalizada. El fogonazo te quema a vos más que a ellos. Dos maniquíes siguen avanzando —su avance es impredecible, mezclando pasos lentos y largos con explosiones de velocidad. Solo te queda correr.
+    ~ hp -= 20
+    ~ magia -= 10
+}
+# next
+-> cap3_museo_momia
+
+=== cap3_museo_momia ===
+// TODO: Task 8 — sala de la Momia + portal + ladrona + rama RATONCITO
 -> END
 
 // ============================================================
