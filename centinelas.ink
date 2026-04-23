@@ -4868,7 +4868,51 @@ Tu mirada cae sobre una vitrina: báculo ceremonial de madera densa, ritualmente
 -> cap3_museo_momia
 
 === cap3_museo_momia ===
-// TODO: Task 8 — sala de la Momia + portal + ladrona + rama RATONCITO
+# music:horror_ambient
+
+Los maniquíes todavía no habían llegado a esta Sala. A simple vista la Momia está escondida dentro de los biombos de la cultura Incaica. El ambiente se siente cálido y pesado, como un sauna, y no es complicado darte cuenta que está cargado de magia. No sabes si la Momia esta reaccionando a la presencia de los maniquíes o si es un tipo de defensa de esta.
+
+Realmente te das cuenta que no sabes si los maniquíes son esbirros de otra facción rival que quiere primerearte para robar (digamos recuperar) la Momia o tal vez son aliados de esta que vienen a liberarla.
+
+Corres entre los biombos y llegas hasta la Momia. Estas listo para romper el vidrio cuando sentís el pico de energía mágica. La realidad se desgarra justo detrás de la Momia, una pequeña herida de medio metro que corta la tela del espacio.
+
+Te golpea la diferencia de presión y temperatura cuando se mezcla el clima del Museo con el del lugar que está del otro lado del portal. El aire se llena del olor a agua salada, donde sea que está el otro lado del portal se encuentra en alguna playa.
+# next
+
+No hay tiempo que perder. Golpeas con toda tu fuerza el vidrio de la vitrina que protege a la Momia y todo lo que obtenés es un dolor que sube de tu meñique hasta tu codo. El vidrio está reforzado.
+
+Del portal surgen dos manos femeninas con uñas pintadas de violeta, el mismo color que tiene los bordes del portal, y empieza a hacer fuerza para ensancharlo.
+
+Le das el segundo golpe a la vitrina, y un tercero, cuarto y hasta quinto. El vidrio termina con una pequeña muesca, vos terminás más lastimado.
+
+Las manos logran estirar suficiente el portal hasta que tenga el tamaño de la ventana de una casa. Un par de brazos femeninos se estiran y abrazan a la Momia.
+# next
+
+# play_sfx:sting_revelacion
+"el primero que lo encuentra se lo lleva" —dice un tono de voz juguetón mientras se lleva a la Momia por el portal.
+# next
+
+{ conocimiento >= 40:
+    ~ voz_conocida = true
+    # play_sfx:stinger_conocimiento
+    Esa voz te suena conocida, pero no estás seguro y el ruido de los maniquíes acercándose ocupa más tu atención.
+    # achievement:unlock:ratoncito_sabiduria
+}
+# next
+
+El portal se cierra y vos te quedás golpeando la vitrina, solo lográndote lastimar más. Perdiste. Te metiste al Museo, no lograste tu objetivo, y te quedaste con un grupo de maniquíes que quieren matarte.
+~ momia_robada = true
+# next
+
+-> cap3_final_fracaso
+
+=== cap3_final_fracaso ===
+# stop_music
+# CHAPTER_BREAK: title=Fracasaste, subtitle=Fin del Capítulo 3, music=terror_ambient
+
+Fin de la demo. El eco de los clack-clack se acerca.
+# next
+
 -> END
 
 // ============================================================
