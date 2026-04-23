@@ -1,6 +1,6 @@
 {
     "title": "CENTINELAS DEL SUR",
-    "version": "0.17.2",
+    "version": "0.18.0",
     "theme": {
         "primaryColor": "#8b5cf6",
         "bgColor": "#030712",
@@ -380,6 +380,55 @@
             "description": "Nunca cediste ante el miedo.",
             "icon": "🧠",
             "image": "/games/centinelas/achievements/duro rocky badge.jpg"
+        },
+        {
+            "id": "espia_elfaro",
+            "title": "Oreja indiscreta",
+            "description": "Escuchaste la conversación prohibida en el laboratorio de El Faro.",
+            "icon": "👂",
+            "image": null
+        },
+        {
+            "id": "enojo_enriquez",
+            "title": "Cazador de tappers",
+            "description": "Descubriste el tapper misterioso que Enríquez esconde en la cocina.",
+            "icon": "🔍",
+            "image": null
+        },
+        {
+            "id": "colaborador_museo",
+            "title": "Trabajo en equipo",
+            "description": "Coordinaste con tus compañeros para entrar al museo sin improvisar.",
+            "icon": "🤝",
+            "image": null
+        },
+        {
+            "id": "no_colaborador_museo",
+            "title": "Lobo solitario",
+            "description": "Entraste al museo por tu cuenta, sin avisar a nadie.",
+            "icon": "🐺",
+            "image": null
+        },
+        {
+            "id": "llegaste_con_ventaja",
+            "title": "Con ventaja",
+            "description": "Llegaste al Museo antes que cayera la noche.",
+            "icon": "⏱",
+            "image": null
+        },
+        {
+            "id": "incineracion_museo",
+            "title": "Pirotecnia arqueológica",
+            "description": "Incineraste a los maniquíes con magia cruda.",
+            "icon": "🔥",
+            "image": null
+        },
+        {
+            "id": "ratoncito_sabiduria",
+            "title": "Oído fino",
+            "description": "Reconociste la voz de la ladrona del portal.",
+            "icon": "🐭",
+            "image": null
         }
     ],
     "extras": {

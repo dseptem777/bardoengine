@@ -1,5 +1,25 @@
 # Changelog — Centinelas del Sur
 
+## [0.18.0] — 2026-04-23
+
+### Añadido
+- **Capítulo 3 "Visita al Museo"** — integración completa del crudo del co-autor (495 líneas, ~12k palabras)
+  - Escena 1-2: Llegada 6am a El Faro, pre-briefing con 3 rutas (recorrer, espiar oficina Profesor, espiar laboratorio)
+  - Escena 3: Briefing con El Profesor + Mary Shelley, plan de robar la Momia incaica
+  - Escena 4: 6 opciones de tiempo libre antes del museo (Cabral +5 fuerza, cocina item secreto Enríquez, biblioteca +5 conocimiento/magia condicional, Belén +5 hp, guardias cementerio +5 hp, ir directo al museo)
+  - Escenas 5-6: Reconocimiento diurno con 4 rutas (fuerza/conocimiento/magia/improvisada) + entrada nocturna
+  - Escenas 7-8: Combate sensorial en la primera sala — 3 ramas (revólver + candelabro colapsando, báculo ceremonial con keymash, magia cruda)
+  - Escenas 9-10: Sala de la Momia, portal violeta, ladrona femenina, rama condicional RATONCITO (conocimiento>=40 reconoce la voz), **cliffhanger final de demo**
+- VARs nuevas: `item_enojo_enriquez`, `cabral_al_museo`, `voz_conocida`, `momia_robada`, `espiaste_lab`, `belen_sobrevive`
+- Achievements nuevos: `espia_elfaro`, `enojo_enriquez`, `colaborador_museo`, `no_colaborador_museo`, `llegaste_con_ventaja`, `incineracion_museo`, `ratoncito_sabiduria`
+
+### Técnico
+- Crudo `docs/centinelas/crudos/Capitulo 3.txt` normalizado de latin-1 a UTF-8
+- Compilación Ink verde (sin phantom refs de audio en knots nuevos)
+- Integración respeta el principio de preservación: cada párrafo del crudo aparece textualmente en el ink
+
+---
+
 ## [0.17.2] — 2026-04-21
 
 ### Fix: assets de audio + limpieza
