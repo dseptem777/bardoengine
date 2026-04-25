@@ -52,6 +52,14 @@ VAR genjutsu_stat_used = ""
 VAR genjutsu_willpower = 0
 VAR habitacion_img = ""
 
+// Cap 3 — Museo
+VAR item_enojo_enriquez = false
+VAR belen_sobrevive = false
+VAR cabral_al_museo = false
+VAR voz_conocida = false
+VAR momia_robada = true
+VAR espiaste_lab = false
+
 -> capitulo_0
 
 // Stat principal del personaje (prioridad en empate: magia > fuerza > conocimiento)
@@ -81,7 +89,6 @@ VAR habitacion_img = ""
 === origen_magia ===
 # music:escuela_ambient
 # achievement:unlock:centinela_magica
-# play_sfx:stinger_magia
 El reloj nunca se movió tan rápido. Y eso que estaba en clase de matemática con el Profesor Schmit, que siempre se convertía en un torneo de bostezos y ronquidos.
 
 Jorge había prometido que me iba a esperar después de clase para matarme a golpes, desde principio de año venía haciéndome la vida imposible pero esta vez sus palabras habían tenido una entonación especial. Filosas.
@@ -184,6 +191,7 @@ El Faro me había encontrado.
 ~ apodo_personaje = "Chispa"
 # stat:magia:+20 # stat:fuerza:+10 # stat:conocimiento:+10
 # next
+# play_sfx:stinger_magia
 # CHAPTER_BREAK: title=Chispa, subtitle=Capítulo 0 — Orígenes, image=title_magia.jpg
 -> intermision
 
@@ -194,7 +202,6 @@ El Faro me había encontrado.
 === origen_combate ===
 # music:horror_ambient
 # achievement:unlock:centinela_combate
-# play_sfx:stinger_fuerza
 Mierda. Mierda. Mierda. La manija de la puerta se resbalaba en mi mano. Escucho a alguien llorar en el piso de arriba de la cabaña y yo no puedo abrir la puta puerta.
 
 Me miro las manos. Están húmedas. Sangre. ¿De quién es esta sangre? ¿Miguel? ¿Claudia?
@@ -259,7 +266,7 @@ Salto por la ventana en una explosión de madera y vidrio. Y ruido, mucho ruido.
 -> combate_persecucion
 
 === combate_persecucion ===
-# music:chase_ambient
+# music:terror_ambient
 Correr por el bosque no es tan fácil. Las ramas azotan tu rostro y las raíces amenazan tus tobillos.
 
 Aparte no hay camino. Todo lo que estamos acostumbrados a usar en la ciudad para guiarnos (calles, esquinas, avenidas) no existe, con suerte algún parche de tierra a la vista o unas hierbas dobladas que dan cuenta de un sendero.
@@ -273,7 +280,6 @@ Una raíz casi me hace perder el equilibrio. Trastabillo y siento sus ¿tentácu
 Pero no fue suficiente. Antes de darme cuenta estaba con la cabeza en el piso sufriendo una oleada de dolor que superó a la carga de adrenalina en mi cuerpo.
 
 Recordaba los gritos de dolor de mi amigo muriendo en el piso de arriba de la cabaña. Le temía a la muerte, le temía más al dolor. Pero simplemente no podía más.
-// TODO: crudo label "RUIDO DE DISPARO" — agregar SFX de disparo como evento al click
 # play_sfx:disparo # flash_yellow
 El ruido hizo eco por todo el bosque. La… cosa… chilló atrás mío. Sonó como estática de radio a todo volumen, como el ruido original del universo. Y sentí la tierra temblar abajo mío cuando su cuerpo cayó al piso.
 
@@ -284,6 +290,7 @@ Me levanté con una misión. Yo sería quien llegaría siempre una hora antes.
 ~ apodo_personaje = "Madrugador"
 # stat:magia:+10 # stat:fuerza:+20 # stat:conocimiento:+10
 # next
+# play_sfx:stinger_fuerza
 # CHAPTER_BREAK: title=Madrugador, subtitle=Capítulo 0 — Orígenes, image=title_fuerza.jpg
 -> intermision
 
@@ -294,7 +301,6 @@ Me levanté con una misión. Yo sería quien llegaría siempre una hora antes.
 === origen_conocimiento ===
 # music:misterio_ambient
 # achievement:unlock:centinela_conocimiento
-# play_sfx:stinger_conocimiento
 \- No sé si me siento cómodo robando un libro.
 
 \- No lo pienses tanto como que lo estamos robando, prefiero decir que lo estamos liberando – dijo Julieta mientras su sonrisa dejaba ver los hoyuelos que me metieron en tantos problemas.
@@ -467,6 +473,7 @@ Ellos te ofrecieron un trabajo y una nueva oportunidad y no pensás desperdiciar
 ~ apodo_personaje = "Ratoncito"
 # stat:magia:+10 # stat:fuerza:+10 # stat:conocimiento:+20
 # next
+# play_sfx:stinger_conocimiento
 # CHAPTER_BREAK: title=Ratoncito, subtitle=Capítulo 0 — Orígenes, image=title_conocimiento.jpg
 -> intermision
 
@@ -2038,7 +2045,7 @@ Los minutos dejan de tener sentido y el tiempo se cuenta solamente en las compre
     No hay tiempo para sutilezas, te cargas el cuerpo de Juan y corres hacia la salida.
 }
 # next
-# music:chase_ambient
+# music:terror_ambient
 La luz del celular rebota por todos lados mientras corres, intentando hacer malabares entre el cuerpo de Juan, tu daga y el celular. Rocas de formas extrañas, raíces retorciadas, telarañas quebradas, la luz solo te da un calidoscopio de imágenes poco prometedoras.
 Pero no la necesitas, tu cuerpo recuerda el camino de forma instintiva y logras seguir el camino correcto y agacharte cuando es adecuado (casi siempre).
 # next
@@ -2078,7 +2085,7 @@ Un corte. Otro. La daga se siente pesada pero tus brazos no paran. Cuando termin
 
 === regreso_orfanato ===
 # SPIDER_DIFFICULTY: fast
-# music:chase_ambient
+# music:terror_ambient
 Corres por el bosque con el cuerpo de Juan en tus brazos. Será por qué es liviano, o el ruido afilado de los enemigos clavando sus extremidades en los árboles ayuda a empujar tu adrenalina, pero avanzas sin bajar el ritmo. No hay raíces que se interpongan en tu camino o ramas que te molesten
 # next
 No necesitas guiarte. Entre las copas de los árboles sobresale la cruz de la capilla vecina al orfanato. Santuario, o "la X marca el lugar", depende tus preferencias teológicas (al menos nadie duda de la existencia de los piratas)
@@ -2332,6 +2339,7 @@ Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tom
 { ninos_capilla:
     Abrís la puerta de la capilla y todos los niños están ahí, sin un rasguño, a los pies de una estatua de Santa Inés. La Capilla funcionó
     Belén se acerca y te abraza. Luego todos los niños la siguen
+    ~ belen_sobrevive = true
     # achievement:unlock:ninos_ninguno
 - else:
     { ninos_habitacion:
@@ -2339,6 +2347,7 @@ Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tom
         Entras y ves a los chicos amontonados en una esquina, llorando. En el centro de la habitación están los cadáveres de 3 arañas…y de más de diez chicos.
         Los dejaste a su suerte e hicieron lo mejor que pudieron.
         Belén, en la esquina de la habitación y te mira con odio en la mirada.
+        ~ belen_sobrevive = true
         # achievement:unlock:ninos_mitad
     }
     { ninos_cocina:
@@ -2347,6 +2356,7 @@ Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tom
         Tiras el cadáver del animal al costado, con la misma sutileza que le darías a una bolsa de basura.
         Los niños salen, ilesos, de sus escondites debajo de las mesas o dentro de los cajones.
         Belén se acerca y le dan un beso en la frente a la hermana que se sacrificó por ellos. El resto de los chicos la imitan
+        ~ belen_sobrevive = true
         # achievement:unlock:ninos_ninguno
     }
     { ninos_pelear:
@@ -2361,6 +2371,7 @@ Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tom
         Recorres el bosque. El camino a la puerta de salida está marcado por niños muertos y redes de tela de araña. Fue una masacre. Sus piernitas no le podían ganar nunca a las arañas.
         Al final, todavía agarrada al portón, está Belén.
         Le gritas pero no te contesta. Los dedos de su mano están rojos del esfuerzo y, a pesar de que lo intentas, no suelta el portón. No te responde y sus ojos miran sin mirar, perdidos en los horrores que queman su memoria
+        ~ belen_sobrevive = true
         # achievement:unlock:ninos_casi_todos
     }
 }
@@ -4277,9 +4288,645 @@ De vuelta a la pista de baile.
 
 === capitulo_3 ===
 ~ capitulo_actual = "Cap. 3 — El Museo"
-# music:agite_museo
+# music:centinelas_base
 
-PRÓXIMAMENTE — Recuperá un objeto de poder en el Museo de Historia de Costa Alegre que puede ayudarte a conocer dónde se esconde la Secta que está sacrificando humanos.
+-> cap3_llegada_elfaro
+
+=== cap3_llegada_elfaro ===
+# next: Visita al Museo
+
+Te citan a El Faro a las 6 de la mañana. Es tan temprano que el campus universitario donde se encuentra el edificio esta vacío, ni el estudiante más aplicado va a aparecer a esta hora. Vos lograste llegar puntual dado que tenes el esquema de sueño completamente roto y las pesadillas no te dejan dormir. No es difícil madrugar cuando nunca te fuiste a dormir.
+# next
+
+Entras a El Faro y te sorprende no encontrar a Enriquez sentada tras su escritorio en la recepción. Hasta donde sabias, ella estaba biológicamente conectada a la silla (lo cual es sarcasmo, aunque no dudas que en este lugar eso sea posible). Notas que la puerta que lleva al laboratorio de Mary Shelley está abierta y de su interior se escuchan dos voces solamente. Parece que es muy temprano hasta para los otros Guardianes de El Faro.
+# next
+
+¿Qué hacés?
+* [Recorrer el lugar intentando encontrar a Enriquez]
+    -> cap3_recorrer_elfaro
+* [Meterte en la oficina del Profesor]
+    -> cap3_espiar_oficina
+* [Acercarte sigilosamente al laboratorio]
+    -> cap3_espiar_lab
+
+=== cap3_recorrer_elfaro ===
+Recorres el edificio, o las partes que podes entrar al menos. El baño esta vacío, la cocina parece desierta y la heladera solo contiene ese tapper que está en el fondo desde que empezaste a trabajar acá y nadie logra descifrar que es su contenido marrón semilíquido. Por muchas vueltas que des, Enriquez parece estar en su día libre asi que no te queda más opción que dejar de perder el tiempo.
+# next
+-> cap3_briefing_lab
+
+=== cap3_espiar_oficina ===
+Te descalzas para hacer menos ruido y subís por la escalera que da a su oficina. Crees que estás haciendo un muy buen trabajo, los escalones no chirrearon ni una sola vez bajo tu peso.
+# next
+Justo cuando estas por poner tu mano en la manija, suena tu celular. ¿Cómo es posible? Siempre lo tenes en silenció justo por situaciones como esta.
+# next
+Lo sacas y lees un mensaje de El Profesor Buen intento, pero no hay forma que puedas entrar. Deja de jugar y veinte al laboratorio. Te estamos esperando.
+# next
+-> cap3_briefing_lab
+
+=== cap3_espiar_lab ===
+~ espiaste_lab = true
+Avanzas lo más sigilo posible, haciendo tu cuerpo pequeño y prestando especial atención adonde pones los pies. Al principio lo conversación te llega como murmullos inentendibles.
+# next
+Estiras tu cuello un poco más y empezás a entender algunas palabras sueltas peligros, prohibido y locura. Es lamentable que, cuando espías, nunca escuchas cosas lindas como torta de chocolate o fiesta sorprensa.
+# next
+Es entonces cuando la voz de El Profesor te llega fuerte y claro.
+# next
+Deja de escuchar y entra de una vez NOMBRE DE PERSONAJE. Queremos hablar con vos y no tengo ganas de estar a los gritos.
+# achievement:unlock:espia_elfaro
+# next
+-> cap3_briefing_lab
+
+=== cap3_briefing_lab ===
+# music:misterio_ambient
+
+No tenes duda que murió con dolor, unas marcas al costado de su rostro, como si alguien hubiese clavado repetidas veces un picahielos y jugado con la herida, te lo confirman.
+
+— Un nuevo cuerpo, la Secta sigue sacrificando gente y lanzándola al fondo del mar. Ya paso un mes desde la anterior misión, así que es claro el enfoque cíclico de su ritual
+— Así que vamos a seguir recibiendo más cuerpos si no hacemos algo — interrumpís al Profesor mientras intentas que tu odio no se vuelque en tus palabras.
+— Por eso llegó el momento de probar un enfoque más radical — Mary Shelley comienza a hablar pero se para en seco en cuanto El Profesor le da una mirada. Aprovechas el momento para meter una pregunta.
+
+* [¿Sabemos quién es?]
+    — Por suerte, al contar con el cuerpo, pude comparar el registro dental con las bases de datos del Gobierno. Martín Gimenez — Mary Shelley empieza a hablar rápido mientras hojea la información que tiene en su carpeta — 22 años, vivía en Costa Alegre hace 8 años, luego de escaparse de su hogar donde era víctima de violencia. Vino a trabajar en la industria pesquera, hace 3 años se quedó sin trabajo y se encontraba en situación de calle.
+    Tenía solo 22 años, y pensar que para vos era un hombre de mediana edad. Supongo que, para él, los años golpearon más fuerte.
+    -> cap3_briefing_lab_profundo
+
+* [El Tiburón humanoide que me encontré en la Morgue ¿Volvió a aparecer?]
+    -> cap3_briefing_lab_profundo
+
+=== cap3_briefing_lab_profundo ===
+— El Profundo — dice El Profesor poniendo voz de docente — por suerte no fue visto de nuevo. El cadáver fue encontrado por un barco pesquero que notó que algo se enganchó entre sus redes.
+— Pobres, sin duda imaginaron que habían pescado algo grande — acotó Mary Shelley.
+— Lo cual no quita que El Profundo esté dando vueltas por Costa Alegre intentando borrar las huellas de este ritual, te recomiendo estar atento.
+
+* [¿Las runas son las mismas?]
+    — Si, nuestro equipo sigue trabajando para intentar descifrarlas y darnos una mejor idea de qué están haciendo, pero es claro que se trata del mismo grupo — aclara El Profesor.
+    Te acercas al cuerpo y mirás las runas, intentas abstraerte, alejarte lo suficiente para no ver heridas sobre la piel sino símbolos sobre un lienzo.
+    { conocimiento < 30:
+        Lo único que lográs es darle nafta a tu rabia. Debés encontrar la forma de detener esto.
+    - else:
+        — Intercambio y pesca abundante — decís señalando un par de heridas juntas (tanto que a simple vista parecen una sola herida) que decidís interpretar como una palabra — No hay que ser literal por pesca abundante, me parece que es algo tan básico como un intercambio de vidas humanas por riqueza, decile al equipo que trabaje en base a esa idea.
+    }
+    -> cap3_briefing_lab_plan
+
+=== cap3_briefing_lab_plan ===
+# next
+
+— Por suerte, estábamos cocinando un plan que puede darnos una ventaja — la sonrisa de Mary Shelley contrasta fuertemente con el cadáver que tiene solo a tres pasos.
+— No uses un plural. Es tu idea y yo no pienso hacerme cargo — El Profesor vuelve a mostrar un poco de tensión en su voz que denota que estuvieron discutiendo de esto durante las últimas horas.
+— Bueno, díganme la idea de una vez — decís esperando que no vuelva a iniciar la pelea.
+— Considero que, con un hechizo que todavía no fue probado, podríamos hacer que el cadáver nos muestre un rastro psíquico de donde estuvo antes de morir, lo cual podría ser una forma de llegar a la guarida de la secta — Mary Shelley habla rápido y mirando de reojo a El Profesor, con temor a que la interrumpa.
+— Es imposible contar la cantidad de condicionales que tiene ese último párrafo, podría causarle un infarto a un profesor de Lengua y Literatura — la interrumpe El Profesor.
+— Es mejor que no hacer nada
+— Sin contar que nunca se usó el hechizo
+— Pero su teoría es muy sólida
+— Y rompe las barreras naturales entre la vida y la muerte
+— También la penicilina
+Y volvió a iniciar la pelea.
+# next
+
+Los argumentos van de punta a punta. Para El Profesor es un experimento peligroso que no tiene garantía de éxito, mientras que para Mary Shelley es la única forma de resolver el problema sin esperar que aparezcan más cuerpos.
+Y nadie tiene pinta de que va a ceder su posición.
+
+* [Te vas de la habitación, no tiene sentido perder tiempo viendo este espectáculo]
+    Salís y aprovechás para ir a la cocina. Alguien trajo un par de medialunas así que te parece gran momento para hacerte un mate y desayunar algo. Pasan unos cinco minutos (y más medialunas de las que te animás a confesar) y te llega un mensaje de El Profesor pidiendo que vuelvas al laboratorio. Parece que ya tomaron una decisión.
+    -> cap3_briefing_lab_museo
+
+* [Interrumpís la pelea. Esto no va a ningún lado.]
+    — Basta — gritas con tanta fuerza que hasta lográs que se muevan un par de cabellos de Mary Shelley — No tiene sentido discutir esto. Y no puedo decir el mal gusto que es hacerlo delante de un cadáver que al fin de cuenta es nuestra responsabilidad.
+    Tus dos interlocutores empiezan a balbucear pero no les da tiempo de decir algo.
+    — Si existe una forma de impedir otro muerto, debemos intentarla, estoy dispuesto. Cuéntenme qué están planeando.
+    -> cap3_briefing_lab_museo
+
+* [Esperás que terminen]
+    Jurás que la conversación amaga con terminar tres veces. Y las tres veces vuelve a empezar con la misma intensidad. Es como estar perdido en un laberinto argumentativo.
+    A la larga (y muy a la larga) es El Profesor quien termina cediendo. No sabés si hace eco a los argumentos esgrimidos por Mary Shelley, si simplemente tiene otras cosas que hacer o si ya pensó cómo controlar cualquier efecto secundario peligroso.
+    -> cap3_briefing_lab_museo
+
+=== cap3_briefing_lab_museo ===
+# next
+
+— Un hechizo así requiere una gran cantidad de poder — Mary Shelley está tan emocionada que habla cada vez más rápido y resulta complicado seguirla — hay pocas personas en el mundo que pueden brindar tanto poder.
+— Y seguir vivas — acota El Profesor por lo bajo.
+— Exacto — grita Mary Shelley — Y como el homicidio es malo la otra opción es encontrar un objeto que haya contenido una cantidad exorbitante de poder sobrenatural y usarlo como fuente de energía.
+— Déjame adivinar — comentás con tristeza — El objeto está en algún tipo de fortaleza custodiado por, no sé, dragones zombis que tienen ametralladoras en la boca.
+— Casi — contesta Mary Shelley — Está de visita en el Museo de Historia de Costa Alegre.
+# next
+
+— El plan entonces es que vaya al Museo de Historia de Costa Alegre y robe un objeto histórico de incontable valor.
+— Sí, una momia incaica que está en una exposición ambulante de Jujuy. Aparenta ser un objeto de gran poder — la emoción desbordaba a Mary Shelley.
+— No me gusta la palabra aparenta — acotaste a la misma vez que El Profesor.
+— Sin duda lo es. Sacrificio humano, adoración religiosa. Mierda, hasta el hecho de que sea una pieza de museo es hasta un tipo de adoración. Si mis lecturas son correctas, es una batería lo suficientemente poderosa para darle poder al ritual que tengo en mente.
+— No sé si me siento cómodo robando una pieza de arte histórico.
+— El Museo Británico lo hace todo el tiempo y nadie le dice nada, lo tuyo hasta tendría más valor dado que lo hacés para salvar vidas — Mary Shelley hablaba tan rápido que las palabras se juntaban tanto hasta parecer una única gran palabra.
+# next
+
+En menos de quince minutos estaban apoyados sobre una mesa con fotos de la momia incaica, mapas del museo y folletos de las exposiciones.
+
+¿Cómo respondés al plan de robar la Momia?
+* [Aceptar sin objeciones — la misión es la misión]
+    -> cap3_tiempo_libre
+* [Aceptar pero expresar incomodidad ética]
+    ~ conocimiento += 2
+    — No sé si me siento cómodo robando una pieza de arte histórico.
+    -> cap3_tiempo_libre
+
+=== cap3_tiempo_libre ===
+
+El plan era simple. Ibas a ir esta tarde a hacer un recorrido al Museo para conocer las instalaciones y obtener un poco información. A la noche ibas a volver con el objetivo de robarte la momia y venir directo a El Faro.
+# next
+En algún momento de la planificación entra Enriquez (tarde) con cara de pocos amigos y una jarra llena de café.
+# next
+* [Le haces un comentario]
+    -> cap3_tl_comentario_enriquez
+* [No le decís nada]
+    -> cap3_tl_sin_comentario
+
+=== cap3_tl_comentario_enriquez ===
+En cuanto entra señalás el reloj de tu muñeca.
+—Buenas tardes, ¿Querés que te preste mi reloj así te organizás?
+La mirada de Enriquez es suficiente como para asesinar a alguien y te das cuenta que tiene en las manos una jarra llena de café hirviendo y no tendría dudas en usarlo.
+Esto te va a pasar factura.
+~ item_enojo_enriquez = true
+# achievement:unlock:enojo_enriquez
+# next
+-> cap3_tl_menu
+
+=== cap3_tl_sin_comentario ===
+Sos lo suficiente inteligente para darte cuenta que no te conviene tener una mala relación con Enriquez. Aparte trae café, nadie que traiga café puede ser malo. Te llenás una taza y te dedicás a ver una foto de la momia incaica hasta que la imagen queda grabada en tu memoria.
+# next
+-> cap3_tl_menu
+
+=== cap3_tl_menu ===
+
+Llega un punto que no es posible hacer más planificación desde El Faro. Solo resta que vayas al Museo y hagas una exploración en el terreno. Aún así es temprano todavía, por lo que tenés tiempo para hacer alguna acción más antes de comenzar tu misión.
+# next
+
+¿Cómo aprovechás el tiempo?
+* [Entrenar un poco con Cabral]
+    -> cap3_tl_cabral
+* [Ver si Enriquez tiene algo de conocimiento para compartir]
+    -> cap3_tl_biblioteca
+* [Hablar con Mary Shelley para afinar tus poderes sobrenaturales]
+    -> cap3_tl_mary_shelley
+* { belen_sobrevive } [Visitar a Belén en el nuevo orfanato]
+    -> cap3_tl_belen
+* { algunos_guardias_sobreviven } [Ver cómo están los guardias del cementerio]
+    -> cap3_tl_guardias
+* [No perder más tiempo — ir directo al Museo]
+    -> cap3_museo_dia
+
+=== cap3_tl_cabral ===
+Cabral adaptó el sótano para convertirlo en una verdadera pista de obstáculos. Hay vallas para saltar, un muro para escalar y una intricada red de alambre de púa pensada para que te arrastres por debajo. Visto desde afuera, todo parece increíblemente divertido.
+# next
+Eso es, obviamente, hasta que empezás a hacerlo. A los cinco minutos de recorrido tus pulmones se sienten en llamas y tus rodillas parecen hechas de cristal.
+No ayuda que cuando terminás Cabral se limita a mirar el reloj, negar con la cabeza y gritar de nuevo.
+La primera vez que grita de nuevo te enojás, la segunda querés llorar. Para la tercera tu espíritu ya está roto y hacés el recorrido a pura inercia.
+# next
+Terminás en el piso, recostado sobre un charco de tu propio sudor. Por suerte Cabral siempre sabe cómo levantar tu ánimo y ya te está acercando una botella de agua mientras te hace una pregunta clave.
+—¿Qué preferís? ¿Sanguches de milanesa o hamburguesas?
+~ fuerza += 5
+# play_sfx:stinger_fuerza
+# next
+* [Pedirle que te acompañe al Museo de noche (-20 HP en favores cobrados)]
+    ~ hp -= 20
+    ~ cabral_al_museo = true
+    Cabral suelta una carcajada y te dice que obvio, para eso están los amigos. El precio se te va a descontar en sudor antes del atardecer.
+    -> cap3_museo_dia
+* [Seguir con el plan original, vos solo]
+    -> cap3_museo_dia
+
+=== cap3_tl_biblioteca ===
+Te encontrás a Enriquez en su escritorio, con tan pocas ganas de sociabilizar como siempre.
+# next
+{ item_enojo_enriquez:
+    —Estuve chequeando tus pedidos de libros para estudiar y vi que hay un error burocrático. Es una lástima pero tuve que cancelar el pedido del día de hoy —Enriquez disfruta cada una de las palabras.
+    —¿Se puede hacer un nuevo pedido?
+    —Sí, tiene que ser acorde al protocolo 22-J, ¿lo conocés?
+    —Obviamente mentís.
+    —Genial. Igual tiene un plazo de 48 horas, así que hoy no vas a poder leer nada.
+    Te retirás aceptando tu derrota. Tal vez no debiste burlarte de ella.
+    # next
+- else:
+    Sobre el escritorio te espera un libro gigante con la letra H escrita en la tapa con letras doradas. Te sorprende que una letra muda en español tenga tantas palabras en el manual correspondiente.
+    # next
+    Ojeando el libro te das cuenta que hemo es el prefijo que significa sangre y pasás las siguientes horas aprendiendo sobre todas las cosas horribles que quieren beber, usar o robar tu sangre, incluido un mosquito de más de dos metros que tiene la costumbre de decapitar a las personas para poner su pico directo en la aorta.
+    # next
+    Terminás la lectura y te das cuenta lo codiciado que sos. De repente sentís que bajo la fina capa de tu piel hay un tesoro que todos quieren robar.
+    ~ conocimiento += 5
+    # play_sfx:stinger_conocimiento
+    # next
+}
+-> cap3_museo_dia
+
+=== cap3_tl_mary_shelley ===
+Mary Shelley está intentando solucionar una ecuación en su pizarrón. Parece que la manía que la desbordaba esta mañana ahora se concentró en un punto focal. Aun así, mientras mira el pizarrón no deja de golpetear el piso con su pie derecho mientras su mano izquierda juguetea con una lapicera.
+# next
+—¿Problema difícil? —preguntás.
+—Técnicamente, existe la posibilidad de que cuando haga el ritual, tal vez despierte a todos los muertos del mundo y cree una invasión zombie.
+—¿El Profesor sabe esto?
+—Tranquilo, no va a ocurrir una invasión zombie.
+—Mejor, eso sería extremadamente poco original —contestás.
+# next
+Ella está ocupada pero te da un ejercicio para fortalecer tu concentración. Te coloca sobre un pentagrama durante las próximas horas y tu única tarea es usar tu voluntad para que una pequeña moneda se mantenga flotando a la altura de tus ojos.
+# next
+En cuanto te parás sobre el pentagrama empieza a ocurrir de todo. Pasás por picos de calor a picos de frío, de repente una terrible sensación de ingravidez se instala en tu estómago. En un momento estás seguro que cientos de bichos babosos encontraron la forma de meterse entre tu ropa y reptan sobre tu piel dejando una húmeda baba a su paso. Por último, sentís un bocinazo constante detrás de ti a pesar de no poder avanzar.
+# next
+Hay momentos difíciles, pero a pesar de todo lográs sobreponerte y la moneda nunca cae al piso.
+~ magia += 5
+# play_sfx:stinger_magia
+# next
+-> cap3_museo_dia
+
+=== cap3_tl_belen ===
+El nuevo orfanato parece más feo. El edificio tiene claras marcas de descuido, vidrios rotos en la ventana, rejas oxidadas y paredes mal pintadas. El hecho de estar en una parte fea de la ciudad no ayuda mucho. Tampoco habla muy bien del lugar que, con muy poco sigilo burocrático, El Faro logró que autoricen que la visites de forma regular.
+# next
+Ella se sube a tu auto y te da un hola tímido. Siempre los primeros momentos son raros. Es verdad que una invasión de arañas demoniacas no es la mejor forma de conocer a alguien, pero en cierta forma te sentís responsable por su vida ahora. No tenés duda que algún burócrata en un sótano ya la anotó como posible futura Guardián.
+# next
+Aprovechás la mañana para comprarle un helado y dar una vuelta por la playa mientras los primeros rayos del sol expulsan el frío. La verdad es que verla bien sirve para darte cuenta lo importante de tu trabajo. Vos podés pasar por grandes cuotas de dolor físico o mental pero si al final una niña sobrevive, todo vale la pena.
+# next
+Después de un par de horas la volvés a llevar al orfanato y repetís la tradición del final de cada salida: le prometés que los monstruos no van a volver, le decís que cualquier problema puede llamarte y le pasás una bolsa de caramelos para que soborne a sus compañeros de orfanato.
+~ hp += 5
+# next
+-> cap3_museo_dia
+
+=== cap3_tl_guardias ===
+Es raro volver al Cementerio. A simple vista no se ve ninguna señal de la batalla que ocurrió acá hace unas noches. La única novedad es un cartel de un blanco impoluto sobre el cual, en grandes letras negras, se aclara que está prohibido ingresar al predio luego del atardecer. No confiás mucho en que los Vampiros tengan un respeto obsesivo por la ley como para dejarse amedrentar por un simple letrero, pero entendés que es parte de una necesidad humana para normalizar la situación y sentir que se da una respuesta. Acá pasó algo una noche, así que pusimos un cartel y nunca se va a volver a repetir, los votantes ya pueden dormir tranquilos.
+# next
+Uno de los guardias te ve venir desde la garita y te saluda efusivamente, y luego en forma de chiste te hace un saludo militar. Desde los eventos en la entrada de la cripta (apodada la batalla de la cripta por los guardias) ellos bromean que sos su Capitán, General o Teniente. Generalmente ascendés de grado conforme hay más alcohol en la reunión.
+# next
+Si bien la mayoría no sabe de la existencia de El Faro, están conscientes de que en la oscuridad acechan cosas horribles y vos pertenecés a una organización indefinida que se encarga de mantenerlas a raya.
+# next
+Antes de darte cuenta estás con dos guardias tomando mate mientras un tercero está pidiendo un par de pizzas por delivery. Existe cierta comodidad que solo se da en la camaradería producto de haber atravesado juntos algo grande.
+# next
+Mucha gente atraviesa la vida sin tener una gran aventura, y es lógico, las grandes aventuras suenan bien en papel pero cuando uno las vive se da cuenta que están compuestas por temor, sufrimiento y pérdida. Los guardias tuvieron la tragedia de tener una gran aventura, pero la suerte de encontrar en ella la fuerza para sobrevivir y el coraje para sobrepasarlo. En cierta forma, están agradecidos por la oportunidad que les diste.
+# next
+Sabés que esta es la historia que se va a contar en fiestas familiares durante generaciones y no dudás que algún nieto lleve tu nombre. Pero ahora es momento de disfrutar del calor y el cariño que solo se tiene rodeado de compañeros de armas.
+La tarde sirve para relajar tu mente y prepararte para los retos que tengas que enfrentar a futuro.
+~ hp += 5
+# next
+-> cap3_museo_dia
+
+=== cap3_museo_dia ===
+# music:agite_museo
+# next
+
+DE DIA EN EL MUSEO
+El museo estaba en el medio de un parque arbolado. El día era lindo y un montón de personas habían aprovechado para salir a disfrutar de la naturaleza. Una familia estaba disfrutando un picnic (mientras un comando de hormigas se acercaba para robarle las migas), una pareja de enamorados estaban enfrascados en un abrazo tan largo que sus cuerpos habían encontrado la forma perfecta de encajar entre si y con el árbol donde se apoyaban. Tu reflexión es interrumpida por una pelota que pasa a centímetros de tu cabeza, un grupo de jóvenes estaba aprovechando el parque para improvisar un partido de futbol.
+# next
+
+El Museo, visto desde afuera, es una mole brutalista que parece más apta para ser guarida de supervillano que centro de saber. Un circulo de cemento al cual se accede subiendo por una escalera (también de cemento) atravesando en el camino estatuas (obviamente, de cemento) que representan diversos períodos históricos de Costa Alegre.
+# next
+
+Entrás al hall central del Museo y se encuentra casi vacío, solo cuenta con un mostrador detrás del cual hay un par de pasantes y una gigantografia de la Momia Incaica que está en exposición.
+Te tomás un momento para observar la momia. Generalmente cuando se escucha esa palabra uno piensa en Egipto, vendajes, sarcófagos de oro y maldiciones, pero este no era el caso con la Momia Incaica (aunque con tu suerte no estás dispuesto a descartar una maldición tan rápidamente).
+La momia era una adolescente cruzada de piernas, con ropa propia del Imperio Incaico, que había sido momificada mediante el uso de la aridez y el frio de los Andes. Su rostro miraba para abajo y el efecto de sombras dificultaba ver su expresión pero parecía estar durmiendo. Requería un esfuerzo consciente darse cuenta que uno estaba viendo un cadáver y no una obra de arte, supones que el paso del tiempo y las particularidades de la modificación generan esa distancia.
+# next
+
+Te acercás al mostrador y el pasante joven te pasa un folleto y te explica como es el recorrido del Museo. Te informa que la estructura es un círculo que se recorre de derecha a izquierda, consta de cinco salas y al final tenés una tienda para comprar recuerdos así como la posibilidad de acceder al café que se encuentra en el jardín ubicado en el centro de la estructura.
+Por último, te muestra una caja y te invita a dejar una colaboración para sostener la institución ante los cortes de financiación que lleva el Gobierno.
+
+* [Colaborás con el Museo]
+    Sacás unos billetes de tu billetera y ponés dinero en la caja de colaboración. Obviamente es de interés de toda Costa Alegre que sus instituciones educativas estén bien fundadas y te da un poco de vergüenza vivir en un país donde el Gobierno no financia la educación. Te preguntás donde va el dinero que ahorran, sin duda no están ayudando en combatir seres sobrenaturales.
+    # achievement:unlock:colaborador_museo
+    -> cap3_museo_primer_sala
+
+* [No colaborás con el Museo]
+    Sonreís y girás para la derecha, para entrar a la primera sala del Museo. Sentís que no es tu responsabilidad financiar la educación. Estás seguro que próximamente el Gobierno va a entrar en razón y librar el dinero que corresponde ¿No?, o sin duda otra persona va a venir y va a poner suficiente dinero como para compensar el día ¿No es así?
+    # achievement:unlock:no_colaborador_museo
+    -> cap3_museo_primer_sala
+
+=== cap3_museo_primer_sala ===
+La primera sala está dedicada a los Pueblos Originarios. Aparentemente eran hábiles pescadores y navegantes, en los costados ondulados de la sala se puede ver elementos de pesca, ropas tradicionales y vasijas de barro.
+En el centro de la sala hay una recreación de las canoas que usaban para navegar el mar y pescar kilómetros de la costa. Te basta ver la canoa cinco minutos, y recordar lo violento que se puede poner el mar, para darte cuenta que esta gente era mas valiente que vos.
+# next
+
+Ahora tocaba Costa Alegre en la época colonial. No tenías consciencia de que la ciudad era tan vieja pero parece que ya había un pequeño poblado en el siglo XVIII que había sido un poco un puerto de pescadores (y mucho un centro de contrabandistas).
+La mayoría de las vitrinas estaban compuestas por ropa de la época y objetos cotidianos de la Colonia donde abundaba el trabajo en plata y la iconografía cristiana.
+En el centro de la sala había un carruaje gigante con unos detalles marinos (sirenas, tritones, kraken y demás seres fantásticos). Hay que admitir que el vehículo era más elegante que cualquier cosa que te podías cruzar hoy por la calle.
+{ conocimiento >= 20:
+    En una esquina de la sala se expone una tabla de la evolución poblacional de la ciudad en esos primeros años. La mezcla de números y letra manuscrita aleja a la mayoría de la gente, pero vos te quedás un momento comparando números. Parece que los primeros pobladores de Costa Alegre la tuvieron muy duro, hambruna por las embarcaciones hundidas, crecidas repentinas del mar, pestes. El poblado estuvo cerca de desaparecer varias veces durante su primer año de existencia. Eso es hasta 1780 donde esos sucesos dejan de aparecer y el pueblo empieza a prosperar.
+    No te sorprende que la secta que estás buscando tal vez lleve actuando más de doscientos años haciendo esto y sus orígenes fueron para aplacar a las entidades que castigaban el poblado desde el fondo del mar.
+}
+# next
+
+La tercera sala correspondía a Costa Alegre en el siglo XX, la cual había crecido desde 1900 para convertirse en un parador turístico como un centro industrial.
+La mayoría de las vitrinas tenían fotos, planos o gigantografias de recortes periodísticos. Se veía fotos de la inauguración del Casino de Costa Alegre así como de los primeros hoteles sindicales que se había construido a metros del mar.
+En el centro de la sala había una maqueta que contaba la historia de la toma de los Astilleros Herrera, símbolo de la lucha sindical de los sesenta y setenta en la Ciudad. En esa época cada vez que salía un barco del astillero se cobraba la vida de un par de trabajadores que morían por las pésimas condiciones de seguridad. El conflicto llevó a la fábrica por parte de los trabajadores exigiendo condiciones dignas de trabajo y terminó con una brutal represión por parte de la dictadura militar.
+{ fuerza >= 20:
+    Viendo el mapa te das cuenta que el predio de la fábrica no era tan difícil de custodiar, el gran problema era la posibilidad que la marina haga un desembarco naval entrando desde la rampa de lanzamiento del astillero. Si vos hubieses estado encargado de la defensa del predio, con veinte hombres fuertes y un par de armas largas, podrías seguir hasta el día de hoy atrincherado en la fábrica.
+}
+# next
+
+Ya recorriste la mitad del circulo que compone el Museo y por fin llegás a la sala donde está la Momia Incaica. Aparte de la Momia (que está escondida de la vista detrás de unos biombos con información de la cultura Inca) en esta sala está la mayoría de los visitantes del museo que esperan su turno para entrar a ver la momia o dan vuelta entre las vitrinas donde se encuentran diversos objetos cotidianos propios del Imperio Inca.
+{ magia >= 20:
+    Mary Shelley tiene razón, la momia desborda de energía sobrenatural. Toda la sala se siente como un sauna, el aire está caliente y espeso y tenés que sentarte unos minutos para recuperar la compostura. La mera cercanía del objeto te hace sentir emocionado, excitado y energizado a la vez. No tenías esta mezcla tan particular desde que eras adolescente. Respirás y te concentrás en tu propio cuerpo y notás tus palmas mojadas, tu rostro colorado y tu corazón acelerado.
+    Agradecés que la comunidad sobrenatural de Costa Alegre sea bastante bruta y no visite de forma regular los Museos, sino alguien ya se hubiese dado cuenta de las particulares características de la Momia Inca y hubiese intentado robarla.
+    Aun así, te da un poco de miedo lo que puede pasar si quedás frente a frente a la Momia.
+}
+
+Se hace un hueco entre las masas de visitantes que quieren ver a la Momia Incaica. Si querés entrar a verla este es el mejor momento para hacerlo.
+
+* [Entrás a ver a la Momia Incaica]
+    -> cap3_museo_dia_momia
+
+* [Lo importante es explorar el Museo para volver a la noche, mejor terminar el recorrido]
+    -> cap3_museo_dia_recorrido_final
+
+=== cap3_museo_dia_momia ===
+Te metés entre los biombos que buscan recrear la cueva donde fue encontrada la Momia. Te sorprende lo pequeña que es, es obvio que en vida era solo una niña. Aparte su rostro, mirando hacia abajo y escondido detrás de un mechón de pelos, la hace parecer tímida e incómoda. No podés dejar de pensar que tal vez no es correcto que esté expuesta ante masas de desconocidos. Sentís que hay un doble sacrilegio, tanto al ritual religioso de su sacrificio como a la intimidad y respeto que le corresponde a los muertos.
+# next
+
+{ magia < 20:
+    La energía se siente más espesa. Tu camisa de repente está empapada de sudor y una presión aprieta tu frente. Durante unos segundos no podés actuar, pero te saca de tu ensoñación unas gotas de sangre que caen sobre tu pecho. Te llevás las manos a tu nariz, estás sangrando. Mucho.
+    Por lo menos la sangre es un vector que te pone en movimiento, te abrís paso a los empujones y vas a la siguiente sala en busca de un baño.
+    -> cap3_museo_dia_recorrido_final
+- else:
+    { magia < 30:
+        La energía de la momia es desbordante. Es como el sol o el mar. Aún más, esos conceptos tienen límites, son objetos finitos e ideas manejables. La energía de la momia es algo aun mayor, una luz rosada atraviesa todo. Los objetos, tu cuerpo, los espacios entre los átomos.
+        Sentís la energía desbordándote, difuminándote. Una sensación de vértigo y caída te inunda e intentás enfrentarla.
+        Los límites de tu ser se desdibujan e intentás torpemente mantenerlo, como un niño que dibuja unos palotes y dice que eso es una persona.
+        Es entonces cuando tu cuerpo dice basta.
+        ~ hp -= 10
+        -> cap3_museo_dia_hospital
+    - else:
+        La energía de la momia es desbordante. Se siente como tener el mejor sexo de tu vida, dentro de un auto de alta gama, que avanza a toda velocidad, por el infinito.
+        Naciste para manejar estas energías. Todo el tiempo anterior a esto, o sea toda tu vida, parece tan lenta y mundana. Gris y estática. Una pared de cemento.
+        Te emborrachás en la energía. A tu alrededor se escuchan gritos. El tono de esos gritos va más allá del miedo ¿Pánico? ¿Locura?.
+        Al olor después se le suma el olfato. Humo y el distintivo olor a carne quemada. Pero no te descompone, estás más allá de descomponerte.
+        Por último se agrega el tacto. Ahí te das cuenta que la carne que se está quemando es la tuya.
+        ~ hp -= 20
+        -> cap3_museo_dia_hospital
+    }
+}
+
+=== cap3_museo_dia_hospital ===
+Una luz gigante flotaba sobre tu cabeza. Tu primera impresión fue que habías muerto y estabas en el cielo. Estabas relajado y, por lo menos, no tenías que levantarte para ir a trabajar.
+Esa impresión duró hasta que la luz gigante titiló fruto de una falla de corriente y una polilla, confundida, huyó de la oscuridad y se chocó contra tu cara.
+Problemas de corriente, olor a desinfectante, una sábana rasposa y el tic tac constante de aparatos electrónicos.
+Estabas en el Hospital de Costa Alegre. Lejos del Cielo, con suerte estabas en su antesala.
+# next
+
+Parece que tu contacto cercano con la Momia había sobrecargado tu cuerpo. Después de hacer un análisis superficial (y carente de cualquier conocimiento técnico, simplemente te dedicaste a tocar todo lo que podías tocar para asegurar que seguía en su lugar) llegaste a la conclusión de que estabas bien.
+En cuanto te sentás en la cama tu conclusión cambia de bien a relativamente bien. Tu cabeza duele como si alguien le hubiese pegado con un martillo y tu cuerpo se siente liviano y carente de energía, sin duda por la pérdida de sangre.
+# next
+
+Es sorprendente lo fácil que es escapar de un Hospital. Teniendo en cuenta lo colapsado que está el sistema de salud de la ciudad, creo que si algún profesional de salud se da cuenta que sos un fugado solamente se alegra al saber que va a tener una cama libre para un paciente más grave. Al fin de cuentas, si tenés suficiente energía para poder escaparte, no deberías estar en un hospital en primer lugar.
+Al salir del Hospital notás una luna llena iluminando el paisaje nocturno. Tu pequeña experiencia te hizo perder todo el día y desperdiciar cualquier oportunidad de planificar el robo de la Momia.
+No te quedan más opciones que ir directo al Museo e improvisar sobre la marcha.
+# next
+-> cap3_museo_noche_entrada
+
+=== cap3_museo_dia_recorrido_final ===
+La última sala es el cuarto de recuerdos. Postales, remeras, vasos e imanes. La característica común es el sobreprecio.
+Si seguís avanzando volvés a la Sala principal y salís del Museo. A la derecha hay una arcada que da al centro del edificio, un jardín arbolado donde se instaló un café improvisado. Con ver el pizarrón con la oferta culinaria te das cuenta que el lugar también está marcado por el sobreprecio.
+Ya recorriste el lugar, antes de irte podrías dejar preparada alguna acción que te permita hacer más fácil tu incursión nocturna para robar la momia.
+
+* [Esconderte dentro del Museo es una opción. Y te ahorraría pensar cómo entrar a la noche.]
+    Intentás esconderte en el baño del Museo. Trabás la puerta de un privado y te parás sobre el inodoro para que el guardia de seguridad no se dé cuenta que estás ahí cuando haga su ronda. Tenés que hacer fuerza para contener tu risa al recordar que usaste la misma técnica para quedarte en el colegio una noche con unos amigos.
+    El plan funcionó esa vez. Lamentablemente, ya no estás en el colegio.
+    No sabés cómo se dan cuenta que estás ahí, posiblemente tengan un sistema de cámaras y les llamó la atención que alguien entró al baño y nunca salió (esperás que nadie se descomponga en el museo).
+    Un guardia con poco sentido del humor te escolta a la puerta.
+    Afuera ves una luna llena iluminando el paisaje nocturno. Tu pequeña experiencia te hizo perder todo el día y desperdiciar cualquier oportunidad de planificar el robo de la Momia.
+    No te quedan más opciones que ir directo al Museo e improvisar sobre la marcha.
+    -> cap3_museo_noche_entrada
+
+* { conocimiento >= 20 } [En las Salas hay guardias, podrías intentar robarle la llave a alguno para entrar tranquilo a la noche.]
+    El Museo no está lleno de gente. Chocarse a alguien por accidente es difícil. Así que buscás otro enfoque. Registrás el lugar y encontrás lo que buscás, te das cuenta porque no tienen el aspecto del típico visitante de un Museo, caminan demasiado rápido y hablan demasiado alto. Es una pareja de adolescentes que sin duda estaban pasando la tarde en la plaza y decidieron entrar a molestar un poco.
+    Uno de los guardias también los detecta y empieza a seguirlos, y vos lo seguís a él a unos metros (o, mejor dicho, al llavero que lleva colgado de su cinto). Al llegar a la Sala de la exposición Inca uno de los adolescentes hace una idiotez (obviamente) y golpea uno de los vidrios con sus nudillos un par de veces.
+    El guardia se acerca para retarlos y vos aprovechás para pasar por su lado y hacer la maniobra McPherson y terminás con su juego de llaves en tu bolsillo.
+    Esta noche vas a poder entrar por la puerta grande sin necesidad de tener problemas.
+    -> cap3_museo_ya_adentro
+
+* { magia >= 20 } [Un hechizo de invisibilidad y a esperar al baño.]
+    Hacerte invisible no es tan fácil como parece. Si no estás bien concentrado más que invisible sos difuso, por usar una palabra. Aparte, curiosamente, nada llama más la atención que hacerte invisible en mitad de una multitud.
+    Vas al baño y te escondés en un privado. Te concentrás mientras ejecutás una serie de precisos movimientos de manos a la par que repetís una onomatopeya de forma cada vez más baja.
+    Una vez que sos invisible (como confirma el espejo del baño) te parás en una esquina esperando no chocarte con nadie y solo te resta esperar a la noche.
+    -> cap3_museo_ya_adentro
+
+* { fuerza >= 20 } [La puerta va a estar protegida, lo más simple es entrar trepando. Buscás claraboyas y ductos de respiración.]
+    Das una nueva vuelta al museo, solamente que esta vez en lugar de observar los objetos en exposición te dedicás a estudiar el techo buscando una claraboya o los ductos de un aire acondicionado. La mayoría de las Salas carece de estos mecanismos, sospechás que para proteger las obras, pero el hall por el cual entrás tiene un ventanal gigante para facilitar la iluminación.
+    A la salida estudiás el bosque que rodea el lugar y notás un árbol con una rama convenientemente gruesa que llega cerca del techo del Museo.
+    Con un poco de suerte podrías saltar al techo del Museo, abrir el ventanal, y descolgarte con una soga. Arriesgado, pero divertido.
+    -> cap3_museo_ya_adentro
+
+* [A centímetros tuyos hay una alarma de incendio. No es necesario esperar. Simplemente generar caos y correr por la Momia.]
+    Siempre tuviste ganas de hacer esto. Ves la alarma de incendio en la pared y te parece la mejor idea del mundo. En cuanto bajás la palanca una sirena grave empieza a escucharse por todo el Museo, luego viene una luz roja parpadeante y por último los gritos de pánico de toda la gente presente.
+    La gente se convierte en una marea humana que va hacia la puerta. Vos avanzás contra corriente intentando llegar a la Sala donde se encuentra La Momia. Buscás los puntos de menor resistencia, aquella gente que parece que se va a correr a tu paso, en algún momento saltás por encima de un nene chiquito y girás todo tu cuerpo para no golpear de frente a una señora que no llegó a verte.
+    Vas a llegar. Estás seguro que vas a llegar. Por lo menos eso creés hasta que alguien te agarra con una llave por el cuello y te dice "Es para el otro lado amigo". Te encontraste con un puto héroe ¿Cuáles eran las posibilidades?.
+    Esos minutos que perdés son clave. Empezás a ver que el Museo se llena de uniformes azul (policía) y marrón (bomberos).
+    Todo se volvió demasiado público, no te queda más opción que salir del Museo y volver a intentarlo a la noche.
+    -> cap3_museo_noche_entrada
+
+=== cap3_museo_ya_adentro ===
+Tu plan fue un éxito y te encontrás dentro del Museo en cuanto cierra. Mientras avanzás bajo la semioscuridad escuchás unos ruidos en las otras Salas del Museo. Al principio no le das mucha importancia, este tipo de edificios viejos tienden a ser muy ruidosos cuando llega la noche y baja la temperatura. Sin duda es el metal de una cañería o algo por el estilo.
+Pero después te das cuenta que el ruido es demasiado continuo y parece provenir de diversos grupos en varias habitaciones. ¿Guardias de seguridad? Podría ser pero los pasos serían demasiado inconstantes.
+# next
+
+Estás en el Hall Central listo para iniciar el recorrido que te va a llevar a la Momia Incaica cuando escuchás que una puerta detrás tuyo se abre.
+Te escondés detrás del mostrador (el colmo de la falta de imaginación) mientras espiás por el filo del mueble. Un guardia de seguridad entra y recorre toda la habitación con el brillo de su linterna.
+Avanza al centro de la habitación y no se da cuenta de nada. Sos vos el que lo nota primero, detrás de él aparecieron tres maniquíes que simplemente antes no estaban ahí. Notás que su rostro es totalmente liso, carente de cualquier rasgo facial, y eso es aún más perturbador que su súbito aparecer.
+# next
+
+El guarda para unos segundos y los maniquíes comienzan a moverse. Su caminar al principio es torpe y carece de dirección clara hasta que de repente los tres a la vez aumentan su velocidad y, con su avance zigzagueante, rodean al guardia de todas las direcciones.
+La violencia generalmente ocurre muy rápido, por mucho que lo veas es increíble en qué tan poco tiempo las cosas pueden cambiar completamente para alguien. Uno de los maniquíes carga de frente, el guardia llega a darle un golpe fuerte en la cara con su pesada linterna (mala táctica, pero hay que reconocer que es valiente) pero el maniquí parece no sentir dolor.
+En cuestión de segundos el maniquí atrapó uno de sus brazos mientras que los otros dos, que llegaron por los costados, agarraron respectivamente su otro brazo y una pierna.
+Luego se dedican a tirar y doblar las extremidades.
+# next
+
+No hay malicia en la cara de los maniquíes (fácil al no haber rostro) ni emiten un sonido. Solo se escuchan los gritos desesperados del guardia que solo son superados por el ruido seco de huesos rompiéndose y carne siendo desgarrada.
+Cuando terminan su trabajo sueltan al guardia que cae pesadamente al piso. Una caída así de espalda sin duda le saca todo el aire de los pulmones y le impide seguir gritando ayuda.
+No pensás quedarte para ser la segunda víctima, aprovechás el momento y te colás en la Primera Sala del Museo mientras planeás cómo enfrentarte a esta nueva amenaza.
+# achievement:unlock:llegaste_con_ventaja
+# next
+-> cap3_museo_primera_sala
+
+=== cap3_museo_noche_entrada ===
+# music:terror_ambient
+Para tu desventaja, la noche está hermosa. Preferirías una de esas tormentas que traen el frio del mar y dejan la noche con olor a sal pero la noche es cálida con una brisa regular que llama a caminar.
+Eso significa que el parque que rodea el Museo está lleno de parejas que caminan lento y sin rumbo, adolescentes que se aburren y no hacen nada (pero prefieren hacerlo afuera de su casa) y hasta un par de familias con niños que quedaron energizados después de la visita al Museo y no se quieren ir todavía.
+Eso significa que te toca esperar un poco antes de ver cómo forzar tu entrada.
+# next
+
+Es entonces cuando te das cuenta que ya hay algo dentro del Museo. No es un ruido o una sensación sobrenatural, más una herencia genética de un pasado de cazador recolector que levanta pequeños detalles que no llegás a procesar y le da información a tu cerebro: hay algo entre esos arbustos ¿presa o peligro?.
+Que se joda la sutileza, es momento de entrar en el Museo.
+
+{ cabral_al_museo:
+    Cabral camina a tu lado en silencio, el revólver ya en la mano, cubriendo los ángulos que vos no podés vigilar. Saber que hay alguien atrás te da un respiro que no sabías que necesitabas.
+    ~ fuerza += 3
+}
+
+* { fuerza >= 20 } [Un poco de fuerza bastará para romper el mecanismo de la puerta.]
+    Te apoyás contra la puerta y empezás a forzar el mecanismo mientras empujás con tu hombro. Requiere más que un poco de fuerza pero, luego de unos minutos, escuchás el click del mecanismo rompiéndose y podés entrar al hall central del Museo.
+    -> cap3_museo_noche_convergencia
+
+* { conocimiento >= 20 } [Hace tiempo que las ganzúas no se usan. Es su momento de brillar.]
+    Las ganzúas bailan en la cerradura de la puerta haciendo un tintineo metálico. Apoyás tu oreja contra la puerta y vas escuchando el resultado de cada movimiento hasta encontrar la posición correcta. Eureka, la puerta se abre y entrás al hall central del Museo.
+    -> cap3_museo_noche_convergencia
+
+* { magia >= 20 } [Un poco de calor concentrado bastará para romper el mecanismo de la puerta.]
+    Concentrar el calor fue lo más difícil, lo que te sale más natural era prender fuego toda la puerta (y la mitad del Museo de yapa) pero este trabajo requería algo más sutil. A medida que pasaron los segundos el calor se fue concentrando y aumentando, hasta convertir el pico de la puerta en una baba candente que cayó al piso. Así, por arte de magia (textualmente) lograste entrar al hall central del Museo.
+    -> cap3_museo_noche_convergencia
+
+* [Entrás de todas formas — improvisando]
+    Rodeás el edificio buscando cualquier punto débil. Una ventana trasera con el seguro flojo cede con un poco de insistencia. No es elegante, pero funciona.
+    -> cap3_museo_noche_convergencia
+
+=== cap3_museo_noche_convergencia ===
+Te encontrás de nuevo en el hall central, bajo la tenue luz de la luna que entra por los ventanales. Tardás unos segundos en comprender lo que estás viendo, una pieza así sería más propia de un museo de arte moderno.
+En el piso hay una figura con el típico traje de guardia de seguridad, pero sus extremidades se encuentran dobladas en ángulos raros, ángulos que ningún cuerpo humano adoptaría voluntariamente.
+A su alrededor están parados tres maniquíes de aspecto humanoide pero con rostros planos, carentes de cualquier rasgo. Por alguna razón esta particularidad los hace parecer más perturbadores.
+Sospechás que, tal vez, dejaron en el hall central elementos que deben colocar en alguna vitrina mañana a primera hora para hacer una composición.
+# next
+
+Es entonces cuando escuchás un quejido en el piso. La figura con el traje de guardia de seguridad no era una maqueta ni un maniquí, era una persona que (por ese ruido) estaba en sus últimos minutos de vida.
+No tenés mucho tiempo, debés decidir cómo actuar.
+
+* [Te acercás a intentar salvar la vida al guardia de seguridad]
+    Te arrodillás al lado del guardia mientras intentás recordar los pocos conocimientos que tenés sobre primeros auxilios. Sentís que, aun si recuperás todo lo que olvidaste sobre salud, el guardia está más cerca de necesitar un milagro que un médico.
+    Solo llegás a notar cómo una sombra se mueve, antes de darte cuenta uno de los maniquíes te agarra firmemente del cuello. Movés los pies desesperadamente intentando encontrar algo sólido pero solo hay vacío. Lentamente te empezás a quedar sin aire.
+    { fuerza >= 25:
+        Sentís tus abdominales en llamas pero lográs elevar tus piernas y darle una patada al maniquí para forzar que te suelte. Corrés hacia la primera sala mientras ves delante de ti las sombras que produce el arbitrario movimiento del maniquí y escuchás detrás de ti el ruido inconexo de sus pisadas.
+        ~ hp -= 10
+    - else:
+        Es entonces cuando otro maniquí descarga un golpe contra tu estómago, dejándote sin aire mientras abrís la boca en un grito mudo.
+        Por suerte te lanza como un muñeco roto con tanta fuerza que atravesás la puerta hasta la siguiente habitación.
+        ~ hp -= 20
+    }
+    -> cap3_museo_primera_sala
+
+* [Alguien ya está en el Museo, vas a la siguiente sala para llegar rápido a la momia.]
+    -> cap3_museo_primera_sala
+
+=== cap3_museo_primera_sala ===
+# stop_music
+# play_sfx:heartbeat_boost
+# UI_EFFECT: blur_vignette
+# play_sfx:pasos_monstruo
+
+Te encontrás de nuevo en el hall central, bajo la tenue luz de la luna que entra por los ventanales. Tardás unos segundos en comprender lo que estás viendo, una pieza así sería más propia de un museo de arte moderno.
+# next
+
+En el piso hay una figura con el típico traje de guardia de seguridad, pero sus extremidades se encuentran dobladas en ángulos raros, ángulos que ningún cuerpo humano adoptaría voluntariamente. A su alrededor están parados tres maniquíes de aspecto humanoide pero con rostros planos, carentes de cualquier rasgo. Por alguna razón esta particularidad los hace parecer más perturbadores.
+# next
+
+Es entonces cuando escuchás un quejido en el piso. La figura con el traje de guardia de seguridad no era una maqueta ni un maniquí, era una persona que —por ese ruido— estaba en sus últimos minutos de vida. No tenés mucho tiempo.
+# next
+
+El latido de tu propio corazón se amplifica en tus oídos como si alguien hubiera bajado todo el otro sonido del mundo. Los maniquíes se mueven. El clack-clack de sus articulaciones rebota contra las vitrinas de Pueblos Originarios. Tenés segundos para decidir.
+
+¿Qué hacés?
+* [Llegar a la primera sala y trabar la entrada — usar lo que encuentres] -> cap3_combate_baston
+* [Desenfundar y dispararle al maniquí de adelante] -> cap3_combate_revolver
+* [Dejar estallar la magia cruda] -> cap3_combate_magia
+
+=== cap3_combate_revolver ===
+# play_sfx:disparo
+# flash_red
+# shake
+
+El disparo es perfecto, uno de esos para estar orgullosos. Conecta justo en la frente del maniquí —entre los ojos, aunque el bicho tiene un rostro liso lo cual te quita el punto de referencia. No hay sangre, tripas ni gritos de dolor, lo cual vuelve todo bastante anticlimático. Solo el fuerte olor a plástico quemado y la cabeza moviéndose para atrás por el efecto cinético de la bala.
+# next
+
+# play_sfx:clic_arma
+{ fuerza >= 25:
+    Los otros dos maniquíes se te lanzan encima. Sabés que su estrategia es agarrar y torcer, romper o quebrar. Te movés rápido entre ellos y usás el mango del revólver como una porra. En un momento una de sus manos logra agarrar el puño de tu chaqueta; te retorcés como un animal para sacarte la prenda antes que puedan agarrar algo de carne. A pesar de todo, el combate te favorece y de repente te encontrás del otro lado. Con un claro sentido táctico, te das media vuelta y corrés con toda tu fuerza hacia la Sala con la Momia.
+    ~ hp -= 8
+- else:
+    Intentás girar para apuntarle a otro de los maniquíes pero te encontrás con un par de manos abiertas dirigidas directo a tu cuerpo. Por puro instinto te tirás al piso mientras el disparo es un eco que se pierde en el vacío. Te hacés una pelota intentando proteger tus órganos más importantes mientras los tres maniquíes te dan una tanda de patadas. Uno te agarra del cuello y te vuelve a poner sobre dos piernas —por suerte su agarre está en el cuello de tu chaqueta, no en la carne. Te retorcés como un animal y lográs sacarte la prenda. Salís corriendo hacia la Sala con la Momia mientras uno de los maniquíes atrás destroza tu chaqueta.
+    ~ hp -= 10
+}
+# next
+-> cap3_museo_momia
+
+=== cap3_combate_baston ===
+# play_sfx:golpe
+# shake
+
+Llegás a la primera Sala, la exposición de Costa Alegre en la época de los Pueblos Originarios. Ves un par de maquetas y lamentás que estas figuras con lanzas no cobren vida para ayudarte. Atrás tuyo escuchás como los pasos irregulares de los maniquíes se preparan para entrar. Cerrás la puerta de ingreso pero notás que es una madera de mala calidad —parece que el Museo estuvo desfinanciado desde su construcción. El cierre de la puerta es más una expresión de deseo que una defensa real.
+# next
+
+Tu mirada cae sobre una vitrina: báculo ceremonial de madera densa, ritualmente decorado, casi un metro de largo. Pesado. Rompés el vidrio y lo aferrás con ambas manos antes de que los golpes de los maniquíes hagan temblar la puerta.
+# play_sfx:vidrio_roto
+# next
+
+# MINIGAME: keymash key=space duration=6000 threshold=18
+# play_sfx:golpe
+
+{ minigame_result == 1:
+    Cada embiste de madera contra tu defensa hace retumbar toda la sala. Repelés la oleada con el báculo, usando las vitrinas como muralla. Los maniquíes retroceden dando espacio para avanzar. Las manos te sangran por los astillazos pero tus huesos siguen enteros.
+    ~ hp -= 6
+    ~ fuerza += 3
+- else:
+    Un maniquí se te cuela por el flanco y te clava astillas en el costillar antes que lo tirés. Sangrás pero seguís entero. Aprovechás el hueco para correr hacia la siguiente sala.
+    ~ hp -= 18
+}
+# next
+-> cap3_museo_momia
+
+=== cap3_combate_magia ===
+# play_sfx:magia_oscura
+# flash_red
+# UI_EFFECT: blood_pulse
+
+{ magia >= 15:
+    # play_sfx:magiexplosion
+    Dejás estallar la magia cruda. La sala se ilumina con un fogonazo de luz azul y naranja cegadora; el crujido del fuego tapa hasta el latido en tus oídos. Los maniquíes se calcinan en segundos. Un grito de dolor escapa tuyo —quemaste también tus propias manos, pero el camino hacia la Sala con la Momia está despejado.
+    ~ hp -= 12
+    ~ magia -= 5
+    # achievement:unlock:incineracion_museo
+- else:
+    La magia se te escapa mal canalizada. El fogonazo te quema a vos más que a ellos. Dos maniquíes siguen avanzando —su avance es impredecible, mezclando pasos lentos y largos con explosiones de velocidad. Solo te queda correr.
+    ~ hp -= 20
+    ~ magia -= 10
+}
+# next
+-> cap3_museo_momia
+
+=== cap3_museo_momia ===
+# music:horror_ambient
+
+Los maniquíes todavía no habían llegado a esta Sala. A simple vista la Momia está escondida dentro de los biombos de la cultura Incaica. El ambiente se siente cálido y pesado, como un sauna, y no es complicado darte cuenta que está cargado de magia. No sabes si la Momia esta reaccionando a la presencia de los maniquíes o si es un tipo de defensa de esta.
+
+Realmente te das cuenta que no sabes si los maniquíes son esbirros de otra facción rival que quiere primerearte para robar (digamos recuperar) la Momia o tal vez son aliados de esta que vienen a liberarla.
+
+Corres entre los biombos y llegas hasta la Momia. Estas listo para romper el vidrio cuando sentís el pico de energía mágica. La realidad se desgarra justo detrás de la Momia, una pequeña herida de medio metro que corta la tela del espacio.
+
+Te golpea la diferencia de presión y temperatura cuando se mezcla el clima del Museo con el del lugar que está del otro lado del portal. El aire se llena del olor a agua salada, donde sea que está el otro lado del portal se encuentra en alguna playa.
+# next
+
+No hay tiempo que perder. Golpeas con toda tu fuerza el vidrio de la vitrina que protege a la Momia y todo lo que obtenés es un dolor que sube de tu meñique hasta tu codo. El vidrio está reforzado.
+
+Del portal surgen dos manos femeninas con uñas pintadas de violeta, el mismo color que tiene los bordes del portal, y empieza a hacer fuerza para ensancharlo.
+
+Le das el segundo golpe a la vitrina, y un tercero, cuarto y hasta quinto. El vidrio termina con una pequeña muesca, vos terminás más lastimado.
+
+Las manos logran estirar suficiente el portal hasta que tenga el tamaño de la ventana de una casa. Un par de brazos femeninos se estiran y abrazan a la Momia.
+# next
+
+# play_sfx:sting_revelacion
+"el primero que lo encuentra se lo lleva" —dice un tono de voz juguetón mientras se lleva a la Momia por el portal.
+# next
+
+{ conocimiento >= 40:
+    ~ voz_conocida = true
+    # play_sfx:stinger_conocimiento
+    Esa voz te suena conocida, pero no estás seguro y el ruido de los maniquíes acercándose ocupa más tu atención.
+    # achievement:unlock:ratoncito_sabiduria
+}
+# next
+
+El portal se cierra y vos te quedás golpeando la vitrina, solo lográndote lastimar más. Perdiste. Te metiste al Museo, no lograste tu objetivo, y te quedaste con un grupo de maniquíes que quieren matarte.
+~ momia_robada = true
+# next
+
+-> cap3_final_fracaso
+
+=== cap3_final_fracaso ===
+# stop_music
+# CHAPTER_BREAK: title=Fracasaste, subtitle=Fin del Capítulo 3, music=terror_ambient
+
+Fin de la demo. El eco de los clack-clack se acerca.
+# next
 
 -> END
 
