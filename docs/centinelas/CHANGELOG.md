@@ -1,5 +1,20 @@
 # Changelog — Centinelas del Sur
 
+## [0.18.2] — 2026-04-25
+
+### Fixed
+- **Hallucinations eliminadas**: choice `cabral_al_museo` en tiempo libre, bloque condicional `{ cabral_al_museo }` en convergencia nocturna, choice de reacción al plan del Profesor con `+conocimiento`, opción nocturna "improvisando" — ninguno existía en el crudo.
+- **Items secretos corregidos**: `enojo_enriquez` y `llegaste_con_ventaja` cambiados de `# achievement:unlock:` a `# inv:add:` y declarados en sección `"items"` del config para que aparezcan en el inventario.
+
+### Añadido
+- **Rama TRAUMADO** (`cap3_viaje_museo`): en el viaje al Museo, si el jugador es traumado y hay bebé muerto, aparece el fantasma del bebé en el asiento del acompañante.
+- **Hall convergencia nocturna completado**: opciones 3 y 4 del crudo — estudiar maniquíes (>=25 SABIDURIA → `entidades_poseidas`) y atacar con pistola (retroceso).
+- **Primera sala nocturna reescrita** con las 6 opciones del crudo: trabar la puerta (keymash), hechizo invisibilidad (keymash), esconderse en la canoa (keymash), símbolo en la puerta (requiere `entidades_poseidas`), lanza de vitrina (requiere `llegaste_con_ventaja`), correr.
+- **Segunda sala nocturna** (`cap3_corres_museo`): elección del acta fundacional — rescatarla otorga achievement `acta_fundacional`.
+- Achievement `acta_fundacional` ("Guardián del Patrimonio") + ítem `entidades_poseidas` añadidos al config.
+
+---
+
 ## [0.18.1] — 2026-04-25
 
 ### Fixed

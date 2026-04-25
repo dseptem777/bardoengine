@@ -59,6 +59,8 @@ VAR cabral_al_museo = false
 VAR voz_conocida = false
 VAR momia_robada = true
 VAR espiaste_lab = false
+VAR llegaste_con_ventaja = false
+VAR entidades_poseidas = false
 
 -> capitulo_0
 
@@ -4422,13 +4424,7 @@ Y nadie tiene pinta de que va a ceder su posición.
 
 En menos de quince minutos estaban apoyados sobre una mesa con fotos de la momia incaica, mapas del museo y folletos de las exposiciones.
 
-¿Cómo respondés al plan de robar la Momia?
-* [Aceptar sin objeciones — la misión es la misión]
-    -> cap3_tiempo_libre
-* [Aceptar pero expresar incomodidad ética]
-    ~ conocimiento += 2
-    — No sé si me siento cómodo robando una pieza de arte histórico.
-    -> cap3_tiempo_libre
+-> cap3_tiempo_libre
 
 === cap3_tiempo_libre ===
 
@@ -4447,7 +4443,7 @@ En cuanto entra señalás el reloj de tu muñeca.
 La mirada de Enriquez es suficiente como para asesinar a alguien y te das cuenta que tiene en las manos una jarra llena de café hirviendo y no tendría dudas en usarlo.
 Esto te va a pasar factura.
 ~ item_enojo_enriquez = true
-# achievement:unlock:enojo_enriquez
+# inv:add:enojo_enriquez
 # next
 -> cap3_tl_menu
 
@@ -4473,7 +4469,7 @@ Llega un punto que no es posible hacer más planificación desde El Faro. Solo r
 * { algunos_guardias_sobreviven } [Ver cómo están los guardias del cementerio]
     -> cap3_tl_guardias
 * [No perder más tiempo — ir directo al Museo]
-    -> cap3_museo_dia
+    -> cap3_viaje_museo
 
 === cap3_tl_cabral ===
 Cabral adaptó el sótano para convertirlo en una verdadera pista de obstáculos. Hay vallas para saltar, un muro para escalar y una intricada red de alambre de púa pensada para que te arrastres por debajo. Visto desde afuera, todo parece increíblemente divertido.
@@ -4487,13 +4483,7 @@ Terminás en el piso, recostado sobre un charco de tu propio sudor. Por suerte C
 ~ fuerza += 5
 # play_sfx:stinger_fuerza
 # next
-* [Pedirle que te acompañe al Museo de noche (-20 HP en favores cobrados)]
-    ~ hp -= 20
-    ~ cabral_al_museo = true
-    Cabral suelta una carcajada y te dice que obvio, para eso están los amigos. El precio se te va a descontar en sudor antes del atardecer.
-    -> cap3_museo_dia
-* [Seguir con el plan original, vos solo]
-    -> cap3_museo_dia
+-> cap3_viaje_museo
 
 === cap3_tl_biblioteca ===
 Te encontrás a Enriquez en su escritorio, con tan pocas ganas de sociabilizar como siempre.
@@ -4516,7 +4506,7 @@ Te encontrás a Enriquez en su escritorio, con tan pocas ganas de sociabilizar c
     # play_sfx:stinger_conocimiento
     # next
 }
--> cap3_museo_dia
+-> cap3_viaje_museo
 
 === cap3_tl_mary_shelley ===
 Mary Shelley está intentando solucionar una ecuación en su pizarrón. Parece que la manía que la desbordaba esta mañana ahora se concentró en un punto focal. Aun así, mientras mira el pizarrón no deja de golpetear el piso con su pie derecho mientras su mano izquierda juguetea con una lapicera.
@@ -4535,7 +4525,7 @@ Hay momentos difíciles, pero a pesar de todo lográs sobreponerte y la moneda n
 ~ magia += 5
 # play_sfx:stinger_magia
 # next
--> cap3_museo_dia
+-> cap3_viaje_museo
 
 === cap3_tl_belen ===
 El nuevo orfanato parece más feo. El edificio tiene claras marcas de descuido, vidrios rotos en la ventana, rejas oxidadas y paredes mal pintadas. El hecho de estar en una parte fea de la ciudad no ayuda mucho. Tampoco habla muy bien del lugar que, con muy poco sigilo burocrático, El Faro logró que autoricen que la visites de forma regular.
@@ -4547,7 +4537,7 @@ Aprovechás la mañana para comprarle un helado y dar una vuelta por la playa mi
 Después de un par de horas la volvés a llevar al orfanato y repetís la tradición del final de cada salida: le prometés que los monstruos no van a volver, le decís que cualquier problema puede llamarte y le pasás una bolsa de caramelos para que soborne a sus compañeros de orfanato.
 ~ hp += 5
 # next
--> cap3_museo_dia
+-> cap3_viaje_museo
 
 === cap3_tl_guardias ===
 Es raro volver al Cementerio. A simple vista no se ve ninguna señal de la batalla que ocurrió acá hace unas noches. La única novedad es un cartel de un blanco impoluto sobre el cual, en grandes letras negras, se aclara que está prohibido ingresar al predio luego del atardecer. No confiás mucho en que los Vampiros tengan un respeto obsesivo por la ley como para dejarse amedrentar por un simple letrero, pero entendés que es parte de una necesidad humana para normalizar la situación y sentir que se da una respuesta. Acá pasó algo una noche, así que pusimos un cartel y nunca se va a volver a repetir, los votantes ya pueden dormir tranquilos.
@@ -4564,6 +4554,19 @@ Sabés que esta es la historia que se va a contar en fiestas familiares durante 
 La tarde sirve para relajar tu mente y prepararte para los retos que tengas que enfrentar a futuro.
 ~ hp += 5
 # next
+-> cap3_viaje_museo
+
+=== cap3_viaje_museo ===
+El Museo se encuentra en la otra punta de Costa Alegre. No te queda otra opción que hacer el camino por la autopista que, a esta hora, es principalmente una sucesión de frenar y arrancar mientras crece tu nivel de frustración.
+{ traumado:
+    # next
+    Es entonces cuando lo ves, acostado en el piso del auto del lado del acompañante. Lo más correcto sería decir que primero lo oliste. Un olor fuerte, casi tangible, a carne podrida y muerte. Ese olor que toca una fibra instintiva en tu cuerpo y te hace saber que algo se encuentra muy mal.
+    Cuando girás tu cabeza lo ves: el bebé muerto se encuentra en tu auto. En su cabeza todavía se ve el orificio de bala —la bala que vos disparaste. Gatea y se sube al asiento del acompañante con torpeza, tal vez por su edad o tal vez por estar muerto; no se le puede culpar por eso. Te lanza una mirada de dos ojos completamente negros.
+    # next
+    Tus manos se endurecen en el volante hasta que te duelen los nudillos. Intentás concentrarte para no terminar encajando tu auto en la parte trasera del camión que va adelante. El bebé abre la boca pero su voz sale truncada, suena como un hombre de cincuenta años con cuarenta años de fumador.
+    —Que lindo que me llevás al Museo, nunca pude ir. Eso está bien, me vas a poder llevar a un montón de lugares. Casi todo es nuevo para mí.
+    # next
+}
 -> cap3_museo_dia
 
 === cap3_museo_dia ===
@@ -4736,7 +4739,8 @@ Luego se dedican a tirar y doblar las extremidades.
 No hay malicia en la cara de los maniquíes (fácil al no haber rostro) ni emiten un sonido. Solo se escuchan los gritos desesperados del guardia que solo son superados por el ruido seco de huesos rompiéndose y carne siendo desgarrada.
 Cuando terminan su trabajo sueltan al guardia que cae pesadamente al piso. Una caída así de espalda sin duda le saca todo el aire de los pulmones y le impide seguir gritando ayuda.
 No pensás quedarte para ser la segunda víctima, aprovechás el momento y te colás en la Primera Sala del Museo mientras planeás cómo enfrentarte a esta nueva amenaza.
-# achievement:unlock:llegaste_con_ventaja
+~ llegaste_con_ventaja = true
+# inv:add:llegaste_con_ventaja
 # next
 -> cap3_museo_primera_sala
 
@@ -4750,11 +4754,6 @@ Eso significa que te toca esperar un poco antes de ver cómo forzar tu entrada.
 Es entonces cuando te das cuenta que ya hay algo dentro del Museo. No es un ruido o una sensación sobrenatural, más una herencia genética de un pasado de cazador recolector que levanta pequeños detalles que no llegás a procesar y le da información a tu cerebro: hay algo entre esos arbustos ¿presa o peligro?.
 Que se joda la sutileza, es momento de entrar en el Museo.
 
-{ cabral_al_museo:
-    Cabral camina a tu lado en silencio, el revólver ya en la mano, cubriendo los ángulos que vos no podés vigilar. Saber que hay alguien atrás te da un respiro que no sabías que necesitabas.
-    ~ fuerza += 3
-}
-
 * { fuerza >= 20 } [Un poco de fuerza bastará para romper el mecanismo de la puerta.]
     Te apoyás contra la puerta y empezás a forzar el mecanismo mientras empujás con tu hombro. Requiere más que un poco de fuerza pero, luego de unos minutos, escuchás el click del mecanismo rompiéndose y podés entrar al hall central del Museo.
     -> cap3_museo_noche_convergencia
@@ -4767,9 +4766,6 @@ Que se joda la sutileza, es momento de entrar en el Museo.
     Concentrar el calor fue lo más difícil, lo que te sale más natural era prender fuego toda la puerta (y la mitad del Museo de yapa) pero este trabajo requería algo más sutil. A medida que pasaron los segundos el calor se fue concentrando y aumentando, hasta convertir el pico de la puerta en una baba candente que cayó al piso. Así, por arte de magia (textualmente) lograste entrar al hall central del Museo.
     -> cap3_museo_noche_convergencia
 
-* [Entrás de todas formas — improvisando]
-    Rodeás el edificio buscando cualquier punto débil. Una ventana trasera con el seguro flojo cede con un poco de insistencia. No es elegante, pero funciona.
-    -> cap3_museo_noche_convergencia
 
 === cap3_museo_noche_convergencia ===
 Te encontrás de nuevo en el hall central, bajo la tenue luz de la luna que entra por los ventanales. Tardás unos segundos en comprender lo que estás viendo, una pieza así sería más propia de un museo de arte moderno.
@@ -4797,90 +4793,185 @@ No tenés mucho tiempo, debés decidir cómo actuar.
 * [Alguien ya está en el Museo, vas a la siguiente sala para llegar rápido a la momia.]
     -> cap3_museo_primera_sala
 
+* [Te acercás a estudiar los maniquíes.]
+    Das un par de pasos y solo ves un grupo de maniquíes. A esta distancia parecen completamente ordinarios y solo podés notar que no se están moviendo ni respiran —teniendo en cuenta que no tienen nariz, es esperable.
+    Te animás a dar un paso más y tocás su brazo. Notás que no tiene ninguna articulación, sin duda sus movimientos serán torpes. Aun así te sorprende sentir calor y algo ¿moviéndose? debajo del plástico.
+    { conocimiento >= 25:
+        Sabés que varios invocadores, cuando traen a entidades a este plano que carecen de forma física, utilizan muñecos, cadáveres o elementos similares para darles un vehículo para actuar. Eso es bueno —si son entidades de otro plano, pueden ser contenidas y alejadas con los métodos correspondientes.
+        ~ entidades_poseidas = true
+        # inv:add:entidades_poseidas
+    - else:
+        Entonces se mueve, más rápido de lo que esperás pero de forma torpe, usando la articulación del hombro en lugar de la del codo. El golpe cae directo en tu rostro y te llena la boca del gusto a sangre —tu sangre. El momento del estudio terminó.
+        ~ hp -= 10
+    }
+    Corrés hacia la primera sala mientras ves delante de ti las sombras que produce el arbitrario movimiento del maniquí y escuchás detrás de ti el ruido inconexo de sus pisadas.
+    -> cap3_museo_primera_sala
+
+* [Ya sos muy viejo para caer en esto. Sacás la pistola.]
+    # play_sfx:disparo
+    # flash_yellow
+    Debe ser el tiro más fácil que tuviste que hacer en toda tu vida. Apuntás, contenés la respiración y empezás a tirar del gatillo. Justo en ese momento, el maniquí hace un movimiento rápido, a caballo entre un salto y una caída, y se mueve hacia un costado. Tu disparo se pierde en el aire —el único efecto aparente fue avisarle a todos que llegaste, con el ruido que retumba en los techos altos del Museo.
+    Los maniquíes cargan hacia vos. Su avanzar es torpe y combina pasos largos con explosiones de velocidad. Todo su avance es zigzagueante y te hacen acordar a un borracho agresivo.
+    Pasaste de dispararle a un blanco inmóvil a estar perseguido por tres enemigos. Es momento de retirarse y repensar la estrategia.
+    Corrés hacia la primera sala mientras ves delante de ti las sombras que produce el arbitrario movimiento del maniquí y escuchás detrás de ti el ruido inconexo de sus pisadas.
+    -> cap3_museo_primera_sala
+
 === cap3_museo_primera_sala ===
 # stop_music
-# play_sfx:heartbeat_boost
-# UI_EFFECT: blur_vignette
 # play_sfx:pasos_monstruo
+# UI_EFFECT: blur_vignette
 
-Te encontrás de nuevo en el hall central, bajo la tenue luz de la luna que entra por los ventanales. Tardás unos segundos en comprender lo que estás viendo, una pieza así sería más propia de un museo de arte moderno.
+Llegás a la primera Sala, la exposición de Costa Alegre en la época de los Pueblos Originarios. Ves un par de maquetas y lamentás que estas figuras con lanzas no cobren vida para ayudarte.
+Atrás tuyo escuchás cómo los pasos irregulares de los maniquíes se preparan para entrar. Cerrás la puerta de ingreso pero notás que es una madera de mala calidad —parece que el Museo estuvo desfinanciado desde su construcción. El cierre de la puerta es más una expresión de deseo que una defensa real.
+En unos segundos van a entrar, así que tenés que actuar rápido.
 # next
 
-En el piso hay una figura con el típico traje de guardia de seguridad, pero sus extremidades se encuentran dobladas en ángulos raros, ángulos que ningún cuerpo humano adoptaría voluntariamente. A su alrededor están parados tres maniquíes de aspecto humanoide pero con rostros planos, carentes de cualquier rasgo. Por alguna razón esta particularidad los hace parecer más perturbadores.
+* [Te apoyás contra la puerta, intentando trabarla e impedir que los maniquíes entren]
+    Apoyás tu espalda en el centro de la puerta intentando sostenerla contra el avance de los maniquíes.
+    Los golpes son torpes, pero están cargados con una fuerza que hace temblar la puerta y se propaga por tu espalda hasta tus rodillas, que ya se sienten de gelatina.
+    Es entonces cuando uno de sus brazos rompe la puerta y te aferra de la muñeca.
+    # play_sfx:golpe
+    # shake
+    # next
+    Las manos empiezan a atravesar la puerta. Antes de darte cuenta una está aferrando tu muñeca, otra un talón y la tercera está palpando el terreno en busca de tu cuello.
+    Es entonces cuando se abre la otra puerta y aparecen tres maniquíes más. Intentás forcejear mientras se acercan pero te encontrás atrapado contra la puerta.
+    Antes de darte cuenta, una lluvia de manos busca qué parte tuya agarrar, tirar y retorcer.
+    # next
+    # MINIGAME: keymash key=space duration=6000 threshold=18
+    { minigame_result == 1:
+        Lográs zafarte y te lanzás hacia la siguiente sala con lo que te queda de energía.
+        ~ hp -= 10
+    - else:
+        Las manos logran aferrarte demasiado. Cuando finalmente salís, cada músculo grita.
+        ~ hp -= 25
+    }
+    # next
+    -> cap3_corres_museo
+
+* { magia >= 20 } [Un hechizo de invisibilidad podría ser útil en este momento]
+    En este momento volverte invisible te sale tan natural como contener la respiración. Buscás una esquina y ejecutás los movimientos necesarios para que el hechizo funcione.
+    Justo a tiempo, la puerta de entrada cede ante los maniquíes. A la par se abre la otra puerta, y otros tres maniquíes ingresan a la habitación.
+    # next
+    Su movimiento aleatorio es difícil de predecir. Antes de darte cuenta estás rodeado.
+    Es entonces cuando una idea te golpea: ¿qué sentido tiene ser invisible si los maniquíes no tienen ojos? Podrían estar moviéndose por ecolocalización o por lectura de energías mágicas.
+    Antes de poder procesar la idea, los seis cargan a la vez sobre vos.
+    # next
+    # MINIGAME: keymash key=space duration=6000 threshold=18
+    { minigame_result == 1:
+        Lográs esquivar lo suficiente para abrirte paso hacia la puerta.
+        ~ hp -= 10
+        ~ magia -= 5
+    - else:
+        Te atrapan, pero lográs liberarte a costa de tu chaqueta —y de algo de piel.
+        ~ hp -= 22
+        ~ magia -= 8
+    }
+    # next
+    -> cap3_corres_museo
+
+* [Te escondés dentro de la canoa gigante que está expuesta en mitad de la Sala]
+    Subís a la canoa y la misma se queja a medida que se acostumbra a tu peso. Te acostás a lo largo en un intento de que los bordes de la embarcación tapen tu cuerpo. Desde este ángulo solo podés mirar el techo.
+    El ruido de la puerta siendo destrozada es claro. También sentís otro ruido en el extremo opuesto: la puerta que da a la siguiente sala se abrió y dejó entrar a más maniquíes.
+    # next
+    Su caminar aleatorio es muy complicado de seguir solo con el oído. Son las sombras lo que delatan su posición, proyectadas como seis dedos oscuros de una garra que está por caer sobre la canoa.
+    Es entonces cuando una idea te golpea: ¿qué sentido tiene esconderse si los maniquíes no tienen ojos? Antes de poder procesar la idea, los seis cargan a la vez sobre vos.
+    # next
+    # MINIGAME: keymash key=space duration=6000 threshold=18
+    { minigame_result == 1:
+        Te tirás de la canoa y corrés hacia la puerta.
+        ~ hp -= 12
+    - else:
+        Te atrapan dentro de la canoa. Cuando lográs salir, los golpes ya te costaron caro.
+        ~ hp -= 24
+    }
+    # next
+    -> cap3_corres_museo
+
+* { entidades_poseidas } [Trazás un símbolo en la puerta para impedir la entrada de las entidades]
+    La puerta no es solo una construcción de madera, también es un símbolo. Separa una parte de la estructura de otra y representa lo que puede entrar —o lo que se debe quedar afuera. Es bastante para trabajar en este momento.
+    Metés la mano en tu bolsillo y encontrás una tiza. Las condiciones no son óptimas —la adrenalina te hace temblar la mano y la puerta tiembla ante los golpeteos de los maniquíes.
+    Aun así lo lográs. En cuanto trazás la última línea del sello los golpeteos se detienen. Las entidades que habitan los maniquíes no pueden atravesar la puerta.
+    # play_sfx:magia_oscura
+    # next
+    Estás llegando a la puerta que da a la siguiente Sala cuando la misma se abre de golpe y te deja casi encima de otro grupo de tres maniquíes. Tenés segundos para reaccionar.
+    * * [Te lanzás sobre ellos buscando un hueco donde pasar]
+        Amigás que te vas a lanzar para la izquierda y, a último minuto, lanzás tu cuerpo para el lado contrario. Sentís sus dedos plásticos intentando atraparte pero solo logran arrancarte un par de pelos.
+        -> cap3_corres_museo
+    * * [La sorpresa es el mejor momento para atacar — desenfundás y disparás]
+        # play_sfx:disparo
+        # shake
+        El disparo conecta justo en la frente del maniquí. No hay sangre ni gritos, solo el fuerte olor a plástico quemado.
+        { fuerza >= 25:
+            Los otros dos se te lanzan encima. Te movés rápido y usás el mango del revólver como porra. El combate te favorece y te abrís paso.
+            ~ hp -= 8
+        - else:
+            Los otros dos te rodean. Lográs sacarte la chaqueta antes de que puedan aferrarte la carne, y salís corriendo.
+            ~ hp -= 15
+        }
+        -> cap3_corres_museo
+
+* { llegaste_con_ventaja } [Rápido — agarrás una lanza de una vitrina y la usás para trabar la puerta]
+    Sentís un poco de lástima cuando rompés la vitrina para agarrar el arma, pero tus enemigos mataron a un guardia.
+    # play_sfx:vidrio_roto
+    Colocás la lanza entre las manijas de la puerta. Eso va a retroceder un poco el avance de tus enemigos, así que aprovechás para avanzar hacia la siguiente habitación.
+    # next
+    Estás llegando a la puerta que da a la siguiente Sala cuando la misma se abre de golpe y te deja casi encima de otro grupo de tres maniquíes. Tenés segundos para reaccionar.
+    * * [Te lanzás sobre ellos buscando un hueco donde pasar]
+        Amigás que te vas a lanzar para la izquierda y, a último minuto, lanzás tu cuerpo para el lado contrario. Sentís sus dedos plásticos intentando atraparte pero solo logran arrancarte un par de pelos.
+        -> cap3_corres_museo
+    * * [La sorpresa es el mejor momento para atacar — desenfundás y disparás]
+        # play_sfx:disparo
+        # shake
+        El disparo conecta justo en la frente del maniquí. No hay sangre ni gritos, solo el fuerte olor a plástico quemado.
+        { fuerza >= 25:
+            Los otros dos se te lanzan encima. Te movés rápido y usás el mango del revólver como porra. El combate te favorece y te abrís paso.
+            ~ hp -= 8
+        - else:
+            Los otros dos te rodean. Lográs sacarte la chaqueta antes de que puedan aferrarte la carne, y salís corriendo.
+            ~ hp -= 15
+        }
+        -> cap3_corres_museo
+
+* [Corrés con toda la velocidad que dan tus piernas buscando llegar a la segunda sala]
+    Cerrás la puerta atrás tuyo y, antes de escuchar el ruido del portazo, ya estás dado vuelta y corriendo a toda velocidad.
+    Estás llegando a la puerta que da a la siguiente Sala cuando la misma se abre de golpe y te deja casi encima de otro grupo de tres maniquíes. Tenés segundos para reaccionar.
+    * * [Te detenés y buscás otro camino]
+        Venías tan ligero que te cuesta un poco parar. Te detenés justo a centímetros de la mano de uno de los maniquíes.
+        Te das media vuelta y volvés al centro de la sala buscando ventanas, ductos de aire, lo que sea para salir.
+        La puerta por la que entraste cede con el característico ruido de la madera quebrándose mientras tres maniquíes más entran en la Sala.
+        Por mucho que mirás no encontrás otro camino. Los maniquíes se colocan a tu alrededor.
+        # MINIGAME: keymash key=space duration=6000 threshold=18
+        { minigame_result == 1:
+            Encontrás un hueco y te lanzás hacia la puerta.
+            ~ hp -= 10
+        - else:
+            Los maniquíes te aferran y tenés que forcejear para escapar.
+            ~ hp -= 25
+        }
+        -> cap3_corres_museo
+    * * [Aprovechás el momentum y te lanzás buscando pasar]
+        Vas tan rápido que es difícil detenerte. El maniquí del costado tiene los brazos elevados, lo que le dificulta defenderse.
+        Te sumergís en un tackle y sentís chocar tu hombro contra sus piernas. Antes de darte cuenta el maniquí sale volando por encima de tu cuerpo.
+        Ves en el borde de tu campo de visión cómo otras manos se extienden intentando detenerte, pero antes que cierren los dedos ya estás llegando a la próxima puerta.
+        -> cap3_corres_museo
+
+=== cap3_corres_museo ===
+Estás ya por la Segunda Sala del Museo y tenés miedo de mirar para atrás. Los maniquíes están más cerca de lo que te gustaría —el golpeteo irregular de sus pies de plástico detrás tuyo y sus sombras acercándose.
 # next
+Estás a segundos de llegar a la puerta de la siguiente sala y, a tu izquierda, notás que está expuesta la versión original del acta fundacional de Costa Alegre. Es un documento de un valor inconmensurable para la historia de la ciudad y sería una lástima que se pierda —aunque hay que admitir que, teniendo en cuenta tus últimas misiones, lo menos raro que puede pasar es que todo el Museo termine en llamas.
 
-Es entonces cuando escuchás un quejido en el piso. La figura con el traje de guardia de seguridad no era una maqueta ni un maniquí, era una persona que —por ese ruido— estaba en sus últimos minutos de vida. No tenés mucho tiempo.
-# next
+* [Rescatás el acta fundacional]
+    Rompés la vitrina y, con todo el respeto que amerita la situación —que no es tanto dado que los maniquíes asesinos están intentando hacer una corrida para llegar antes que vos a la puerta— tomás el acta fundacional y la guardás en el bolsillo. Enríquez luego sabrá qué hilos tirar para que esto vuelva al Museo.
+    # achievement:unlock:acta_fundacional
+    # next
+    Recorrés la tercera Sala sin más inconvenientes. Por suerte un par de los maniquíes parece confundirse y se chocan de lleno contra la maqueta de la toma de los Astilleros Herrera, dándote un par de minutos de ventaja clave.
+    -> cap3_museo_momia
 
-El latido de tu propio corazón se amplifica en tus oídos como si alguien hubiera bajado todo el otro sonido del mundo. Los maniquíes se mueven. El clack-clack de sus articulaciones rebota contra las vitrinas de Pueblos Originarios. Tenés segundos para decidir.
-
-¿Qué hacés?
-* [Llegar a la primera sala y trabar la entrada — usar lo que encuentres] -> cap3_combate_baston
-* [Desenfundar y dispararle al maniquí de adelante] -> cap3_combate_revolver
-* [Dejar estallar la magia cruda] -> cap3_combate_magia
-
-=== cap3_combate_revolver ===
-# play_sfx:disparo
-# flash_red
-# shake
-
-El disparo es perfecto, uno de esos para estar orgullosos. Conecta justo en la frente del maniquí —entre los ojos, aunque el bicho tiene un rostro liso lo cual te quita el punto de referencia. No hay sangre, tripas ni gritos de dolor, lo cual vuelve todo bastante anticlimático. Solo el fuerte olor a plástico quemado y la cabeza moviéndose para atrás por el efecto cinético de la bala.
-# next
-
-# play_sfx:clic_arma
-{ fuerza >= 25:
-    Los otros dos maniquíes se te lanzan encima. Sabés que su estrategia es agarrar y torcer, romper o quebrar. Te movés rápido entre ellos y usás el mango del revólver como una porra. En un momento una de sus manos logra agarrar el puño de tu chaqueta; te retorcés como un animal para sacarte la prenda antes que puedan agarrar algo de carne. A pesar de todo, el combate te favorece y de repente te encontrás del otro lado. Con un claro sentido táctico, te das media vuelta y corrés con toda tu fuerza hacia la Sala con la Momia.
-    ~ hp -= 8
-- else:
-    Intentás girar para apuntarle a otro de los maniquíes pero te encontrás con un par de manos abiertas dirigidas directo a tu cuerpo. Por puro instinto te tirás al piso mientras el disparo es un eco que se pierde en el vacío. Te hacés una pelota intentando proteger tus órganos más importantes mientras los tres maniquíes te dan una tanda de patadas. Uno te agarra del cuello y te vuelve a poner sobre dos piernas —por suerte su agarre está en el cuello de tu chaqueta, no en la carne. Te retorcés como un animal y lográs sacarte la prenda. Salís corriendo hacia la Sala con la Momia mientras uno de los maniquíes atrás destroza tu chaqueta.
-    ~ hp -= 10
-}
-# next
--> cap3_museo_momia
-
-=== cap3_combate_baston ===
-# play_sfx:golpe
-# shake
-
-Llegás a la primera Sala, la exposición de Costa Alegre en la época de los Pueblos Originarios. Ves un par de maquetas y lamentás que estas figuras con lanzas no cobren vida para ayudarte. Atrás tuyo escuchás como los pasos irregulares de los maniquíes se preparan para entrar. Cerrás la puerta de ingreso pero notás que es una madera de mala calidad —parece que el Museo estuvo desfinanciado desde su construcción. El cierre de la puerta es más una expresión de deseo que una defensa real.
-# next
-
-Tu mirada cae sobre una vitrina: báculo ceremonial de madera densa, ritualmente decorado, casi un metro de largo. Pesado. Rompés el vidrio y lo aferrás con ambas manos antes de que los golpes de los maniquíes hagan temblar la puerta.
-# play_sfx:vidrio_roto
-# next
-
-# MINIGAME: keymash key=space duration=6000 threshold=18
-# play_sfx:golpe
-
-{ minigame_result == 1:
-    Cada embiste de madera contra tu defensa hace retumbar toda la sala. Repelés la oleada con el báculo, usando las vitrinas como muralla. Los maniquíes retroceden dando espacio para avanzar. Las manos te sangran por los astillazos pero tus huesos siguen enteros.
-    ~ hp -= 6
-    ~ fuerza += 3
-- else:
-    Un maniquí se te cuela por el flanco y te clava astillas en el costillar antes que lo tirés. Sangrás pero seguís entero. Aprovechás el hueco para correr hacia la siguiente sala.
-    ~ hp -= 18
-}
-# next
--> cap3_museo_momia
-
-=== cap3_combate_magia ===
-# play_sfx:magia_oscura
-# flash_red
-# UI_EFFECT: blood_pulse
-
-{ magia >= 15:
-    # play_sfx:magiexplosion
-    Dejás estallar la magia cruda. La sala se ilumina con un fogonazo de luz azul y naranja cegadora; el crujido del fuego tapa hasta el latido en tus oídos. Los maniquíes se calcinan en segundos. Un grito de dolor escapa tuyo —quemaste también tus propias manos, pero el camino hacia la Sala con la Momia está despejado.
-    ~ hp -= 12
-    ~ magia -= 5
-    # achievement:unlock:incineracion_museo
-- else:
-    La magia se te escapa mal canalizada. El fogonazo te quema a vos más que a ellos. Dos maniquíes siguen avanzando —su avance es impredecible, mezclando pasos lentos y largos con explosiones de velocidad. Solo te queda correr.
-    ~ hp -= 20
-    ~ magia -= 10
-}
-# next
--> cap3_museo_momia
+* [Seguís avanzando]
+    Venís tan rápido que dudás que puedas parar si querés. El acta fundacional es un lindo simbolismo, pero tu trabajo es mucho más importante para que Costa Alegre siga existiendo.
+    # next
+    Recorrés la tercera Sala sin más inconvenientes. Por suerte un par de los maniquíes parece confundirse y se chocan de lleno contra la maqueta de la toma de los Astilleros Herrera, dándote un par de minutos de ventaja clave.
+    -> cap3_museo_momia
 
 === cap3_museo_momia ===
 # music:horror_ambient
