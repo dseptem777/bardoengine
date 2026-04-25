@@ -2339,6 +2339,7 @@ Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tom
 { ninos_capilla:
     Abrís la puerta de la capilla y todos los niños están ahí, sin un rasguño, a los pies de una estatua de Santa Inés. La Capilla funcionó
     Belén se acerca y te abraza. Luego todos los niños la siguen
+    ~ belen_sobrevive = true
     # achievement:unlock:ninos_ninguno
 - else:
     { ninos_habitacion:
@@ -2346,6 +2347,7 @@ Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tom
         Entras y ves a los chicos amontonados en una esquina, llorando. En el centro de la habitación están los cadáveres de 3 arañas…y de más de diez chicos.
         Los dejaste a su suerte e hicieron lo mejor que pudieron.
         Belén, en la esquina de la habitación y te mira con odio en la mirada.
+        ~ belen_sobrevive = true
         # achievement:unlock:ninos_mitad
     }
     { ninos_cocina:
@@ -2354,6 +2356,7 @@ Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tom
         Tiras el cadáver del animal al costado, con la misma sutileza que le darías a una bolsa de basura.
         Los niños salen, ilesos, de sus escondites debajo de las mesas o dentro de los cajones.
         Belén se acerca y le dan un beso en la frente a la hermana que se sacrificó por ellos. El resto de los chicos la imitan
+        ~ belen_sobrevive = true
         # achievement:unlock:ninos_ninguno
     }
     { ninos_pelear:
@@ -2368,6 +2371,7 @@ Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tom
         Recorres el bosque. El camino a la puerta de salida está marcado por niños muertos y redes de tela de araña. Fue una masacre. Sus piernitas no le podían ganar nunca a las arañas.
         Al final, todavía agarrada al portón, está Belén.
         Le gritas pero no te contesta. Los dedos de su mano están rojos del esfuerzo y, a pesar de que lo intentas, no suelta el portón. No te responde y sus ojos miran sin mirar, perdidos en los horrores que queman su memoria
+        ~ belen_sobrevive = true
         # achievement:unlock:ninos_casi_todos
     }
 }
