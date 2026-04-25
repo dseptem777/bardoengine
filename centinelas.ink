@@ -266,7 +266,7 @@ Salto por la ventana en una explosión de madera y vidrio. Y ruido, mucho ruido.
 -> combate_persecucion
 
 === combate_persecucion ===
-# music:chase_ambient
+# music:terror_ambient
 Correr por el bosque no es tan fácil. Las ramas azotan tu rostro y las raíces amenazan tus tobillos.
 
 Aparte no hay camino. Todo lo que estamos acostumbrados a usar en la ciudad para guiarnos (calles, esquinas, avenidas) no existe, con suerte algún parche de tierra a la vista o unas hierbas dobladas que dan cuenta de un sendero.
@@ -2045,7 +2045,7 @@ Los minutos dejan de tener sentido y el tiempo se cuenta solamente en las compre
     No hay tiempo para sutilezas, te cargas el cuerpo de Juan y corres hacia la salida.
 }
 # next
-# music:chase_ambient
+# music:terror_ambient
 La luz del celular rebota por todos lados mientras corres, intentando hacer malabares entre el cuerpo de Juan, tu daga y el celular. Rocas de formas extrañas, raíces retorciadas, telarañas quebradas, la luz solo te da un calidoscopio de imágenes poco prometedoras.
 Pero no la necesitas, tu cuerpo recuerda el camino de forma instintiva y logras seguir el camino correcto y agacharte cuando es adecuado (casi siempre).
 # next
@@ -2085,7 +2085,7 @@ Un corte. Otro. La daga se siente pesada pero tus brazos no paran. Cuando termin
 
 === regreso_orfanato ===
 # SPIDER_DIFFICULTY: fast
-# music:chase_ambient
+# music:terror_ambient
 Corres por el bosque con el cuerpo de Juan en tus brazos. Será por qué es liviano, o el ruido afilado de los enemigos clavando sus extremidades en los árboles ayuda a empujar tu adrenalina, pero avanzas sin bajar el ritmo. No hay raíces que se interpongan en tu camino o ramas que te molesten
 # next
 No necesitas guiarte. Entre las copas de los árboles sobresale la cruz de la capilla vecina al orfanato. Santuario, o "la X marca el lugar", depende tus preferencias teológicas (al menos nadie duda de la existencia de los piratas)
