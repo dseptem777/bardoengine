@@ -397,15 +397,15 @@
         },
         {
             "id": "colaborador_museo",
-            "title": "Trabajo en equipo",
-            "description": "Coordinaste con tus compañeros para entrar al museo sin improvisar.",
+            "title": "Donante silencioso",
+            "description": "Dejaste unos billetes en la caja de colaboración del Museo.",
             "icon": "🤝",
             "image": null
         },
         {
             "id": "no_colaborador_museo",
-            "title": "Lobo solitario",
-            "description": "Entraste al museo por tu cuenta, sin avisar a nadie.",
+            "title": "Gorra estatal",
+            "description": "Decidiste que no te correspondía financiar al Museo con tu plata.",
             "icon": "🐺",
             "image": null
         },
