@@ -196,6 +196,24 @@
             "description": "Una estatua de Buda de oro macizo. Excentricidad de algún oligarca con demasiado tiempo libre.",
             "icon": "🪷",
             "category": "items"
+        },
+        "enojo_enriquez": {
+            "name": "Enojo de Enríquez",
+            "description": "Encontraste el tapper escondido en la cocina de Enríquez.",
+            "icon": "🔍",
+            "category": "claves"
+        },
+        "llegaste_con_ventaja": {
+            "name": "Ventaja Nocturna",
+            "description": "Llegaste al Museo antes del anochecer y pudiste explorar sin restricciones.",
+            "icon": "⏱",
+            "category": "claves"
+        },
+        "entidades_poseidas": {
+            "name": "Entidades Poseídas",
+            "description": "Sabés que los maniquíes son vehículos para entidades de otro plano —pueden ser contenidas con rituales.",
+            "icon": "👁",
+            "category": "documentos"
         }
     },
     "achievements": [
@@ -428,6 +446,13 @@
             "title": "Oído fino",
             "description": "Reconociste la voz de la ladrona del portal.",
             "icon": "🐭",
+            "image": null
+        },
+        {
+            "id": "acta_fundacional",
+            "title": "Guardián del Patrimonio",
+            "description": "Rescataste el acta fundacional de Costa Alegre en medio del caos.",
+            "icon": "📜",
             "image": null
         }
     ],
