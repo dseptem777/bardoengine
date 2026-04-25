@@ -1,5 +1,15 @@
 # Changelog — Centinelas del Sur
 
+## [0.18.1] — 2026-04-25
+
+### Fixed
+- `cabral_al_museo` ahora es una choice real: llevar a Cabral al Museo nocturno cuesta -20 HP y otorga +3 FUERZA en la convergencia nocturna.
+- `belen_sobrevive` se setea correctamente en las 4 ramas de Cap 2B donde Belén no muere; el knot `cap3_tl_belen` ahora es alcanzable.
+- Descriptions de `colaborador_museo` / `no_colaborador_museo` ajustadas al crudo: el jugador dona dinero (o no), no coordina con un equipo.
+- Phantom ref `chase_ambient` (3 ocurrencias) reemplazada por `terror_ambient`. `explosion_magica` y `disparos_escopeta` quedan intactos: ya están mapeados con random rotation en `SFX_VARIANTS` (`useAudio.js`).
+
+---
+
 ## [0.18.0] — 2026-04-23
 
 ### Añadido
