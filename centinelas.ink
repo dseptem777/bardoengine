@@ -4483,7 +4483,13 @@ Terminás en el piso, recostado sobre un charco de tu propio sudor. Por suerte C
 ~ fuerza += 5
 # play_sfx:stinger_fuerza
 # next
--> cap3_museo_dia
+* [Pedirle que te acompañe al Museo de noche (-20 HP en favores cobrados)]
+    ~ hp -= 20
+    ~ cabral_al_museo = true
+    Cabral suelta una carcajada y te dice que obvio, para eso están los amigos. El precio se te va a descontar en sudor antes del atardecer.
+    -> cap3_museo_dia
+* [Seguir con el plan original, vos solo]
+    -> cap3_museo_dia
 
 === cap3_tl_biblioteca ===
 Te encontrás a Enriquez en su escritorio, con tan pocas ganas de sociabilizar como siempre.
@@ -4739,6 +4745,11 @@ Eso significa que te toca esperar un poco antes de ver cómo forzar tu entrada.
 
 Es entonces cuando te das cuenta que ya hay algo dentro del Museo. No es un ruido o una sensación sobrenatural, más una herencia genética de un pasado de cazador recolector que levanta pequeños detalles que no llegás a procesar y le da información a tu cerebro: hay algo entre esos arbustos ¿presa o peligro?.
 Que se joda la sutileza, es momento de entrar en el Museo.
+
+{ cabral_al_museo:
+    Cabral camina a tu lado en silencio, el revólver ya en la mano, cubriendo los ángulos que vos no podés vigilar. Saber que hay alguien atrás te da un respiro que no sabías que necesitabas.
+    ~ fuerza += 3
+}
 
 * { fuerza >= 20 } [Un poco de fuerza bastará para romper el mecanismo de la puerta.]
     Te apoyás contra la puerta y empezás a forzar el mecanismo mientras empujás con tu hombro. Requiere más que un poco de fuerza pero, luego de unos minutos, escuchás el click del mecanismo rompiéndose y podés entrar al hall central del Museo.
