@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { scrollAnchorToReadLine } from '../utils/readingScroll.js'
+import { scrollToBottomSmooth } from '../utils/readingScroll.js'
 import { BookOpen, Settings, Save, Heart, Backpack, FastForward } from 'lucide-react'
 import TextDisplay from './TextDisplay'
 import ChoiceButton from './ChoiceButton'
@@ -274,13 +274,14 @@ export default function Player({
         }
     }, [autoAdvance, autoAdvanceDelay, choices.length, isEnded, onContinue, hasPendingMinigame, minigameAutoStart, onMinigameReady, genjutsuBreak, onGenjutsuTypingComplete])
 
-    // Scroll to interactive area when typing finishes
+    // After typing finishes, smooth-scroll to bottom so the choices land at
+    // the read line (~65% Y) — same mechanism as the typewriter scroll, just
+    // with a small delay to let choices/buttons mount first.
     useEffect(() => {
-        if (!isTyping && interactiveRef.current && scrollContainerRef.current) {
-            // Delay slightly to ensure DOM has rendered the choices/buttons
+        if (!isTyping && scrollContainerRef.current) {
             const timer = setTimeout(() => {
-                if (interactiveRef.current && scrollContainerRef.current) {
-                    scrollAnchorToReadLine(scrollContainerRef.current, interactiveRef.current, { ratio: 0.55 })
+                if (scrollContainerRef.current) {
+                    scrollToBottomSmooth(scrollContainerRef.current)
                 }
             }, 100)
             return () => clearTimeout(timer)
@@ -414,7 +415,7 @@ export default function Player({
                 */}
                 <div
                     ref={contentRef}
-                    className={`w-full px-4 sm:px-6 md:px-12 pt-[10vh] sm:pt-[15vh] pb-[55vh] ${hasDesktopStatsPanel ? '' : 'mx-auto'}`}
+                    className={`w-full px-4 sm:px-6 md:px-12 pt-[10vh] sm:pt-[15vh] pb-[35vh] ${hasDesktopStatsPanel ? '' : 'mx-auto'}`}
                     style={hasDesktopStatsPanel ? {
                         maxWidth: 'var(--player-max-width, 48rem)',
                         marginLeft: 'max(calc((100% - var(--player-max-width, 48rem)) / 2), var(--stats-panel-inset, 260px))',

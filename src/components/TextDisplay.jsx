@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { scrollAnchorToReadLine, userIsReadingUp } from '../utils/readingScroll.js'
+import { scrollToBottomSmooth, userIsReadingUp } from '../utils/readingScroll.js'
 
 // Font size classes mapping
 const FONT_SIZE_CLASSES = {
@@ -303,23 +303,23 @@ export default function TextDisplay({
         hasFoundRef.current = false
     }, [text])
 
-    // Auto-scroll logic: RAF-coalesced smooth scroll to fixed read-line position
+    // Auto-scroll: keep the bottom of typed text visible. Combined with the
+    // pb-[35vh] padding on the content wrapper (Player.jsx), this anchors the
+    // active line at ~65% viewport-Y. Within a line, scrollHeight doesn't
+    // change so this is a no-op; on line wrap, smooth scroll glides one line up.
     const scrollRafRef = useRef(null)
     useEffect(() => {
-        if (isTyping && anchorRef.current) {
-            const container = scrollContainerRef?.current
-            if (!container) return
-            // Skip if user has scrolled up to re-read
-            if (userIsReadingUp(container)) return
-            if (!scrollRafRef.current) {
-                scrollRafRef.current = requestAnimationFrame(() => {
-                    scrollRafRef.current = null
-                    if (anchorRef.current && scrollContainerRef?.current) {
-                        scrollAnchorToReadLine(scrollContainerRef.current, anchorRef.current, { ratio: 0.65 })
-                    }
-                })
+        if (!isTyping) return
+        const container = scrollContainerRef?.current
+        if (!container) return
+        if (userIsReadingUp(container)) return
+        if (scrollRafRef.current) return
+        scrollRafRef.current = requestAnimationFrame(() => {
+            scrollRafRef.current = null
+            if (scrollContainerRef?.current) {
+                scrollToBottomSmooth(scrollContainerRef.current)
             }
-        }
+        })
         return () => {
             if (scrollRafRef.current) {
                 cancelAnimationFrame(scrollRafRef.current)
