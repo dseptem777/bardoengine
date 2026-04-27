@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { scrollAnchorToReadLine, userIsReadingUp } from '../utils/readingScroll.js'
 
 // Font size classes mapping
 const FONT_SIZE_CLASSES = {
@@ -126,6 +127,8 @@ export default function TextDisplay({
     dominantStat = null,       // string | null
     willpowerValue = 100,      // 0-100
     onBreakGenjutsu = null,    // () => void
+    // Scroll system
+    scrollContainerRef = null, // ref to the scrollable container (from Player)
 }) {
     const [displayedText, setDisplayedText] = useState('')
     const hasFoundRef = useRef(false)
@@ -300,18 +303,19 @@ export default function TextDisplay({
         hasFoundRef.current = false
     }, [text])
 
-    // Auto-scroll logic: throttled to avoid per-character layout thrashing
+    // Auto-scroll logic: RAF-coalesced smooth scroll to fixed read-line position
     const scrollRafRef = useRef(null)
     useEffect(() => {
-        if (isTyping && anchorRef.current && typeof anchorRef.current.scrollIntoView === 'function') {
+        if (isTyping && anchorRef.current) {
+            const container = scrollContainerRef?.current
+            if (!container) return
+            // Skip if user has scrolled up to re-read
+            if (userIsReadingUp(container)) return
             if (!scrollRafRef.current) {
                 scrollRafRef.current = requestAnimationFrame(() => {
                     scrollRafRef.current = null
-                    if (anchorRef.current) {
-                        anchorRef.current.scrollIntoView({
-                            block: 'center',
-                            behavior: 'auto'
-                        })
+                    if (anchorRef.current && scrollContainerRef?.current) {
+                        scrollAnchorToReadLine(scrollContainerRef.current, anchorRef.current, { ratio: 0.65 })
                     }
                 })
             }
@@ -322,7 +326,7 @@ export default function TextDisplay({
                 scrollRafRef.current = null
             }
         }
-    }, [displayedText, isTyping])
+    }, [displayedText, isTyping, scrollContainerRef])
 
     const fontSizeClass = FONT_SIZE_CLASSES[fontSize] || FONT_SIZE_CLASSES.normal
 
