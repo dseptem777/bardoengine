@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## v0.23.0 (2026-04-26)
+
+### Features
+- **comfy reading experience**: replaced per-character `scrollIntoView` jitter with a native `scrollTo({behavior:'smooth'})` bottom-anchored system. `pb-[35vh]` content padding creates a stable read-line at ~65% viewport height — new text always appears there, old text glides upward (Disco Elysium style). User scroll-up pauses auto-scroll. Zero custom RAF/tween code.
+
+---
+
 ## v0.22.2 (2026-04-21)
 
 ### Fixes

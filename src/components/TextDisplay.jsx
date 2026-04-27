@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { scrollToBottomSmooth, userIsReadingUp } from '../utils/readingScroll.js'
 
 // Font size classes mapping
 const FONT_SIZE_CLASSES = {
@@ -126,6 +127,8 @@ export default function TextDisplay({
     dominantStat = null,       // string | null
     willpowerValue = 100,      // 0-100
     onBreakGenjutsu = null,    // () => void
+    // Scroll system
+    scrollContainerRef = null, // ref to the scrollable container (from Player)
 }) {
     const [displayedText, setDisplayedText] = useState('')
     const hasFoundRef = useRef(false)
@@ -300,29 +303,30 @@ export default function TextDisplay({
         hasFoundRef.current = false
     }, [text])
 
-    // Auto-scroll logic: throttled to avoid per-character layout thrashing
+    // Auto-scroll: keep the bottom of typed text visible. Combined with the
+    // pb-[35vh] padding on the content wrapper (Player.jsx), this anchors the
+    // active line at ~65% viewport-Y. Within a line, scrollHeight doesn't
+    // change so this is a no-op; on line wrap, smooth scroll glides one line up.
     const scrollRafRef = useRef(null)
     useEffect(() => {
-        if (isTyping && anchorRef.current && typeof anchorRef.current.scrollIntoView === 'function') {
-            if (!scrollRafRef.current) {
-                scrollRafRef.current = requestAnimationFrame(() => {
-                    scrollRafRef.current = null
-                    if (anchorRef.current) {
-                        anchorRef.current.scrollIntoView({
-                            block: 'center',
-                            behavior: 'auto'
-                        })
-                    }
-                })
+        if (!isTyping) return
+        const container = scrollContainerRef?.current
+        if (!container) return
+        if (userIsReadingUp(container)) return
+        if (scrollRafRef.current) return
+        scrollRafRef.current = requestAnimationFrame(() => {
+            scrollRafRef.current = null
+            if (scrollContainerRef?.current) {
+                scrollToBottomSmooth(scrollContainerRef.current)
             }
-        }
+        })
         return () => {
             if (scrollRafRef.current) {
                 cancelAnimationFrame(scrollRafRef.current)
                 scrollRafRef.current = null
             }
         }
-    }, [displayedText, isTyping])
+    }, [displayedText, isTyping, scrollContainerRef])
 
     const fontSizeClass = FONT_SIZE_CLASSES[fontSize] || FONT_SIZE_CLASSES.normal
 
