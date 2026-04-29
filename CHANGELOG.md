@@ -1,5 +1,14 @@
 # Changelog — BardoEngine
 
+## [0.24.0] - 2026-04-29
+
+### Features
+- **security**: harden story encryption with key splitting (2 env vars XOR'd with compile-time masks), HKDF-SHA256 derivation, ChaCha20 pre-AES obfuscation layer, and zeroize on drop
+- **build**: load encryption secrets from `.env` at repo root via `dotenvy` in `src-tauri/build.rs` — single source of truth, no shell exports needed
+- **docs**: add `SECURITY.md` with threat model — this is obfuscation, not DRM
+
+---
+
 ## v0.23.1 (2026-04-29)
 
 ### Fixes
