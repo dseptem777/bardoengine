@@ -1,5 +1,13 @@
 # Changelog — Centinelas del Sur
 
+## [0.18.3] — 2026-04-29
+
+### Fixed
+- **cap3/minigames**: reformateados 4 tags `MINIGAME` de keymash en la secuencia del museo nocturno (líneas 4840, 4859, 4879, 4943) — formato heredado roto → formato nuevo; los minijuegos ahora arrancan y la rama de resultado ya no siempre pierde
+- **hub**: condición `misiones_completadas == 1` cambiada a `>= 1` en `inter_tarot` e `inter_jesus` — el hub ya no se traba en la segunda visita
+
+---
+
 ## [0.18.2] — 2026-04-25
 
 ### Fixed

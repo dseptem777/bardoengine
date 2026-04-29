@@ -535,12 +535,12 @@ Te queda un poco de tiempo para tu siguiente misión. Tal vez podés hacer algo 
 
 + [Recorrer el filo entre lo normal y lo sobrenatural # REQUIRES: misiones_completadas >= 1]
 {
-- misiones_completadas == 1: -> inter_tarot
+- misiones_completadas >= 1: -> inter_tarot
 }
 
 + [Ayudar a un aliado # REQUIRES: misiones_completadas >= 1]
 {
-- misiones_completadas == 1: -> inter_jesus
+- misiones_completadas >= 1: -> inter_jesus
 }
 
 + [Ir a la enfermería # REQUIRES: misiones_completadas >= 1] -> inter_enfermeria
@@ -4837,7 +4837,7 @@ En unos segundos van a entrar, así que tenés que actuar rápido.
     Es entonces cuando se abre la otra puerta y aparecen tres maniquíes más. Intentás forcejear mientras se acercan pero te encontrás atrapado contra la puerta.
     Antes de darte cuenta, una lluvia de manos busca qué parte tuya agarrar, tirar y retorcer.
     # next
-    # MINIGAME: keymash key=space duration=6000 threshold=18
+    # MINIGAME: type=keymash, key=SPACE, count=18, timeLimit=6, autostart=true
     { minigame_result == 1:
         Lográs zafarte y te lanzás hacia la siguiente sala con lo que te queda de energía.
         ~ hp -= 10
@@ -4856,7 +4856,7 @@ En unos segundos van a entrar, así que tenés que actuar rápido.
     Es entonces cuando una idea te golpea: ¿qué sentido tiene ser invisible si los maniquíes no tienen ojos? Podrían estar moviéndose por ecolocalización o por lectura de energías mágicas.
     Antes de poder procesar la idea, los seis cargan a la vez sobre vos.
     # next
-    # MINIGAME: keymash key=space duration=6000 threshold=18
+    # MINIGAME: type=keymash, key=SPACE, count=18, timeLimit=6, autostart=true
     { minigame_result == 1:
         Lográs esquivar lo suficiente para abrirte paso hacia la puerta.
         ~ hp -= 10
@@ -4876,7 +4876,7 @@ En unos segundos van a entrar, así que tenés que actuar rápido.
     Su caminar aleatorio es muy complicado de seguir solo con el oído. Son las sombras lo que delatan su posición, proyectadas como seis dedos oscuros de una garra que está por caer sobre la canoa.
     Es entonces cuando una idea te golpea: ¿qué sentido tiene esconderse si los maniquíes no tienen ojos? Antes de poder procesar la idea, los seis cargan a la vez sobre vos.
     # next
-    # MINIGAME: keymash key=space duration=6000 threshold=18
+    # MINIGAME: type=keymash, key=SPACE, count=18, timeLimit=6, autostart=true
     { minigame_result == 1:
         Te tirás de la canoa y corrés hacia la puerta.
         ~ hp -= 12
@@ -4940,7 +4940,7 @@ En unos segundos van a entrar, así que tenés que actuar rápido.
         Te das media vuelta y volvés al centro de la sala buscando ventanas, ductos de aire, lo que sea para salir.
         La puerta por la que entraste cede con el característico ruido de la madera quebrándose mientras tres maniquíes más entran en la Sala.
         Por mucho que mirás no encontrás otro camino. Los maniquíes se colocan a tu alrededor.
-        # MINIGAME: keymash key=space duration=6000 threshold=18
+        # MINIGAME: type=keymash, key=SPACE, count=18, timeLimit=6, autostart=true
         { minigame_result == 1:
             Encontrás un hueco y te lanzás hacia la puerta.
             ~ hp -= 10

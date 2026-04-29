@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## v0.23.1 (2026-04-29)
+
+### Fixes
+- **security(csp)**: replaced `null` Tauri CSP with a full policy covering `'self'`, Tauri asset/IPC schemes, Google Fonts, and `data:`/`blob:` sources — WebView is no longer wide open to XSS-to-IPC bridging
+
+---
+
 ## v0.23.0 (2026-04-26)
 
 ### Features
