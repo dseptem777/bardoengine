@@ -77,8 +77,13 @@ The blob is stored in `src-tauri/resources/<story-id>.enc`.
 | `BARDO_SECRET_B` | 64 hex chars (32 bytes) | Secondary key half |
 | `BARDO_OBFUSCATION_SEED` | 64 hex chars (32 bytes) | ChaCha20 obfuscation layer |
 
-All three must be set **both** when running `cargo build` (baked into the binary via `env!()`)
-**and** when running `npm run encrypt-story` (used by the Node.js encrypt script).
+All three must be present **both** at `cargo build` time (baked into the binary via `env!()`)
+**and** at `npm run encrypt-story` time (used by the Node.js encrypt script).
+
+**Single source of truth:** place them in `.env` at the repo root. `build.rs` loads `.env`
+automatically via the `dotenvy` crate, so `cargo build`, `npm run tauri:build`,
+`npm run tauri:dev`, and `npm run build-game` all work without any shell exports.
+CI environments can still inject them as real env vars — `.env` loading is silent/optional.
 
 ### Generating secrets
 
