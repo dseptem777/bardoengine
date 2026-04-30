@@ -441,6 +441,7 @@ export default function Player({
                             willpowerValue={willpowerValue}
                             onBreakGenjutsu={onBreakGenjutsu}
                             scrollContainerRef={scrollContainerRef}
+                            paused={chapterBreakActive}
                         />
                     </div>
 

@@ -129,6 +129,7 @@ export default function TextDisplay({
     onBreakGenjutsu = null,    // () => void
     // Scroll system
     scrollContainerRef = null, // ref to the scrollable container (from Player)
+    paused = false,
 }) {
     const [displayedText, setDisplayedText] = useState('')
     const hasFoundRef = useRef(false)
@@ -139,12 +140,47 @@ export default function TextDisplay({
     const currentTextRef = useRef('')  // Track which text we're currently typing
     const typewriterProgressedRef = useRef(false)  // True only AFTER first char is typed
     const fastForwardRef = useRef(false)
+    const pausedRef = useRef(paused)
+    const kickSlowLoopRef = useRef(null)
+    const kickFastLoopRef = useRef(null)
+
+    useEffect(() => { pausedRef.current = paused }, [paused])
 
     // Store onComplete in a ref to avoid re-triggering the effect when callback changes
     const onCompleteRef = useRef(onComplete)
     useEffect(() => {
         onCompleteRef.current = onComplete
     }, [onComplete])
+
+    // Pause/resume: clear pending loops when paused, re-kick when unpaused
+    useEffect(() => {
+        if (paused) {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
+                timeoutRef.current = null
+            }
+            if (rafRef.current) {
+                cancelAnimationFrame(rafRef.current)
+                rafRef.current = null
+            }
+        } else {
+            // Clear any stale timer/raf IDs left behind by paused typeChar/fastLoop
+            // (they return without scheduling but may leave the ref non-null)
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
+                timeoutRef.current = null
+            }
+            if (rafRef.current) {
+                cancelAnimationFrame(rafRef.current)
+                rafRef.current = null
+            }
+            if (fastForwardRef.current) {
+                kickFastLoopRef.current?.()
+            } else {
+                kickSlowLoopRef.current?.()
+            }
+        }
+    }, [paused])
 
     // Fast-forward: when activated, kill the slow timeout loop and switch to rAF chunk loop
     useEffect(() => {
@@ -160,6 +196,11 @@ export default function TextDisplay({
 
             // Start rAF chunk loop
             const fastLoop = () => {
+                if (pausedRef.current) {
+                    rafRef.current = null
+                    return
+                }
+
                 if (indexRef.current >= text.length) {
                     onCompleteRef.current?.()
                     return
@@ -171,6 +212,13 @@ export default function TextDisplay({
                 typewriterProgressedRef.current = true
 
                 rafRef.current = requestAnimationFrame(fastLoop)
+            }
+
+            kickFastLoopRef.current = () => {
+                if (rafRef.current) return
+                if (!pausedRef.current && fastForwardRef.current && indexRef.current < (text?.length ?? 0)) {
+                    rafRef.current = requestAnimationFrame(fastLoop)
+                }
             }
 
             rafRef.current = requestAnimationFrame(fastLoop)
@@ -218,6 +266,11 @@ export default function TextDisplay({
         }
 
         const typeChar = () => {
+            if (pausedRef.current) {
+                timeoutRef.current = null
+                return
+            }
+
             if (indexRef.current >= text.length) {
                 onCompleteRef.current?.()
                 return
@@ -241,6 +294,13 @@ export default function TextDisplay({
             }
 
             timeoutRef.current = setTimeout(typeChar, dynamicDelay)
+        }
+
+        kickSlowLoopRef.current = () => {
+            if (timeoutRef.current) return
+            if (!pausedRef.current && indexRef.current < (text?.length ?? 0)) {
+                typeChar()
+            }
         }
 
         // Start typing with a small delay to let React settle

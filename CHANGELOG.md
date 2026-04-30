@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## [0.24.1] - 2026-04-30
+
+### Fixes
+- **chapter break**: el typewriter del knot que carga junto al `CHAPTER_BREAK` ya no corre detrás del overlay. Se añadió prop `paused` a `TextDisplay` que detiene los loops `setTimeout`/`rAF` y los reanuda desde el char actual al cerrar el overlay. Antes, si el jugador se quedaba viendo la imagen de capítulo, el texto se tipeaba en background y al dismissear ya estaba todo escrito.
+
+---
+
 ## [0.24.0] - 2026-04-29
 
 ### Features
