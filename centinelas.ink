@@ -53,6 +53,10 @@ VAR genjutsu_willpower = 0
 VAR habitacion_img = ""
 
 // Cap 3 — Museo
+VAR colaboraste_museo = false
+VAR preg_identidad = false
+VAR preg_profundo = false
+VAR preg_runas = false
 VAR item_enojo_enriquez = false
 VAR belen_sobrevive = false
 VAR cabral_al_museo = false
@@ -4333,7 +4337,7 @@ Estiras tu cuello un poco más y empezás a entender algunas palabras sueltas pe
 # next
 Es entonces cuando la voz de El Profesor te llega fuerte y claro.
 # next
-Deja de escuchar y entra de una vez NOMBRE DE PERSONAJE. Queremos hablar con vos y no tengo ganas de estar a los gritos.
+Deja de escuchar y entra de una vez {nombre_personaje}. Queremos hablar con vos y no tengo ganas de estar a los gritos.
 # achievement:unlock:espia_elfaro
 # next
 -> cap3_briefing_lab
@@ -4341,26 +4345,39 @@ Deja de escuchar y entra de una vez NOMBRE DE PERSONAJE. Queremos hablar con vos
 === cap3_briefing_lab ===
 # music:misterio_ambient
 
+El Profesor y Mary Shelley estaban en la habitación y su presencia se notaba incomoda. Sin duda llegaste después de una confrontación. La tensión era tangible, hasta parecía haber una disputa por el control del ambiente entre el olor a pipa de El Profesor y la fragancia de productos químicos y velas que asociabas con Mary Shelley.
+# next
+
+Sobre una camilla en una de las esquinas de la habitación descansaba un cadáver. Extrañas la época donde la presencia de un cuerpo te incomodaba, ahora se siente un poco como un día más en la oficina.
+# next
+
+Haces los saludos correspondientes y te acercas directamente al cuerpo. Una sábana lo cubre de la cintura para abajo pero el torso está marcado por los mismos signos y las mismas marcas de tortura que el cadáver que viste en tu primera misión. Te detenes a ver su rostro, parece un hombre de mediana edad. No podes dejar de notar unos pequeños surcos bajo los ojos ¿marcas de lágrimas?
+# next
+
 No tenes duda que murió con dolor, unas marcas al costado de su rostro, como si alguien hubiese clavado repetidas veces un picahielos y jugado con la herida, te lo confirman.
 
 — Un nuevo cuerpo, la Secta sigue sacrificando gente y lanzándola al fondo del mar. Ya paso un mes desde la anterior misión, así que es claro el enfoque cíclico de su ritual
 — Así que vamos a seguir recibiendo más cuerpos si no hacemos algo — interrumpís al Profesor mientras intentas que tu odio no se vuelque en tus palabras.
 — Por eso llegó el momento de probar un enfoque más radical — Mary Shelley comienza a hablar pero se para en seco en cuanto El Profesor le da una mirada. Aprovechas el momento para meter una pregunta.
 
-* [¿Sabemos quién es?]
+-> cap3_briefing_preguntas
+
+=== cap3_briefing_preguntas ===
++ {not preg_identidad} [¿Sabemos quién es?]
+    ~ preg_identidad = true
     — Por suerte, al contar con el cuerpo, pude comparar el registro dental con las bases de datos del Gobierno. Martín Gimenez — Mary Shelley empieza a hablar rápido mientras hojea la información que tiene en su carpeta — 22 años, vivía en Costa Alegre hace 8 años, luego de escaparse de su hogar donde era víctima de violencia. Vino a trabajar en la industria pesquera, hace 3 años se quedó sin trabajo y se encontraba en situación de calle.
     Tenía solo 22 años, y pensar que para vos era un hombre de mediana edad. Supongo que, para él, los años golpearon más fuerte.
-    -> cap3_briefing_lab_profundo
+    -> cap3_briefing_preguntas
 
-* [El Tiburón humanoide que me encontré en la Morgue ¿Volvió a aparecer?]
-    -> cap3_briefing_lab_profundo
++ {not preg_profundo} [El Tiburón humanoide que me encontré en la Morgue ¿Volvió a aparecer?]
+    ~ preg_profundo = true
+    — El Profundo — dice El Profesor poniendo voz de docente — por suerte no fue visto de nuevo. El cadáver fue encontrado por un barco pesquero que notó que algo se enganchó entre sus redes.
+    — Pobres, sin duda imaginaron que habían pescado algo grande — acotó Mary Shelley.
+    — Lo cual no quita que El Profundo esté dando vueltas por Costa Alegre intentando borrar las huellas de este ritual, te recomiendo estar atento.
+    -> cap3_briefing_preguntas
 
-=== cap3_briefing_lab_profundo ===
-— El Profundo — dice El Profesor poniendo voz de docente — por suerte no fue visto de nuevo. El cadáver fue encontrado por un barco pesquero que notó que algo se enganchó entre sus redes.
-— Pobres, sin duda imaginaron que habían pescado algo grande — acotó Mary Shelley.
-— Lo cual no quita que El Profundo esté dando vueltas por Costa Alegre intentando borrar las huellas de este ritual, te recomiendo estar atento.
-
-* [¿Las runas son las mismas?]
++ {not preg_runas} [¿Las runas son las mismas?]
+    ~ preg_runas = true
     — Si, nuestro equipo sigue trabajando para intentar descifrarlas y darnos una mejor idea de qué están haciendo, pero es claro que se trata del mismo grupo — aclara El Profesor.
     Te acercas al cuerpo y mirás las runas, intentas abstraerte, alejarte lo suficiente para no ver heridas sobre la piel sino símbolos sobre un lienzo.
     { conocimiento < 30:
@@ -4368,7 +4385,13 @@ No tenes duda que murió con dolor, unas marcas al costado de su rostro, como si
     - else:
         — Intercambio y pesca abundante — decís señalando un par de heridas juntas (tanto que a simple vista parecen una sola herida) que decidís interpretar como una palabra — No hay que ser literal por pesca abundante, me parece que es algo tan básico como un intercambio de vidas humanas por riqueza, decile al equipo que trabaje en base a esa idea.
     }
+    -> cap3_briefing_preguntas
+
++ [Ya tengo suficiente información, pasemos al plan]
     -> cap3_briefing_lab_plan
+
+=== cap3_briefing_lab_profundo ===
+-> cap3_briefing_preguntas
 
 === cap3_briefing_lab_plan ===
 # next
@@ -4573,7 +4596,7 @@ El Museo se encuentra en la otra punta de Costa Alegre. No te queda otra opción
 # music:agite_museo
 # next
 
-DE DIA EN EL MUSEO
+// DE DIA EN EL MUSEO
 El museo estaba en el medio de un parque arbolado. El día era lindo y un montón de personas habían aprovechado para salir a disfrutar de la naturaleza. Una familia estaba disfrutando un picnic (mientras un comando de hormigas se acercaba para robarle las migas), una pareja de enamorados estaban enfrascados en un abrazo tan largo que sus cuerpos habían encontrado la forma perfecta de encajar entre si y con el árbol donde se apoyaban. Tu reflexión es interrumpida por una pelota que pasa a centímetros de tu cabeza, un grupo de jóvenes estaba aprovechando el parque para improvisar un partido de futbol.
 # next
 
@@ -4582,13 +4605,14 @@ El Museo, visto desde afuera, es una mole brutalista que parece más apta para s
 
 Entrás al hall central del Museo y se encuentra casi vacío, solo cuenta con un mostrador detrás del cual hay un par de pasantes y una gigantografia de la Momia Incaica que está en exposición.
 Te tomás un momento para observar la momia. Generalmente cuando se escucha esa palabra uno piensa en Egipto, vendajes, sarcófagos de oro y maldiciones, pero este no era el caso con la Momia Incaica (aunque con tu suerte no estás dispuesto a descartar una maldición tan rápidamente).
-La momia era una adolescente cruzada de piernas, con ropa propia del Imperio Incaico, que había sido momificada mediante el uso de la aridez y el frio de los Andes. Su rostro miraba para abajo y el efecto de sombras dificultaba ver su expresión pero parecía estar durmiendo. Requería un esfuerzo consciente darse cuenta que uno estaba viendo un cadáver y no una obra de arte, supones que el paso del tiempo y las particularidades de la modificación generan esa distancia.
+La momia era una adolescente cruzada de piernas, con ropa propia del Imperio Incaico, que había sido momificada mediante el uso de la aridez y el frio de los Andes. Su rostro miraba para abajo y el efecto de sombras dificultaba ver su expresión pero parecía estar durmiendo. Requería un esfuerzo consciente darse cuenta que uno estaba viendo un cadáver y no una obra de arte, supones que el paso del tiempo y las particularidades de la momificación generan esa distancia.
 # next
 
 Te acercás al mostrador y el pasante joven te pasa un folleto y te explica como es el recorrido del Museo. Te informa que la estructura es un círculo que se recorre de derecha a izquierda, consta de cinco salas y al final tenés una tienda para comprar recuerdos así como la posibilidad de acceder al café que se encuentra en el jardín ubicado en el centro de la estructura.
 Por último, te muestra una caja y te invita a dejar una colaboración para sostener la institución ante los cortes de financiación que lleva el Gobierno.
 
 * [Colaborás con el Museo]
+    ~ colaboraste_museo = true
     Sacás unos billetes de tu billetera y ponés dinero en la caja de colaboración. Obviamente es de interés de toda Costa Alegre que sus instituciones educativas estén bien fundadas y te da un poco de vergüenza vivir en un país donde el Gobierno no financia la educación. Te preguntás donde va el dinero que ahorran, sin duda no están ayudando en combatir seres sobrenaturales.
     # achievement:unlock:colaborador_museo
     -> cap3_museo_primer_sala
@@ -4913,6 +4937,11 @@ En unos segundos van a entrar, así que tenés que actuar rápido.
 * { llegaste_con_ventaja } [Rápido — agarrás una lanza de una vitrina y la usás para trabar la puerta]
     Sentís un poco de lástima cuando rompés la vitrina para agarrar el arma, pero tus enemigos mataron a un guardia.
     # play_sfx:vidrio_roto
+    { colaboraste_museo:
+        Al menos le dejaste suficiente dinero como para que puedan reparar los destrozos.
+    - else:
+        Sentís culpa de no haber colaborado con el Museo, al menos así tendrían dinero para reparar la vitrina que acabás de romper.
+    }
     Colocás la lanza entre las manijas de la puerta. Eso va a retroceder un poco el avance de tus enemigos, así que aprovechás para avanzar hacia la siguiente habitación.
     # next
     Estás llegando a la puerta que da a la siguiente Sala cuando la misma se abre de golpe y te deja casi encima de otro grupo de tres maniquíes. Tenés segundos para reaccionar.

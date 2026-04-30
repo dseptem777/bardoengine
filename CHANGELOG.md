@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## [0.24.2] - 2026-04-30
+
+### Content
+- **centinelas cap3**: revisión profunda del Capítulo 3 comparando crudo vs ink — párrafos faltantes en `cap3_briefing_lab` (Profesor/Mary Shelley, cadáver en camilla, rostro con surcos de lágrimas), refactor de preguntas del briefing a knot `cap3_briefing_preguntas` con sticky choices (identidad / Tiburón-Profundo / runas), fix de literal `NOMBRE DE PERSONAJE` → `{nombre_personaje}` en `cap3_espiar_lab`, reactividad nueva por `colaboraste_museo` en `cap3_museo_primera_sala`, nuevas VARs (`colaboraste_museo`, `preg_identidad`, `preg_profundo`, `preg_runas`), typo `modificación` → `momificación`
+
+---
+
 ## [0.24.1] - 2026-04-30
 
 ### Fixes

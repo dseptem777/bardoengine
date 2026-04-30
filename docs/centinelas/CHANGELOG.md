@@ -1,5 +1,19 @@
 # Changelog — Centinelas del Sur
 
+## [0.19.0] — 2026-04-30
+
+### Añadido
+- **cap3/briefing**: 3 párrafos descriptivos faltantes en `cap3_briefing_lab` — Profesor y Mary Shelley presentes en la habitación, cadáver en la camilla, saludos del Profesor con rostro marcado por surcos de lágrimas
+- **cap3/briefing**: refactor de preguntas a knot dedicado `cap3_briefing_preguntas` con sticky choices `+ {not var}` — el jugador ahora puede hacer las 3 preguntas (identidad del cadáver, Tiburón-Profundo, runas); el Tiburón solo aparece si se preguntó por él
+- **cap3/museo**: reactividad nueva en `cap3_museo_primera_sala` — flavor diferenciado según `colaboraste_museo` (colaboró vs no colaboró en el museo nocturno)
+- **vars nuevas**: `colaboraste_museo`, `preg_identidad`, `preg_profundo`, `preg_runas`
+
+### Fixed
+- **cap3/espiar**: literal `NOMBRE DE PERSONAJE` reemplazado por `{nombre_personaje}` en `cap3_espiar_lab`
+- **cap3/cosméticas**: comentado encabezado `DE DIA EN EL MUSEO`, typo `modificación` → `momificación`
+
+---
+
 ## [0.18.3] — 2026-04-29
 
 ### Fixed
