@@ -1,5 +1,21 @@
 # Changelog — BardoEngine
 
+## [0.25.0] - 2026-05-01
+
+### Features
+- **deferred tag timing**: SFX (`play_sfx:*`), `shake`, and `flash_*` tags now fire as the typewriter reaches the paragraph that emitted them, instead of all firing at render time. Music, bg, stats, inventory, and other tags remain instantaneous. New config module `src/config/tagTiming.js` classifies tags by timing behavior.
+- **TextDisplay segments**: `TextDisplay` now receives a `segments` prop (array of `{text, tags}`) that tracks which paragraph the typewriter cursor is in, enabling per-paragraph tag dispatch.
+- **Player/App wiring**: `Player.jsx` and `App.jsx` updated to pass `segments` and an `onSegmentReached` callback down to `TextDisplay`.
+
+### Fixes
+- **TextDisplay skip race condition**: fixed stale `isTyping` ref on mount/new-beat transition that caused the skip effect to fire incorrectly when the first beat loaded.
+
+### Tests
+- 9 new test cases for `tagTiming.js` (`src/config/__tests__/tagTiming.test.js`)
+- 1 new test case in `useStoryState` for segment-aware story state
+
+---
+
 ## [0.24.2] - 2026-04-30
 
 ### Content

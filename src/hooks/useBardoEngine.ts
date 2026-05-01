@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useMemo, useState } from 'react'
+import { isDeferrableTag } from '../config/tagTiming'
 import { useVFX } from './useVFX'
 import { useAudio } from './useAudio'
 import { useSaveSystem } from './useSaveSystem'
@@ -54,6 +55,7 @@ export function useBardoEngine({
         continueLabel,
         isEnded,
         history,
+        segments: storySegments,
         initStory: initStoryState,
         continueStory: continueStoryState,
         makeChoice: makeChoiceState,
@@ -65,6 +67,25 @@ export function useBardoEngine({
         getKnotList,
         getVariables
     } = storyState
+
+    // ==================
+    // Deferred tag segments — paired text+deferredTags for typewriter-timed SFX firing
+    // ==================
+    const [textSegments, setTextSegments] = useState<{ text: string; deferredTags: string[] }[]>([])
+
+    // Callback passed to TextDisplay: fires deferred tags when typewriter crosses a segment boundary.
+    // triggerVFX is stable (useCallback in useVFX), so this ref trick avoids stale closure issues.
+    const triggerVFXRef = useRef<typeof triggerVFX | null>(null)
+    // We assign this after triggerVFX is defined below; see "Keep refs updated" block.
+
+    const onSegmentReached = useCallback((_segIndex: number, deferredTags: string[]) => {
+        if (!deferredTags || deferredTags.length === 0) return
+        const trigger = triggerVFXRef.current
+        if (!trigger) return
+        for (const tag of deferredTags) {
+            trigger(tag)
+        }
+    }, [])
 
     // ==================
     // Input System
@@ -624,26 +645,34 @@ export function useBardoEngine({
             return
         }
 
-        const { text: newText, tags } = continueStoryState()
+        const { text: newText, tags, segments: newSegments } = continueStoryState()
+
+        // Split tags into instant (fire now) and deferrable (fire when typewriter crosses paragraph)
+        const instantTags = tags.filter((t: string) => !isDeferrableTag(t))
+        const newTextSegments = newSegments.map(seg => ({
+            text: seg.text,
+            deferredTags: seg.tags.filter((t: string) => isDeferrableTag(t)),
+        }))
+        setTextSegments(newTextSegments)
 
         // When pagination (# next) and CHAPTER_BREAK co-occur in the same Continue() batch,
         // defer the CHAPTER_BREAK so the player can read the current text first.
-        const hasPagination = tags.some((t: string) => {
+        const hasPagination = instantTags.some((t: string) => {
             const tag = t.trim().toLowerCase()
             return tag === 'next' || tag === 'page' || tag.startsWith('next:') || tag.startsWith('page:')
         })
-        const chapterBreakTags = tags.filter((t: string) => t.trim().toUpperCase().startsWith('CHAPTER_BREAK:'))
+        const chapterBreakTags = instantTags.filter((t: string) => t.trim().toUpperCase().startsWith('CHAPTER_BREAK:'))
 
         if (hasPagination && chapterBreakTags.length > 0) {
             pendingChapterBreakTagsRef.current = chapterBreakTags
-            const filteredTags = tags.filter((t: string) => !t.trim().toUpperCase().startsWith('CHAPTER_BREAK:'))
+            const filteredTags = instantTags.filter((t: string) => !t.trim().toUpperCase().startsWith('CHAPTER_BREAK:'))
             processTags(filteredTags)
         } else {
             // Track if CHAPTER_BREAK arrived with text in the same batch
             if (chapterBreakTags.length > 0) {
                 chapterBreakHasTextRef.current = !!newText.trim()
             }
-            processTags(tags)
+            processTags(instantTags)
         }
 
         // Sync stats from Ink variables to React state (tags update Ink directly, bypassing React)
@@ -760,6 +789,7 @@ export function useBardoEngine({
 
     // Keep refs updated
     continueStoryRef.current = continueStory
+    triggerVFXRef.current = triggerVFX
 
     // ==================
     // Bidirectional stat sync: React stats → Ink variables
@@ -868,15 +898,23 @@ export function useBardoEngine({
         }
 
         // makeChoiceState updates history internally
-        const { text: newText, tags } = makeChoiceState(index)
+        const { text: newText, tags, segments: newSegments } = makeChoiceState(index)
+
+        // Split tags into instant and deferrable
+        const instantTags = tags.filter((t: string) => !isDeferrableTag(t))
+        const newTextSegments = newSegments.map(seg => ({
+            text: seg.text,
+            deferredTags: seg.tags.filter((t: string) => isDeferrableTag(t)),
+        }))
+        setTextSegments(newTextSegments)
 
         // Track if CHAPTER_BREAK arrived with text (same as in continueStory)
-        const chapterBreakTags = tags.filter((t: string) => t.trim().toUpperCase().startsWith('CHAPTER_BREAK:'))
+        const chapterBreakTags = instantTags.filter((t: string) => t.trim().toUpperCase().startsWith('CHAPTER_BREAK:'))
         if (chapterBreakTags.length > 0) {
             chapterBreakHasTextRef.current = !!newText.trim()
         }
 
-        processTags(tags)
+        processTags(instantTags)
 
         // Notify spider system that player advanced (resets idle timer)
         if (spiderInfestation.state.infesting) {
@@ -1141,6 +1179,9 @@ export function useBardoEngine({
         isEnded,
         history,
         isThemeReady,
+        // Deferred-tag segments for typewriter-synchronized SFX
+        textSegments,
+        onSegmentReached,
 
         actions,
         subsystems,
@@ -1148,6 +1189,7 @@ export function useBardoEngine({
         settingsHelpers
     }), [
         story, text, choices, canContinue, continueLabel, isEnded, history, isThemeReady,
+        textSegments, onSegmentReached,
         actions, subsystems, configRef, settingsHelpers
     ])
 }

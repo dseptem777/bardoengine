@@ -328,8 +328,7 @@ En su biblioteca estaba "La Última Colección", donde se recopilaban las profec
 # music:misterio_ambient
 Bueno, dejemos de dar vueltas y pasemos a la acción.
 
-Entre las dos terrazas había una distancia de cinco metros. Llevábamos meses practicando para saltar esa distancia. Pero las prácticas habían sido sobre tierra, en cambio ahora teníamos una caída de 50 metros que hacía ver todo más real.
-# next: Tomar carrera y saltar
+Entre las dos terrazas había una distancia de cinco metros. Llevábamos meses practicando para saltar esa distancia. Pero las prácticas habían sido sobre tierra, en cambio ahora teníamos una caída de 50 metros que hacía ver todo más real. # next: Tomar carrera y saltar
 # shake # play_sfx:aterrizaje
 Caí haciendo un escándalo sobre el techo. Julieta a mi lado lo hizo con un mayor nivel de gracia. Mientras yo era una bolsa de papas ella era una felina.
 

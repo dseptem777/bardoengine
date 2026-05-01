@@ -155,7 +155,8 @@ function AppContent({ onStorySelect }) {
     // Destructure for convenience
     const {
         story, text, choices, canContinue, continueLabel, isEnded, history,
-        actions, subsystems, config
+        actions, subsystems, config,
+        textSegments, onSegmentReached
     } = engine
     const { audio, vfx, saveSystem, gameSystems, achievementsSystem, minigameController, willpower, spiderInfestation, scrollFriction, bossController, visualDamage, scrollContainerRef, genjutsu, chapterBreak } = subsystems
 
@@ -606,6 +607,8 @@ function AppContent({ onStorySelect }) {
                     willpowerValue={willpower?.state?.value ?? 100}
                     onBreakGenjutsu={genjutsu?.breakGenjutsu}
                     onGenjutsuTypingComplete={genjutsu?.onTypingComplete}
+                    textSegments={textSegments}
+                    onSegmentReached={onSegmentReached}
                 />
             )}
 

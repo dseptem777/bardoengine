@@ -70,6 +70,9 @@ export default function Player({
     onBossPhaseComplete = null,
     onBossPlayerDeath = null,
     sabiduria = 10,
+    // Deferred-tag segments for typewriter-synchronized SFX
+    textSegments = null,
+    onSegmentReached = null,
 }) {
     // If no text but has interactive content, skip typewriter
     const hasInteractiveContent = choices.length > 0 || isEnded
@@ -442,6 +445,8 @@ export default function Player({
                             onBreakGenjutsu={onBreakGenjutsu}
                             scrollContainerRef={scrollContainerRef}
                             paused={chapterBreakActive}
+                            segments={textSegments}
+                            onSegmentReached={onSegmentReached}
                         />
                     </div>
 

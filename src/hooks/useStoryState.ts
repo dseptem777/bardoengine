@@ -8,6 +8,11 @@ export interface StoryHistoryEntry {
     type?: 'text' | 'choice';
 }
 
+export interface StorySegment {
+    text: string;
+    tags: string[];
+}
+
 export interface UseStoryStateReturn {
     story: Story | null;
     text: string;
@@ -17,14 +22,15 @@ export interface UseStoryStateReturn {
     isEnded: boolean;
     history: StoryHistoryEntry[];
     currentTags: string[];
+    segments: StorySegment[];
     initStory: (data: any, savedState?: any, savedText?: string) => void;
-    continueStory: () => { text: string; tags: string[] };
-    makeChoice: (index: number) => { text: string; tags: string[] };
+    continueStory: () => { text: string; tags: string[]; segments: StorySegment[] };
+    makeChoice: (index: number) => { text: string; tags: string[]; segments: StorySegment[] };
     setGlobalVariable: (varName: string, value: any) => void;
     getGlobalVariable: (varName: string) => any;
     restoreInputState: () => boolean;
     resetStoryState: () => void;
-    spawnAtKnot: (knotName: string, variables?: Record<string, any>) => { text: string; tags: string[] };
+    spawnAtKnot: (knotName: string, variables?: Record<string, any>) => { text: string; tags: string[]; segments: StorySegment[] };
     getKnotList: () => string[];
     getVariables: () => Record<string, any>;
 }
@@ -38,6 +44,7 @@ export function useStoryState(): UseStoryStateReturn {
     const [isEnded, setIsEnded] = useState(false)
     const [history, setHistory] = useState<StoryHistoryEntry[]>([])
     const [currentTags, setCurrentTags] = useState<string[]>([])
+    const [segments, setSegments] = useState<StorySegment[]>([])
 
     const storyRef = useRef<Story | null>(null)
     const inputStateSnapshotRef = useRef<string | null>(null)
@@ -49,6 +56,7 @@ export function useStoryState(): UseStoryStateReturn {
         let fullText = ""
         let hasCriticalError = false
         const allTags: string[] = []
+        const allSegments: StorySegment[] = []
         let brokeForMinigame = false
         setContinueLabel(null)
 
@@ -60,6 +68,7 @@ export function useStoryState(): UseStoryStateReturn {
                 const nextBatch = currentStory.Continue()
                 const tags = currentStory.currentTags || []
 
+                allSegments.push({ text: nextBatch, tags: [...tags] })
                 fullText += nextBatch + '\n\n'
                 allTags.push(...tags)
 
@@ -122,6 +131,7 @@ export function useStoryState(): UseStoryStateReturn {
         setCanContinue(hasCriticalError ? false : (brokeForMinigame ? false : currentStory.canContinue))
         setIsEnded(hasCriticalError || (brokeForMinigame ? false : (!currentStory.canContinue && currentStory.currentChoices.length === 0)))
         setCurrentTags(allTags)
+        setSegments(allSegments)
 
         // Add to history if there is text
         if (trimmedText) {
@@ -133,7 +143,7 @@ export function useStoryState(): UseStoryStateReturn {
             }])
         }
 
-        return { text: trimmedText, tags: allTags }
+        return { text: trimmedText, tags: allTags, segments: allSegments }
     }, [])
 
     const continueStory = useCallback(() => {
@@ -316,6 +326,7 @@ export function useStoryState(): UseStoryStateReturn {
         isEnded,
         history,
         currentTags,
+        segments,
         initStory,
         continueStory,
         makeChoice,
@@ -335,6 +346,7 @@ export function useStoryState(): UseStoryStateReturn {
         isEnded,
         history,
         currentTags,
+        segments,
         initStory,
         continueStory,
         makeChoice,
