@@ -130,6 +130,9 @@ export default function TextDisplay({
     // Scroll system
     scrollContainerRef = null, // ref to the scrollable container (from Player)
     paused = false,
+    // Deferred-tag segments: fire SFX/VFX when typewriter reaches each paragraph
+    segments = null,           // { text: string, deferredTags: string[] }[] | null
+    onSegmentReached = null,   // (segIndex: number, deferredTags: string[]) => void
 }) {
     const [displayedText, setDisplayedText] = useState('')
     const hasFoundRef = useRef(false)
@@ -143,8 +146,45 @@ export default function TextDisplay({
     const pausedRef = useRef(paused)
     const kickSlowLoopRef = useRef(null)
     const kickFastLoopRef = useRef(null)
+    // Segment boundary tracking
+    const segmentBoundariesRef = useRef([])   // [{ startChar, segIndex, tags }]
+    const firedSegmentsRef = useRef(new Set()) // Set of segIndex already fired
+    const onSegmentReachedRef = useRef(onSegmentReached)
 
     useEffect(() => { pausedRef.current = paused }, [paused])
+
+    // Keep onSegmentReached ref current
+    useEffect(() => { onSegmentReachedRef.current = onSegmentReached }, [onSegmentReached])
+
+    // Compute segment boundaries whenever text or segments change.
+    // useStoryState joins segments with '\n\n', so we locate each segment's start
+    // within the full text by scanning forward.
+    useEffect(() => {
+        firedSegmentsRef.current = new Set()
+        if (!segments || segments.length === 0 || !text) {
+            segmentBoundariesRef.current = []
+            return
+        }
+        const boundaries = []
+        let searchFrom = 0
+        for (let i = 0; i < segments.length; i++) {
+            const segText = segments[i].text
+            if (!segText) {
+                boundaries.push({ startChar: searchFrom, segIndex: i, tags: segments[i].deferredTags })
+                continue
+            }
+            // Trim trailing whitespace that useStoryState may have stripped
+            const idx = text.indexOf(segText.trimEnd(), searchFrom)
+            if (idx !== -1) {
+                boundaries.push({ startChar: idx, segIndex: i, tags: segments[i].deferredTags })
+                searchFrom = idx + segText.trimEnd().length
+            } else {
+                // Fallback: place at current search position
+                boundaries.push({ startChar: searchFrom, segIndex: i, tags: segments[i].deferredTags })
+            }
+        }
+        segmentBoundariesRef.current = boundaries
+    }, [text, segments])
 
     // Store onComplete in a ref to avoid re-triggering the effect when callback changes
     const onCompleteRef = useRef(onComplete)
@@ -318,8 +358,21 @@ export default function TextDisplay({
     }, [text, isTyping, typewriterDelay])
 
     // Skip effect when isTyping changes to false (user clicked to skip)
+    const skipEffectMountedRef = useRef(false)
     useEffect(() => {
+        const wasMounted = skipEffectMountedRef.current
+        skipEffectMountedRef.current = true
+
         if (!isTyping && text) {
+            // Two legit entry paths:
+            //   1. Initial mount with isTyping=false → render text instantly (used by tests).
+            //   2. User skipped mid-typing → typewriterProgressedRef=true.
+            // Block the bug case: new text arrived while isTyping was still false from the
+            // previous beat. Typewriter effect runs first (declaration order) and resets
+            // progressed=false. Without this guard, skip would jump displayedText to full
+            // new text and prematurely fire ALL deferred segment tags.
+            if (wasMounted && !typewriterProgressedRef.current) return
+
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current)
             }
@@ -328,15 +381,32 @@ export default function TextDisplay({
                 rafRef.current = null
             }
             setDisplayedText(text)
-            // Only fire onComplete if typewriter had actually started for this text.
-            // Prevents premature onComplete when this effect runs because *text changed*
-            // (not because the user skipped) — in that case typewriterProgressed is false.
-            if (typewriterProgressedRef.current) {
-                onCompleteRef.current?.()
-            }
-            typewriterProgressedRef.current = true  // Mark as progressed since we showed full text
+            typewriterProgressedRef.current = true
+            onCompleteRef.current?.()
         }
     }, [isTyping, text])
+
+    // Fire deferred segment tags as the typewriter reveals each segment.
+    // Runs after every displayedText change (both slow typewriter and fast-forward).
+    useEffect(() => {
+        if (!onSegmentReachedRef.current) return
+        const boundaries = segmentBoundariesRef.current
+        if (!boundaries || boundaries.length === 0) return
+        const revealed = displayedText.length
+
+        for (const boundary of boundaries) {
+            if (firedSegmentsRef.current.has(boundary.segIndex)) continue
+            // Segment 0 fires as soon as any character is revealed
+            // Other segments fire when the typewriter crosses their start position
+            const threshold = boundary.segIndex === 0 ? 1 : boundary.startChar + 1
+            if (revealed >= threshold) {
+                firedSegmentsRef.current.add(boundary.segIndex)
+                if (boundary.tags && boundary.tags.length > 0) {
+                    onSegmentReachedRef.current(boundary.segIndex, boundary.tags)
+                }
+            }
+        }
+    }, [displayedText])
 
     // Detect seekString visibility - ONLY when typewriter has naturally reached it
     useEffect(() => {

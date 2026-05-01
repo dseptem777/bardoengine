@@ -1,5 +1,12 @@
 # Changelog — Centinelas del Sur
 
+## [0.19.1] — 2026-05-01
+
+### Fixed
+- **paginación**: tag `# next: Tomar carrera y saltar` movido inline al final del párrafo "Entre las dos terrazas..." — estaba como tag standalone que tomaba el contenido siguiente como nuevo beat, rompiendo la paginación del capítulo
+
+---
+
 ## [0.19.0] — 2026-04-30
 
 ### Añadido
