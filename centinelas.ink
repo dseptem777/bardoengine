@@ -2452,7 +2452,7 @@ Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tom
 { madre_alegria_vive:
     # achievement:unlock:alegria_vive
 }
-
+# next
 FIN DEL EPISODIO.
 -> intermision_2
 
@@ -4399,9 +4399,9 @@ La tarde se va apagando contra el horizonte. Volvés a tu departamento con el cu
 
 Algo se está moviendo en Costa Alegre y vos sos parte del engranaje, te guste o no.
 
-El celular vibra en la mesita. Es El Faro.
 # next
-
+El celular vibra en la mesita.
+// TODO: sfx de celular vibrando con ringtone especifico
 -> inter2_siguiente
 
 // ============================================================
@@ -4420,7 +4420,7 @@ De vuelta a la pista de baile.
 -> capitulo_3
 
 // ============================================================
-// CAPÍTULO 3 — PLACEHOLDER
+// CAPÍTULO 3 — EL MUSEO
 // ============================================================
 
 === capitulo_3 ===
@@ -5168,8 +5168,6 @@ Las manos logran estirar suficiente el portal hasta que tenga el tamaño de la v
 
 El portal se cierra y vos te quedás golpeando la vitrina, solo lográndote lastimar más. Perdiste. Te metiste al Museo, no lograste tu objetivo, y te quedaste con un grupo de maniquíes que quieren matarte.
 ~ momia_robada = true
-# next
-
 -> cap3_final_fracaso
 
 === cap3_final_fracaso ===
