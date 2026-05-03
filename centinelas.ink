@@ -642,7 +642,7 @@ Faltan cinco minutos para la hora en que te citaron para darte una misión de ca
 # music:escuela_ambient
 El hall central es un cuarto gigante, en el cual en el piso está representado el mismo logo que la puerta. A pesar de que el edificio no tiene ventanas el clima es agradable y no está viciado.
 # shake
-No es necesario ser un gran practicante de magia para darse cuenta de la gran cantidad de magia defensiva que hay en el lugar. Lo sentís como un dejo de gusto amargo en tu boca.
+No es necesario ser un gran practicante de magia para darse cuenta de la enorme cantidad de magia defensiva que hay en el lugar. Lo sentís como un dejo de gusto amargo en tu boca.
 # next
 El único ruido proviene del escritorio de la secretaria, la Sra. Enríquez, que está tipeando algo en su máquina de escribir.
 
