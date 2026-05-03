@@ -448,8 +448,8 @@ Estás encerrado en tu cuerpo, con tu miedo como único compañero de celda.
 # music:misterio_ambient
 Ayacucho Olavarría sale de tu campo de visión, ni siquiera podés mover tu ojo para ver adónde va. Tu vista está clavada en el marco de la puerta, ahora vacía, y en la nuca de Julieta.
 
-Lo escuchás caminar, canturrear algo, un poco de ruido de vidrio. La incertidumbre te vuelve loco, estás completamente consciente de que estás totalmente a su merced.
 # next
+Lo escuchás caminar, canturrear algo, un poco de ruido de vidrio. La incertidumbre te vuelve loco, estás completamente consciente de que estás totalmente a su merced.
 -> conocimiento_final
 
 === conocimiento_final ===
@@ -1270,9 +1270,9 @@ La mujer patalea, llora y te araña. Te promete la muerte de formas horribles mi
 Mary Shelley da un gritito de alegría cuando pasás a verla a El Faro. Siendo la médica oficial (y también chamán y científica loca) le toca a ella realizarte las curaciones necesarias.
 Utiliza una mezcla de medicina occidental junto con hierbas, cantos y rituales extraños.
 — Lindo cuerpo — dice para sí misma mientras te sutura una herida — si morís intentá por favor mantener las extremidades pegadas al torso que es un tedio volver a conectar los nervios y las venas.
+# next
 — ¿Eso significa que si muero me pueden revivir? — preguntás. Toda la respuesta que recibís es una risa que no te da mucha seguridad.
 # stat:hp:+20
-# next
 -> inter1_convergencia
 
 // ============================================================
@@ -4012,9 +4012,8 @@ Encontrás un lugar alejado en un espigón que corta las olas del mar. A medida 
 
 Intentás ignorar la situación pero de repente notás que todo es sombras a tu alrededor. Una ola gigante se eleva tapando el sol y cae sobre tu cabeza. Son segundos enteros de agua y su fuerza azotando tu cuerpo.
 
-Terminás mojado, salado, y entendiendo que el mar no te quiere presente.
 # next
-
+Terminás mojado, salado, y entendiendo que el mar no te quiere presente.
 -> inter2_convergencia
 
 // ============================================================
@@ -4037,9 +4036,8 @@ El hogar de la tarotista está vacío. Solo hay un sobre en la mesa con tu nombr
 
 "No voy a volver a aparecer durante la Demo. Lo único que veo en tu futuro ahora es que prontamente vas a tener la versión completa del juego, y ahí te voy a estar esperando".
 
-No entendés mucho lo que quiere decir, pero no es raro — la mayoría de las profecías son crípticas y solo se entienden después de que ocurran los hechos.
 # next
-
+No entendés mucho lo que quiere decir, pero no es raro — la mayoría de las profecías son crípticas y solo se entienden después de que ocurran los hechos.
 -> inter2_convergencia
 
 // ============================================================
@@ -4068,10 +4066,9 @@ Mary Shelley te mira durante cinco segundos y te das cuenta de la idiotez que ac
 
 — Al menos decime, ¿duele mucho?
 
+# next
 — Las plantas nunca se quejaron — contesta Mary Shelley con una sonrisa.
 # stat:hp:+5
-# next
-
 -> inter2_convergencia
 
 // ============================================================
@@ -4224,10 +4221,9 @@ Tu compañera se ve satisfecha. Detrás de ella ves la puerta del baño entreabi
 
 — ¿Lo logramos?
 
+# next
 — Es una forma de decir. Tuviste tu colaboración. Lo importante es que hay un predador menos en Costa Alegre. Vamos a quedarnos con esa idea.
 # stat:amistad_abuela:+1
-# next
-
 -> inter2_convergencia
 
 // ============================================================
@@ -4267,9 +4263,8 @@ Un policía baja de la patrulla y se acerca hacia ustedes. Tu compañera dice po
 
 — Lo lamento, no era mi intención.
 
-— Sin duda, sino serías un traidor. Lamento que hayas venido hoy, pero no pudo salir.
 # next
-
+— Sin duda, sino serías un traidor. Lamento que hayas venido hoy, pero no pudo salir.
 -> inter2_convergencia
 
 // ============================================================
@@ -4340,10 +4335,9 @@ Son las cuatro de la mañana y estás tomando una cerveza mientras mirás el oc�
 
 "Buena cacería, el problema del súcubo fue solucionado. Si no nos subíamos al escenario nunca la iba a encontrar. Sus métodos son poco ortodoxos pero divertidos. Espero que trabajemos juntos de nuevo".
 
+# next
 El mensaje está acompañado por una foto de ella saludando con la mano derecha, mientras en la izquierda tiene un machete bañado en una sangre negra viscosa. Sospechás que la abuelita no es alguien con quien joder.
 # stat:amistad_abuela:+1
-# next
-
 -> inter2_convergencia
 
 // ============================================================
@@ -4447,8 +4441,8 @@ Entras a El Faro y te sorprende no encontrar a Enriquez sentada tras su escritor
     -> cap3_espiar_lab
 
 === cap3_recorrer_elfaro ===
-Recorres el edificio, o las partes que podes entrar al menos. El baño esta vacío, la cocina parece desierta y la heladera solo contiene ese tapper que está en el fondo desde que empezaste a trabajar acá y nadie logra descifrar que es su contenido marrón semilíquido. Por muchas vueltas que des, Enriquez parece estar en su día libre asi que no te queda más opción que dejar de perder el tiempo.
 # next
+Recorres el edificio, o las partes que podes entrar al menos. El baño esta vacío, la cocina parece desierta y la heladera solo contiene ese tapper que está en el fondo desde que empezaste a trabajar acá y nadie logra descifrar que es su contenido marrón semilíquido. Por muchas vueltas que des, Enriquez parece estar en su día libre asi que no te queda más opción que dejar de perder el tiempo.
 -> cap3_briefing_lab
 
 === cap3_espiar_oficina ===
@@ -4457,7 +4451,6 @@ Te descalzas para hacer menos ruido y subís por la escalera que da a su oficina
 Justo cuando estas por poner tu mano en la manija, suena tu celular. ¿Cómo es posible? Siempre lo tenes en silenció justo por situaciones como esta.
 # next
 Lo sacas y lees un mensaje de El Profesor Buen intento, pero no hay forma que puedas entrar. Deja de jugar y veinte al laboratorio. Te estamos esperando.
-# next
 -> cap3_briefing_lab
 
 === cap3_espiar_lab ===
@@ -4470,7 +4463,6 @@ Es entonces cuando la voz de El Profesor te llega fuerte y claro.
 # next
 Deja de escuchar y entra de una vez {nombre_personaje}. Queremos hablar con vos y no tengo ganas de estar a los gritos.
 # achievement:unlock:espia_elfaro
-# next
 -> cap3_briefing_lab
 
 === cap3_briefing_lab ===
@@ -4595,15 +4587,15 @@ En algún momento de la planificación entra Enriquez (tarde) con cara de pocos 
 En cuanto entra señalás el reloj de tu muñeca.
 —Buenas tardes, ¿Querés que te preste mi reloj así te organizás?
 La mirada de Enriquez es suficiente como para asesinar a alguien y te das cuenta que tiene en las manos una jarra llena de café hirviendo y no tendría dudas en usarlo.
+# next
 Esto te va a pasar factura.
 ~ item_enojo_enriquez = true
 # inv:add:enojo_enriquez
-# next
 -> cap3_tl_menu
 
 === cap3_tl_sin_comentario ===
-Sos lo suficiente inteligente para darte cuenta que no te conviene tener una mala relación con Enriquez. Aparte trae café, nadie que traiga café puede ser malo. Te llenás una taza y te dedicás a ver una foto de la momia incaica hasta que la imagen queda grabada en tu memoria.
 # next
+Sos lo suficiente inteligente para darte cuenta que no te conviene tener una mala relación con Enriquez. Aparte trae café, nadie que traiga café puede ser malo. Te llenás una taza y te dedicás a ver una foto de la momia incaica hasta que la imagen queda grabada en tu memoria.
 -> cap3_tl_menu
 
 === cap3_tl_menu ===
@@ -4633,10 +4625,10 @@ No ayuda que cuando terminás Cabral se limita a mirar el reloj, negar con la ca
 La primera vez que grita de nuevo te enojás, la segunda querés llorar. Para la tercera tu espíritu ya está roto y hacés el recorrido a pura inercia.
 # next
 Terminás en el piso, recostado sobre un charco de tu propio sudor. Por suerte Cabral siempre sabe cómo levantar tu ánimo y ya te está acercando una botella de agua mientras te hace una pregunta clave.
+# next
 —¿Qué preferís? ¿Sanguches de milanesa o hamburguesas?
 ~ fuerza += 5
 # play_sfx:stinger_fuerza
-# next
 -> cap3_viaje_museo
 
 === cap3_tl_biblioteca ===
@@ -4678,7 +4670,6 @@ En cuanto te parás sobre el pentagrama empieza a ocurrir de todo. Pasás por pi
 Hay momentos difíciles, pero a pesar de todo lográs sobreponerte y la moneda nunca cae al piso.
 ~ magia += 5
 # play_sfx:stinger_magia
-# next
 -> cap3_viaje_museo
 
 === cap3_tl_belen ===
@@ -4690,7 +4681,6 @@ Aprovechás la mañana para comprarle un helado y dar una vuelta por la playa mi
 # next
 Después de un par de horas la volvés a llevar al orfanato y repetís la tradición del final de cada salida: le prometés que los monstruos no van a volver, le decís que cualquier problema puede llamarte y le pasás una bolsa de caramelos para que soborne a sus compañeros de orfanato.
 ~ hp += 5
-# next
 -> cap3_viaje_museo
 
 === cap3_tl_guardias ===
@@ -4705,9 +4695,9 @@ Antes de darte cuenta estás con dos guardias tomando mate mientras un tercero e
 Mucha gente atraviesa la vida sin tener una gran aventura, y es lógico, las grandes aventuras suenan bien en papel pero cuando uno las vive se da cuenta que están compuestas por temor, sufrimiento y pérdida. Los guardias tuvieron la tragedia de tener una gran aventura, pero la suerte de encontrar en ella la fuerza para sobrevivir y el coraje para sobrepasarlo. En cierta forma, están agradecidos por la oportunidad que les diste.
 # next
 Sabés que esta es la historia que se va a contar en fiestas familiares durante generaciones y no dudás que algún nieto lleve tu nombre. Pero ahora es momento de disfrutar del calor y el cariño que solo se tiene rodeado de compañeros de armas.
+# next
 La tarde sirve para relajar tu mente y prepararte para los retos que tengas que enfrentar a futuro.
 ~ hp += 5
-# next
 -> cap3_viaje_museo
 
 === cap3_viaje_museo ===
@@ -4830,8 +4820,8 @@ En cuanto te sentás en la cama tu conclusión cambia de bien a relativamente bi
 
 Es sorprendente lo fácil que es escapar de un Hospital. Teniendo en cuenta lo colapsado que está el sistema de salud de la ciudad, creo que si algún profesional de salud se da cuenta que sos un fugado solamente se alegra al saber que va a tener una cama libre para un paciente más grave. Al fin de cuentas, si tenés suficiente energía para poder escaparte, no deberías estar en un hospital en primer lugar.
 Al salir del Hospital notás una luna llena iluminando el paisaje nocturno. Tu pequeña experiencia te hizo perder todo el día y desperdiciar cualquier oportunidad de planificar el robo de la Momia.
-No te quedan más opciones que ir directo al Museo e improvisar sobre la marcha.
 # next
+No te quedan más opciones que ir directo al Museo e improvisar sobre la marcha.
 -> cap3_museo_noche_entrada
 
 === cap3_museo_dia_recorrido_final ===
@@ -4893,10 +4883,10 @@ Luego se dedican a tirar y doblar las extremidades.
 
 No hay malicia en la cara de los maniquíes (fácil al no haber rostro) ni emiten un sonido. Solo se escuchan los gritos desesperados del guardia que solo son superados por el ruido seco de huesos rompiéndose y carne siendo desgarrada.
 Cuando terminan su trabajo sueltan al guardia que cae pesadamente al piso. Una caída así de espalda sin duda le saca todo el aire de los pulmones y le impide seguir gritando ayuda.
+# next
 No pensás quedarte para ser la segunda víctima, aprovechás el momento y te colás en la Primera Sala del Museo mientras planeás cómo enfrentarte a esta nueva amenaza.
 ~ llegaste_con_ventaja = true
 # inv:add:llegaste_con_ventaja
-# next
 -> cap3_museo_primera_sala
 
 === cap3_museo_noche_entrada ===
@@ -4994,13 +4984,14 @@ En unos segundos van a entrar, así que tenés que actuar rápido.
     # next
     # MINIGAME: type=keymash, key=SPACE, count=18, timeLimit=6, autostart=true
     { minigame_result == 1:
+        # next
         Lográs zafarte y te lanzás hacia la siguiente sala con lo que te queda de energía.
         ~ hp -= 10
     - else:
+        # next
         Las manos logran aferrarte demasiado. Cuando finalmente salís, cada músculo grita.
         ~ hp -= 25
     }
-    # next
     -> cap3_corres_museo
 
 * { magia >= 20 } [Un hechizo de invisibilidad podría ser útil en este momento]
@@ -5013,15 +5004,16 @@ En unos segundos van a entrar, así que tenés que actuar rápido.
     # next
     # MINIGAME: type=keymash, key=SPACE, count=18, timeLimit=6, autostart=true
     { minigame_result == 1:
+        # next
         Lográs esquivar lo suficiente para abrirte paso hacia la puerta.
         ~ hp -= 10
         ~ magia -= 5
     - else:
+        # next
         Te atrapan, pero lográs liberarte a costa de tu chaqueta —y de algo de piel.
         ~ hp -= 22
         ~ magia -= 8
     }
-    # next
     -> cap3_corres_museo
 
 * [Te escondés dentro de la canoa gigante que está expuesta en mitad de la Sala]
@@ -5033,13 +5025,14 @@ En unos segundos van a entrar, así que tenés que actuar rápido.
     # next
     # MINIGAME: type=keymash, key=SPACE, count=18, timeLimit=6, autostart=true
     { minigame_result == 1:
+        # next
         Te tirás de la canoa y corrés hacia la puerta.
         ~ hp -= 12
     - else:
+        # next
         Te atrapan dentro de la canoa. Cuando lográs salir, los golpes ya te costaron caro.
         ~ hp -= 24
     }
-    # next
     -> cap3_corres_museo
 
 * { entidades_poseidas } [Trazás un símbolo en la puerta para impedir la entrada de las entidades]
