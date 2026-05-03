@@ -1226,7 +1226,6 @@ En el piso notás el cadáver de una mujer de unos treinta años, su garganta de
 # next
 Jesús vuelve a su forma humana y mira decepcionado el cadáver a tus pies.
 — Creo que pudimos hacer eso mucho mejor — hay amargura y crítica en sus palabras y, a pesar de que usa el plural, sabés que van dirigidas a vos.
-# achievement:unlock:juan_salvado
 -> inter1_convergencia
 
 === jesus_distraccion ===
@@ -1245,7 +1244,6 @@ El vampiro es una montaña de polvo en una esquina del galpón (notás que tambi
 La mujer está sentada contra una de las paredes, con un poco de sangre brotando de una herida superficial de un brazo.
 — Bueno, pudo haber salido mejor, pero pudo haber salido mucho peor. Muchas gracias compañero.
 # stat:amistad_jesus:+1
-# achievement:unlock:juan_salvado
 -> inter1_convergencia
 
 === jesus_sigilo ===
@@ -1264,7 +1262,6 @@ La mujer grita cuando la tackleás e inmovilizás en el suelo. Atrás tuyo se es
 La mujer patalea, llora y te araña. Te promete la muerte de formas horribles mientras se retuerce en su llanto. El síndrome de abstinencia va a ser horrible pero está viva. Y eso siempre es una promesa de futuro.
 — Lo logramos — Jesús aparece atrás tuyo de forma humana — gracias Guardián, nunca olvidaré esto.
 # stat:amistad_jesus:+2
-# achievement:unlock:juan_salvado
 -> inter1_convergencia
 
 === inter_enfermeria ===
@@ -2117,6 +2114,7 @@ Los minutos dejan de tener sentido y el tiempo se cuenta solamente en las compre
     Te cargas el cuerpo de Juan, te sorprende lo poco que pesa su cuerpo. Frágil y liviano, no entendes como hay gente que le puede hacer daño a los niños. Al menos te vas a asegurar que tenga un entierro decente.
 - else:
     ~ juan_vive = true
+    # achievement:unlock:juan_salvado
     Juan toce. Pones su cuerpo de costado y le das ligeros golpes en la espalda. Hace un poco mas de fuerza y escupe una sustancia viscosa y blancuzca que estaba alojada en sus entrañas. Por el borde de tus ojos ves brillos entre la oscuridad. Las arañas te observan. Si bien su forma de pensar debe ser considerablemente alienígena (al fin y al cabo son demonios y eligieron forma de araña), esperas que sientan el fracaso.
     No hay tiempo para sutilezas, te cargas el cuerpo de Juan y corres hacia la salida.
 }

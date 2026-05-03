@@ -1,5 +1,12 @@
 # Changelog — Centinelas del Sur
 
+## [0.22.0] — 2026-05-03
+
+### Fixed
+- **achievement/juan_salvado**: eliminados 3 unlocks incorrectos del achievement en los knots `jesus_frontal`, `jesus_distraccion` y `jesus_sigilo` (intermisión Jesús); el unlock ahora ocurre únicamente en `cueva_capullo` cuando `juan_vive = true`, reflejando el momento narrativo correcto
+
+---
+
 ## [0.21.0] — 2026-05-02
 
 ### Added
