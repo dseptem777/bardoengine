@@ -1,5 +1,13 @@
 # Changelog — Centinelas del Sur
 
+## [0.21.0] — 2026-05-02
+
+### Added
+- **inter0/entrenamiento**: nuevo bloque narrativo en `intermision_hub` (rama `misiones_completadas == 0`) que cubre los primeros seis meses de entrenamiento del Centinela — cronograma bajo la puerta, actividades municipales, el manco del sillón y las clases de judo; termina con la frase puente "Pero esta noche eso iba a cambiar"
+- **inter0/stat-gate**: bloque final del entrenamiento ramificado por stat dominante (`fuerza >= 20` → servicio militar / polígono; `conocimiento >= 20` → cajas de libros / click mental; `magia >= 20` → reunión con el Guardián + ejercicio de la vela); bloques mutuamente exclusivos vía switch ink
+
+---
+
 ## [0.20.0] — 2026-05-02
 
 ### Added

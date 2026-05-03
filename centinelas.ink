@@ -524,6 +524,30 @@ Ellos te ofrecieron un trabajo y una nueva oportunidad y no pensás desperdiciar
     # next
     # next
     Y, claro, también estás vos.
+    # next
+    Los primeros seis meses desde tu "incidente", como elegiste llamarlo, fueron raros. Esperabas que El Faro te pusiera algún mentor viejo con el cual ibas a tener una relación casi paternal, o te citara a una escuela escondida dividida en fraternidades que peleaban entre ellas. Pero nada de eso ocurrió, solo encontraste que alguien tiró un cronograma debajo de tu puerta con una lista de actividades que tenías que hacer.
+    La mayoría eran gratuitas o estaban cubiertas en planes sociales del Municipio, así que probablemente El Faro no tenía presupuesto para ninguna de tus ideas fantasiosas.
+    # next
+    Corriste por la playa hasta que tus rodillas se sintieron a punto de estallar, tomaste clases de yoga antes de la siesta en compañía de jubiladas y amas de casa aburridas, pasaste tardes enteras leyendo una extraña lista de libros en la Biblioteca de Costa Alegre (desde etnología hasta leyendas de la Polinesia). Por alguna razón también te hicieron tomar clases de violín, nunca lograste que sonara diferente a un gato siendo destripado, pero al menos aprendiste a esconder tu frustración.
+    # next
+    Sospechás que el tipo de entrenamiento de El Faro era tirarte todo lo que se les ocurría y ver en qué sobresalías. Cada tanto, cuando ibas o volvías de una actividad, te parabas frente a una vidriera a ver tu reflejo en la vitrina, a ver si detectabas ese supuesto Centinela que te estaba siguiendo para dar un informe de tus avances. Solo lograste que una mujer con aspecto de secretaria y cara de pocos amigos te lleve puesto y te grite "no es momento para detenerse", sumado a un montón de comentarios poco cariñosos a la rama femenina de tu familia.
+    # next
+    Una noche entraste a tu casa y te encontraste con un manco sentado en un sillón. Raro, pero no te parecía peligroso, al fin de cuentas en lugar de un arma tenía un brazo menos. Grave error, en menos de un minuto terminaste en el piso, con tres moretones y un mueble roto. Se fue sin decir nada, pero cuando el siguiente lunes pasaron la lista de actividades debajo de tu puerta, te habían agregado clases de judo.
+
+    # next
+    {
+    - fuerza >= 20:
+        A lo último, tu entrenamiento comenzó a sentirse como ir al servicio militar. Si bien lo único que sabés de eso son un par de historias jocosas de tu padre, es lo que más se parece. Te reservaron clases con un instructor de tiro en un polígono, pasabas toda la mañana en el gimnasio municipal haciendo todas las actividades físicas disponibles y la última nota te prohibió usar auto o transporte público. Debías ir trotando a todos lados.
+    - conocimiento >= 20:
+        A lo último ya no ibas a la biblioteca. Directamente te enviaban cajas y cajas llenas de libros que debías estudiar y presentar un resumen, monografía u opinión. Los plazos eran cada vez más cortos y los libros más largos. Aparte, los temas no tenían relación, pasabas de un manual de latín a una ficción como Matadero Cinco. Fue en una noche de insomnio y ansiedad cuando tu cerebro hizo click y empezaste a ver las conexiones (muchas veces tenues o irracionales) entre los textos que te brindaban. Después de eso absorbiste conocimiento como una esponja.
+    - magia >= 20:
+        Tuviste una extraña reunión con un Guardián. Una joven que no podía tener más de treinta años, tenía cada mechón de pelo de un color diferente y usaba una bata sucia que podía indicar que era profesional de salud o encargada de limpieza. Fue ella quien te informó que aquellas personas que tienen talento para la magia (usó esa palabra, sin eufemismos o risas) descubren su poder con una explosión de energía, pero luego pueden pasar años para que vuelvan a llegar a ese nivel.
+        # next
+        Te dio una serie de ejercicios simples, movimientos de manos y frases guturales que te hicieron perder un fin de semana de lluvia. La frustración creció fuerte… hasta que de un simple movimiento de mano lograste encender una vela (y casi tus cortinas, pero ese es un detalle menor).
+    }
+
+    # next
+    Pasados los primeros seis meses seguías siendo un novato, pero en lugar de ser uno perdido y confundido eras uno ansioso de mostrar tu valía. Todo lo que vino después fue bastante aburrido: presentaciones formales y trabajos de oficina. Traducir textos, archivar misiones, vigilar propiedades y dar tu opinión. Pero esta noche eso iba a cambiar.
 - misiones_completadas == 1:
     Te despertás a las tres de la mañana. Hace un par de días te acosa una pesadilla donde te estás ahogando en un mar de sangre y sentís, rozando tus pies, que una gran entidad marina está dando vueltas. Jugando con vos, esperando el momento para atacar.
     Ya que tu psiquis se niega a dejarte dormir, decidís verlo como una mejora y hacer más cosas. Tu departamento nunca estuvo tan limpio. Aprovechás para hacer ejercicio, meditar para centrar tu mente y leer todos los libros que pudiste pedir prestados de la sede de El Faro.
