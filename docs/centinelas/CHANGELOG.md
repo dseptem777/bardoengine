@@ -1,5 +1,17 @@
 # Changelog — Centinelas del Sur
 
+## [0.20.0] — 2026-05-02
+
+### Added
+- **inter1/convergencia**: nuevo knot puente `inter1_convergencia` con beat de cierre para la Intermisión 1, ramificado por dos ejes — actividad del día (playa / tarot / enfermería / Jesús con 3 niveles de amistad) y saldo del Capítulo 1 (evitó la pelea con El Profundo / peleó sin mordisco / peleó y fue mordido)
+- **vars nuevas**: `inter1_actividad`, `peleo_profundo`, `mordido_profundo` — seteadas en los knots de actividad y en los knots de combate de Cap 1
+
+### Fixed
+- **inter1/flujo**: los diverts `-> inter_misiones` al final de los knots de actividad de Inter 1 (playa, tarot, jesús x3, enfermería) ahora apuntan a `-> inter1_convergencia`; el nuevo knot cierra con `-> inter_misiones` preservando el resto del flujo
+- **abuela/escala**: `amistad_abuela` ahora usa escala 0/1/2 en lugar de 0/2/4 — incrementos de `+1` en `inter2_abuela_escandalo` y `inter2_abuela_banda`; umbrales en `inter2_convergencia` ajustados a `>= 2` (sonrisa filosa) y `>= 1` (conforme)
+
+---
+
 ## [0.19.2] — 2026-05-01
 
 ### Fixed
