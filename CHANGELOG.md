@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## [0.26.0] - 2026-05-03
+
+### Fixes
+- **centinelas/achievement**: removidos 3 unlocks erróneos de `juan_salvado` en knots de la intermisión Jesús (`jesus_frontal`, `jesus_distraccion`, `jesus_sigilo`); el unlock correcto se agregó exclusivamente en `cueva_capullo` bajo la rama `juan_vive = true`
+
+---
+
 ## [0.25.0] - 2026-05-01
 
 ### Features
