@@ -1,5 +1,14 @@
 # Changelog — Centinelas del Sur
 
+## [0.22.1] — 2026-05-03
+
+### Fixed
+- **paginación/next**: corregida la colocación del tag `# next` al final de `despues_combate_ninos` — ahora pausa correctamente en "FIN DEL EPISODIO." antes de entrar a `intermision_2`, y el overlay del CHAPTER_BREAK "Costa Alegre" aparece correctamente tras el click
+- **paginación/next**: corregido el tag `# next` antes de `-> inter2_siguiente` (rama "El Faro llama") — el CHAPTER_BREAK del capítulo 3 ahora muestra su overlay correctamente
+- **paginación/next**: eliminado tag `# next` redundante antes de `-> cap3_final_fracaso` — el overlay "Fracasaste / Fin del Capítulo 3" ahora aparece correctamente
+
+---
+
 ## [0.22.0] — 2026-05-03
 
 ### Fixed
