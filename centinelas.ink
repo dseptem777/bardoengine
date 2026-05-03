@@ -557,7 +557,7 @@ Ellos te ofrecieron un trabajo y una nueva oportunidad y no pensás desperdiciar
 }
 
 # next
-Abrís la ventana de tu departamento y entra un poco de aire acompañado por el olor a sal del agua salada. El viento trae unos gritos de diversión y alegría.
+Abrís la ventana de tu departamento y entra un poco de aire acompañado por el olor a sal del agua de Mar. El viento trae unos gritos de diversión y alegría.
 Te queda un poco de tiempo para tu siguiente misión. Tal vez podés hacer algo antes de ir.
 ¿Qué querés hacer?
 
