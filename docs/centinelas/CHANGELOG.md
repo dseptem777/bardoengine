@@ -1,5 +1,14 @@
 # Changelog — Centinelas del Sur
 
+## [0.19.2] — 2026-05-01
+
+### Fixed
+- **inter2/loop**: la intermisión 2 ya no vuelve al hub tras completar una quest secundaria (playa, tarot, enfermería, abuelita); los diverts `-> intermision_2` en esos knots ahora apuntan a `-> inter2_convergencia`
+- **inter2/convergencia**: nuevo knot puente `inter2_convergencia` con beat de cierre ramificado por dos ejes — actividad del día (playa / tarot / enfermería / abuela con 3 niveles de amistad) y última misión jugada (orfanato: Belén+Juan / solo Belén / ninguno; cementerio: traumado / sin guardias / guardias sobreviven)
+- **vars nuevas**: `inter2_actividad` (seteada al inicio de cada knot de actividad) y `ultima_mision` (seteada en `capitulo_2a` y `capitulo_2b`)
+
+---
+
 ## [0.19.1] — 2026-05-01
 
 ### Fixed

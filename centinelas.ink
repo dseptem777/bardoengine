@@ -65,6 +65,8 @@ VAR momia_robada = true
 VAR espiaste_lab = false
 VAR llegaste_con_ventaja = false
 VAR entidades_poseidas = false
+VAR inter2_actividad = ""
+VAR ultima_mision = ""
 
 -> capitulo_0
 
@@ -1266,6 +1268,7 @@ Vas a la escena del crimen. Algo huele a ritual desde aquí.
 
 === capitulo_2a ===
 ~ capitulo_actual = "Cap. 2 — Pequeños inocentes"
+~ ultima_mision = "orfanato"
 # CHAPTER_BREAK: title=Pequeños inocentes, subtitle=Capítulo 2, image=title_cap2a_inocentes.jpg, music=campo_ambient
 # inv:clear_mission
 # music:campo_ambient
@@ -2393,6 +2396,7 @@ FIN DEL EPISODIO.
 
 === capitulo_2b ===
 ~ capitulo_actual = "Cap. 2 — El nuevo amanecer"
+~ ultima_mision = "cementerio"
 # CHAPTER_BREAK: title=El nuevo amanecer, subtitle=Capítulo 2, music=city_ambient
 # inv:clear_mission
 # achievement:unlock:nuevo_amanecer
@@ -3931,6 +3935,7 @@ Te queda un poco de tiempo antes de tu siguiente misión. Tal vez podés hacer a
 // ============================================================
 
 === inter2_playa ===
+~ inter2_actividad = "playa"
 # music:playa_ambient
 
 Costa Alegre está sufriendo la peor plaga que puede azotar a una ciudad: una invasión de turistas. Hay algún tipo de fin de semana largo o algo por el estilo — tu vida se volvió tan caótica que tardás un par de meses en recordar en qué mes estás — así que cada centímetro de arena es un campo de batalla entre turistas que intentan marcar posiciones a fuerza de sombrillas e infiltrarse entre las líneas enemigas extendiendo mantas y empujando ojotas.
@@ -3944,13 +3949,14 @@ Intentás ignorar la situación pero de repente notás que todo es sombras a tu 
 Terminás mojado, salado, y entendiendo que el mar no te quiere presente.
 # next
 
--> intermision_2
+-> inter2_convergencia
 
 // ============================================================
 // TAROT
 // ============================================================
 
 === inter2_tarot ===
+~ inter2_actividad = "tarot"
 # music:misterio_ambient
 
 Salís a caminar y te dejás llevar por el flujo de energías, por las pequeñas señales que hay en todas las ciudades. Cuando hay una bifurcación, basta lanzar una moneda al aire para saber por dónde seguir. Antes de darte cuenta, estás en la periferia de la ciudad.
@@ -3968,13 +3974,14 @@ El hogar de la tarotista está vacío. Solo hay un sobre en la mesa con tu nombr
 No entendés mucho lo que quiere decir, pero no es raro — la mayoría de las profecías son crípticas y solo se entienden después de que ocurran los hechos.
 # next
 
--> intermision_2
+-> inter2_convergencia
 
 // ============================================================
 // ENFERMERÍA
 // ============================================================
 
 === inter2_enfermeria ===
+~ inter2_actividad = "enfermeria"
 # music:misterio_ambient
 
 Entrás al laboratorio de Mary Shelley a esperarla. Como la científica oficial de El Faro, a ella le toca realizar las curaciones necesarias. Notás que su laboratorio está lleno de plantas que parecen haber sido castigadas por una plaga de insectos — las hojas tienen una sucesión de agujeros pero están siendo tratadas con una sustancia mucosa semitransparente que repara las heridas.
@@ -3999,13 +4006,14 @@ Mary Shelley te mira durante cinco segundos y te das cuenta de la idiotez que ac
 # stat:hp:+5
 # next
 
--> intermision_2
+-> inter2_convergencia
 
 // ============================================================
 // ABUELITA — HUB
 // ============================================================
 
 === inter2_abuelita ===
+~ inter2_actividad = "abuela"
 # music:city_ambient_b
 
 Un nuevo mensaje: otro Guardián está complicado con su misión. Parece ser un tema menor pero que, con la presencia de otro par de manos, se podría solucionar en una noche. Preferís estar ocupado — te sentís un inútil haciendo nada y el tiempo ocioso solo hace que tu mente camine hacia recuerdos oscuros.
@@ -4154,7 +4162,7 @@ Tu compañera se ve satisfecha. Detrás de ella ves la puerta del baño entreabi
 # stat:amistad_abuela:+2
 # next
 
--> intermision_2
+-> inter2_convergencia
 
 // ============================================================
 // ABUELITA — ESCÁNDALO
@@ -4196,7 +4204,7 @@ Un policía baja de la patrulla y se acerca hacia ustedes. Tu compañera dice po
 — Sin duda, sino serías un traidor. Lamento que hayas venido hoy, pero no pudo salir.
 # next
 
--> intermision_2
+-> inter2_convergencia
 
 // ============================================================
 // ABUELITA — BANDA
@@ -4270,7 +4278,65 @@ El mensaje está acompañado por una foto de ella saludando con la mano derecha,
 # stat:amistad_abuela:+2
 # next
 
--> intermision_2
+-> inter2_convergencia
+
+// ============================================================
+// CONVERGENCIA — BEAT DE CIERRE DE LA INTERMISIÓN 2
+// ============================================================
+
+=== inter2_convergencia ===
+La tarde se va apagando contra el horizonte. Volvés a tu departamento con el cuerpo cansado y la cabeza dando vueltas.
+
+// === Eje A: actividad de hoy ===
+{
+- inter2_actividad == "playa":
+    El gusto a sal del mar todavía te seca los labios. La ola que te tiró del espigón sigue retumbando en tu cabeza — no fue un accidente, el mar quiso decirte algo.
+- inter2_actividad == "tarot":
+    Las cartas que viste siguen barajándose detrás de tus párpados cuando cerrás los ojos. Sea lo que sea que esa mujer leyó en tu futuro, te dejó un peso raro en el pecho.
+- inter2_actividad == "enfermeria":
+    El olor a antiséptico te sigue pegado a la nariz. Te miraste demasiado en el espejo del consultorio y no te gustó del todo lo que viste — pero al menos el cuerpo responde otra vez como debería.
+- inter2_actividad == "abuela" && amistad_abuela >= 4:
+    Te queda la sonrisa filosa de la abuelita y la sensación de haber trabajado con alguien que sabe exactamente lo que hace. Ya pasaron varias misiones juntos y algo te dice que la próxima vez te va a llamar a vos primero.
+- inter2_actividad == "abuela" && amistad_abuela >= 2:
+    Te queda en la cabeza la abuelita: medio madre, medio asesina a sueldo. No fue una jornada perfecta pero ella parecía conforme con lo aportado.
+- inter2_actividad == "abuela":
+    Te queda la mirada decepcionada de la abuelita. La cagaste, y el rumor en El Faro va a llegar antes que vos a la próxima reunión.
+}
+# next
+
+// === Eje B: última misión, path Orfanato (cap 2A) ===
+{ultima_mision == "orfanato":
+    {
+    - belen_sobrevive && juan_vive:
+        Pensás en Belén y en Juan, en la cara que pusieron cuando los sacaste del lugar. Por una vez todos volvieron a casa. Es una sensación rara — no estás acostumbrado a que las cosas terminen así.
+    - belen_sobrevive:
+        Pensás en Belén, en cómo te apretó la mano cuando la subiste al auto. La sacaste a ella. No a Juan. Esa cuenta no se equilibra y vos lo sabés.
+    - else:
+        Pensás en el orfanato vacío, en los nombres de los chicos que te quedaron pendientes. Ni Belén ni Juan. La propiedad va a seguir tragando chicos cíclicamente y vos solo pudiste mirar.
+    }
+}
+
+// === Eje B: última misión, path Cementerio (cap 2B) ===
+{ultima_mision == "cementerio":
+    {
+    - traumado:
+        Pero por más que cierres los ojos volvés al cementerio. La voz del Vampiro sigue ahí, en el reverso de cada pensamiento — no es un recuerdo, es una presencia que se quedó adentro tuyo.
+    - todos_guardias_mueren || sin_guardias:
+        Pensás en los guardias del cementerio, en los que entraron con vos y no salieron. Los nombres no los sabías y ahora ya no importan. Quedó solo vos para contarlo.
+    - algunos_guardias_sobreviven:
+        Pensás en los guardias que salieron con vos del cementerio, en cómo se palmeaban entre ellos sin saber bien si reírse o llorar. No fue limpio, pero la mayoría volvió. Eso ya es algo.
+    - else:
+        Pensás en la familia del ritual, en las marcas en las paredes del cementerio, en lo poco que entendés todavía. Volviste con más preguntas que respuestas.
+    }
+}
+# next
+
+Algo se está moviendo en Costa Alegre y vos sos parte del engranaje, te guste o no.
+
+El celular vibra en la mesita. Es El Faro.
+# next
+
+-> inter2_siguiente
 
 // ============================================================
 // MISIÓN SIGUIENTE — GATE AL MUSEO
