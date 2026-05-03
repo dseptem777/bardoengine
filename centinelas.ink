@@ -648,7 +648,7 @@ El único ruido proviene del escritorio de la secretaria, la Sra. Enríquez, que
 
 + [¿Por qué no pasamos a computadoras?]
     { entrada_temprana:
-        — El tiempo no es una construcción social que todos intentamos acatar. En especial cuando se realiza tareas complejas. Y todas las tareas de El Faro son complejas.
+        — El tiempo es una construcción social que todos intentamos acatar. En especial cuando se realiza tareas complejas. Y todas las tareas de El Faro son complejas.
         Enríquez te da una mirada que te hace sospechar que el título de "secretaria" es menospreciar la totalidad de su capacidad.
         Intentás justificarte pero levanta la mano para callarte. Un gesto simple pero efectivo.
         — Tal vez la hora de tu llegada era clave y al adelantarte arruinaste todo. Que no se repita, por favor.
