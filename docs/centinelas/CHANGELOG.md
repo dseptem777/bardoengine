@@ -1,5 +1,12 @@
 # Changelog — Centinelas del Sur
 
+## [0.22.2] — 2026-05-03
+
+### Fixed
+- **paginación/next**: corregidas 22 instancias del patrón `# next` ubicado después del texto de cierre antes de un divert — el tag ahora va antes del texto para que inkjs lo incluya en el mismo `Continue()` y la pausa ocurra en la página correcta; afectaba `conocimiento_esperar`, `inter_enfermeria`, todas las ramas de `inter2_*`, `cap3_recorrer_elfaro`, `cap3_espiar_oficina`, `cap3_espiar_lab`, `cap3_tl_*`, `cap3_museo_dia_hospital`, `cap3_museo_ya_adentro` y las tres ramas de minijuego en `cap3_museo_primera_sala`
+
+---
+
 ## [0.22.1] — 2026-05-03
 
 ### Fixed
