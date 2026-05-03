@@ -871,7 +871,7 @@ Aparte, esperás que en algún momento tengas la posibilidad de devolverle una p
     Mientras tanto, algo está pasando en el pasillo fuera de la morgue. El agente de policía está levantando la voz mientras discute con alguien. Una voz grave y amenazante. Esperás poder terminar antes que esto se vuelva un problema.
 }
 { not rapido:
-    La discusión de afuera de la morgue se convirtió en una discusión a toda regla. Los argumentos se convierten en gritos y, si bien la puerta te impide entender qué se está diciendo, es claro que la violencia está cerca.
+    La discusión de afuera de la morgue se convirtió en una pelea a toda regla. Los argumentos se convierten en gritos y, si bien la puerta te impide entender qué se está diciendo, es claro que la violencia está cerca.
 }
 # next
 Girás para irte y notás, sobre una de las camillas, una sierra médica. Una idea llega a tu cabeza. Con una mano se pueden hacer muchas cosas: El Faro tiene acceso a bases de datos donde tal vez encontraría información para identificar al NN. Y los Guardianes con mayor talento sobrenatural también podrían hacer algo. Si bien no sirve para una Mano de Gloria (la persona no fue ahorcada) tal vez se puede convocar al espíritu para obtener cierta información.
