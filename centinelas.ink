@@ -706,7 +706,7 @@ Tal vez sea la alfombra y el techo rojo, pero algo te da la sensación de que es
 — Cadáveres que hasta no hace tanto eran personas – El Profesor te mira a los ojos y sube un tono la voz – Es nuestra ciudad, las personas que debemos cuidar, y alguien los está sacrificando.
 # next
 Muchas cosas acechan a los humanos. Nuestros fluidos, nuestra carne, nuestras emociones. Para la mayoría de los seres sobrenaturales no estamos en la cima de la pirámide alimenticia.
-Aun así, los sacrificios humanos son un gran NO. Generalmente significa que algo consiguió armar una organización de humanos que lo apoye y está acumulando poder. Sea lo que sea, ya te imaginás yendo directo a la cueva oscura y llevarlos ante la justicia.
+Aun así, los sacrificios humanos son un gran NO. Generalmente significa que algo consiguió armar una organización de humanos que lo apoye y está acumulando poder. Sea lo que sea, ya te imaginás yendo directo a su guarida y llevarlos ante la justicia.
 # next
 — Tu trabajo es recolectar información en el campo. El día de ayer apareció un nuevo cuerpo en la costa y fue llevado a la morgue de la ciudad. Hasta ahora es un NN, sería de gran ayuda que vayas y nos consigas cualquier tipo de información.
 Estamos teniendo problemas con los cuerpos, muchos tienen la tendencia a desaparecer.
