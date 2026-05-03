@@ -67,6 +67,9 @@ VAR llegaste_con_ventaja = false
 VAR entidades_poseidas = false
 VAR inter2_actividad = ""
 VAR ultima_mision = ""
+VAR inter1_actividad = ""
+VAR peleo_profundo  = false
+VAR mordido_profundo = false
 
 -> capitulo_0
 
@@ -557,6 +560,7 @@ Te queda un poco de tiempo para tu siguiente misión. Tal vez podés hacer algo 
 }
 
 === intermision_playa ===
+~ inter1_actividad = "playa"
 # music:playa_ambient
 {
 - misiones_completadas == 0:
@@ -578,7 +582,7 @@ Te queda un poco de tiempo para tu siguiente misión. Tal vez podés hacer algo 
 # next
 {
 - misiones_completadas == 0: -> capitulo_1
-- misiones_completadas >= 1: -> inter_misiones
+- misiones_completadas >= 1: -> inter1_convergencia
 }
 
 === capitulo_1 ===
@@ -1004,6 +1008,7 @@ Hay dos cosas que aprendés. Eso no es humano y tiene una anormal resistencia al
 + [Quien golpea primero golpea dos veces. A tirarle con todo] -> pelea_monstruo
 
 === pelea_monstruo ===
+~ peleo_profundo = true
 # music:terror_ambient
 Atacás con toda tu furia. Una vez que vaciás el cargador de la pistola tomás un hacha de tu mochila, una mole con un mango pesado de madera y un filo de metal que promete violencia. Cargás mientras de tu garganta sale un grito primal de combate.
 # next
@@ -1025,6 +1030,7 @@ Todavía no estás a la altura de este enemigo. En este contexto sobrevivir es u
 + [Cargo con un cuchillo directo a su ojo] -> pelea_final_cuchillo
 
 === pelea_final_cuchillo ===
+~ mordido_profundo = true
 # music:terror_ambient
 # flash_red # shake
 El ataque es épico. El ataque es valiente. Pero el ataque es inútil. La entidad es más alta que vos, retrocede un poco y sube la cabeza, haciendo que tu ataque rebote contra su mejilla.
@@ -1135,6 +1141,7 @@ Pero esos son problemas para el {nombre_personaje} del futuro. Ahora te toca dor
 -> intermision
 
 === inter_tarot ===
+~ inter1_actividad = "tarot"
 # music:misterio_ambient
 # achievement:unlock:fuiste_tarotista
 Salís a caminar y te dejás llevar, por el flujo de energías, por las pequeñas señales que hay en todas las ciudades. Cuando hay una bifurcación basta lanzar una moneda al aire para saber por dónde seguir.
@@ -1150,9 +1157,10 @@ Nunca te habían tirado las cartas antes. Raro. Ella se pasa un momento largo pa
 — Te voy a dar un consejo, gurí. Pasaron dos mil años desde que el Nazareno recorrió estas tierras, pero sus símbolos tienen poder todavía. Si la situación se pone pesada, no dudes en usarlo.
 # next
 Salís a la calle con más dudas que respuestas. Pensando si lo que te dijo la tarotista te va a servir de verdad.
--> inter_misiones
+-> inter1_convergencia
 
 === inter_jesus ===
+~ inter1_actividad = "jesus"
 # music:misterio_ambient
 Te llega un mensaje de que un Guardián está con una misión complicada y podría necesitar una mano. Te subís a tu auto y manejás hasta los puertos de la ciudad a toda la velocidad posible, esperando que El Faro tenga una ayuda monetaria para pagar las multas de tránsito adquiridas en el ejercicio del deber.
 # next
@@ -1195,7 +1203,7 @@ En el piso notás el cadáver de una mujer de unos treinta años, su garganta de
 Jesús vuelve a su forma humana y mira decepcionado el cadáver a tus pies.
 — Creo que pudimos hacer eso mucho mejor — hay amargura y crítica en sus palabras y, a pesar de que usa el plural, sabés que van dirigidas a vos.
 # achievement:unlock:juan_salvado
--> inter_misiones
+-> inter1_convergencia
 
 === jesus_distraccion ===
 # music:misterio_ambient
@@ -1214,7 +1222,7 @@ La mujer está sentada contra una de las paredes, con un poco de sangre brotando
 — Bueno, pudo haber salido mejor, pero pudo haber salido mucho peor. Muchas gracias compañero.
 # stat:amistad_jesus:+1
 # achievement:unlock:juan_salvado
--> inter_misiones
+-> inter1_convergencia
 
 === jesus_sigilo ===
 # music:misterio_ambient
@@ -1233,9 +1241,10 @@ La mujer patalea, llora y te araña. Te promete la muerte de formas horribles mi
 — Lo logramos — Jesús aparece atrás tuyo de forma humana — gracias Guardián, nunca olvidaré esto.
 # stat:amistad_jesus:+2
 # achievement:unlock:juan_salvado
--> inter_misiones
+-> inter1_convergencia
 
 === inter_enfermeria ===
+~ inter1_actividad = "enfermeria"
 # music:misterio_ambient
 Mary Shelley da un gritito de alegría cuando pasás a verla a El Faro. Siendo la médica oficial (y también chamán y científica loca) le toca a ella realizarte las curaciones necesarias.
 Utiliza una mezcla de medicina occidental junto con hierbas, cantos y rituales extraños.
@@ -1243,6 +1252,41 @@ Utiliza una mezcla de medicina occidental junto con hierbas, cantos y rituales e
 — ¿Eso significa que si muero me pueden revivir? — preguntás. Toda la respuesta que recibís es una risa que no te da mucha seguridad.
 # stat:hp:+20
 # next
+-> inter1_convergencia
+
+// ============================================================
+// CONVERGENCIA — BEAT DE CIERRE DE LA INTERMISIÓN 1
+// ============================================================
+
+=== inter1_convergencia ===
+La noche se asienta sobre Buenos Aires. Caminás de vuelta con el cuerpo pesado y la cabeza llena de imágenes que no terminás de ordenar.
+
+{
+- inter1_actividad == "playa":
+    El sonido de las olas todavía te late en el pecho, como si el río te hubiera prestado un poco de su calma.
+- inter1_actividad == "tarot":
+    Las cartas que te tiraron siguen apareciendo cuando cerrás los ojos: figuras que no querías ver y respuestas que no pediste.
+- inter1_actividad == "enfermeria":
+    El olor a alcohol y el zumbido de los tubos fluorescentes te quedaron pegados; al menos el cuerpo te duele un poco menos.
+- inter1_actividad == "jesus" && amistad_jesus >= 2:
+    Pensás en Jesús. Por primera vez sentís que tenés a alguien en este quilombo que te cubre la espalda sin pedir nada a cambio.
+- inter1_actividad == "jesus" && amistad_jesus == 1:
+    Pensás en Jesús. Todavía no sabés bien qué hacer con él, pero algo se abrió: una puerta entreabierta, nada más.
+- inter1_actividad == "jesus":
+    Pensás en Jesús y en lo poco que te dejaste conocer. Quizás la próxima.
+- else:
+    Te das cuenta de que dejaste pasar el día sin elegir realmente nada, y eso también es una elección.
+}
+
+{
+- peleo_profundo && mordido_profundo:
+    Después está la marca. La cicatriz fresca donde El Profundo te clavó los dientes te recuerda que esto ya no es una abstracción: tenés un cuerpo y se lo pueden romper.
+- peleo_profundo:
+    Y volvés, una y otra vez, al momento en que le clavaste la daga en el ojo a esa cosa. No fue limpio, no fue heroico, pero saliste entero.
+- else:
+    Y volvés al faro, a la decisión de no pelear. No sabés si fue cobardía o cordura, pero El Profundo sigue allá afuera y vos seguís acá.
+}
+
 -> inter_misiones
 
 === inter_misiones ===
@@ -4159,7 +4203,7 @@ Tu compañera se ve satisfecha. Detrás de ella ves la puerta del baño entreabi
 — ¿Lo logramos?
 
 — Es una forma de decir. Tuviste tu colaboración. Lo importante es que hay un predador menos en Costa Alegre. Vamos a quedarnos con esa idea.
-# stat:amistad_abuela:+2
+# stat:amistad_abuela:+1
 # next
 
 -> inter2_convergencia
@@ -4275,7 +4319,7 @@ Son las cuatro de la mañana y estás tomando una cerveza mientras mirás el oc�
 "Buena cacería, el problema del súcubo fue solucionado. Si no nos subíamos al escenario nunca la iba a encontrar. Sus métodos son poco ortodoxos pero divertidos. Espero que trabajemos juntos de nuevo".
 
 El mensaje está acompañado por una foto de ella saludando con la mano derecha, mientras en la izquierda tiene un machete bañado en una sangre negra viscosa. Sospechás que la abuelita no es alguien con quien joder.
-# stat:amistad_abuela:+2
+# stat:amistad_abuela:+1
 # next
 
 -> inter2_convergencia
@@ -4295,9 +4339,9 @@ La tarde se va apagando contra el horizonte. Volvés a tu departamento con el cu
     Las cartas que viste siguen barajándose detrás de tus párpados cuando cerrás los ojos. Sea lo que sea que esa mujer leyó en tu futuro, te dejó un peso raro en el pecho.
 - inter2_actividad == "enfermeria":
     El olor a antiséptico te sigue pegado a la nariz. Te miraste demasiado en el espejo del consultorio y no te gustó del todo lo que viste — pero al menos el cuerpo responde otra vez como debería.
-- inter2_actividad == "abuela" && amistad_abuela >= 4:
-    Te queda la sonrisa filosa de la abuelita y la sensación de haber trabajado con alguien que sabe exactamente lo que hace. Ya pasaron varias misiones juntos y algo te dice que la próxima vez te va a llamar a vos primero.
 - inter2_actividad == "abuela" && amistad_abuela >= 2:
+    Te queda la sonrisa filosa de la abuelita y la sensación de haber trabajado con alguien que sabe exactamente lo que hace. Ya pasaron varias misiones juntos y algo te dice que la próxima vez te va a llamar a vos primero.
+- inter2_actividad == "abuela" && amistad_abuela >= 1:
     Te queda en la cabeza la abuelita: medio madre, medio asesina a sueldo. No fue una jornada perfecta pero ella parecía conforme con lo aportado.
 - inter2_actividad == "abuela":
     Te queda la mirada decepcionada de la abuelita. La cagaste, y el rumor en El Faro va a llegar antes que vos a la próxima reunión.
