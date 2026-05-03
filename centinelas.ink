@@ -1236,7 +1236,7 @@ Tocás el timbre al lado de la puerta y esperás.
 La puerta se entreabre y ves la cara de una mujer de unos treinta años. Sus ojos están vidriosos y enmarcados por las ojeras correspondientes. Su piel estaba reseca y quebradiza. Los signos claros de una persona que había sufrido repetidas mordidas de un vampiro.
 — ¿Qué... necesitás? — su voz era quebradiza y le resultaba complicado sacar dos palabras por la garganta.
 # next
-Nunca mentiste tanto y tan rápido. Tu coche se había quedado sin batería. También tu celular. Necesitabas ayuda de un buen samaritano y ella parecía la persona indicada (esa era la mayor mentira, esa parecía alguien que necesitaba una buena comida y una semana de sueño).
+Nunca mentiste tanto y tan rápido. Tu coche se había quedado sin batería. También tu celular. Necesitabas ayuda de un buen samaritano y ella parecía la persona indicada (esa era la mayor mentira, ella es la que parecía alguien que necesitaba una buena comida y una semana de sueño).
 En algún momento del discurso, notás por el rabillo del ojo cómo una sombra cae dentro del galpón.
 # next
 Un rugido y ruidos de combate. La mujer deja la puerta para ir a ayudar a su vampiro. En menos de un minuto Jesús, de nuevo en forma humana, te está abriendo la puerta.
@@ -1377,7 +1377,7 @@ Pero aun así había nutrida información sobre como falsificar documentos, hace
 
 === cap2_prep_magia ===
 # music:orfanato
-En cuanto entre al laboratorio de Mary Shelley encontré la cabeza de un carnero negro colocada sobre una mesa, dentro de un pentagrama, y con una vela roja en su cabeza. Por alguna razón la cabeza estaba cantando "La Marsellesa" (con un mejor francés que el mio) y tenía una serie de electrodos pegados a su cabeza. Seguí el cableado con la vista y encontré a Mary Shelley muy interesada viendo los datos de un electroencefalograma en la pantalla.
+En cuanto entre al laboratorio de Mary Shelley encontré la cabeza de un carnero negro colocada sobre una mesa, dentro de un pentagrama, y con una vela roja en su cabeza. Por alguna razón la cabeza estaba cantando "La Marsellesa" (con un mejor francés que el tuyo) y tenía una serie de electrodos pegados a su cabeza. Seguí el cableado con la vista y encontré a Mary Shelley muy interesada viendo los datos de un electroencefalograma en la pantalla.
 La mire a ella, al experimento, y de nuevo a ella.
 \- Te juro que todo esto es muy necesario – Dijo la Doctora con la voz de una niña atrapada en una travesura.
 \- Prefiero no saber.
