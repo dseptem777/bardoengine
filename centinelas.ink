@@ -667,7 +667,7 @@ El único ruido proviene del escritorio de la secretaria, la Sra. Enríquez, que
 # music:misterio_ambient
 - — El Profesor lo espera en el piso de arriba para darle su primera misión de campo. Por favor, no la arruine. Ya llené un formulario con sus datos y no quiero perder tiempo destruyendo el formulario… y llenando los formularios correspondientes para justificar la destrucción de documentación.
 # next
-El Profesor, Enríquez. Ninguno era un nombre real. Todos los guardianes de El Faro usan alias para proteger su vida civil.
+El Profesor, Enríquez. Ninguno era un nombre real. Todos los centinelas de El Faro usan alias para proteger su vida civil.
 Vos también. ¿Cuál es?
 # next
 # input:nombre_personaje:Tu nombre en clave...
@@ -718,13 +718,13 @@ Tu primera misión. Sacrificios humanos, cadáveres, figuras misteriosas. ¿Est�
 + [Obviamente. Llegó mi momento de brillar.] -> en_la_morgue
 + [No, voy a terminar muerto.]
     — Disculpe Profesor, pero esta misión suena un poco peligrosa para mí. ¿No sería conveniente que usted arregle el problema?
-    El Profesor suspira. — La ventaja de estar en esta oficina es que podés tener el plano general. Créame guardián, cuando yo salgo es para algo más importante. Vaya a la morgue y vuelva con un informe que no me haga arrepentir.
+    El Profesor suspira. — La ventaja de estar en esta oficina es que podés tener el plano general. Créame centinela, cuando yo salgo es para algo más importante. Vaya a la morgue y vuelva con un informe que no me haga arrepentir.
     -> en_la_morgue
 + [Pedir ayuda antes de salir] -> pedir_ayuda
 
 === pedir_ayuda ===
 # music:misterio_ambient
-— Tenemos tres guardianes en la sede que podrían ayudarte...
+— Tenemos tres centinelas en la sede que podrían ayudarte...
 + [Hablar con Enríquez (Sabiduría)] -> ayuda_enriquez
 + [Entrenar con Cabral (Fuerza)] -> ayuda_cabral
 + [Visitar a Mary Shelley (Magia)] -> ayuda_shelley
@@ -787,7 +787,7 @@ Luego del mareo inicial te sentís mejor que nunca. Tus sentidos se sienten más
 === en_la_morgue ===
 # music:terror_ambient
 El palacio de justicia era, bueno, un palacio. Una mole de diez pisos de mármol y cemento donde alguien había decidido agregar una serie de gárgolas a medio camino que miraban de forma amenazante a la Avenida.
-La morgue judicial se encontraba en algún lugar de este edificio. Por suerte El Faro les daba a sus guardianes una identificación relativamente vaga que permitía hacerse pasar por agentes de alguna organización gubernamental. Eso, una buena camisa y caminar rápido, era suficiente para engañar a todos los policías que estaban vigilando el lugar a esa hora de la madrugada.
+La morgue judicial se encontraba en algún lugar de este edificio. Por suerte El Faro les daba a sus centinelas una identificación relativamente vaga que permitía hacerse pasar por agentes de alguna organización gubernamental. Eso, una buena camisa y caminar rápido, era suficiente para engañar a todos los policías que estaban vigilando el lugar a esa hora de la madrugada.
 # next
 Las entrañas de la bestia eran… pobres. La mayoría del mobiliario parecía más viejo que vos y la mitad de las lamparitas titilaban de cansancio. Nadie se había molestado en poner un mapa así que tuviste que preguntar dos veces la dirección (a un empleado ojeroso que caminaba un pasillo oscuro y a un empleado de limpieza que evitaba hacer su trabajo).
 Aparentemente la morgue judicial estaba en el segundo subsuelo, pero para llegar a ese subsuelo había que tomar una escalera que por alguna razón empezaba en el segundo piso. Solo esperabas no tener que salir huyendo de ese lugar, era un verdadero laberinto.
@@ -2324,7 +2324,7 @@ Todo eso está muy bien, pero la araña está a unos metros tuyos y dudas que es
 # next
 Sacas tu libreta de un bolsillo y empezas a recitar un exorcismo genérico, mientras lo cruzas con oraciones de protección y asistencia a todas la deidades de arañas y naturaleza que se puedan sentir insultadas por la forma que eligió el demonio.
 Es un cambalache pero, al fin y al cabo es una discusión. Cómo toda discusión, la confianza y la autoridad importa más que los argumentos.
-Y vos sos un guardián de El Faro, plantado frente a ella solo con un cuaderno como arma. Es difícil que al proyecte más certeza (o soberbia) que eso.
+Y vos sos un centinela de El Faro, plantado frente a ella solo con un cuaderno como arma. Es difícil que al proyecte más certeza (o soberbia) que eso.
 # next
 Algo te escucha. Y te da la razón. Un viento empieza a recorrer la habitación. Un tornado que a vos no te mueve un pelo pero que a las arañas pequeñas las hace volar como hojas en otoño.
 La araña más grande se resiste, clava sus extremidades en la pared pero están no resisten. Una extremidad directamente es cercenada por el viento.
@@ -2525,7 +2525,7 @@ Terminás el tomo con un nuevo aprecio por la abstinencia.
 Entraste a la oficina de la Dra. y te encontraste con un cuadro particular. En una mesa ratona se encontraba la Dra. Mary Shelley junto a una cabra negra, que por lo cómoda que estaba sentada parecía no tener problema en moverse en dos patas, y cuya cabeza estaba rapada y con marcas de suturas recientes.
 En el centro de la mesa, un mazo de cartas. Parece que entraste en mitad de una partida de truco (la cabra estaba ganando).
 # next
-\- Me creés si te digo que es parte de un experimento esencial para trasladar la conciencia de los guardianes caídos a otros cuerpos – la Dra. miró al horizonte y cambió el tono de voz, como si le hablase a una audiencia – imaginá una organización donde ningún Guardián muera, donde su consciencia esté siempre segura y su cuerpo sea un mero objeto, como un auto, o un traje que se elige el que mejor se ajusta para cada misión.
+\- Me creés si te digo que es parte de un experimento esencial para trasladar la conciencia de los centinelas caídos a otros cuerpos – la Dra. miró al horizonte y cambió el tono de voz, como si le hablase a una audiencia – imaginá una organización donde ningún Guardián muera, donde su consciencia esté siempre segura y su cuerpo sea un mero objeto, como un auto, o un traje que se elige el que mejor se ajusta para cada misión.
 \- Lo peor es que le creo Dra. No necesita explicarme nada.
 Después de perder la partida de truco, la Dra. dedicó su tarde a repasar con vos principios claves de la magia así como cuestiones de anatomía que debés tener en cuenta si no querés lastimarte por canalizar grandes energías.
 # stat:magia:+5
@@ -2986,7 +2986,7 @@ Los seguís desde las sombras, viendo cómo hacen chistes, sacan fotos y toman a
 === cap2b_municipal_susto ===
 # stop_music
 # music:terror_ambient
-Salís de la oscuridad con tu mejor voz de Vincent Price y las manos en alto, imitando garras mientras gritás "¡Sangre nueva para mis huesos viejos!". Antes de darte cuenta los jóvenes están corriendo a los gritos por el cementerio. Vas a tener que llamar a El Faro para avisarle que no manden a ningún guardián a investigar esto.
+Salís de la oscuridad con tu mejor voz de Vincent Price y las manos en alto, imitando garras mientras gritás "¡Sangre nueva para mis huesos viejos!". Antes de darte cuenta los jóvenes están corriendo a los gritos por el cementerio. Vas a tener que llamar a El Faro para avisarle que no manden a ningún centinela a investigar esto.
 -> cap2b_elegir_cementerio
 
 === cap2b_municipal_retirar ===
