@@ -94,29 +94,64 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
     // ==================
     // SFX Functions
     // ==================
+
+    // Maps base SFX id → array of variant filenames (without .mp3).
+    // Resolves multi-take rotation and file naming mismatches.
+    const SFX_VARIANTS = {
+        golpe:             ['golpe_a', 'golpe_b', 'golpe_c', 'golpe_d'],
+        rugido_monstruo:   ['rugido_monstruo_a', 'rugido_monstruo_b', 'rugido_monstruo_c', 'rugido_monstruo_d'],
+        susurro_multiple:  ['susurro_multiple_a', 'susurro_multiple_b', 'susurro_multiple_c', 'susurro_multiple_d'],
+        canto_gutural:     ['canto_gutural_a', 'canto_gutural_b', 'canto_gutural_c'],
+        tension:           ['tension_a', 'tension_b', 'tension_c'],
+        magia_oscura:      ['magia_oscura_a', 'magia_oscura_b', 'magia_oscura_c'],
+        trueno_cercano:    ['trueno_cercano_a', 'trueno_cercano_b', 'trueno_cercano_c'],
+        vidrio_roto:       ['vidrio_roto_a', 'vidrio_roto_b'],
+        aterrizaje:        ['aterrizaje_a', 'aterrizaje_b'],
+        caja_fuerte:       ['caja_fuerte_a', 'caja_fuerte_b'],
+        clic_arma:         ['clic_arma_a', 'clic_arma_b'],
+        crasheo:           ['crasheo_a', 'crasheo_b'],
+        disparo:           ['disparo_a', 'disparo_b'],
+        jumpscare:         ['jumpscare_a', 'jumpscare_b'],
+        magia_hex:         ['magia_hex_a', 'magia_hex_b'],
+        mochila_caer:      ['mochila_caer_a', 'mochila_caer_b'],
+        pasos_monstruo:    ['pasos_monstruo_a', 'pasos_monstruo_b'],
+        puerta:            ['puerta_a', 'puerta_b'],
+        puerta_destruida:  ['puerta_destruida_a', 'puerta_destruida_b'],
+        puerta_secreta:    ['puerta_secreta_a', 'puerta_secreta_b'],
+        sal_romperse:      ['sal_romperse_a', 'sal_romperse_b'],
+        trueno_lejano:     ['trueno_lejano_a', 'trueno_lejano_b'],
+        boladefuego:       ['boladefuego_a', 'boladefuego_b'],
+        // Naming mismatches: ink tag → actual filenames
+        disparos_escopeta: ['escopeta_a', 'escopeta_b'],
+        explosion_magica:  ['magiexplosion_a', 'magiexplosion_b'],
+    }
+
     const playSfx = useCallback((id) => {
-        console.log(`[Audio] Play SFX: ${id}`)
+        const variants = SFX_VARIANTS[id]
+        const resolvedId = variants
+            ? variants[Math.floor(Math.random() * variants.length)]
+            : id
 
-        const sfxSrc = `/sounds/${id}.mp3`
+        console.log(`[Audio] Play SFX: ${id}${resolvedId !== id ? ` → ${resolvedId}` : ''}`)
 
-        // Lazy-load: create Howl instance on first play
-        if (!soundsRef.current[id]) {
-            soundsRef.current[id] = new Howl({
+        const sfxSrc = `/sounds/${resolvedId}.mp3`
+
+        if (!soundsRef.current[resolvedId]) {
+            soundsRef.current[resolvedId] = new Howl({
                 src: [sfxSrc],
                 volume: sfxVolumeRef.current,
                 onloaderror: (soundId, error) => {
-                    console.warn(`[Audio] Failed to load SFX ${id}:`, error)
+                    console.warn(`[Audio] Failed to load SFX ${resolvedId}:`, error)
                 },
                 onplayerror: (soundId, error) => {
-                    console.error(`[Audio] Failed to play SFX ${id}:`, error)
+                    console.error(`[Audio] Failed to play SFX ${resolvedId}:`, error)
                 }
             })
         } else {
-            // Update volume before playing
-            soundsRef.current[id].volume(sfxVolumeRef.current)
+            soundsRef.current[resolvedId].volume(sfxVolumeRef.current)
         }
 
-        soundsRef.current[id].play()
+        soundsRef.current[resolvedId].play()
     }, [])
 
     const stopAllSfx = useCallback(() => {

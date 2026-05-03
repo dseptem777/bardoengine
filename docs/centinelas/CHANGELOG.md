@@ -1,5 +1,183 @@
 # Changelog — Centinelas del Sur
 
+## [0.21.0] — 2026-05-02
+
+### Added
+- **inter0/entrenamiento**: nuevo bloque narrativo en `intermision_hub` (rama `misiones_completadas == 0`) que cubre los primeros seis meses de entrenamiento del Centinela — cronograma bajo la puerta, actividades municipales, el manco del sillón y las clases de judo; termina con la frase puente "Pero esta noche eso iba a cambiar"
+- **inter0/stat-gate**: bloque final del entrenamiento ramificado por stat dominante (`fuerza >= 20` → servicio militar / polígono; `conocimiento >= 20` → cajas de libros / click mental; `magia >= 20` → reunión con el Guardián + ejercicio de la vela); bloques mutuamente exclusivos vía switch ink
+
+---
+
+## [0.20.0] — 2026-05-02
+
+### Added
+- **inter1/convergencia**: nuevo knot puente `inter1_convergencia` con beat de cierre para la Intermisión 1, ramificado por dos ejes — actividad del día (playa / tarot / enfermería / Jesús con 3 niveles de amistad) y saldo del Capítulo 1 (evitó la pelea con El Profundo / peleó sin mordisco / peleó y fue mordido)
+- **vars nuevas**: `inter1_actividad`, `peleo_profundo`, `mordido_profundo` — seteadas en los knots de actividad y en los knots de combate de Cap 1
+
+### Fixed
+- **inter1/flujo**: los diverts `-> inter_misiones` al final de los knots de actividad de Inter 1 (playa, tarot, jesús x3, enfermería) ahora apuntan a `-> inter1_convergencia`; el nuevo knot cierra con `-> inter_misiones` preservando el resto del flujo
+- **abuela/escala**: `amistad_abuela` ahora usa escala 0/1/2 en lugar de 0/2/4 — incrementos de `+1` en `inter2_abuela_escandalo` y `inter2_abuela_banda`; umbrales en `inter2_convergencia` ajustados a `>= 2` (sonrisa filosa) y `>= 1` (conforme)
+
+---
+
+## [0.19.2] — 2026-05-01
+
+### Fixed
+- **inter2/loop**: la intermisión 2 ya no vuelve al hub tras completar una quest secundaria (playa, tarot, enfermería, abuelita); los diverts `-> intermision_2` en esos knots ahora apuntan a `-> inter2_convergencia`
+- **inter2/convergencia**: nuevo knot puente `inter2_convergencia` con beat de cierre ramificado por dos ejes — actividad del día (playa / tarot / enfermería / abuela con 3 niveles de amistad) y última misión jugada (orfanato: Belén+Juan / solo Belén / ninguno; cementerio: traumado / sin guardias / guardias sobreviven)
+- **vars nuevas**: `inter2_actividad` (seteada al inicio de cada knot de actividad) y `ultima_mision` (seteada en `capitulo_2a` y `capitulo_2b`)
+
+---
+
+## [0.19.1] — 2026-05-01
+
+### Fixed
+- **paginación**: tag `# next: Tomar carrera y saltar` movido inline al final del párrafo "Entre las dos terrazas..." — estaba como tag standalone que tomaba el contenido siguiente como nuevo beat, rompiendo la paginación del capítulo
+
+---
+
+## [0.19.0] — 2026-04-30
+
+### Añadido
+- **cap3/briefing**: 3 párrafos descriptivos faltantes en `cap3_briefing_lab` — Profesor y Mary Shelley presentes en la habitación, cadáver en la camilla, saludos del Profesor con rostro marcado por surcos de lágrimas
+- **cap3/briefing**: refactor de preguntas a knot dedicado `cap3_briefing_preguntas` con sticky choices `+ {not var}` — el jugador ahora puede hacer las 3 preguntas (identidad del cadáver, Tiburón-Profundo, runas); el Tiburón solo aparece si se preguntó por él
+- **cap3/museo**: reactividad nueva en `cap3_museo_primera_sala` — flavor diferenciado según `colaboraste_museo` (colaboró vs no colaboró en el museo nocturno)
+- **vars nuevas**: `colaboraste_museo`, `preg_identidad`, `preg_profundo`, `preg_runas`
+
+### Fixed
+- **cap3/espiar**: literal `NOMBRE DE PERSONAJE` reemplazado por `{nombre_personaje}` en `cap3_espiar_lab`
+- **cap3/cosméticas**: comentado encabezado `DE DIA EN EL MUSEO`, typo `modificación` → `momificación`
+
+---
+
+## [0.18.3] — 2026-04-29
+
+### Fixed
+- **cap3/minigames**: reformateados 4 tags `MINIGAME` de keymash en la secuencia del museo nocturno (líneas 4840, 4859, 4879, 4943) — formato heredado roto → formato nuevo; los minijuegos ahora arrancan y la rama de resultado ya no siempre pierde
+- **hub**: condición `misiones_completadas == 1` cambiada a `>= 1` en `inter_tarot` e `inter_jesus` — el hub ya no se traba en la segunda visita
+
+---
+
+## [0.18.2] — 2026-04-25
+
+### Fixed
+- **Hallucinations eliminadas**: choice `cabral_al_museo` en tiempo libre, bloque condicional `{ cabral_al_museo }` en convergencia nocturna, choice de reacción al plan del Profesor con `+conocimiento`, opción nocturna "improvisando" — ninguno existía en el crudo.
+- **Items secretos corregidos**: `enojo_enriquez` y `llegaste_con_ventaja` cambiados de `# achievement:unlock:` a `# inv:add:` y declarados en sección `"items"` del config para que aparezcan en el inventario.
+
+### Añadido
+- **Rama TRAUMADO** (`cap3_viaje_museo`): en el viaje al Museo, si el jugador es traumado y hay bebé muerto, aparece el fantasma del bebé en el asiento del acompañante.
+- **Hall convergencia nocturna completado**: opciones 3 y 4 del crudo — estudiar maniquíes (>=25 SABIDURIA → `entidades_poseidas`) y atacar con pistola (retroceso).
+- **Primera sala nocturna reescrita** con las 6 opciones del crudo: trabar la puerta (keymash), hechizo invisibilidad (keymash), esconderse en la canoa (keymash), símbolo en la puerta (requiere `entidades_poseidas`), lanza de vitrina (requiere `llegaste_con_ventaja`), correr.
+- **Segunda sala nocturna** (`cap3_corres_museo`): elección del acta fundacional — rescatarla otorga achievement `acta_fundacional`.
+- Achievement `acta_fundacional` ("Guardián del Patrimonio") + ítem `entidades_poseidas` añadidos al config.
+
+---
+
+## [0.18.1] — 2026-04-25
+
+### Fixed
+- `cabral_al_museo` ahora es una choice real: llevar a Cabral al Museo nocturno cuesta -20 HP y otorga +3 FUERZA en la convergencia nocturna.
+- `belen_sobrevive` se setea correctamente en las 4 ramas de Cap 2B donde Belén no muere; el knot `cap3_tl_belen` ahora es alcanzable.
+- Descriptions de `colaborador_museo` / `no_colaborador_museo` ajustadas al crudo: el jugador dona dinero (o no), no coordina con un equipo.
+- Phantom ref `chase_ambient` (3 ocurrencias) reemplazada por `terror_ambient`. `explosion_magica` y `disparos_escopeta` quedan intactos: ya están mapeados con random rotation en `SFX_VARIANTS` (`useAudio.js`).
+
+---
+
+## [0.18.0] — 2026-04-23
+
+### Añadido
+- **Capítulo 3 "Visita al Museo"** — integración completa del crudo del co-autor (495 líneas, ~12k palabras)
+  - Escena 1-2: Llegada 6am a El Faro, pre-briefing con 3 rutas (recorrer, espiar oficina Profesor, espiar laboratorio)
+  - Escena 3: Briefing con El Profesor + Mary Shelley, plan de robar la Momia incaica
+  - Escena 4: 6 opciones de tiempo libre antes del museo (Cabral +5 fuerza, cocina item secreto Enríquez, biblioteca +5 conocimiento/magia condicional, Belén +5 hp, guardias cementerio +5 hp, ir directo al museo)
+  - Escenas 5-6: Reconocimiento diurno con 4 rutas (fuerza/conocimiento/magia/improvisada) + entrada nocturna
+  - Escenas 7-8: Combate sensorial en la primera sala — 3 ramas (revólver + candelabro colapsando, báculo ceremonial con keymash, magia cruda)
+  - Escenas 9-10: Sala de la Momia, portal violeta, ladrona femenina, rama condicional RATONCITO (conocimiento>=40 reconoce la voz), **cliffhanger final de demo**
+- VARs nuevas: `item_enojo_enriquez`, `cabral_al_museo`, `voz_conocida`, `momia_robada`, `espiaste_lab`, `belen_sobrevive`
+- Achievements nuevos: `espia_elfaro`, `enojo_enriquez`, `colaborador_museo`, `no_colaborador_museo`, `llegaste_con_ventaja`, `incineracion_museo`, `ratoncito_sabiduria`
+
+### Técnico
+- Crudo `docs/centinelas/crudos/Capitulo 3.txt` normalizado de latin-1 a UTF-8
+- Compilación Ink verde (sin phantom refs de audio en knots nuevos)
+- Integración respeta el principio de preservación: cada párrafo del crudo aparece textualmente en el ink
+
+---
+
+## [0.17.2] — 2026-04-21
+
+### Fix: assets de audio + limpieza
+
+- Tag `paso_agua` removido del ink — el sonido existe pero no encajó narrativamente en ningún beat.
+- 87 archivos `.mp3` en `public/sounds/` ahora commiteados (SFX con variantes multi-take para todo el sistema de audio).
+- Achievement badges actualizados (`duro rocky`, `ratoncito`); carpeta `old/` eliminada.
+
+---
+
+## [0.17.1] — 2026-04-21
+
+### Fix: SFX random variants + tags faltantes
+
+- Engine ahora rota aleatoriamente entre múltiples takes (ej: `golpe` → `golpe_a/b/c/d` random). Mismatches de nombre (`disparos_escopeta`, `explosion_magica`) resueltos via mapa interno.
+- 5 nuevos tags insertados: `trueno_cercano` (pelea en tormenta), `boladefuego` (combate mágico araña), `sal_romperse` (trampa de sal en cementerio), `cuerda_rota` (descenso al pozo), `paso_agua` (charcos epílogo cap2b).
+
+---
+
+## [0.17.0] — 2026-04-21
+
+### Feat: SFX Tier 3 + Tier 4 + stingers de origen
+
+**Stingers de origen (Bloque D — 3 nuevos tags):**
+- `origen_magia` → `# play_sfx:stinger_magia` (firma sonora de Chispa)
+- `origen_combate` → `# play_sfx:stinger_fuerza` (firma sonora de Madrugador)
+- `origen_conocimiento` → `# play_sfx:stinger_conocimiento` (firma sonora de Ratoncito)
+
+**T3 SFX diegéticos (3 nuevos tags):**
+- `cap2b_frente_cubil` → `trueno_lejano` en la apertura de la tormenta bíblica
+- `cap2b_monticulos` → `canto_gutural` al entrar a la sala del ritual
+- `cap2b_pasillo_horror` → `susurro_multiple` en el pasillo del cubil
+
+**T4 Mood stingers (4 nuevos tags):**
+- `escondite_asomarse` → `sting_horror` al ver la criatura comiendo el cadáver
+- `cap2b_trampa_convertirse` → `sting_moral` al pedir la conversión
+- `cap2b_investigacion` → `sting_revelacion` al conectar el caso vampírico
+- `cap2b_vampiro_hablar` → `drone_tenso` al iniciar diálogo con el Vampiro
+
+**Music gaps reparados (8 knots sin cobertura):**
+- `escondite_asomarse`, `escondite_quedarse` → `horror_ambient`
+- `apnea_escondite_exito`, `keymash_arrastre_exito` → `misterio_ambient`
+- `apnea_escondite_fallo`, `keymash_arrastre_fallo`, `muerte` → `stop_music`
+- `inter_enfermeria` → `misterio_ambient`
+
+**Cobertura total:** ~50% → ~97% del árbol narrativo (252/262 knots). Los 5 knots restantes son routers sin contenido o minijuegos (intencionalmente sin tag). Audio documentado en `memory/sfx-prompts.md`: 36 entradas con prompts ElevenLabs + queries Freesound para los 36 archivos `.mp3` pendientes.
+
+---
+
+## [0.16.0] — 2026-04-20
+
+### Feat: cobertura de audio Tier 1 + Tier 2
+
+**Tier 1 — música por locación (~120 knots):**
+- Cap 0 preparación: `escuela_ambient` en primeras escenas de Cap 0 sin audio
+- Cap 1 investigación: `misterio_ambient` en `jesus_*`, `belen_*`, `ayuda_*`, entrevistas y diálogos
+- Cap 1 morgue: `horror_ambient` en escenas de morgue, `orfanato` al entrar al hogar
+- Cap 2a exploración: `orfanato`/`orfanato_alegre` en comedor/hab, `horror_ambient` en banos/sótano, `cueva_arañas` en cuevas, `boveda_ambient` en bóveda
+- Cap 2b investigación: `playa_oscura` en cementerio, `misterio_ambient` en comisaría/casas, `terror_ambient` en frente/cubil, `horror_ambient` en pasillos y ritual
+- Cap 2b combate: `boss_arañas` en combate directo con vampiros y ritual_fuerza/magia
+- Intermisión 2: `misterio_ambient` en enfermería/siguiente, `orfanato_alegre` en cocina abuelita, `city_ambient_b` en escándalo, `agite_museo` en cap3 teaser
+
+**Tier 2 — `stop_music` en beats dramáticos (7 knots):**
+- `pozo_muerte` — silencio total en muerte del pozo
+- `cap2b_vampiro_atacar` — corte antes del ataque con boss
+- `cap2b_trampa_convertirse` — silencio al pedir la conversión
+- `cap2b_convertirse_muerte_lucida` — silencio en muerte lúcida
+- `despues_combate` — reset post-combate → `misterio_ambient`
+- `cap2b_epilogo` — silencio dramático → `misterio_ambient`
+- (knot adicional según beat narrativo)
+
+**Cobertura total:** ~11% → ~50% del árbol narrativo. Minijuegos excluidos (manejan su propio audio).
+
+---
+
 ## [0.15.0] — 2026-04-11
 
 ### Feat: 21 nuevos achievements + imágenes

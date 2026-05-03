@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, Suspense } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import Player from './components/Player'
 import StorySelector from './components/StorySelector'
 import StartScreen from './components/StartScreen'
@@ -26,8 +26,6 @@ import { processChoiceRequirements } from './utils/choiceRequirements'
 import { getDominantStat } from './utils/getDominantStat'
 import { SettingsProvider, useSettings } from './hooks/useSettings'
 import { useIsMobile, useIsNarrowViewport } from './hooks/useMediaQuery'
-
-const BardoEditor = React.lazy(() => import('./editor/BardoEditor'))
 
 // Import the compiled stories (used in development mode)
 import partuzaStory from './stories/partuza.json'
@@ -69,7 +67,7 @@ function AppContent({ onStorySelect }) {
     const [inventoryOpen, setInventoryOpen] = useState(false)
     const [relationshipsOpen, setRelationshipsOpen] = useState(false)
     const [extrasOpen, setExtrasOpen] = useState(false)
-    const [showEditor, setShowEditor] = useState(false)
+
     const [choicesVisible, setChoicesVisible] = useState(false)  // True when Player's typewriter is done
     const [meterRevealed, setMeterRevealed] = useState(false)    // True once bar has been shown for first time
     const [debugUnlocked, setDebugUnlocked] = useState(false)
@@ -157,7 +155,8 @@ function AppContent({ onStorySelect }) {
     // Destructure for convenience
     const {
         story, text, choices, canContinue, continueLabel, isEnded, history,
-        actions, subsystems, config
+        actions, subsystems, config,
+        textSegments, onSegmentReached
     } = engine
     const { audio, vfx, saveSystem, gameSystems, achievementsSystem, minigameController, willpower, spiderInfestation, scrollFriction, bossController, visualDamage, scrollContainerRef, genjutsu, chapterBreak } = subsystems
 
@@ -354,7 +353,11 @@ function AppContent({ onStorySelect }) {
     // ==================
 
     return (
-        <div className="min-h-screen bg-bardo-bg relative overflow-hidden transition-colors duration-500">
+        <div
+            className="min-h-screen bg-bardo-bg relative overflow-hidden transition-colors duration-500"
+            data-colorblind={settings.colorblindMode ? 'true' : undefined}
+            data-dyslexic={settings.dyslexicMode ? 'true' : undefined}
+        >
             <VFXLayer vfxState={vfx.vfxState} />
 
             {/* Horror VFX Layer - Extended effects for meta-horror */}
@@ -496,7 +499,6 @@ function AppContent({ onStorySelect }) {
                     stories={devStoryList}
                     onSelect={selectStoryDev}
                     hasSave={() => false}
-                    onOpenEditor={() => setShowEditor(true)}
                     onImportInk={handleImportInk}
                     onRemoveStory={handleRemoveStory}
                 />
@@ -605,6 +607,8 @@ function AppContent({ onStorySelect }) {
                     willpowerValue={willpower?.state?.value ?? 100}
                     onBreakGenjutsu={genjutsu?.breakGenjutsu}
                     onGenjutsuTypingComplete={genjutsu?.onTypingComplete}
+                    textSegments={textSegments}
+                    onSegmentReached={onSegmentReached}
                 />
             )}
 
@@ -682,16 +686,7 @@ function AppContent({ onStorySelect }) {
                 }}
             />
 
-            {/* Bardo Editor Overlay - Only visible in Story Selector view */}
-            {showEditor && showStorySelector && (
-                <Suspense fallback={
-                    <div className="fixed inset-0 z-[200] bg-[#0a0a0a] flex items-center justify-center">
-                        <p className="text-yellow-400 text-xl tracking-widest animate-pulse">LOADING BARDOEDITOR...</p>
-                    </div>
-                }>
-                    <BardoEditor onClose={() => setShowEditor(false)} />
-                </Suspense>
-            )}
+
         </div>
     )
 }

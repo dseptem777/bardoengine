@@ -65,6 +65,41 @@ describe('useStoryState Optimization Verification', () => {
         expect(result.current.text).toBe("Part 1\n\nPart 2")
     })
 
+    it('should build segments array with per-iteration text and tags', () => {
+        const { result } = renderHook(() => useStoryState())
+
+        mockCanContinue
+            .mockReturnValueOnce(true)
+            .mockReturnValueOnce(true)
+            .mockReturnValueOnce(false)
+
+        mockContinue
+            .mockReturnValueOnce('Caí haciendo un escándalo.')
+            .mockReturnValueOnce('Julieta terminó de hablar.')
+
+        mockGetCurrentTags
+            .mockReturnValueOnce(['shake', 'play_sfx:aterrizaje'])
+            .mockReturnValueOnce(['play_sfx:magia_hex'])
+
+        act(() => {
+            result.current.initStory({})
+        })
+
+        let output
+        act(() => {
+            output = result.current.continueStory()
+        })
+
+        expect(output.segments).toHaveLength(2)
+        expect(output.segments[0].text).toBe('Caí haciendo un escándalo.')
+        expect(output.segments[0].tags).toEqual(['shake', 'play_sfx:aterrizaje'])
+        expect(output.segments[1].text).toBe('Julieta terminó de hablar.')
+        expect(output.segments[1].tags).toEqual(['play_sfx:magia_hex'])
+
+        // Hook state also exposes segments
+        expect(result.current.segments).toHaveLength(2)
+    })
+
     it('should handle breaks for pagination', () => {
         const { result } = renderHook(() => useStoryState())
 

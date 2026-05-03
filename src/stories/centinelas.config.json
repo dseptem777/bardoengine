@@ -1,6 +1,6 @@
 {
     "title": "CENTINELAS DEL SUR",
-    "version": "0.15.0",
+    "version": "0.21.0",
     "theme": {
         "primaryColor": "#8b5cf6",
         "bgColor": "#030712",
@@ -196,6 +196,24 @@
             "description": "Una estatua de Buda de oro macizo. Excentricidad de algún oligarca con demasiado tiempo libre.",
             "icon": "🪷",
             "category": "items"
+        },
+        "enojo_enriquez": {
+            "name": "Enojo de Enríquez",
+            "description": "Encontraste el tapper escondido en la cocina de Enríquez.",
+            "icon": "🔍",
+            "category": "claves"
+        },
+        "llegaste_con_ventaja": {
+            "name": "Ventaja Nocturna",
+            "description": "Llegaste al Museo antes del anochecer y pudiste explorar sin restricciones.",
+            "icon": "⏱",
+            "category": "claves"
+        },
+        "entidades_poseidas": {
+            "name": "Entidades Poseídas",
+            "description": "Sabés que los maniquíes son vehículos para entidades de otro plano —pueden ser contenidas con rituales.",
+            "icon": "👁",
+            "category": "documentos"
         }
     },
     "achievements": [
@@ -380,6 +398,62 @@
             "description": "Nunca cediste ante el miedo.",
             "icon": "🧠",
             "image": "/games/centinelas/achievements/duro rocky badge.jpg"
+        },
+        {
+            "id": "espia_elfaro",
+            "title": "Oreja indiscreta",
+            "description": "Escuchaste la conversación prohibida en el laboratorio de El Faro.",
+            "icon": "👂",
+            "image": null
+        },
+        {
+            "id": "enojo_enriquez",
+            "title": "Cazador de tappers",
+            "description": "Descubriste el tapper misterioso que Enríquez esconde en la cocina.",
+            "icon": "🔍",
+            "image": null
+        },
+        {
+            "id": "colaborador_museo",
+            "title": "Donante silencioso",
+            "description": "Dejaste unos billetes en la caja de colaboración del Museo.",
+            "icon": "🤝",
+            "image": null
+        },
+        {
+            "id": "no_colaborador_museo",
+            "title": "Gorra estatal",
+            "description": "Decidiste que no te correspondía financiar al Museo con tu plata.",
+            "icon": "🐺",
+            "image": null
+        },
+        {
+            "id": "llegaste_con_ventaja",
+            "title": "Con ventaja",
+            "description": "Llegaste al Museo antes que cayera la noche.",
+            "icon": "⏱",
+            "image": null
+        },
+        {
+            "id": "incineracion_museo",
+            "title": "Pirotecnia arqueológica",
+            "description": "Incineraste a los maniquíes con magia cruda.",
+            "icon": "🔥",
+            "image": null
+        },
+        {
+            "id": "ratoncito_sabiduria",
+            "title": "Oído fino",
+            "description": "Reconociste la voz de la ladrona del portal.",
+            "icon": "🐭",
+            "image": null
+        },
+        {
+            "id": "acta_fundacional",
+            "title": "Guardián del Patrimonio",
+            "description": "Rescataste el acta fundacional de Costa Alegre en medio del caos.",
+            "icon": "📜",
+            "image": null
         }
     ],
     "extras": {

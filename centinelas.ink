@@ -52,6 +52,25 @@ VAR genjutsu_stat_used = ""
 VAR genjutsu_willpower = 0
 VAR habitacion_img = ""
 
+// Cap 3 — Museo
+VAR colaboraste_museo = false
+VAR preg_identidad = false
+VAR preg_profundo = false
+VAR preg_runas = false
+VAR item_enojo_enriquez = false
+VAR belen_sobrevive = false
+VAR cabral_al_museo = false
+VAR voz_conocida = false
+VAR momia_robada = true
+VAR espiaste_lab = false
+VAR llegaste_con_ventaja = false
+VAR entidades_poseidas = false
+VAR inter2_actividad = ""
+VAR ultima_mision = ""
+VAR inter1_actividad = ""
+VAR peleo_profundo  = false
+VAR mordido_profundo = false
+
 -> capitulo_0
 
 // Stat principal del personaje (prioridad en empate: magia > fuerza > conocimiento)
@@ -108,6 +127,7 @@ Sus labios rozaron mi oreja y durante un momento sentí un rayo de energía que 
 * [No, si no me enfrento a esto ahora la semana próxima va a ser peor.] -> magia_enfrentar
 
 === magia_escapar ===
+# music:escuela_ambient
 \- Oka, ¿y qué hago? ¿Tenés un mapa secreto del colegio? ¿Hay que arrastrarse por ductos de aire?
 
 \- Vos seguime la corriente – dijo Julieta mientras se ponía una pastilla en el ojo y me guiñaba.
@@ -136,6 +156,7 @@ Y ahí estaba, como mi plaga bíblica personal… Jorge.
 -> magia_confrontacion
 
 === magia_enfrentar ===
+# music:escuela_ambient
 # shake # play_sfx:golpe
 Defensa arriba. Mentón abajo. Eso era todo el entrenamiento que tenía para el combate. Es una lástima que lo había sacado de ver películas de boxeo de los ochenta.
 
@@ -146,6 +167,7 @@ El primer golpe pasó directo entre mis brazos y chocó en mi rostro. Dolor, hum
 -> magia_confrontacion
 
 === magia_confrontacion ===
+# music:escuela_ambient
 # shake # flash_red # play_sfx:golpe
 Intenté ponerme en posición fetal. No sirvió. Cada golpe era una explosión de dolor que se expandía por todo mi ser. Mi cuerpo temblaba, todo su cableado estaba mal, la adrenalina me sobrecargaba pero no podía pelear ni tenía adónde correr. La única opción que me quedaba era seguir tirado en el piso esperando que todo termine rápido.
 # next: Otro golpe
@@ -180,6 +202,7 @@ El Faro me había encontrado.
 ~ apodo_personaje = "Chispa"
 # stat:magia:+20 # stat:fuerza:+10 # stat:conocimiento:+10
 # next
+# play_sfx:stinger_magia
 # CHAPTER_BREAK: title=Chispa, subtitle=Capítulo 0 — Orígenes, image=title_magia.jpg
 -> intermision
 
@@ -205,6 +228,7 @@ Dios, es… es…
 * [Que se joda todo, yo solo quiero salir. Voy a saltar por una de las ventanas.] -> combate_ventana
 
 === combate_subir ===
+# music:horror_ambient
 La escalera es de madera y chilla en cuanto pongo mi pie en el primer escalón. Espero un segundo. En mi cabeza se repite el eco de los gritos de mi amigo agonizando, pero no pasa nada.
 
 Por las dudas me saco las zapatillas, ato los cordones, y me las cuelgo al cuello. No sé si sirve o no, pero ser precavido no me va a matar.
@@ -246,13 +270,14 @@ Pero escucho otro ruido atrás mío, justo en la cima de la escalera. No tengo q
 -> combate_persecucion
 
 === combate_ventana ===
+# music:horror_ambient
 # shake # play_sfx:vidrio_roto
 Salto por la ventana en una explosión de madera y vidrio. Y ruido, mucho ruido. No tengo que darme vuelta para saber que… eso… notó mi presencia.
 
 -> combate_persecucion
 
 === combate_persecucion ===
-# music:chase_ambient
+# music:terror_ambient
 Correr por el bosque no es tan fácil. Las ramas azotan tu rostro y las raíces amenazan tus tobillos.
 
 Aparte no hay camino. Todo lo que estamos acostumbrados a usar en la ciudad para guiarnos (calles, esquinas, avenidas) no existe, con suerte algún parche de tierra a la vista o unas hierbas dobladas que dan cuenta de un sendero.
@@ -266,7 +291,6 @@ Una raíz casi me hace perder el equilibrio. Trastabillo y siento sus ¿tentácu
 Pero no fue suficiente. Antes de darme cuenta estaba con la cabeza en el piso sufriendo una oleada de dolor que superó a la carga de adrenalina en mi cuerpo.
 
 Recordaba los gritos de dolor de mi amigo muriendo en el piso de arriba de la cabaña. Le temía a la muerte, le temía más al dolor. Pero simplemente no podía más.
-// TODO: crudo label "RUIDO DE DISPARO" — agregar SFX de disparo como evento al click
 # play_sfx:disparo # flash_yellow
 El ruido hizo eco por todo el bosque. La… cosa… chilló atrás mío. Sonó como estática de radio a todo volumen, como el ruido original del universo. Y sentí la tierra temblar abajo mío cuando su cuerpo cayó al piso.
 
@@ -277,6 +301,7 @@ Me levanté con una misión. Yo sería quien llegaría siempre una hora antes.
 ~ apodo_personaje = "Madrugador"
 # stat:magia:+10 # stat:fuerza:+20 # stat:conocimiento:+10
 # next
+# play_sfx:stinger_fuerza
 # CHAPTER_BREAK: title=Madrugador, subtitle=Capítulo 0 — Orígenes, image=title_fuerza.jpg
 -> intermision
 
@@ -305,10 +330,10 @@ En su biblioteca estaba "La Última Colección", donde se recopilaban las profec
 * [El futuro es siempre cambiante. La mera idea de observarlo lo cambia. Sirven más como curiosidad histórica.] -> conocimiento_accion
 
 === conocimiento_accion ===
+# music:misterio_ambient
 Bueno, dejemos de dar vueltas y pasemos a la acción.
 
-Entre las dos terrazas había una distancia de cinco metros. Llevábamos meses practicando para saltar esa distancia. Pero las prácticas habían sido sobre tierra, en cambio ahora teníamos una caída de 50 metros que hacía ver todo más real.
-# next: Tomar carrera y saltar
+Entre las dos terrazas había una distancia de cinco metros. Llevábamos meses practicando para saltar esa distancia. Pero las prácticas habían sido sobre tierra, en cambio ahora teníamos una caída de 50 metros que hacía ver todo más real. # next: Tomar carrera y saltar
 # shake # play_sfx:aterrizaje
 Caí haciendo un escándalo sobre el techo. Julieta a mi lado lo hizo con un mayor nivel de gracia. Mientras yo era una bolsa de papas ella era una felina.
 
@@ -332,6 +357,7 @@ Como es común en estos casos, el silencio duró unos segundos para dar paso a u
 * [Mantengamos todo fácil. Directo a la biblioteca.] -> conocimiento_biblioteca
 
 === conocimiento_caja ===
+# music:misterio_ambient
 Lo importante es que ya no había sistema de seguridad, así que me podía poner tranquilo con mis ganzúas a trabajar para abrir la puerta.
 
 Avanzás por la mansión. Las cámaras de seguridad, ya sin energía, están en cada esquina apuntando hacia el piso. Cadáveres de ojos tecnológicos ya sin nada que hacer.
@@ -363,6 +389,7 @@ Entonces escuchás la puerta abriéndose detrás de ti.
 -> conocimiento_confrontacion
 
 === conocimiento_biblioteca ===
+# music:misterio_ambient
 Después de abrir la puerta de la biblioteca y esperar unos segundos para escuchar si había alguien dando vueltas, no quedó otra opción que prender la linterna. La biblioteca está ubicada en el corazón de la mansión, un cuarto de dos pisos más grande que cualquier casa que conocés.
 
 Te basta un recorrido de los estantes con la linterna para darte cuenta que no tenés la más mínima idea de cómo vas a hacer para encontrar el libro que estás buscando.
@@ -392,6 +419,7 @@ Entonces escuchás la puerta abriéndose detrás de ti.
 -> conocimiento_confrontacion
 
 === conocimiento_confrontacion ===
+# music:misterio_ambient
 El heredero de los Ayacucho Olavarría está en el marco de la puerta. A pesar de que son dos contra uno (y él está vestido solamente con una bata y unas pantuflas) en su rostro hay una sonrisa de diversión, como un padre que está jugando a un juego con su hijo que sabe que fácilmente puede ganar.
 
 # play_sfx:magia_oscura
@@ -406,6 +434,7 @@ De repente estás completamente inmovilizado. Tu cuerpo se encuentra duro y se n
 * [No hacés nada. Veamos qué pasa.] -> conocimiento_esperar
 
 === conocimiento_resistir ===
+# music:misterio_ambient
 # shake
 Te esforzás por moverte, pero solo conseguís un punzante dolor de cabeza que se vuelve cada vez más filoso. El pánico empieza a carcomerte. ¿Qué pasa si nunca más recupero el control de mi cuerpo? ¿Moriré de inanición?
 
@@ -416,6 +445,7 @@ Estás encerrado en tu cuerpo, con tu miedo como único compañero de celda.
 -> conocimiento_final
 
 === conocimiento_esperar ===
+# music:misterio_ambient
 Ayacucho Olavarría sale de tu campo de visión, ni siquiera podés mover tu ojo para ver adónde va. Tu vista está clavada en el marco de la puerta, ahora vacía, y en la nuca de Julieta.
 
 Lo escuchás caminar, canturrear algo, un poco de ruido de vidrio. La incertidumbre te vuelve loco, estás completamente consciente de que estás totalmente a su merced.
@@ -423,6 +453,7 @@ Lo escuchás caminar, canturrear algo, un poco de ruido de vidrio. La incertidum
 -> conocimiento_final
 
 === conocimiento_final ===
+# music:misterio_ambient
 Ayacucho Olavarría vuelve a aparecer en tu campo de visión, con una copa de Brandy en la mano.
 
 \- A ver qué tenemos acá, y qué provecho le podemos sacar a esta situación.
@@ -452,6 +483,7 @@ Ellos te ofrecieron un trabajo y una nueva oportunidad y no pensás desperdiciar
 ~ apodo_personaje = "Ratoncito"
 # stat:magia:+10 # stat:fuerza:+10 # stat:conocimiento:+20
 # next
+# play_sfx:stinger_conocimiento
 # CHAPTER_BREAK: title=Ratoncito, subtitle=Capítulo 0 — Orígenes, image=title_conocimiento.jpg
 -> intermision
 
@@ -492,6 +524,30 @@ Ellos te ofrecieron un trabajo y una nueva oportunidad y no pensás desperdiciar
     # next
     # next
     Y, claro, también estás vos.
+    # next
+    Los primeros seis meses desde tu "incidente", como elegiste llamarlo, fueron raros. Esperabas que El Faro te pusiera algún mentor viejo con el cual ibas a tener una relación casi paternal, o te citara a una escuela escondida dividida en fraternidades que peleaban entre ellas. Pero nada de eso ocurrió, solo encontraste que alguien tiró un cronograma debajo de tu puerta con una lista de actividades que tenías que hacer.
+    La mayoría eran gratuitas o estaban cubiertas en planes sociales del Municipio, así que probablemente El Faro no tenía presupuesto para ninguna de tus ideas fantasiosas.
+    # next
+    Corriste por la playa hasta que tus rodillas se sintieron a punto de estallar, tomaste clases de yoga antes de la siesta en compañía de jubiladas y amas de casa aburridas, pasaste tardes enteras leyendo una extraña lista de libros en la Biblioteca de Costa Alegre (desde etnología hasta leyendas de la Polinesia). Por alguna razón también te hicieron tomar clases de violín, nunca lograste que sonara diferente a un gato siendo destripado, pero al menos aprendiste a esconder tu frustración.
+    # next
+    Sospechás que el tipo de entrenamiento de El Faro era tirarte todo lo que se les ocurría y ver en qué sobresalías. Cada tanto, cuando ibas o volvías de una actividad, te parabas frente a una vidriera a ver tu reflejo en la vitrina, a ver si detectabas ese supuesto Centinela que te estaba siguiendo para dar un informe de tus avances. Solo lograste que una mujer con aspecto de secretaria y cara de pocos amigos te lleve puesto y te grite "no es momento para detenerse", sumado a un montón de comentarios poco cariñosos a la rama femenina de tu familia.
+    # next
+    Una noche entraste a tu casa y te encontraste con un manco sentado en un sillón. Raro, pero no te parecía peligroso, al fin de cuentas en lugar de un arma tenía un brazo menos. Grave error, en menos de un minuto terminaste en el piso, con tres moretones y un mueble roto. Se fue sin decir nada, pero cuando el siguiente lunes pasaron la lista de actividades debajo de tu puerta, te habían agregado clases de judo.
+
+    # next
+    {
+    - fuerza >= 20:
+        A lo último, tu entrenamiento comenzó a sentirse como ir al servicio militar. Si bien lo único que sabés de eso son un par de historias jocosas de tu padre, es lo que más se parece. Te reservaron clases con un instructor de tiro en un polígono, pasabas toda la mañana en el gimnasio municipal haciendo todas las actividades físicas disponibles y la última nota te prohibió usar auto o transporte público. Debías ir trotando a todos lados.
+    - conocimiento >= 20:
+        A lo último ya no ibas a la biblioteca. Directamente te enviaban cajas y cajas llenas de libros que debías estudiar y presentar un resumen, monografía u opinión. Los plazos eran cada vez más cortos y los libros más largos. Aparte, los temas no tenían relación, pasabas de un manual de latín a una ficción como Matadero Cinco. Fue en una noche de insomnio y ansiedad cuando tu cerebro hizo click y empezaste a ver las conexiones (muchas veces tenues o irracionales) entre los textos que te brindaban. Después de eso absorbiste conocimiento como una esponja.
+    - magia >= 20:
+        Tuviste una extraña reunión con un Guardián. Una joven que no podía tener más de treinta años, tenía cada mechón de pelo de un color diferente y usaba una bata sucia que podía indicar que era profesional de salud o encargada de limpieza. Fue ella quien te informó que aquellas personas que tienen talento para la magia (usó esa palabra, sin eufemismos o risas) descubren su poder con una explosión de energía, pero luego pueden pasar años para que vuelvan a llegar a ese nivel.
+        # next
+        Te dio una serie de ejercicios simples, movimientos de manos y frases guturales que te hicieron perder un fin de semana de lluvia. La frustración creció fuerte… hasta que de un simple movimiento de mano lograste encender una vela (y casi tus cortinas, pero ese es un detalle menor).
+    }
+
+    # next
+    Pasados los primeros seis meses seguías siendo un novato, pero en lugar de ser uno perdido y confundido eras uno ansioso de mostrar tu valía. Todo lo que vino después fue bastante aburrido: presentaciones formales y trabajos de oficina. Traducir textos, archivar misiones, vigilar propiedades y dar tu opinión. Pero esta noche eso iba a cambiar.
 - misiones_completadas == 1:
     Te despertás a las tres de la mañana. Hace un par de días te acosa una pesadilla donde te estás ahogando en un mar de sangre y sentís, rozando tus pies, que una gran entidad marina está dando vueltas. Jugando con vos, esperando el momento para atacar.
     Ya que tu psiquis se niega a dejarte dormir, decidís verlo como una mejora y hacer más cosas. Tu departamento nunca estuvo tan limpio. Aprovechás para hacer ejercicio, meditar para centrar tu mente y leer todos los libros que pudiste pedir prestados de la sede de El Faro.
@@ -511,12 +567,12 @@ Te queda un poco de tiempo para tu siguiente misión. Tal vez podés hacer algo 
 
 + [Recorrer el filo entre lo normal y lo sobrenatural # REQUIRES: misiones_completadas >= 1]
 {
-- misiones_completadas == 1: -> inter_tarot
+- misiones_completadas >= 1: -> inter_tarot
 }
 
 + [Ayudar a un aliado # REQUIRES: misiones_completadas >= 1]
 {
-- misiones_completadas == 1: -> inter_jesus
+- misiones_completadas >= 1: -> inter_jesus
 }
 
 + [Ir a la enfermería # REQUIRES: misiones_completadas >= 1] -> inter_enfermeria
@@ -528,6 +584,7 @@ Te queda un poco de tiempo para tu siguiente misión. Tal vez podés hacer algo 
 }
 
 === intermision_playa ===
+~ inter1_actividad = "playa"
 # music:playa_ambient
 {
 - misiones_completadas == 0:
@@ -549,7 +606,7 @@ Te queda un poco de tiempo para tu siguiente misión. Tal vez podés hacer algo 
 # next
 {
 - misiones_completadas == 0: -> capitulo_1
-- misiones_completadas >= 1: -> inter_misiones
+- misiones_completadas >= 1: -> inter1_convergencia
 }
 
 === capitulo_1 ===
@@ -582,6 +639,7 @@ Faltan cinco minutos para la hora en que te citaron para darte una misión de ca
 -> hall_central
 
 === hall_central ===
+# music:escuela_ambient
 El hall central es un cuarto gigante, en el cual en el piso está representado el mismo logo que la puerta. A pesar de que el edificio no tiene ventanas el clima es agradable y no está viciado.
 # shake
 No es necesario ser un gran practicante de magia para darse cuenta de la gran cantidad de magia defensiva que hay en el lugar. Lo sentís como un dejo de gusto amargo en tu boca.
@@ -606,6 +664,7 @@ El único ruido proviene del escritorio de la secretaria, la Sra. Enríquez, que
     -> mision_profe
 
 === mision_profe ===
+# music:misterio_ambient
 - — El Profesor lo espera en el piso de arriba para darle su primera misión de campo. Por favor, no la arruine. Ya llené un formulario con sus datos y no quiero perder tiempo destruyendo el formulario… y llenando los formularios correspondientes para justificar la destrucción de documentación.
 # next
 El Profesor, Enríquez. Ninguno era un nombre real. Todos los guardianes de El Faro usan alias para proteger su vida civil.
@@ -638,6 +697,7 @@ Tal vez sea la alfombra y el techo rojo, pero algo te da la sensación de que es
     -> tema_cadaveres
 
 === tema_cadaveres ===
+# music:misterio_ambient
 — Hace tiempo que están apareciendo cadáveres en las playas de Costa Alegre, horribles cadáveres – El Profesor se toma unos momentos para fumar de su pipa – su piel denota un patrón de dolor. Alguien se toma el trabajo de marcar signos y runas en su cuerpo antes de degollarlos y arrojarlos al mar.
 — ¿Pudimos adivinar de qué se trata en base a las runas? – Te mordés la lengua en cuanto terminás de hacer la pregunta.
 # next
@@ -663,12 +723,14 @@ Tu primera misión. Sacrificios humanos, cadáveres, figuras misteriosas. ¿Est�
 + [Pedir ayuda antes de salir] -> pedir_ayuda
 
 === pedir_ayuda ===
+# music:misterio_ambient
 — Tenemos tres guardianes en la sede que podrían ayudarte...
 + [Hablar con Enríquez (Sabiduría)] -> ayuda_enriquez
 + [Entrenar con Cabral (Fuerza)] -> ayuda_cabral
 + [Visitar a Mary Shelley (Magia)] -> ayuda_shelley
 
 === ayuda_enriquez ===
+# music:misterio_ambient
 # achievement:unlock:conociste_enriquez
 Antes de salir pasás por su escritorio. Ella sigue tipeando en su máquina de escribir en un claro intento de ignorarte. Cada paso que das, tipea con más fuerza.
 — Perdón — tenés que levantar la voz para ganarle al quejido mecánico de las teclas — Voy a salir a mi primer misión de campo y El Profesor recomendó…
@@ -686,6 +748,7 @@ Leés sobre la sabiduría de los anteriores Guardianes de El Faro. Aprendés muc
 -> en_la_morgue
 
 === ayuda_cabral ===
+# music:misterio_ambient
 # achievement:unlock:conociste_cabral
 El campo de entrenamiento se encuentra en el subsuelo del edificio. Es una mezcla ecléctica entre un dojo, un gimnasio y un campo de tiro ubicado aún más abajo. Cabral se encuentra de espaldas pero, en cuanto ponés un pie en el dojo, se da cuenta de tu presencia.
 — Bienvenido Guardián. Es tu primera vez en el campo de entrenamiento, así que la tradición dicta que tengamos un sparring amistoso.
@@ -703,6 +766,7 @@ Cabral te somete a una sesión de entrenamiento completa. Practican un par de go
 -> en_la_morgue
 
 === ayuda_shelley ===
+# music:misterio_ambient
 # achievement:unlock:conociste_shelley
 Antes de abrir la puerta del laboratorio te golpea una mezcla fuerte de olor a desinfectante, propio de cualquier hospital, con una mezcla de hierbas que no podés descifrar pero te parecen más propias de la cocina de una abuela.
 Adentro el cuadro es aún más caótico. Mientras en una esquina tenés equipo médico moderno, en la otra hay cristales y pentagramas. En una de las camillas se encuentra un cuerpo (tapado por una sábana por suerte) y por el bulto que se puede ver, notás que no es algo humano.
@@ -741,6 +805,7 @@ Lo que no esperabas es que sean tantas. ¿Cómo ibas a hacer para encontrar el c
 + [Abrir todas las puertas a lo bruto] -> buscar_fuerza
 
 === buscar_magia ===
+# music:terror_ambient
 Cerrás los ojos y te relajás. Ponés tu mente en blanco y dejás que la energía de la habitación te hable. Obviamente la morgue no tiene una buena energía, la sentís golpear contra tu piel, como alquitrán que repta hacia tu nariz. Te disociás un poco, la esencia es sentir la energía pero sin dejarte controlar por ella.
 # next
 {
@@ -756,6 +821,7 @@ Cerrás los ojos y te relajás. Ponés tu mente en blanco y dejás que la energ�
 }
 
 === buscar_sabiduria ===
+# music:terror_ambient
 Te sentás frente a la computadora y le das al botón de encendido. La computadora tarda varios minutos en arrancar dado que posiblemente sea más vieja que vos, pero eso te da tiempo para estudiar el escritorio del forense a ver si hay alguna pista que te pueda ayudar para averiguar su clave.
 # next
 {
@@ -773,6 +839,7 @@ Te sentás frente a la computadora y le das al botón de encendido. La computado
 }
 
 === buscar_fuerza ===
+# music:terror_ambient
 Empezás a abrir las puertas de los contenedores. La primera se abre lentamente, metés tu mano y sale… el cadáver de un anciano que tiene toda la pinta de haber muerto por dos tiros en el pecho. Principalmente porque tiene dos orificios gigantes en el pecho. Una parte de vos esperaba tener suerte en el primer intento, pero parece que esto va a tardar un tiempo.
 # next
 {
@@ -789,6 +856,7 @@ Empezás a abrir las puertas de los contenedores. La primera se abre lentamente,
 }
 
 === frente_al_cadaver(rapido) ===
+# music:terror_ambient
 # next
 Esta vez sí te dedicás a ver el cuerpo. No es bonito. Los cuerpos sacados del fondo del mar nunca lo son. Pero lo que hicieron en su carne antes de morir es peor. Su pecho tiene tres renglones de una ¿escritura? Símbolo tras símbolo, casi sin espacio entre ellos, como un niño que escribe en una hoja y teme quedarse sin espacio.
 Uno de sus brazos fue directamente desollado y su carne tiene la muestra de haber sido quemada. Como cuando se marca al ganado.
@@ -830,6 +898,7 @@ Ahora, hay que buscar una forma de salir de la morgue.
 + [Soy un Guardián. Lo que entre se va a encontrar con una verdadera pelea] -> pelea_monstruo
 
 === escape_ducto ===
+# music:terror_ambient
 Amontonás un par de camillas, unas cajas de suplementos médicos que parecen sólidas y unos gabinetes. De alguna forma terminás con una pirámide de dudosa estabilidad que te deja a los pies de la entrada al ducto de aire.
 Trepás por tu obra arquitectónica. Casi cuando estás por rozar la entrada al ducto de aire escuchás a la estructura crujir debajo de vos.
 # next
@@ -855,6 +924,7 @@ Antes de darte cuenta te encontrás en tu auto, con la llave puesta en la cerrad
 + [Espero agazapado a ver qué sale del edificio] -> observar_monstruo
 
 === observar_monstruo ===
+# music:terror_ambient
 Eso no se hace esperar. La puerta del Palacio de Justicia se abre y las luces del edificio dejan ver una silueta.
 Es enorme, muy por encima de los dos metros y cada extremidad es del tamaño de tu torso.
 Usa un sobretodo que le tapa todo el cuerpo junto con una bufanda que le oculta el rostro, lo cual es una locura con este calor. A medida que avanza podés notar más detalles.
@@ -871,6 +941,7 @@ Con la mayor cautela que podés, sacás un par de fotos del ser mientras avanza 
 -> final_morgue_exito
 
 === escape_escondite ===
+# music:terror_ambient
 Dás una vuelta por la morgue pero no hay muchos lugares para esconderse. Abajo del escritorio parecía muy infantil.
 La idea llega condimentada con una pizca de ironía, el mejor lugar para esconderse es en los privados donde guardan los cadáveres.
 Solo esperás que no sea premonitorio.
@@ -892,13 +963,15 @@ Luego empieza un sonido que puede ser tanto diente contra diente como filo contr
 + [Quedarte quieto donde estás] -> escondite_quedarse
 
 === escondite_asomarse ===
+# music:horror_ambient
 Lentamente tomás lo que puede ser la peor decisión de tu vida y te asomás un poco. Lo ves de costado, la comisura de su boca va de oreja a oreja (textualmente) y su mandíbula se ensanchó hacia adelante dejando ver una hilera de dientes filosos y encorvados. Te hace pensar en un tiburón.
-Se está... comiendo... el cadáver...
+Se está... comiendo... el cadáver... # play_sfx:sting_horror
 Ya terminó con los dos brazos y está por mandarse la cabeza y el torso en una sola mordida.
 Entrás para adentro de tu escondite poniendo las manos en tu boca para contener el grito.
 -> apnea_escondite
 
 === escondite_quedarse ===
+# music:horror_ambient
 Esperás cinco minutos. La mole se vuelve a mover, escuchás el poco mobiliario que sigue en pie quejándose y ser destruido por su peso.
 Y luego esperás cinco minutos más. Diez minutos. Hasta que la sensación de miedo abandona tu cuerpo.
 # next
@@ -918,11 +991,13 @@ Al menos recuperaste una mano, mejor ir para El Faro a ver qué pueden hacer con
 }
 
 === apnea_escondite_exito ===
+# music:misterio_ambient
 La criatura se retira. Esperás una eternidad más para estar seguro. Te arrastrás para salir. El cadáver del NN ya no está. Esa cosa se lo comió.
 Al menos recuperaste una mano, mejor ir para El Faro a ver qué pueden hacer con eso.
 -> final_morgue_exito
 
 === apnea_escondite_fallo ===
+# stop_music
 # shake # flash_red # play_sfx:jumpscare
 La puerta del privado se abre de golpe. Garras oscuras se cierran alrededor de tu tobillo y te sacan arrastrando.
 Lo último que ves es esa boca inmensa abriéndose de oreja a oreja.
@@ -930,6 +1005,7 @@ MORISTE. FIN DEL JUEGO.
 -> END
 
 === escape_trampa ===
+# music:terror_ambient
 Tenés unos minutos para improvisar una emboscada, sea lo que sea que está ahí afuera acaba de matar a un policía, así que es peligroso y no debés contenerte para atacar. Tu gran ventaja es que hay una sola puerta de entrada.
 # next: Preparas tu trampa
 {
@@ -956,6 +1032,8 @@ Hay dos cosas que aprendés. Eso no es humano y tiene una anormal resistencia al
 + [Quien golpea primero golpea dos veces. A tirarle con todo] -> pelea_monstruo
 
 === pelea_monstruo ===
+~ peleo_profundo = true
+# music:terror_ambient
 Atacás con toda tu furia. Una vez que vaciás el cargador de la pistola tomás un hacha de tu mochila, una mole con un mango pesado de madera y un filo de metal que promete violencia. Cargás mientras de tu garganta sale un grito primal de combate.
 # next
 La piel de la entidad es más dura que el cemento. Las balas rebotaron peligrosamente y el hacha se quebró con el tercer golpe. Eso ni intentó cubrirse, solo sigue tus movimientos con la vista como quien está intentando matar a una mosca molesta.
@@ -976,6 +1054,8 @@ Todavía no estás a la altura de este enemigo. En este contexto sobrevivir es u
 + [Cargo con un cuchillo directo a su ojo] -> pelea_final_cuchillo
 
 === pelea_final_cuchillo ===
+~ mordido_profundo = true
+# music:terror_ambient
 # flash_red # shake
 El ataque es épico. El ataque es valiente. Pero el ataque es inútil. La entidad es más alta que vos, retrocede un poco y sube la cabeza, haciendo que tu ataque rebote contra su mejilla.
 # next
@@ -988,11 +1068,13 @@ FIN DE TU HISTORIA.
 -> END
 
 === encuentro_monstruo ===
+# music:terror_ambient
 La entidad te encuentra antes de que puedas escapar. Sus ojos negros se clavan en vos.
 + [Luchar por tu vida] -> pelea_monstruo
 + [Intentar huir desesperadamente] -> final_morgue_escape
 
 === final_morgue_escape ===
+# music:terror_ambient
 Con la poca energía que te queda amagás para un lado y rápidamente cambiás de dirección. Corrés por el pasillo de entrada a la morgue, a los metros te caés de cara al piso.
 # next
 Ves a tus pies, te resbalaste con el cadáver del oficial de policía que cuidaba la morgue. Su cuerpo ahora es una masa de carne picada, sangre y horror. Solo se distingue que fue un hombre por los jirones de su uniforme.
@@ -1026,11 +1108,13 @@ Ya no es posible retroceder. Hay que seguir corriendo, nada más importa. Ganarl
 }
 
 === keymash_arrastre_exito ===
+# music:misterio_ambient
 Abrís la puerta del auto con dedos que ya casi no sentís. Arrancás. No mirás atrás.
 Te dirigís a El Faro.
 -> final_morgue_exito
 
 === keymash_arrastre_fallo ===
+# stop_music
 # flash_red
 MORISTE. FIN DEL JUEGO.
 -> END
@@ -1081,6 +1165,8 @@ Pero esos son problemas para el {nombre_personaje} del futuro. Ahora te toca dor
 -> intermision
 
 === inter_tarot ===
+~ inter1_actividad = "tarot"
+# music:misterio_ambient
 # achievement:unlock:fuiste_tarotista
 Salís a caminar y te dejás llevar, por el flujo de energías, por las pequeñas señales que hay en todas las ciudades. Cuando hay una bifurcación basta lanzar una moneda al aire para saber por dónde seguir.
 Antes de darte cuenta, estás en la periferia de la ciudad.
@@ -1095,9 +1181,11 @@ Nunca te habían tirado las cartas antes. Raro. Ella se pasa un momento largo pa
 — Te voy a dar un consejo, gurí. Pasaron dos mil años desde que el Nazareno recorrió estas tierras, pero sus símbolos tienen poder todavía. Si la situación se pone pesada, no dudes en usarlo.
 # next
 Salís a la calle con más dudas que respuestas. Pensando si lo que te dijo la tarotista te va a servir de verdad.
--> inter_misiones
+-> inter1_convergencia
 
 === inter_jesus ===
+~ inter1_actividad = "jesus"
+# music:misterio_ambient
 Te llega un mensaje de que un Guardián está con una misión complicada y podría necesitar una mano. Te subís a tu auto y manejás hasta los puertos de la ciudad a toda la velocidad posible, esperando que El Faro tenga una ayuda monetaria para pagar las multas de tránsito adquiridas en el ejercicio del deber.
 # next
 El Guardián está apoyado contra una pared. La luz de la luna ilumina su piel cobriza aunque su rostro está escondido detrás de una maraña de pelo oscuro. A pesar de que la noche trajo un viento frío del mar, el Guardián está en cuero y descalzo, usando solamente un pantalón corto de fútbol.
@@ -1129,6 +1217,7 @@ Parece que te toca a vos elegir el enfoque del ataque.
 + [Sigilo. Darle la vuelta al galpón y buscar otra entrada] -> jesus_sigilo
 
 === jesus_frontal ===
+# music:misterio_ambient
 Cargás contra la puerta del galpón. Abajo tuyo una sombra pasa volando, Jesús saltando de un techo directo al techo del galpón. Le das una patada fuerte a la puerta esperando sacarla volando pero tiembla en su lugar, haciendo un ruido seco que hace eco por toda la manzana. Creo que acabás de anunciar tu llegada.
 # next
 Forcejeás con la puerta intentando abrirla, de adentro del galpón se escucha el ruido de vidrios rotos y pelea. Después de unos segundos que parecen eternos la puerta cede un poco, lo cual te da espacio para hacer palanca y abrirla definitivamente.
@@ -1138,9 +1227,10 @@ En el piso notás el cadáver de una mujer de unos treinta años, su garganta de
 Jesús vuelve a su forma humana y mira decepcionado el cadáver a tus pies.
 — Creo que pudimos hacer eso mucho mejor — hay amargura y crítica en sus palabras y, a pesar de que usa el plural, sabés que van dirigidas a vos.
 # achievement:unlock:juan_salvado
--> inter_misiones
+-> inter1_convergencia
 
 === jesus_distraccion ===
+# music:misterio_ambient
 Caminás directo a la puerta del galpón, con paso firme, querés que el vampiro sepa que estás viniendo. Que no te considere una amenaza. De ser posible, que te piense como un delivery de comida a domicilio.
 Tocás el timbre al lado de la puerta y esperás.
 # next
@@ -1156,9 +1246,10 @@ La mujer está sentada contra una de las paredes, con un poco de sangre brotando
 — Bueno, pudo haber salido mejor, pero pudo haber salido mucho peor. Muchas gracias compañero.
 # stat:amistad_jesus:+1
 # achievement:unlock:juan_salvado
--> inter_misiones
+-> inter1_convergencia
 
 === jesus_sigilo ===
+# music:misterio_ambient
 Te agachás y buscás las sombras para acercarte sin ser visto. Por suerte el destino ayuda a tu misión y unas nubes tapan la luna oscureciendo la calle.
 Llegás al galpón, colocás tu mano contra la pared y empezás a darle la vuelta buscando una entrada secundaria.
 # next
@@ -1174,15 +1265,52 @@ La mujer patalea, llora y te araña. Te promete la muerte de formas horribles mi
 — Lo logramos — Jesús aparece atrás tuyo de forma humana — gracias Guardián, nunca olvidaré esto.
 # stat:amistad_jesus:+2
 # achievement:unlock:juan_salvado
--> inter_misiones
+-> inter1_convergencia
 
 === inter_enfermeria ===
+~ inter1_actividad = "enfermeria"
+# music:misterio_ambient
 Mary Shelley da un gritito de alegría cuando pasás a verla a El Faro. Siendo la médica oficial (y también chamán y científica loca) le toca a ella realizarte las curaciones necesarias.
 Utiliza una mezcla de medicina occidental junto con hierbas, cantos y rituales extraños.
 — Lindo cuerpo — dice para sí misma mientras te sutura una herida — si morís intentá por favor mantener las extremidades pegadas al torso que es un tedio volver a conectar los nervios y las venas.
 — ¿Eso significa que si muero me pueden revivir? — preguntás. Toda la respuesta que recibís es una risa que no te da mucha seguridad.
 # stat:hp:+20
 # next
+-> inter1_convergencia
+
+// ============================================================
+// CONVERGENCIA — BEAT DE CIERRE DE LA INTERMISIÓN 1
+// ============================================================
+
+=== inter1_convergencia ===
+La noche se asienta sobre Buenos Aires. Caminás de vuelta con el cuerpo pesado y la cabeza llena de imágenes que no terminás de ordenar.
+
+{
+- inter1_actividad == "playa":
+    El sonido de las olas todavía te late en el pecho, como si el río te hubiera prestado un poco de su calma.
+- inter1_actividad == "tarot":
+    Las cartas que te tiraron siguen apareciendo cuando cerrás los ojos: figuras que no querías ver y respuestas que no pediste.
+- inter1_actividad == "enfermeria":
+    El olor a alcohol y el zumbido de los tubos fluorescentes te quedaron pegados; al menos el cuerpo te duele un poco menos.
+- inter1_actividad == "jesus" && amistad_jesus >= 2:
+    Pensás en Jesús. Por primera vez sentís que tenés a alguien en este quilombo que te cubre la espalda sin pedir nada a cambio.
+- inter1_actividad == "jesus" && amistad_jesus == 1:
+    Pensás en Jesús. Todavía no sabés bien qué hacer con él, pero algo se abrió: una puerta entreabierta, nada más.
+- inter1_actividad == "jesus":
+    Pensás en Jesús y en lo poco que te dejaste conocer. Quizás la próxima.
+- else:
+    Te das cuenta de que dejaste pasar el día sin elegir realmente nada, y eso también es una elección.
+}
+
+{
+- peleo_profundo && mordido_profundo:
+    Después está la marca. La cicatriz fresca donde El Profundo te clavó los dientes te recuerda que esto ya no es una abstracción: tenés un cuerpo y se lo pueden romper.
+- peleo_profundo:
+    Y volvés, una y otra vez, al momento en que le clavaste la daga en el ojo a esa cosa. No fue limpio, no fue heroico, pero saliste entero.
+- else:
+    Y volvés al faro, a la decisión de no pelear. No sabés si fue cobardía o cordura, pero El Profundo sigue allá afuera y vos seguís acá.
+}
+
 -> inter_misiones
 
 === inter_misiones ===
@@ -1193,10 +1321,12 @@ El Faro te informó de dos situaciones que se están dando y sería conveniente 
 + [EL NUEVO AMANECER — Una familia asesinada con marcas de ritual] -> prox_mision_2
 
 === prox_mision_1 ===
+# music:misterio_ambient
 Te dirigís al orfanato. El destino de esos niños depende de vos.
 -> capitulo_2a
 
 === prox_mision_2 ===
+# music:misterio_ambient
 Vas a la escena del crimen. Algo huele a ritual desde aquí.
 -> capitulo_2b
 
@@ -1206,6 +1336,7 @@ Vas a la escena del crimen. Algo huele a ritual desde aquí.
 
 === capitulo_2a ===
 ~ capitulo_actual = "Cap. 2 — Pequeños inocentes"
+~ ultima_mision = "orfanato"
 # CHAPTER_BREAK: title=Pequeños inocentes, subtitle=Capítulo 2, image=title_cap2a_inocentes.jpg, music=campo_ambient
 # inv:clear_mission
 # music:campo_ambient
@@ -1224,6 +1355,7 @@ Por suerte, antes de salir a la ruta, tomaste una decisión acertada.
 * [Pedí que informen mi visita al cura a cargo de la institución] -> cap2_prep_cura
 
 === cap2_prep_info ===
+# music:orfanato
 El Faro todavía es reacio a informatizarse así que te terminan dando una carpeta gruesa con más de trescientos páginas. Parece que el orfanato funciona en ese predio hace solo 20 años.
 Antes fue una institución psiquiátrica y, si retrocedemos en el tiempo, en la década del cincuenta fue un emprendimiento turístico: una estancia para vender una versión empaquetada de 48 horas de la vida que tenía la oligarquía argentina.
 # next
@@ -1232,12 +1364,14 @@ Sea lo que sea que estaba pasando, ocurrió de forma cíclica en ese terreno.
 -> frente_orfanato
 
 === cap2_prep_fuerza ===
+# music:orfanato
 Cabral sonrió cuando me vio entrar al mat. Y luego paso las siguientes horas intentando matarme de las formas más originales que se le ocurrieron. Hubo espadas, hubo golpes bajos. En un momento creo que tiró tierra en mis ojos.
 \- Nunca vas a estar realmente listo para lo que viene, pero simplemente porque es imposible estar listo para todo. Lo mejor a lo que podes aspirar es a estar listo para la sorpresa e improvisar en el acto – Una vez terminado su discurso, Cabral me invitó a las típicas cervezas post entrenamiento.
 # stat:fuerza:+5
 -> frente_orfanato
 
 === cap2_prep_conocimiento ===
+# music:orfanato
 Enriquez volvió a tirar un libro grueso sobre su escritorio. Esta vez la letra era la F, lo cual me hacía dudar mucho sobre el mecanismo organizativo del El Faro.
 Pero aun así había nutrida información sobre como falsificar documentos, hacer fotografías y, por alguna razón, un anexo entero sobre los hongos llamdo "Fungi" (que al parecer habían estado cerca de controlar el mundo en 1367 y 1865).
 \- Siempre es importan leer sobre las acciones de los Guardianes más importantes de la antigüedad. Debería mentirte y decirte que, tal vez un día vos puedas poner tu propia entrada en el manual, pero no me parece correcto decir mentiras.
@@ -1245,6 +1379,7 @@ Pero aun así había nutrida información sobre como falsificar documentos, hace
 -> frente_orfanato
 
 === cap2_prep_magia ===
+# music:orfanato
 En cuanto entre al laboratorio de Mary Shelley encontré la cabeza de un carnero negro colocada sobre una mesa, dentro de un pentagrama, y con una vela roja en su cabeza. Por alguna razón la cabeza estaba cantando "La Marsellesa" (con un mejor francés que el mio) y tenía una serie de electrodos pegados a su cabeza. Seguí el cableado con la vista y encontré a Mary Shelley muy interesada viendo los datos de un electroencefalograma en la pantalla.
 La mire a ella, al experimento, y de nuevo a ella.
 \- Te juro que todo esto es muy necesario – Dijo la Doctora con la voz de una niña atrapada en una travesura.
@@ -1254,6 +1389,7 @@ Aun así, se tomó un par de horas para profundizar mis conocimientos del mundo 
 -> frente_orfanato
 
 === cap2_prep_cura ===
+# music:orfanato
 ~ visito_cura = true
 La tarea bajó por la cadena de mando de El Faro hasta llegar al encargado de hacer llamadas (por suerte yo ya no tenía que hacer eso). Un Guardián joven me informó que ya estaban avisados de mi llegada. Me esperaba un cura llamado Miguel Ponsatti.
 -> frente_orfanato
@@ -1302,6 +1438,7 @@ Actualmente solo había tres adultos en el predio, ella, la Hermana Paciencia y 
 // =========================================================
 
 === cap2_con_cura ===
+# music:orfanato
 # next
 La Madre Alegría te deja en la puerta de la Capilla. Se excusa mientras dice que el Padre Ponsatti te espera adentro.
 En cuanto abrís la puerta, lo primero que notas es la energía que está recorriendo el aire. Si bien es desorganizada (silvestre es la palabra que te viene a la cabeza) te hace recordar un poco a la red de conjuros defensivos que hay en El Faro.
@@ -1331,6 +1468,7 @@ Pasa siempre lo mismo cuando uno tiene fotos de gente desaparecida, uno busca un
 // =========================================================
 
 === cap2_sin_cura ===
+# music:orfanato
 # next
 La Madre Alegría te hace entrar al hall central del edificio principal. En una esquina te observa una estatua gigante de Santa Inés mientras en las cerámicas del piso se forma el rostro de Jesús. La composición tan cristiana es cortada por pequeños detalles que delatan la presencia de niños, un par de juguetes repartidos por el piso, un dibujo infantil pegado al lado de la estatua. Por alguna razón alguien decidió atar una remera al pasamos de la escalera que lleva al primer piso.
 # next
@@ -1343,6 +1481,7 @@ La Madre Alegría te hace entrar al hall central del edificio principal. En una 
 // =========================================================
 
 === hall_orfanato ===
+# music:orfanato
 { hall_orfanato > 1:
     # next: Volvés al Hall Central
 }
@@ -1362,6 +1501,7 @@ Estas solo en el hall central. ¿Cómo continuas tu investigación?
 // =========================================================
 
 === cuarto_ninos ===
+# music:orfanato
 Subís por la escalera hasta el primer piso. De un lado se ven un par de puertas abiertas que dan a unos salones de aulas improvisados. Del otro encontrás las puertas a los dos dormitorios. Con una completa falta de imaginación alguien decoró la puerta del cuarto de varones con una pelota azul.
 Abrís la puerta y te encontrás en un cuarto con una decena de camas cucheta y una pila de chicos amontonados en una esquina. Están formados en un semi circulo y algo en el medio les llama la atención.
 Por suerte parecen no haber notado tu presencia.
@@ -1370,6 +1510,7 @@ Por suerte parecen no haber notado tu presencia.
 * [Seria irrespetuoso no hacer notar tu presencia. Al fin de cuentas, es su pieza] -> ninos_anunciarse
 
 === ninos_sigilo ===
+# music:orfanato
 Los chicos están absortos en lo suyo y no te notan llegar. Por encima de sus cabezas notas que armaron un coliseo improvisado. Alguien atrapó una araña (bastante grande, casi del tamaño de una mano) y la esta haciendo pelear con un escorpión. Parece que uno de los chicos levantó apuestas usando un sistema de tapas de botellas.
 Repudiable, pero también muestra un gran espíritu emprendedor.
 # next
@@ -1379,6 +1520,7 @@ Antes de retirarte notas como la araña le ganó sin problema al escorpión, apr
 -> hall_orfanato
 
 === ninos_anunciarse ===
+# music:orfanato
 Los chicos se dan vuelta en cuestión de cinco minutos y forman una pared humana entre vos y lo que sea que estaban viendo. Saludas, te presentas e intentar usar todas tus habilidades para interactuar con niños. Por respuesta solo recibís miradas al piso, monosílabos y risas burlonas.
 Son un grupo cerrado y están acostumbrados a desconfiar del mundo adulto. Y vos no hiciste nada para ganarte su lealtad o su aprecio.
 Sin más opciones, no te queda más opción que salir y continuar tu investigación por otro lado.
@@ -1389,6 +1531,7 @@ Sin más opciones, no te queda más opción que salir y continuar tu investigaci
 // =========================================================
 
 === cuarto_ninas ===
+# music:orfanato
 Subís por la escalera hasta el primer piso. De un lado se ven un par de puertas abiertas que dan a unos salones de aulas improvisados. Del otro encontrás las puertas a los dos dormitorios. El cuarto de mujeres esta individualizado por una corona rosa (aunque no entendés la relación entre las chicas y apoyar posturas opresivas que fueron dejadas de lado hace más de dos siglos).
 Al entrar te encontrás con una un caos organizado. Un par de camas cuchetas se utilizaron como paredes para construir un fuerte. Cuatro chicas están recorriendo el lugar jugando un juego que, desde afuera, parece centrarse en hacer mucho ruido y correr peligrosamente cerca de los objetos con bordes filosos.
 Otras juegan a saltar la soga, el elástico o saltar sobre la cama. Todo esta escena te pone serias dudas sobre la viabilidad de la paternidad.
@@ -1405,11 +1548,13 @@ En menos de cinco minutos perdiste el control de la situación.
 * [Debo ganarme la confianza de Belén. Le doy una golosina] -> ninas_golosina
 
 === ninas_esperar ===
+# music:orfanato
 Tarde o temprano las chicas se cansan, solamente que toma más tiempo del que esperabas. Mucho mas tiempo del que esperabas,
 Pero lentamente todas vuelven a sus juegos y te dejan hablar tranquilo con Belén.
 -> en_privado_belen
 
 === ninas_golosina ===
+# music:orfanato
 \- Toma Belén – digo mientras le doy un caramelo que tenia guardado en el bolsillo.
 \- La Madrea Alegria me dice que nunca acepte caramelos de extraños
 \- Yo soy {nombre_personaje}, no soy un extraño.
@@ -1417,6 +1562,7 @@ Pero lentamente todas vuelven a sus juegos y te dejan hablar tranquilo con Belé
 -> en_privado_belen
 
 === en_privado_belen ===
+# music:misterio_ambient
 ~ tiene_info_belen = true
 # next: En privado con Belén
 Te llevas a la chica a un costado. Le sonreís, principalmente por que no vienen a tu cabeza palabras que sirvan en este momento. Tal vez después de esta misión puedas escribir un capitulo en los instructivos de El Faro respecto a cómo interactuar con niños y tener un enfoque pedagógico.
@@ -1441,6 +1587,7 @@ Le das espacio y la dejas hablar.
 * [Ya paso mucho tiempo. No tengo confianza en que podamos encontrar a tu amigo con vida. Lo siento.] -> belen_respuesta
 
 === belen_respuesta ===
+# music:misterio_ambient
 ~ tiene_machete = true
 Las lágrimas que venía conteniendo se liberaron completamente y ella rompió en llanto.
 Miras el machete que te dio con el recorrido para llegar a la guarida del monstruo. La letra del chico es una mezcla entre imprenta mayúscula y cursiva, y está llena de referencias como "a la derecha del árbol con forma de mano" y "seguir directo hasta la roca con forma de culo". Tal vez seguir estas instrucciones no va a ser tan fácil como parecía.
@@ -1452,6 +1599,7 @@ Miras el machete que te dio con el recorrido para llegar a la guarida del monstr
 // =========================================================
 
 === comedor_orfanato ===
+# music:orfanato
 El comedor es un cuarto gigante con unas 6 mesas donde entran diez personas en cada una. Los chicos le dieron un aire a hogar poniendo un montón de dibujos en las paredes.
 Te acercas a verlos, en la mayoría se ven a ellos jugando, en muchos en compañía del Padre Ponsatti o la Hermana Paciencia. Para sorpresa de nadie, no hay ni un dibujo de ellos jugando con la Madre Alegría.
 Al final del cuarto se encuentra la barra, que conecta con la cocina. Miras por arriba y se ve una monja fortachona que está vaciando todos los cajones y poniendo su contenido sobre la barra, como si se tratará de la autopsia de un bazar
@@ -1477,6 +1625,7 @@ Juan en cambio es un chico bonachón, que muchas veces la ayudaba a lavar los pl
 * [¡Comida gratis!. Si algo aprendí es que nunca se le dice que no a la comida gratis] -> comedor_comer
 
 === comedor_no_comer ===
+# music:orfanato
 Ella pone el cucharon en la olla y saca una sustancia amarillenta con un pedazo de carne de origen desconocido. Preferís decir no.
 \- Una lástima – La Hermana Paciencia se ve frustrada – la comida esta tan deliciosa
 \- Recuerde sus votos de ayuno hermana
@@ -1484,6 +1633,7 @@ Ella pone el cucharon en la olla y saca una sustancia amarillenta con un pedazo 
 -> hall_orfanato
 
 === comedor_comer ===
+# music:orfanato_alegre
 Ella pone el cucharon en la olla y te lo pasa. Te pones en la boca el guiso, del cual sobresale un jugoso pedazo de carne, e inmediatamente tu boca se llena de sabores deliciosos.
 Hacer comida de verdad (no calentar una olla con agua para tirar algún producto comprado en un supermercado) requiere tiempo y esfuerzo. Son de las dos cosas más importantes que uno le puede regalar a la otra persona. Las energías se tienden a trasmitir a las cosas, y sin duda la Hermana Paciencia sabia como trasmitir esas energías a su comida.
 Sentís como una oleada calor y energía se extiende desde tu estomago por el resto de tu cuerpo, preparándote para la tarea que tenes por delante.
@@ -1495,6 +1645,7 @@ Sentís como una oleada calor y energía se extiende desde tu estomago por el re
 // =========================================================
 
 === bosque_sin_pistas ===
+# music:playa_ambient
 El Orfanato está rodeado por un bosque gigante. El terreno es espeso y al norte se vuelve levemente montañoso, aparte no parece haber ningún sendero que podría darte una pista.
 Das un par de vueltas intentando buscar alguna pista pero te terminas perdiéndote por unos minutos, podes encontrar el regreso de nuevo solamente porque entre las ramas se logra ver la cruz que decorada el techo de la capilla.
 Sin duda sos un chico de ciudad.
@@ -1502,11 +1653,13 @@ Necesitas más pistas para saber qué camino tomar en el bosque. Volves al Orfan
 -> hall_orfanato
 
 === bosque_opciones ===
+# music:playa_ambient
 + [Seguir el camino que te dio Belén # REQUIRES: inv:machete_bosque] -> bosque_belen
 + [Rastrear la energía demoníaca con magia # REQUIRES: inv:info_invocacion_demoniaca, magia >= 15] -> bosque_magia
 + [Volver al orfanato] -> hall_orfanato
 
 === bosque_belen ===
+# music:playa_ambient
 El machete que te dio Belén está lleno de referencias que, a primer momento, parecen no tener ningún tipo de sentido. Caminas lentamente desde la puerta del Orfanato e intentas verlo todo desde los ojos de un niño. Ves el bosque desde otra perspectiva, todo es más grande y peligroso, pero a la vez más divertido y lleno de posibilidades.
 # next
 { conocimiento < 20:
@@ -1522,6 +1675,7 @@ En la entrada la luz se vuelva cada vez más intensa mientras la pelota pierde s
 -> cueva_entrada
 
 === bosque_magia ===
+# music:horror_ambient
 Los demonios no pertenecen a este plano, son un cuerpo ajeno. Infeccioso. Al igual que con una enfermedad, nuestra realidad pone a actuar un sistema inmunológico que permite detectarlos. Muchas de las señales son tan conocidas que ya forman parte del folclore natural como que la madera se pudra de forma repentina, el vuelo descoordinado de aves, o que los fuegos tomen una tonalidad verdosa.
 La mayoría de esos signos requieren una larga presencia de los demonios en este plano pero, para quien está más en sintonía con el mundo espiritual, puede detectar señales más sutiles. Como seguir un mal olor en la cocina
 # next
@@ -1557,6 +1711,7 @@ En la entrada la luz se vuelva cada vez más intensa mientras la pelota pierde s
 // =========================================================
 
 === capilla_cerrada ===
+# music:orfanato
 Intentas abrir a puerta de la Capilla, el edificio vecino al Edificio Principal, pero está cerrado. Hay algo que te parece muy erróneo de tener la puerta de una iglesia cerrada, debería estar abierta todo el tiempo por si uno tiene una ¿urgencia religiosa?.
 Golpeas durante un tiempo la puerta pero nadie respodne. Te da la impresión que no vas a lograr entrar.
 -> hall_orfanato
@@ -1566,6 +1721,7 @@ Golpeas durante un tiempo la puerta pero nadie respodne. Te da la impresión que
 // =========================================================
 
 === banos_opciones ===
+# music:horror_ambient
 El baño esta antecedido por un cuarto gigante, el cual el orfanato usa medio como depósito y zona de guardado. Te sorprende un poco que desperdicien un espacio tan grande y no le hayan dado un uso más útil.
 Los dos baños son gigantes, más propios de un club o un gimnasio que de una casa. Pero es entendible si se tiene en consideración que lo tienen que usar 25 chicos a la vez.
 
@@ -1575,6 +1731,7 @@ Los dos baños son gigantes, más propios de un club o un gimnasio que de una ca
 + [Son baños. No todo tiene un significado oculto] -> banos_nada
 
 === bano_varones ===
+# music:horror_ambient
 El baño no tiene muchas sorpresas. Duchas al fondo, privados a los costados, un gran espejo con varias bachas al frente. Te agrada notar que al menos hay jabón y papel higiénico.
 Notas que una de las ventanas está abierta. Raro porque el año está entrando en una época de clima mas frio. Te basta darle una mirada a la ventana para darte cuenta que un niño puede fácilmente trepar y pasar por ahí.
 Ambos niños eran varones, tiene sentido.
@@ -1582,12 +1739,14 @@ La pregunta que debes hacerte es ¿Se escaparon por ahí? ¿O algo entro y se lo
 -> hall_orfanato
 
 === bano_mujeres ===
+# music:horror_ambient
 El baño no tiene muchas sorpresas. Duchas al fondo, privados a los costados, un gran espejo con varias bachas al frente. Te agrada notar que al menos hay jabón y papel higiénico.
 Tocas las paredes, revisas las ventanas, inclusive tirar el botón.
 Aca no hay nada
 -> hall_orfanato
 
 === banos_deposito ===
+# music:horror_ambient
 Es un cuarto demasiado grande para ser un mero depósito. Viviste en monoambientes más chicos que esto. Moves un par de cajas. Buscas mecanismos en las paredes. Como buen descubrimiento, viene un poco por azar.
 Recorriendo el lugar te das cuenta que en un rincón el piso sede un poco. Tomas tu cuchillo y cortas la cortina (era horriblemente de mal gusto, contaba como un monstruo).
 Una trampilla que lleva a un sótano, cerrada por una fuerte cadena con un candado. Todo tiene un aspecto vetusto y oxidado, te da la impresión de ser inclusive anterior al Orfanato
@@ -1596,11 +1755,13 @@ Una trampilla que lleva a un sótano, cerrada por una fuerte cadena con un canda
 * [Esto no podes abrirlo con una ganzúa, pero si con un poco de ácido # REQUIRES: conocimiento >= 25] -> sotano_acido
 
 === sotano_buscar_llave ===
+# music:horror_ambient
 Lo importante es que, si vos no podes abrir esa trampilla, menos un chico. Aparte la cadena esta puesta de este lado asi que nada se pudo meter por ahí.
 Hay que seguir investigando y estar atento a ver si encontras unas llaves
 -> hall_orfanato
 
 === sotano_acido ===
+# music:horror_ambient
 Te tiemblan un poco las manos mientras sacas el frasco donde va el ácido. Respiras, te relajas y pones unas gotas en el mecanismo del candado.
 Un olor potente e industrial inunda el ambiente, por suerte estas cerca de los baños y nadie se va a preguntar por olores extraños.
 Dejas pasar unos minutos y forzas con un elemento el candado. Con el mecanismo carcomido, basta un simple empujón y se abre.
@@ -1624,6 +1785,7 @@ Tal vez uno de los niños lo encontró. Mientras miras al pozo, preferís no pen
 + [Ya vi todo lo que necesitaba ver. Vuelvo arriba] -> hall_orfanato
 
 === sotano_estatuas ===
+# music:horror_ambient
 Una atenta mirada te permite notar que cada estatua está sobre un pedestal donde, en una época, estuvieron grabados nombres. Sea quien sea que vandalizó esto, también se encargó de destruir la piedra
 { conocimiento >= 25:
     Pero los nombre, si bien son importantes, no son todo. Muchas veces la forma de las estatuas no busca representar la realidad, sino repetir simbolismos que trasmiten información.
@@ -1635,12 +1797,14 @@ Una atenta mirada te permite notar que cada estatua está sobre un pedestal dond
 -> sotano_acido_hub
 
 === sotano_pozo ===
+# music:horror_ambient
 Te acercas con respeto al pozo. Más cerca estas más notas la leve inclinación del terreno que te lleva hacia el mismo. Uno de los bordes del pozo presenta una mancha oscura descolorida, tal vez sea humedad. Esperas que sea humedad, las otras opciones te gustan menos.
 
 * [Acercarse más] -> pozo_acercarse
 * [Ya no tengo nada mas que hacer acá. Retrocedo] -> sotano_acido_hub
 
 === pozo_acercarse ===
+# music:horror_ambient
 El pozo genera una atracción casi hipnótica. Si bien avanzas mirando atentamente donde pisas por temor a resbalarte, te aseguras de estar siempre con la imagen del pozo en la borde de tu campo de visión. Sus bordes desnivelados, como unos dientes chuecos, y la oscuridad de su interior lo hacen parecer un animal a punto de atacar.
 Empezás a tener la inquietante idea de que, si dejas de mirarlo, el pozo va a saltar y te va a devorar.
 Llegas lo más cerca del borde que te permite tu coraje. Plantas los pies bien firme y te asomas para ver. La oscuridad es impenetrable. Tiras una moneda y la caída parece eterna pero, después de unos segundos, se escucha el leve tintineo.
@@ -1649,6 +1813,8 @@ Llegas lo más cerca del borde que te permite tu coraje. Plantas los pies bien f
 * [Retrocedo] -> sotano_acido_hub
 
 === pozo_bajar ===
+# music:cueva_arañas
+# play_sfx:cuerda_rota
 Te preparas para bajar al pozo, en lo cual puede ser una de las peores decisiones de tu vida. Te cercioras tres veces que el nudo que ata la soga a la estatua este bien ajustado. Es muy curioso que toda una vida pueda depender de algo tan pequeño.
 Con mucho esfuerzo le das la espalda al pozo. Se te erizan los pelos de la nuca y durante unos segundos esperas que el pozo se estire como la trompa de un animal gigante y te engulla. Pero no pasa nada. Retrocedes unos pasos hasta llegar al borde del pozo y comenzás a bajar
 # next: Bajando
@@ -1660,10 +1826,12 @@ Solo estas vos, la soga y la oscuridad. Arriba tuyo se ve una pequeña luz que i
 * [No es momento para cambiar de opinión. Sigo bajando] -> pozo_seguir
 
 === pozo_subir ===
+# music:cueva_arañas
 Morir de forma estúpida no va a rescatar a los chicos. Y si el Orfanato está arriba de una gran red de cuevas, sin duda hay una mejor entrada. Es increíble la velocidad con la que reptas por la cuerda pero, antes de darte cuenta, volvés a la cima.
 -> sotano_acido_hub
 
 === pozo_seguir ===
+# music:cueva_arañas
 # play_sfx:tension
 El ser humano tiene muchas ventajas. La transpiración, ser bípedos, los pulgares opuestos. Casi nadie nos gana como cazadores de resistencia. Pero moverse por una soga en mitad de la oscuridad, eso no es nuestro fuerte.
 Nunca te sentiste tan expuesto y vulnerable, como si la oscuridad fuese una gran presencia que te rodea.
@@ -1681,6 +1849,7 @@ Es entonces cuando eso empieza a reptar por la pared para llegar a tu lado
 }
 
 === pozo_escape_exitoso ===
+# music:cueva_arañas
 La adrenalina responde y tus músculos están preparados. Empezas a trepar a toda velocidad. Es un esfuerzo de todo el cuerpo. Tus brazos te elevan, tus piernas te empujan, tu estomago mantiene el sentido.
 Los ojos te siguen a un costado pero, de alguna forma, logras ser más rápido. Crees que vas a llegar.
 # next
@@ -1693,6 +1862,7 @@ El entrenamiento valió la pena
 -> sotano_acido_hub
 
 === pozo_muerte ===
+# stop_music
 # shake # flash_red
 Comenzás a trepar por la soga pero no hay forma que le ganes a eso. Te sentís como un gusano en el anzuelo de una caña de pescar. De repente algo sisea y agarra a la soga.
 Basta un tirón a la soga para hacerte perder el agarre.
@@ -1704,11 +1874,13 @@ FIN DEL JUEGO.
 -> END
 
 === sotano_acido_hub ===
+# music:horror_ambient
 + [Estudio las estatuas] -> sotano_estatuas
 + [Me acerco al pozo] -> sotano_pozo
 + [Vuelvo arriba] -> hall_orfanato
 
 === banos_nada ===
+# music:horror_ambient
 No entendes mucho qué relación tienen los baños con el misterio que estas investigando. Sentís que es tu responsabilidad darle una mirada al lugar pero, una vez complicado, es mejor centrarse en alguna pista que puede llevar a algo útil.
 -> hall_orfanato
 
@@ -1717,6 +1889,7 @@ No entendes mucho qué relación tienen los baños con el misterio que estas inv
 // =========================================================
 
 === oficina_madre_opciones ===
+# music:misterio_ambient
 Te acercas sigilosamente a la puerta de la oficina de la Madrea Alegría. Apoyas tu oreja contra la puerta y solo escuchas el golpeteo de unos dedos contra el teclado. Quien sabe que podría estar haciendo ¿Enviando un mail a entidades malignas avisando de tu presencia? ¿Poniendo avisos en algún sitio web oscuro de venta de niños?.
 Aunque, tal vez sos vos quien está delirando. No todas las personas odiosas son malas. Y, aun las personas malas, no están metido en cuestiones estrictamente sobrenaturales.
 Apoyas levemente tu mano en la manija de la puerta. Obviamente está cerrada
@@ -1727,10 +1900,12 @@ Apoyas levemente tu mano en la manija de la puerta. Obviamente está cerrada
 * [Golpeo la puerta hasta que me atiendan] -> oficina_golpear
 
 === oficina_ignorar ===
+# music:misterio_ambient
 No te cabe duda que la Madrea Alegría debe ser una persona horrible con los chicos. Pero te parece que la misma se maneja dentro de los parámetros normales de una infancia triste en un orfanato. Y vos estas acá porque hay un elemento sobrenatural en juego.
 -> hall_orfanato
 
 === oficina_ganzua ===
+# music:misterio_ambient
 Eureka. La puerta se abre y esperas encontrar a la Madrea Alegria con las manos en la masa.
 Desde la puerta se puede observar el monitor de su PC (pésimo feng shui). Lees por arriba de su hombro, ignorando su cara de indignación, solo para darte cuenta que estaba escribiendo un mail.
 La Madre Alegria estaba escribiendo un largo mail a una serie de empresarios de la zona, mezclando imploración con amenazas de fuego eterno en el infierno esta solicitando donaciones para….medias. Y ropa en general.
@@ -1745,6 +1920,7 @@ La Madre Alegria estaba escribiendo un largo mail a una serie de empresarios de 
 -> hall_orfanato
 
 === oficina_patada ===
+# music:misterio_ambient
 Solo necesitas una patada bien puesta. La puerta se abre y esperas encontrar a la Madrea Alegria con las manos en la masa.
 Desde la puerta se puede observar el monitor de su PC (pésimo feng shui). Lees por arriba de su hombro, ignorando su cara de indignación, solo para darte cuenta que estaba escribiendo un mail.
 La Madre Alegria estaba escribiendo un largo mail a una serie de empresarios de la zona, mezclando imploración con amenazas de fuego eterno en el infierno esta solicitando donaciones para….medias. Y ropa en general.
@@ -1759,6 +1935,7 @@ La Madre Alegria estaba escribiendo un largo mail a una serie de empresarios de 
 -> hall_orfanato
 
 === oficina_golpear ===
+# music:misterio_ambient
 Golpeas. Primero un par de golpes de cortesía. Luego más fuerte. Por último terminas convirtiendo tu mano en una maza contra la puerta, al punto que te llega a doler la mano.
 \- Obviamente, si tendría dos nenes escondidos en mi oficina, ya me hubiese dado cuenta {nombre_personaje} – La voz de la Madre Alegría trasmite el cansancio de quien está agotada de interactuar con gente de poca inteligencia. – Vaya a hacer algo útil y busque a los niños.
 -> hall_orfanato
@@ -1784,6 +1961,7 @@ El camino de la izquierda parece bajar de forma serpenteante mientras el camino 
 * [Me tomo un momento para escuchar y estudiar mi ambiente] -> cueva_escuchar
 
 === cueva_escuchar ===
+# music:cueva_arañas
 Dejas de pensar en el dolor de tu cuerpo (tus rodillas parecen dos sirenas que mandan constante señales a todo tu cuerpo). Contenes la respiración y tranquilizas tu respiración.
 Algo se mueve. Mierda. Muchas cosas se mueven. Esta lleno en la cueva, arriba y abajo, todo a tu alrededor. Es un sonido suave y punzante, como si algo caminaría en punta de pie. La mayoría del ruido viene por el camino marcado por la media.
 Pero también hay algo que viene atrás tuyo. Mejor estar atento
@@ -1793,21 +1971,25 @@ Pero también hay algo que viene atrás tuyo. Mejor estar atento
 * [Bajo por el camino de la izquierda] -> cueva_izquierda
 
 === cueva_izquierda ===
+# music:cueva_arañas
 Bajas por el camino de la izquierda, aunque sería más correcto decir que caes de forma más o menos controlada. La red de telaraña hace parecer el lugar más espeso y peligroso. Notas un par de huecos por el que podrías seguir avanzando pero ninguno se encuentra al ras del suelo. Sin duda Juan no siguió para acá, aunque alguno ser que vuele o se pegue a las paredes podría usar esos huecos para moverse.
 
 * [Me tomo unos momentos para dejar unas trampas en esos huecos. Es importante cuidarse la espalda] -> cueva_trampas
 * [Vuelvo lo más rapido y sigo por el otro camino] -> cueva_volver_derecha
 
 === cueva_trampas ===
+# music:cueva_arañas
 ~ puso_trampas = true
 No estás trabajando en las mejores condiciones pero podes hacer una trampa. Algo lo suficientemente letal como para destruir a lo que se meta por ahí y lo suficientemente ruidoso para que lo escuches. Solo esperas no haberse excedido y poner en peligro la integridad de la cueva. O matar a un topo inocente
 -> cueva_derecha
 
 === cueva_volver_derecha ===
+# music:cueva_arañas
 Subir es más difícil que bajar. Así de cruel es la gravedad. Terminas apagando la linterna del celular para tener libre tus dos manos para agarrarte de las raíces. Logras subir por pura fuerza de voluntad es un par de raspones en las rodillas y tierra bajo todas tus uñas.
 -> cueva_derecha
 
 === cueva_derecha ===
+# music:cueva_arañas
 Pasas por encima de la media asegurándote de dejarla en su lugar, podría ser necesaria a futuro una marca que te indique por dónde ir. Das cinco pasos y el camino te obliga a realizar un giro angosto a tu derecha.
 Es ahí donde tu pierna deja de responder, miras para abajo y notas que tu pie está atrapado en una red de tela de araña. Por mucha fuerza que haces estos no son los finos hilos que veías hasta ahora, son más gruesos y resistentes, y parecen tener unos pequeños filos que muerden tu zapatilla y amenazan con llegar hasta tu piel.
 # next
@@ -1818,6 +2000,7 @@ Es ahí donde tu pierna deja de responder, miras para abajo y notas que tu pie e
 }
 
 === cueva_emboscada_sabe ===
+# music:cueva_arañas
 Estas completamente indefenso, este sería el momento perfecto para que te ataquen. No hay que ser muy inteligente para sospechar que sea lo que sea que te esté siguiendo va a pensar lo mismo.
 Giras todo tu cuerpo y, con un movimiento fluido y puramente instintivo, tenes tu daga en la mano. No llegas a clavársela, todo es demasiado para eso.
 El enemigo estaba saltando, un par de colmillos del tamaño de tu antebrazo y ocho ojos brillantes saliendo de la oscuridad y enfilando directo hacia tu cuello, pero vos llegas a posicionar tu daga antes.
@@ -1829,6 +2012,7 @@ Su cuerpo afloja el agarre y en un latido está en el piso, con las piernas enro
 -> boveda
 
 === cueva_emboscada_no_sabe ===
+# music:cueva_arañas
 # shake # flash_red
 Obviamente, este es el momento perfecto para una emboscada. Algo se mueve rápidamente atrás tuyo. Intentas girar, lo cual es muy difícil con un pie inmovilizado, y ves ocho ojos negros como la noche y un par de colmillos del tamaño de tu mano dirigiéndose hacia tu cuerpo.
 El celular se te escapa de la mano y todo se vuelve un juego de sombras y movimiento. Sea lo que sea es grande, como un perro casero, y tiene una capa de pelo fino que te da asco.
@@ -1847,23 +2031,27 @@ Limpias tu daga con tu pantalón y haces un tajo en la manga de tu camisa, donde
 * [Estoy en una cueva llena de enemigos. No es momento de ponerme a jugar a la enfermera] -> herida_ignorar
 
 === herida_cortar ===
+# music:cueva_arañas
 El corte duele. Duele más que la mordida. Ejerces presión en tu brazo y del corte sale una mezcla de sangre, pus y de una sustancia con olor a aceite que esperas que sea el veneno. Tu herida parece un surtidor, lo cual nunca es bueno. Pero después de apretar un rato (y gritar un poco), solo expulsa sangre. Esperas que eso sea suficiente.
 Aun así, luego de vendar la herida, notas que la movilidad de tu brazo sufrió gravemente por tu intervención.
 # stat:hp:-10
 -> boveda
 
 === herida_chupar ===
+# music:cueva_arañas
 Girar así resulta complicado. Y cuando te pones los bultos en la boca tu primera reacción es alejar la boca en una mezcla de dolor y asco. Aun así, ser humano es entender la necesidad de ciertas dosis de dolor y sacrificio en aras de un bien mayor. Respirar profundo, te llevas los bultos a la boca y succionas. Decidís imaginar que es helado de frutillar y vainilla.
 Cuando sentís un gusto amargo en la boca, lo que supones que es el veneno, escupís al piso y seguís hasta que solo llega a tu boca el gusto metálico de la sangre.
 # stat:hp:-5
 -> boveda
 
 === herida_vendar ===
+# music:cueva_arañas
 Sacas de tu bolso el kit básico de primeros auxilios y limpias la herida (acompañado por un par de gritos). Una cueva oscura, manos sucias de tierra, una mordida por una araña que es lo suficientemente grande como para pagar boleto en un colectivo. No son las mejores situaciones pero esperas que funcione durante un tiempo.
 Por lo menos hasta que te pueda atender Mary Shelley. Solo esperas que no decida amputarte el brazo o dejarte en observación para ver si ganas el poder de trepar paredes y tirar telarañas.
 -> boveda
 
 === herida_ignorar ===
+# music:cueva_arañas
 Puteas por lo bajo. Pateas el cadáver de la araña a tus pies, y decidís seguís adelante ignorando el dolor. Cuando termines tu misión, estas seguro que en El Faro te van a dar la atención médica correspondiente
 # stat:hp:-5
 -> boveda
@@ -1895,14 +2083,17 @@ Tenes que pasar.
 * [Simplemente descargo mi poder contra ellas # REQUIRES: magia >= 20] -> boveda_pasar_magia
 
 === boveda_pasar ===
+# music:boveda_ambient
 Lo importante es que logras llegar.
 -> boveda_capullo
 
 === boveda_pasar_magia ===
+# music:boveda_ambient
 Solo una palabra y un gesto. Sos una fuerza de la naturaleza, como un monzón o un terremoto, las telarañas se tuercen y quiebran dejando un camino para que avances.
 -> boveda_capullo
 
 === boveda_capullo ===
+# music:boveda_ambient
 Llegas hasta el capullo y de un solo movimiento cortas el hilo que lo ata al techo. A tus pies está el capullo. Te basta una simple mirada para darte cuenta que la forma que esconde es la de un joven. Supones que es tarde para Dario, tal vez sea Juan.
 Sos muy cuidadoso con tu daga, como una caricia, solo usas la punta y la moves despacio para abrir la tela de araña sin lastimar al niño.
 # next
@@ -1930,7 +2121,7 @@ Los minutos dejan de tener sentido y el tiempo se cuenta solamente en las compre
     No hay tiempo para sutilezas, te cargas el cuerpo de Juan y corres hacia la salida.
 }
 # next
-# music:chase_ambient
+# music:terror_ambient
 La luz del celular rebota por todos lados mientras corres, intentando hacer malabares entre el cuerpo de Juan, tu daga y el celular. Rocas de formas extrañas, raíces retorciadas, telarañas quebradas, la luz solo te da un calidoscopio de imágenes poco prometedoras.
 Pero no la necesitas, tu cuerpo recuerda el camino de forma instintiva y logras seguir el camino correcto y agacharte cuando es adecuado (casi siempre).
 # next
@@ -1943,6 +2134,7 @@ Entonces las vez. Primero son meramente el reflejo de luz en la oscuridad. El br
 + [Va a ser una pelea dura] -> cueva_pelea_normal
 
 === cueva_pelea_fuerza ===
+# music:boss_arañas
 Antes que te des cuenta una sustancia babosa y pegajosa rodea tu muñeca, la inhábil por suerte. Una de las arañas te atrapo con su tela y te tira hacia ella mientras la otra se prepara para flanquearte.
 Sorprendentemente, Cabral te entrenó para situaciones así. En vez de ofrecer resistencia a la araña que te atrapó, cargas contra ella.
 Atrás tuyo notas movimiento, la otra araña saltó hacia donde deberías haber estado. Pero vos ya estas con la daga en la mano.
@@ -1954,6 +2146,7 @@ De un corte preciso la abrís al medio. La tierra de la cueva se llena de entra�
 -> regreso_orfanato
 
 === cueva_pelea_normal ===
+# music:boss_arañas
 No tenes la fuerza para cargar contra ellas, así que haces lo único que se te ocurre: esperar. Daga en mano, espalda contra la pared, dejas que vengan.
 # next
 La primera araña salta hacia vos. La esquivas por centímetros y le clavas la daga en el costado. No es un golpe limpio, pero basta. El bicho se retuerce y cae.
@@ -1968,7 +2161,7 @@ Un corte. Otro. La daga se siente pesada pero tus brazos no paran. Cuando termin
 
 === regreso_orfanato ===
 # SPIDER_DIFFICULTY: fast
-# music:chase_ambient
+# music:terror_ambient
 Corres por el bosque con el cuerpo de Juan en tus brazos. Será por qué es liviano, o el ruido afilado de los enemigos clavando sus extremidades en los árboles ayuda a empujar tu adrenalina, pero avanzas sin bajar el ritmo. No hay raíces que se interpongan en tu camino o ramas que te molesten
 # next
 No necesitas guiarte. Entre las copas de los árboles sobresale la cruz de la capilla vecina al orfanato. Santuario, o "la X marca el lugar", depende tus preferencias teológicas (al menos nadie duda de la existencia de los piratas)
@@ -2005,6 +2198,7 @@ Te das cuenta en cuestión de segundos que las arañas pequeñas (contextualment
 * [Tenes otras cosas más importantes que hacer] -> no_ayudar_madre
 
 === ayudar_madre ===
+# music:misterio_ambient
 { fuerza >= 25:
     Cargas y, en el mismo, la empujas con tu hombro para sacarla del peligro (tal vez un poco más fuerte de lo que querías), descargas un mandoble con la espada que parte en dos a una de las arañas y terminas girando sobre tus tales para enfrentar a las tres arañas que quedan.
     Corte, esquiva, parada, amague. Clavar. Y clavar de nuevo. En cuestión de segundos convertiste a una de las arañas en una fracción extraña y terminas clavado a la otra al piso con y espada
@@ -2019,6 +2213,7 @@ Te das cuenta en cuestión de segundos que las arañas pequeñas (contextualment
 -> ninos_decision
 
 === no_ayudar_madre ===
+# music:misterio_ambient
 ~ madre_alegria_vive = false
 # achievement:unlock:alegria_muere
 La Madre Alegría grita dia veces, la primera cuando una araña la muerde en la pantorrilla y la segunda cuando el golpe la hace caer de rodillas. Rápidamente es superada. Cuatro arañas les clavan sus colmillos, una en cada extremidad. Las arañas comienzan a moverse y subir por una de las paredes, dejando atrás un rastro de sangre. Aún así la Madre Alegría no grita más, se limita a repetir una plegaria en latín.
@@ -2031,6 +2226,7 @@ El grito de los niños vuelva a enfocarte, la araña gigante ya casi subió y la
 -> ninos_decision
 
 === ninos_decision ===
+# music:misterio_ambient
 + [Que suban y se escondan en la pieza] -> ninos_habitacion
 + [En la capilla van a estar seguros] -> ninos_capilla
 + [La cocina parece un buen lugar para atrincherarse] -> ninos_cocina
@@ -2038,26 +2234,31 @@ El grito de los niños vuelva a enfocarte, la araña gigante ya casi subió y la
 + [Que huyan por el bosque. Con un poco de suerte van a lograr escapar] -> ninos_huir
 
 === ninos_habitacion ===
+# music:orfanato
 Basta con un grito y un gesto y los chicos entienden de que se trata. Belén se pone upa a uno de los nenes más pequeños y sube las escaleras. Un grupo de arañas, corriendo por una de las paredes van a por ellos
 Esperas que lleguen a hacer una barricada a tiempo
 -> cap2a_spider_check
 
 === ninos_capilla ===
+# music:orfanato
 Siempre es mejor no necesitar ayuda. Pero estas en un orfanato religioso, peleando contra demonios e intentando salvar a unos niños. Si hay un momento donde el de arriba podría dar una mano, es este.
 Das la orden y Belén toma el mando, asegurándose que ninguno se quede detrás.
 Una araña intenta seguirlo, pero basta un disparo para dejarle en claro que si atención debe centrarse en vos
 -> cap2a_spider_check
 
 === ninos_cocina ===
+# music:orfanato
 A la par que das la orden, la hermana Paciencia abre la puerta y le rompe la cabeza a una de las arañas con un palo de amasar, que termina bañado en una sustancia viscosa (ojalá que lo lave antes de cocinar). Los niños corren hacia la cocina. En segundo se convierten en un pequeño ejército armado con sartenes, cuchillos y cubiertos que usan como armas arrojadizas.
 -> cap2a_spider_check
 
 === ninos_pelear ===
+# music:horror_ambient
 Das la orden y bajan, armados con cintos, lámparas y muebles. Los más grandes cargan de forma valiente, pero carecen de técnica. Los más chicos corren y gritan, esperando lograr algo, pero se quedan inmóviles en cuanto terminan frente a frente con una araña.
 A tu derecha vez a un niño que, inútilmente, le pega a una araña con una almohada. A tu izquierda una niña cae al piso, sobrepasada por una araña que busca llegar a su yugular.
 -> cap2a_spider_check
 
 === ninos_huir ===
+# music:horror_ambient
 Belén dirige la retirada hacia la puerta de salida. Va adelante al principio, para romper el miedo, y atrás al final, para ayudar a los rezagados.
 Una araña avanza por el techo, intentando llegar a la puerta antes que ellos, pero de un disparo la bajas al piso obligándola dolorosamente a respetar la ley de gravedad.
 Solo queda esperar que no se encuentren más arañas en el largo camino hacia la salida.
@@ -2074,6 +2275,7 @@ Solo queda esperar que no se encuentren más arañas en el largo camino hacia la
 // =========================================================
 
 === combate_final ===
+# music:boss_arañas
 # next
 La araña gigante logra clavar una de sus extremidades en la pared y eso le da el punto de apoyo necesario para terminar de salir de la cueva. Ya no tenes más vueltas que dar, te toca ver cómo vencer a eso.
 
@@ -2085,14 +2287,16 @@ La araña gigante logra clavar una de sus extremidades en la pared y eso le da e
 * [Acercarme, cortar, huir antes que me ataque y repetir. Un baile letal # REQUIRES: fuerza >= 30] -> combate_fuerza
 
 === combate_espada ===
+# music:boss_arañas
 # flash_red
 La sorpresa dura solo unos segundos. La impresión fuerte cuando una de las extremidades atraviesa tu pecho de punta a punta. Cuando empezas a sentir frío y tu ropa mojada (por tu propia sangre) llega la calma. ¿Cómo se te ocurrió que podías cargar directamente contra eso?. Mientras la araña lentamente te acerca hacia sus colmillos, ya nada te importa. Solo esperas que los niños sobrevivan
 MORISTE. FIN DEL JUEGO.
 -> END
 
 === combate_magia ===
+# music:boss_arañas
 Concentras toda tu energía, mostras tus palmas a la araña gigante y recitas las palabras correctas. A pesar del miedo y la adrenalina, tu lengua baila pronunciando las palabras correctas sin trabarse y en tu nombre permanece grabada, como corresponde, una imagen de un sol sobre un fondo negro.
-Es entonces cuando el fuego empieza a salir de tus manos
+Es entonces cuando el fuego empieza a salir de tus manos # play_sfx:boladefuego
 # next
 # flash_yellow
 Llamarla una bola de fuego es incorrecto, es más parecido a un lanzallamas. Sentís como el aire de calienta, tus brazos empiezan a transpirar pero, a la vez, tu cuerpo se siente cada vez más frío y liviano. Cómo si estaría vaciando tus entrañas para alimentar la llama.
@@ -2106,6 +2310,7 @@ Un viento entra en la habitación y las cenizas se dispersan perdiendo cualquier
 -> despues_combate
 
 === combate_disparos ===
+# music:boss_arañas
 Sacas el arma y apuntas a las patas. Si le volás el apoyo, la gravedad hace el resto.
 # next
 El primer disparo le arranca una pata delantera. La araña gigante se tambalea pero no cae. El segundo disparo le da en otra articulación y un crujido horrendo llena la bóveda.
@@ -2115,6 +2320,7 @@ El eco del impacto dura varios segundos. Después, silencio. Te asomas al borde 
 -> despues_combate
 
 === combate_exorcismo ===
+# music:boss_arañas
 Cuando se trata de invitar (o desinvitar) a un demonio no hay que improvisar. Muchas veces se pasan meses preparando la parafernalia, memorizando los movimientos y las palabras.
 Todo eso está muy bien, pero la araña está a unos metros tuyos y dudas que está dispuesta a darte unos meses de pausa.
 # next
@@ -2132,6 +2338,7 @@ Entonces todos para. El techo vuelve a ser solo un techo, el viento desaparece, 
 -> despues_combate
 
 === combate_capilla ===
+# music:boss_arañas
 Te das media vuelta y huis. Por suerte alguien dejo la puerta abierta. Los metros que te separan de la capilla parecen eternos y notas dos arañas a ti costado, saltando de árbol en árbol, que van a llegar primero.
 Una se desliza por un hilo de seda y pone su cuerpo justo para taparte la entrada a la Capilla, pero vos vas a entrar igual. Usas tus últimas energías para imprimir más velocidad y saltas sobre ella.
 # next
@@ -2147,6 +2354,7 @@ Preparar tu última bala y, con un certero disparo, acabas con su vida
 -> despues_combate
 
 === combate_fuerza ===
+# music:boss_arañas
 El primer hachazo rompe una de las extremidades de la araña y amenaza con hacerla caer por el hueco del cual viene. Pero en ese momento el resto de la arañas carga hacia vos. Es difícil protegerse cuando tus enemigos simplemente pueden caminar por el techo y caer sobre tu cabeza.
 Con mas fuerza que técnica logras abrirte un hueco y huir a la otra punta de la habitación, dejando un par de arañas muertas en el camino
 # next
@@ -2168,6 +2376,7 @@ No sé levanta mas
 // =========================================================
 
 === despues_combate ===
+# stop_music
 # next: Después del combate
 # music:misterio_ambient
 { spider_survived:
@@ -2201,10 +2410,12 @@ Te acercas a Juan
 -> despues_combate_ninos
 
 === despues_combate_ninos ===
+# music:misterio_ambient
 Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tomaron decisiones de último minuto y tenés que averiguar cómo salió todo.
 { ninos_capilla:
     Abrís la puerta de la capilla y todos los niños están ahí, sin un rasguño, a los pies de una estatua de Santa Inés. La Capilla funcionó
     Belén se acerca y te abraza. Luego todos los niños la siguen
+    ~ belen_sobrevive = true
     # achievement:unlock:ninos_ninguno
 - else:
     { ninos_habitacion:
@@ -2212,6 +2423,7 @@ Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tom
         Entras y ves a los chicos amontonados en una esquina, llorando. En el centro de la habitación están los cadáveres de 3 arañas…y de más de diez chicos.
         Los dejaste a su suerte e hicieron lo mejor que pudieron.
         Belén, en la esquina de la habitación y te mira con odio en la mirada.
+        ~ belen_sobrevive = true
         # achievement:unlock:ninos_mitad
     }
     { ninos_cocina:
@@ -2220,6 +2432,7 @@ Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tom
         Tiras el cadáver del animal al costado, con la misma sutileza que le darías a una bolsa de basura.
         Los niños salen, ilesos, de sus escondites debajo de las mesas o dentro de los cajones.
         Belén se acerca y le dan un beso en la frente a la hermana que se sacrificó por ellos. El resto de los chicos la imitan
+        ~ belen_sobrevive = true
         # achievement:unlock:ninos_ninguno
     }
     { ninos_pelear:
@@ -2234,6 +2447,7 @@ Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tom
         Recorres el bosque. El camino a la puerta de salida está marcado por niños muertos y redes de tela de araña. Fue una masacre. Sus piernitas no le podían ganar nunca a las arañas.
         Al final, todavía agarrada al portón, está Belén.
         Le gritas pero no te contesta. Los dedos de su mano están rojos del esfuerzo y, a pesar de que lo intentas, no suelta el portón. No te responde y sus ojos miran sin mirar, perdidos en los horrores que queman su memoria
+        ~ belen_sobrevive = true
         # achievement:unlock:ninos_casi_todos
     }
 }
@@ -2250,6 +2464,7 @@ FIN DEL EPISODIO.
 
 === capitulo_2b ===
 ~ capitulo_actual = "Cap. 2 — El nuevo amanecer"
+~ ultima_mision = "cementerio"
 # CHAPTER_BREAK: title=El nuevo amanecer, subtitle=Capítulo 2, music=city_ambient
 # inv:clear_mission
 # achievement:unlock:nuevo_amanecer
@@ -2271,6 +2486,7 @@ Pero antes de concurrir esta noche a la casa te preparaste.
 * [Descansaste. Necesitabas recuperarte para la misión] -> cap2b_prep_descanso
 
 === cap2b_prep_expediente ===
+# music:city_ambient
 El expediente hacía un análisis detallado de los casos anteriores. Incluidas fotos de las víctimas que hubieses preferido no ver. Sus cuerpos parecían secos, como pasas de uva, y no daban cuenta de haber ejercido ningún tipo de resistencia. Es más, hasta se podía notar una ligera sonrisa de placer en sus rostros. Lo cual parece una clara señal de un ataque de un Vampiro Superior.
 # next
 A diferencia de los vampiros inferiores, que parecen murciélagos de tamaño gigante, los Vampiros Superiores mantienen un aspecto humano y tienden a ser superiores a nosotros en todo lo relacionado con las funciones intelectuales, las interacciones sociales y, en ciertos casos, la magia. Lo cual es bastante injusto dado que tienen una eternidad para practicar.
@@ -2284,6 +2500,7 @@ La lógica dictaba que no entraban en una casa por un bocadillo. Pero aparenteme
 -> cap2b_llegada_casa
 
 === cap2b_prep_fuerza ===
+# music:city_ambient
 Cabral se encuentra en el campo de tiro, una parte del sótano de El Faro que huele a pólvora. En cuanto llegás te pasa una pistola Bersa 9mm y comenzás a hacer entrenamientos para disparar.
 Practicás pegar dos balas en el pecho y una en la cabeza; con balas inertes en el peine para fingir que el arma se traba, con blancos móviles, y con blancos modificados para tener que disparar en lugares muy particulares.
 \- Recordá que muchos de nuestros enemigos no tienen una anatomía parecida a la nuestra. Disparar al pecho o a la cabeza puede ser básico para una persona, pero también tenés que aprender a disparar a ojos que van a estar a la altura de la rodilla o a la base de los tentáculos.
@@ -2294,6 +2511,7 @@ Cabral te invita a una cerveza para festejar tus avances y, de yapa, algún sán
 -> cap2b_llegada_casa
 
 === cap2b_prep_conocimiento ===
+# music:city_ambient
 Esta vez en el escritorio de Enriquez te estaba esperando la guía con la letra F. Ella solo dejó de tipear con una mano para acercarte el libro. Así que buscaste la silla más cómoda y te pusiste a leer.
 Es curioso que haya una varilla entera de cuestiones tan mundanas como "fregar". Rápidamente te das cuenta que "follar" ocupa casi la mitad del libro.
 # next
@@ -2305,6 +2523,7 @@ Terminás el tomo con un nuevo aprecio por la abstinencia.
 -> cap2b_llegada_casa
 
 === cap2b_prep_magia ===
+# music:city_ambient
 Entraste a la oficina de la Dra. y te encontraste con un cuadro particular. En una mesa ratona se encontraba la Dra. Mary Shelley junto a una cabra negra, que por lo cómoda que estaba sentada parecía no tener problema en moverse en dos patas, y cuya cabeza estaba rapada y con marcas de suturas recientes.
 En el centro de la mesa, un mazo de cartas. Parece que entraste en mitad de una partida de truco (la cabra estaba ganando).
 # next
@@ -2315,6 +2534,7 @@ Después de perder la partida de truco, la Dra. dedicó su tarde a repasar con v
 -> cap2b_llegada_casa
 
 === cap2b_prep_tuco ===
+# music:city_ambient
 Al Profesor no le gusta mucho tu pedido. Hace referencia a un montón de reglamentos (que fingís conocer) respecto a la importancia de centralizar la información y limitar el contacto entre los Guardianes para que, en caso de caer uno, no sea un total caos para la organización.
 Literalmente, lo perseguís desde su despacho, atravesando el Hall Central donde trabaja Enriquez, hasta el estacionamiento de la Universidad donde guarda su coche.
 # next
@@ -2325,6 +2545,7 @@ Te pasa un número. Cuando te contactás con la persona, un hombre de cincuenta 
 -> cap2b_llegada_casa
 
 === cap2b_prep_descanso ===
+# music:city_ambient
 Tu cuerpo agradeció un día entero en la cama. Solo saliste para una comida reparadora, de esas que llenan el estómago pero también acarician el alma. Y pasaste toda la tarde jugando a juegos retro sin ninguna relación con tu trabajo, lo necesario para despejar la mente.
 Pero eso te permitió volver a estar afilado para el trabajo.
 # stat:hp:+5
@@ -2335,6 +2556,7 @@ Pero eso te permitió volver a estar afilado para el trabajo.
 // ---------------------------------------------------------
 
 === cap2b_llegada_casa ===
+# music:city_ambient
 A unos metros de la esquina se encuentra estacionada una patrulla policial. Justo frente a una casa blanca de un piso, con un pasillo en un costado que delata la existencia de un patio al fondo. En la puerta de la propiedad se encuentra un oficial de la policía, recostado contra la pared. Con solo verlo te das cuenta que su estado físico no es el mejor y, si no estuviera recostado, posiblemente sufriría un infarto si pasa media hora seguida de pie.
 Esperás que sea el mejor tirador, porque en su defecto es un total desperdicio de dinero público.
 # next
@@ -2345,6 +2567,7 @@ Ambos se miran, como en un western de bajo presupuesto. Hay que tomar una decisi
 -> cap2b_entrar_opciones
 
 === cap2b_entrar_opciones ===
+# music:city_ambient
 + [Te retirás y das la vuelta manzana buscando una entrada por los techos] -> cap2b_entrar_techos
 + {tiene_favor_tuco and not uso_favor_tuco} [Es momento de cobrar tu favor con Tuco] -> cap2b_entrar_tuco
 * [Tenés un billete en el bolsillo. El viejo sobornín siempre funciona] -> cap2b_entrar_soborno
@@ -2352,6 +2575,7 @@ Ambos se miran, como en un western de bajo presupuesto. Hay que tomar una decisi
 + [Fingís ser un policía para que te deje pasar] -> cap2b_entrar_policia
 
 === cap2b_entrar_techos ===
+# music:city_ambient
 Dás la vuelta a la manzana sin problema, buscando del otro lado cuál puede ser un punto de entrada. Frente a un frondoso árbol hay un comercio cerrado, que tiene pinta de haber sido un kiosco hace un par de crisis económicas. Sospechás que es tu mejor forma de entrar dado que debe ser la única propiedad vacía.
 Trepás al árbol y con un poco de equilibrio, y un mucho de suerte, lográs avanzar por una rama que te acerca al frente del kiosco. De un salto lográs llegar al techo.
 # next
@@ -2366,6 +2590,7 @@ Las luces del patrullero te sirven como guía. Aun así caminás con cuidado bus
 -> cap2b_dentro_casa
 
 === cap2b_entrar_tuco ===
+# music:city_ambient
 Le mandás un mensaje a Tuco explicándole lo que necesitás, por respuesta solo recibís un emoticón. Te apoyás contra un árbol, fingiendo que sos solamente una persona que salió a disfrutar el aire fresco de la noche.
 No sabés qué hizo Tuco pero fue rápido. La radio del policía empieza a sonar y una voz gritona le recita una serie de códigos y claves. Con una velocidad que creías imposible, el policía corre hacia su patrullero y sale quemando llanta para atender una urgencia que, sospechás, solo existe en la imaginación de Tuco.
 # next
@@ -2375,6 +2600,7 @@ Con mucho cuidado, para no destruir la cinta policial y dejar rastros de tu entr
 -> cap2b_dentro_casa
 
 === cap2b_entrar_soborno ===
+# music:city_ambient
 Te acercás al policía con el billete de más alta denominación en la palma de tu mano. Lo saludás, asegurándote que en el apretón de manos el billete pase a su sudorosa palma, mientras le sonreís.
 \- Trabajo en el diario "Buenos días Costa Alegre". Vamos a publicar una noticia en la sección criminal y me gustaría sacar unas fotos para la primicia.
 \- No está permitido – te contesta mientras ve el billete que le diste.
@@ -2390,6 +2616,7 @@ No estás seguro si el policía no entiende el concepto de soborno, o lo entiend
 -> cap2b_entrar_opciones
 
 === cap2b_entrar_invisible ===
+# music:city_ambient
 Te alejás hasta doblar la esquina, y perder el campo de visión con el policía. Protegido por las sombras te ponés a recitar el hechizo. Es algo fácil, solo se requiere unas palabras, romper un espejo, quemar unas entrañas de ave y hacerte un corte superficial con un arma blanca nunca usada. Obviamente, son todos objetos que llevás en tu mochila.
 # next
 El hechizo no hace ningún ruido imponente, solamente vas desapareciendo lentamente. Al principio te cuesta un poco caminar. Es raro avanzar cuando no ves tus piernas o calcular por dónde vas sin ver tus brazos, pero te las arreglás.
@@ -2398,6 +2625,7 @@ Al llegar a la puerta contenés la respiración y pasás por debajo de la línea
 -> cap2b_dentro_casa
 
 === cap2b_entrar_policia ===
+# music:city_ambient
 Hay un refrán que dice que la clave para entrar en un lugar es fingir que pertenecés. Así que sacás pecho y ponés cara de asco, como si tu lengua hubiese sido reemplazada por un limón.
 Te acercás a paso firme hasta la puerta de la casa.
 \- Buenas agente, soy el teniente García – por una cuestión meramente estadística estás seguro que en toda comisaría hay alguien con el apellido García – vengo a investigar la escena del crimen.
@@ -2411,6 +2639,7 @@ Por suerte no estás ante el miembro más brillante de las fuerzas de seguridad.
 // ---------------------------------------------------------
 
 === cap2b_dentro_casa ===
+# music:horror_ambient
 { paso_tiempo_casa >= 3:
     -> cap2b_araca_la_cana
 }
@@ -2430,6 +2659,7 @@ Por suerte no estás ante el miembro más brillante de las fuerzas de seguridad.
 + {not cap2b_casa_padres} [La segunda habitación] -> cap2b_casa_padres
 
 === cap2b_casa_zaguan ===
+# music:horror_ambient
 ~ paso_tiempo_casa += 1
 El cuarto es un caos. La puerta a la calle está entreabierta y, con un simple análisis, te das cuenta de que no fue forzada. Sea lo que sea que hizo esto fue invitado a entrar.
 En el medio del cuarto hay un cuerpo chiquito, un niño de no más de 12 años. Sentís el ácido de un vómito subiendo desde tus entrañas y quemando todo a su paso, pero lográs contenerte. El cuerpo está seco, como una pasa de uva, y no muestra signos de una pelea.
@@ -2451,6 +2681,7 @@ Creés que no hay nada más que ver en esta habitación. Debés continuar con tu
 -> cap2b_dentro_casa
 
 === cap2b_casa_cocina ===
+# music:horror_ambient
 ~ paso_tiempo_casa += 1
 La cocina es modesta, con una pequeña mesa en el medio para que pueda comer una familia, y cuenta con una salida al patio del fondo.
 El cuerpo se encuentra en el piso, con un brazo estirado hacia la puerta de salida en un vano intento de escape, pero los perseguidores lo alcanzaron antes y lo dejaron clavado al suelo, donde permanece. Cuando lo ves no podés dejar de pensar en una pila de hojas secas en mitad del otoño.
@@ -2463,12 +2694,14 @@ Hacés una recorrida pero no hay mucho más que ver acá. La familia dejó desco
 -> cap2b_dentro_casa
 
 === cap2b_casa_bano ===
+# music:horror_ambient
 ~ paso_tiempo_casa += 1
 No hay mucho para ver en el baño. Un botiquín de primeros auxilios normal en el cajón bajo la mesada. Ninguna medicación particular. Un poco de humedad en el techo.
 Lo normal que puede encontrarse en cualquier baño de Costa Alegre, hasta el tuyo. Perdiste tiempo buscando algo escondido en la mochila del inodoro y detrás del bidet que seguramente debió ser invertido de otra forma.
 -> cap2b_dentro_casa
 
 === cap2b_casa_ninos ===
+# music:horror_ambient
 ~ paso_tiempo_casa += 1
 Un cuarto de niños. En cuanto abrís la puerta y ves que se asoma la cabeza de un juguete (un oso peluche del tamaño de un nene pequeño) sabés que te va a hacer mierda recorrer esta habitación.
 Por suerte no hay cuerpos. No acá al menos. Pero notás algo raro, la habitación está dividida en dos. Una punta tiene una cama de un niño con el caos y los juguetes propios de un preadolescente.
@@ -2486,6 +2719,7 @@ Pero del otro lado hay una cuna. Una cuna vacía con una manta apartada a un cos
 -> cap2b_dentro_casa
 
 === cap2b_casa_padres ===
+# music:horror_ambient
 ~ paso_tiempo_casa += 1
 La cama matrimonial. El cadáver está en la cama, entre sábanas revueltas. En este contexto la cara de éxtasis del cuerpo se torna más macabra cuando la comparás con la piel reseca que sale entre las sábanas.
 {tiene_teoria_vampiros:
@@ -2501,6 +2735,7 @@ Notás, al lado de la cama, un sacaleche y unas mamaderas. ¿También había un 
 // ---------------------------------------------------------
 
 === cap2b_araca_la_cana ===
+# music:horror_ambient
 # achievement:unlock:caer_en_cana
 Tus pensamientos son interrumpidos por una serie de ruidos que vienen de la calle. Coches parando en la puerta de la casa y voces de hombres toscas y violentas. Acostumbrados a dar órdenes y respaldar sus palabras con acero. Podrían ser criminales pero al escuchar que se saludan usando rangos, te das cuenta de que es la policía.
 Seguramente están viniendo a profundizar su investigación de la escena de crimen. Tus pesquisas ya terminaron, esperás tener suficiente información para continuar con el caso.
@@ -2508,12 +2743,14 @@ Ahora lo importante es ver cómo hacer para salir de la casa sin que te vean.
 -> cap2b_escapar_opciones
 
 === cap2b_escapar_opciones ===
+# music:horror_ambient
 + [Corrés al patio trasero y trepás por los techos # REQUIRES: fuerza >= 25] -> cap2b_escapar_techos
 + [Te hacés invisible # REQUIRES: magia >= 30] -> cap2b_escapar_invisible
 + [Te escondés en la casa] -> cap2b_escapar_escondite
 + [Salís corriendo por la puerta principal antes que reaccionen] -> cap2b_escapar_correr
 
 === cap2b_escapar_techos ===
+# music:horror_ambient
 Vas hacia el fondo de la casa. El patio no tiene un punto de apoyo así que intentás correr con todas tus fuerzas contra la pared y hacer un poco de parkour para lograr empotrarte contra una pequeña abertura.
 Lo lográs, la adrenalina invade tu cuerpo y lamentás que no haya nadie para ver lo que hiciste dado que fue bastante increíble.
 # next
@@ -2523,6 +2760,7 @@ A la par que se abre la puerta del patio, lográs subirte al techo. Contenés un
 -> cap2b_investigacion
 
 === cap2b_escapar_invisible ===
+# music:horror_ambient
 Elegís una esquina que parece poco importante, y donde esperás que nadie pase, y preparás el hechizo. Es rápido, improvisado y a falta de escenografía que te ayude tenés que apoyarte en fuerza bruta y eso se siente mientras recitás las palabras. Se siente en el dolor punzante en tu cabeza y en las gotas de sangre que empiezan a escaparte de tu nariz.
 # next
 Pero lo lográs, los policías entran y recorren la casa. Uno mira a tu esquina y pasa casualmente la luz de su linterna por donde está tu cuerpo, pero no encuentra nada. Debés contenerte para que los latidos de tu corazón no te delaten pero lo importante es que lo lograste. Una vez que ellos se reparten por la casa para hacer su investigación, aprovechás y avanzás hacia la puerta de la calle con el mayor sigilo posible.
@@ -2532,12 +2770,14 @@ En el camino te llama la atención que uno de los policías dejó la carpeta de 
 + [Seguís de largo] -> cap2b_investigacion
 
 === cap2b_escapar_robar_carpeta ===
+# music:horror_ambient
 La verdad es que, cualquier información que tengan, le vas a sacar más provecho vos que ellos. Ya en la calle hojeás la carpeta: parece que un pariente de la familia murió hace poco. ¿Pudo haber sido convertido en Vampiro y usado como caballo de Troya para que la familia los invite a pasar? Vale la pena investigar el cementerio donde fue enterrado.
 ~ tiene_cementerio_correcto = true
 # inv:add:cementerio_correcto
 -> cap2b_investigacion
 
 === cap2b_escapar_escondite ===
+# music:horror_ambient
 Escuchás las voces ásperas del otro lado de la puerta. No hay mucho tiempo, sospechás que cuando entren van a dar vuelta la casa buscando cualquier pista posible. Tenés que elegir dónde esconderte.
 
 + [Debajo de la cama de alguna de las habitaciones] -> cap2b_escondite_cama
@@ -2545,24 +2785,28 @@ Escuchás las voces ásperas del otro lado de la puerta. No hay mucho tiempo, so
 + [Hay unas plantas frondosas en el patio] -> cap2b_escondite_plantas
 
 === cap2b_escondite_cama ===
+# music:horror_ambient
 Corrés a la habitación de los padres y te metés bajo la cama. El lugar está oscuro y lleno de polvo pero lo que más aprensión te da es que a centímetros tuyo, del otro lado del colchón, está el cadáver de una de las víctimas. Intentás reconfortarte pensando en que al menos no debe tener sangre, no si el trabajo lo hizo un Vampiro Superior. Pero la línea de insectos avanzando por una de las patas de la cama para hacerse un festín con su carne te revuelve el estómago.
 # next
 Escuchás unos pasos y, en cuestión de segundos, estás enceguecido por la luz de una linterna que apunta directo a tu rostro. El policía te mira con un rostro que mezcla incredulidad y cansancio, y vos no podés evitar sentirte como un niño que fue atrapado en mitad de una travesura. Que te arresten no es tan divertido como lo hacen ver las películas, antes de darte cuenta estás camino a la comisaría más cercana.
 -> cap2b_comisaria
 
 === cap2b_escondite_banera ===
+# music:horror_ambient
 Te escondés dentro de la bañera y cerrás la cortina detrás tuyo. Te sentís un poco ridículo y tenés serias sospechas de que la luz del baño trasluce tu sombra. Intentás agacharte para ser menos sospechoso y solo lográs mojarte el pantalón con una capa de agua que lleva días.
 # next
 Escuchás unos pasos y, en cuestión de segundos, estás enceguecido por la luz de una linterna que apunta directo a tu rostro. El policía te mira con un rostro que mezcla incredulidad y cansancio, y vos no podés evitar sentirte como un niño que fue atrapado en mitad de una travesura. Que te arresten no es tan divertido como lo hacen ver las películas, antes de darte cuenta estás camino a la comisaría más cercana.
 -> cap2b_comisaria
 
 === cap2b_escondite_plantas ===
+# music:horror_ambient
 Corrés al patio y te escondés entre unas plantas altas. Sabés que los humanos tenemos un pasado cazador pero no estás logrando hacer contacto con los genes de tus ancestros. La pose te parece incómoda y, más te movés intentando buscar una posición correcta, más desarmás las plantas y quedás expuesto. Para colmo de males, la Luna brilla con toda intensidad.
 # next
 Escuchás unos pasos y, en cuestión de segundos, estás enceguecido por la luz de una linterna que apunta directo a tu rostro. El policía te mira con un rostro que mezcla incredulidad y cansancio, y vos no podés evitar sentirte como un niño que fue atrapado en mitad de una travesura. Que te arresten no es tan divertido como lo hacen ver las películas, antes de darte cuenta estás camino a la comisaría más cercana.
 -> cap2b_comisaria
 
 === cap2b_escapar_correr ===
+# music:horror_ambient
 Corrés con todas tus fuerzas hacia la puerta principal, notás que está por ser abierta así que te lanzás como un ariete contra ella. El golpe trae dolor, pero por suerte la adrenalina entra a jugar. Antes de darte cuenta estás en la calle, notás por el rabillo del ojo que en tu salida un policía salió volando y golpeó contra un patrullero.
 Corrés con todas tus fuerzas hacia la esquina, con el objetivo de romper el campo de visión de los policías y esconderte en la oscuridad. Atrás tuyo se escuchan puteadas y disparos (por suerte más de los primeros que de los segundos).
 {
@@ -2582,6 +2826,7 @@ Corrés con todas tus fuerzas hacia la esquina, con el objetivo de romper el cam
 // ---------------------------------------------------------
 
 === cap2b_comisaria ===
+# music:city_ambient
 ~ llegaste_tarde_2b += 1
 Es verdad que la burocracia es el pilar fundamental del Estado Moderno. Es increíble la cantidad de pasos que tienen que pasar antes de terminar tras las rejas. Primero toman tus huellas digitales, y aparte se toman el trabajo de levantar un acta con todos tus datos, y te dejan esperando esposado en un pasillo vaya a saber qué cosa.
 Sabés que El Faro tiene gente encargada de asegurarse que toda esta información se borre, más que terminar arrestado lo que te da miedo es el reto que te va a dar Enriquez la próxima vez que la veas.
@@ -2597,6 +2842,7 @@ Sabés las minucias del proceso legal pero dudás que tu investigación pueda so
 + [Tenés derecho a una llamada. Tal vez Enriquez pueda ayudarte] -> cap2b_comisaria_enriquez
 
 === cap2b_comisaria_esperar ===
+# music:city_ambient
 ~ llegaste_tarde_2b += 1
 Perdés un par de horas que solo te sirven para poner en duda la eficiencia del sistema penal. En lugar de pensar respecto a la gravedad de tu crimen (que en este caso es ser un pésimo jugador de escondidas) te dedicás a disociar completamente y perderte en tu mundo interno.
 # next
@@ -2604,6 +2850,7 @@ Seguramente El Faro cumple su tarea de soborno, amenazas y sabotaje informático
 -> cap2b_en_la_calle
 
 === cap2b_comisaria_tuco ===
+# music:city_ambient
 Pedís tu llamada. Esperás que se nieguen y estás preparando tus argumentos cuando un policía cansado viene a buscarte y, mientras bosteza, te lleva a un pasillo donde hay una verdadera reliquia: un teléfono de línea colgado en la pared. Juntás fuerza y marcás el número de emergencia que te dieron en El Faro. Del otro lado escuchás una tos grave y una sola palabra: "identifíquese".
 # next
 \- Sos un pelotudo – Ese es el único comentario que te dedica el Sargento Tuco cuando le terminás de contar la situación. La frase viene acompañada por un silencio largo que sospechás que lo dedica a decir para adentro todo el resto de los insultos que tiene pensado para vos.
@@ -2621,6 +2868,7 @@ No pasan ni cinco minutos desde que cortás. En cuanto llegás a la celda ya vie
 -> cap2b_en_la_calle
 
 === cap2b_comisaria_enriquez ===
+# music:misterio_ambient
 Pedís tu llamada. Esperás que se nieguen y estás preparando tus argumentos cuando un policía cansado viene a buscarte y, mientras bosteza, te lleva a un pasillo donde hay una verdadera reliquia: un teléfono de línea colgado en la pared. Juntás fuerza y marcás el número de emergencia que te dieron en El Faro. Del otro lado escuchás la voz de Enriquez.
 # next
 \- Pero, ¿Me estás llamando de la Comisaría? – Es la tercera vez que Enriquez te hace la misma pregunta en sucesión, solamente cambió su tono. De la sorpresa a la ira y de ahí a la burla.
@@ -2636,6 +2884,7 @@ No pasan ni cinco minutos desde que cortás. En cuanto llegás a la celda ya vie
 -> cap2b_en_la_calle
 
 === cap2b_en_la_calle ===
+# music:city_ambient
 En la calle una ráfaga de viento te trae el olor a mar. Estuviste unas pocas horas encerrado pero aun así estás seguro de que preferís la libertad. Te alejás un par de metros de la puerta de la Comisaría para pensar cómo continuar tu investigación, cuando escuchás un par de pasos atrás tuyo. Girás sobre tus talones y te encontrás con un policía alto, con cara de pocos amigos, y una cabellera pelirroja que llama la atención.
 \- ¿Sargento Tuco? – Arriesgás.
 # next
@@ -2648,6 +2897,7 @@ Antes de darte cuenta, le estás contestando.
 + [Quería hacer la visita turística. Ya me voy.] -> cap2b_tuco_respuesta_3
 
 === cap2b_tuco_respuesta_1 ===
+# music:misterio_ambient
 Te sentís muy bien con tu respuesta. Tan bien que apenas te llegás a dar cuenta de que la cara del Sargento Tuco se pone tan roja como su pelo. Un puño vuela hacia vos.
 {
     - fuerza < 25:
@@ -2662,11 +2912,13 @@ Te sentís muy bien con tu respuesta. Tan bien que apenas te llegás a dar cuent
 -> cap2b_investigacion
 
 === cap2b_tuco_respuesta_2 ===
+# music:misterio_ambient
 Te muestra una sonrisa llena de dientes castigados por la nicotina. Le encanta sentirse poderoso.
 \- Andá a uno de los cementerios de la ciudad y buscá el nido de los Vampiros Superiores. Rápido y simple. Hasta vos lo vas a poder hacer – Después de tirar esa pieza de información, el Sargento Tuco se da media vuelta y vuelve a entrar en la Comisaría.
 -> cap2b_investigacion
 
 === cap2b_tuco_respuesta_3 ===
+# music:misterio_ambient
 Te das media vuelta y lo dejás hablando solo. Durante los primeros segundos sentís una sensación de vértigo atrás tuyo, como si le hubieses dado la espalda a un perro furioso, pero el Sargento Tuco solo se remite a insultarte. Un bis infinito de la palabra "pelotudo".
 \- Andá a uno de los cementerios de la ciudad y buscá el nido de los Vampiros Superiores. Rápido y simple. Hasta vos lo vas a poder hacer – Después de tirar esa pieza de información, el Sargento Tuco se da media vuelta y vuelve a entrar en la Comisaría.
 -> cap2b_investigacion
@@ -2680,16 +2932,18 @@ Te das media vuelta y lo dejás hablando solo. Durante los primeros segundos sen
 Después de todas tus aventuras dejás que tus piernas te lleven en piloto automático mientras tu cabeza procesa toda la información que tenés. Es de noche y llegás hasta una playa. El mar se ve oscuro y agazapado, como una gran fiera dispuesta a saltar sobre su presa.
 Teniendo en consideración tu último caso, es muy posible que realmente sea eso.
 # next
-Es claro que tenés un problema de Vampiros. Y los Vampiros hacen su nido en la gran mayoría en los cementerios. El único problema es que en Costa Alegre hay tres cementerios diferentes e ir al equivocado puede generar una pérdida de tiempo peligrosa.
+Es claro que tenés un problema de Vampiros. Y los Vampiros hacen su nido en la gran mayoría en los cementerios. El único problema es que en Costa Alegre hay tres cementerios diferentes e ir al equivocado puede generar una pérdida de tiempo peligrosa. # play_sfx:sting_revelacion
 -> cap2b_elegir_cementerio
 
 === cap2b_elegir_cementerio ===
+# music:playa_ambient
 + {tiene_cementerio_correcto} [Esperás que te contacte Enriquez a ver si logró obtener información] -> cap2b_cementerio_pista
 + [Voy a "Lomas de Paz". El cementerio más coqueto de la ciudad] -> cap2b_lomas_de_paz
 + [El cementerio "Recuerdo Eterno" es el más grande y más cercano a la ciudad] -> cap2b_cementerio_recuerdo
 + [El "Cementerio Municipal". Sus torres llenas de nichos deben ser perfectas para emboscadas] -> cap2b_cementerio_municipal
 
 === cap2b_cementerio_pista ===
+# music:playa_oscura
 El teléfono vibra en tu bolsillo exigiendo atención. Un mensaje de Enriquez. Parece que tu pista tenía algo de valor. Hace menos de una semana un tío de la familia falleció en circunstancias extrañas y fue enterrado en "Lomas de Paz", aparentemente en el pasado la familia había tenido cierto dinero y mantenían una cripta paga.
 # next
 Te tomás un momento para unir los puntos en tu cabeza. Por alguna razón los Vampiros Superiores quieren entrar a una casa así que convierten a un familiar y lo usan como Caballo de Troya para que un pariente, dolido por la pérdida pero sorprendido por el regreso de su ser querido, los invite a pasar.
@@ -2702,6 +2956,7 @@ Sin pensarlo, te dirigís al Cementerio "Lomas de Paz".
 -> cap2b_lomas_de_paz
 
 === cap2b_cementerio_recuerdo ===
+# music:playa_oscura
 ~ llegaste_tarde_2b += 1
 El cementerio "Recuerdo Eterno" está rodeado por una pared no muy alta, apenas de dos metros, sus puertas están unidas por una cadena oxidada y pura fuerza de voluntad. Al lado hay un sereno que, para mayor vergüenza, duerme.
 A simple vista, el único servicio que brinda este cementerio es ser un coto de caza perfecto para ladrones de tumbas, estudiantes de medicina que necesitan huesos y vagabundos.
@@ -2712,6 +2967,7 @@ Solo lográs deprimirte. Sin duda tu objetivo no se esconde acá.
 -> cap2b_elegir_cementerio
 
 === cap2b_cementerio_municipal ===
+# music:playa_oscura
 ~ llegaste_tarde_2b += 1
 Visto desde afuera, el Cementerio Municipal parece una pesadilla industrial. Cuenta con una pequeña explanada para tumbas pero en el horizonte se ven tres edificios gigantes y oscuros. Dos edificios llenos de nichos y una chimenea gigante del crematorio.
 Das unas vueltas y terminás entrando en los edificios de los nichos, cuentan hasta con ascensor. No podés sacarte la idea macabra de que es un complejo habitacional para cadáveres.
@@ -2725,14 +2981,18 @@ Solo para encontrarte con un grupo de góticos sacándose unas fotos frente a un
 + [Te retirás] -> cap2b_municipal_retirar
 
 === cap2b_municipal_quedarse ===
+# music:playa_oscura
 Los seguís desde las sombras, viendo cómo hacen chistes, sacan fotos y toman alcohol barato. Perdés un montón de tiempo valioso para darte cuenta de que la única cosa vieja acosándolos sos vos. Tu investigación no va a avanzar por acá.
 -> cap2b_elegir_cementerio
 
 === cap2b_municipal_susto ===
+# stop_music
+# music:terror_ambient
 Salís de la oscuridad con tu mejor voz de Vincent Price y las manos en alto, imitando garras mientras gritás "¡Sangre nueva para mis huesos viejos!". Antes de darte cuenta los jóvenes están corriendo a los gritos por el cementerio. Vas a tener que llamar a El Faro para avisarle que no manden a ningún guardián a investigar esto.
 -> cap2b_elegir_cementerio
 
 === cap2b_municipal_retirar ===
+# music:playa_oscura
 Vos también fuiste un adolescente idiota. Es más, estás seguro de que esas palabras son sinónimos. Mientras no molesten a nadie ni vandalicen el lugar no merece más atención. Lo importante ahora es pensar cómo continuar con tu investigación.
 -> cap2b_elegir_cementerio
 
@@ -2753,6 +3013,7 @@ Si vas a hacer algo, es este momento.
 -> cap2b_entrar_lomas
 
 === cap2b_entrar_lomas ===
+# music:terror_ambient
 + [Un simple hechizo para dormir va a ser suficiente # REQUIRES: magia >= 25] -> cap2b_lomas_hechizo
 + [Esas paredes no son tan altas, se puede trepar # REQUIRES: fuerza >= 25] -> cap2b_lomas_trepar
 + [La puerta es la entrada fácil, debe haber otra entrada # REQUIRES: conocimiento >= 25] -> cap2b_lomas_alcantarilla
@@ -2762,23 +3023,27 @@ Si vas a hacer algo, es este momento.
 + [Tal vez si le decís que venís a ver la tumba de un pariente se apiade] -> cap2b_lomas_abuelita
 
 === cap2b_lomas_hechizo ===
+# music:terror_ambient
 Recitás las palabras y sentís cómo todo el agotamiento de tu cuerpo, el peso de tus extremidades y el dolor en tu cabeza, se empieza a concentrar en tu estómago. El hechizo termina con vos tosiendo, sacando a la fuerza un humo rosado y con olor dulce de tus entrañas.
 El humo repta al ras del piso y, como un animal de caza, salta a la ventana abierta de la garita. En menos de un minuto: intensos ronquidos.
 ~ sin_guardias = true
 -> cap2b_entre_criptas
 
 === cap2b_lomas_trepar ===
+# music:terror_ambient
 Te ponés a recorrer el perímetro y encontrás un lugar donde la pared tiene una pequeña mueca, suficiente para colocar la punta de tu pie. Con ese punto de apoyo (y las horas de entrenamiento que llevás encima) tenés más que suficiente para poder trepar la pared.
 Un salto, unas gotas de transpiración invertidas, y ya estás adentro.
 -> cap2b_entre_criptas
 
 === cap2b_lomas_alcantarilla ===
+# music:terror_ambient
 Con un celular, y tener acceso a las bases de datos correctas, se pueden conseguir muchas cosas. Tardás unos diez minutos en tener un mapa del cementerio, fácil de conseguir dado que es una atracción turística. El momento eureka viene cuando buscás el plano de las alcantarillas y notás que una de considerable tamaño pasa por debajo del cementerio.
 # next
 Soportás un pequeño momento de espeleología urbana y te metés dentro de una boca de tormenta cercana. Avanzás en la oscuridad, con un líquido hasta tus rodillas (elegís creer que es agua, así como te decís que lo que chilla y se mueve en la oscuridad son hojas) pero después de unos minutos encontrás una escalera que te lleva a una puerta de alcantarilla justo en el centro del Cementerio.
 -> cap2b_entre_criptas
 
 === cap2b_lomas_tuco ===
+# music:terror_ambient
 Le explicás la situación a Tuco, una conversación marcada por silencio y el ruido constante de su respiración contra el auricular. Lo único que te dice es "Listo. En cinco minutos andá para la puerta. Y borrá este número".
 Contás seis minutos, principalmente porque dudás de la eficiencia de las fuerzas de seguridad de Costa Alegre, y te acercás a la puerta.
 El guardia abre la puerta y te saluda: "Me avisaron que llegaba Agente, por favor, pase".
@@ -2787,12 +3052,14 @@ El guardia abre la puerta y te saluda: "Me avisaron que llegaba Agente, por favo
 -> cap2b_entre_criptas
 
 === cap2b_lomas_atacar ===
+# music:terror_ambient
 Te acercás con el mayor sigilo posible, pero llega un punto donde la luz de la farola ya no deja espacio para esconderte. Así que solo queda una respuesta posible: extrema violencia.
 El guardia no espera un ataque y, antes que logre agarrar la escopeta, ya estás sobre él desmayándolo con una llave asfixiante.
 ~ sin_guardias = true
 -> cap2b_entre_criptas
 
 === cap2b_lomas_jefe ===
+# music:terror_ambient
 Te acercás a la garita adoptando una actitud desagradable, propia de cargos jerárquicos y nepo baby.
 \- Buenas – te presentás – me manda la gerencia para chequear que todo esté en orden.
 Mientras hablás mirás lo menos posible al guardia, como si su mera presencia te daría asco.
@@ -2804,6 +3071,7 @@ El guardia te mira unos segundos, meditativo, y luego se larga a reír.
 -> cap2b_entrar_lomas
 
 === cap2b_lomas_abuelita ===
+# music:abuelita
 Te acercás a la garita con la cabeza baja y la cara más triste que podés construir. Te acercás mucho a la garita antes de hablarle. Querés convertir tu tristeza (falsa) en algo tangible y personal, que el guardia no pueda ignorar.
 \- Disculpe que lo moleste, mi abuela está enterrada acá, ella fue casi una madre para mí. Me encantaría pasar a dejarle mis respetos pero, por el trabajo se me complica acercarme a otro horario. Sé que lo comprometo pero, ¿podría pasar cinco minutos? Saludo la tumba y me voy.
 # next
@@ -2817,6 +3085,7 @@ Sabías que el argumento de la abuelita no iba a fallar. Todo el mundo ama a las
 // ---------------------------------------------------------
 
 === cap2b_entre_criptas ===
+# music:playa_oscura
 Dentro del cementerio te encontrás en una pequeña ciudad. Calles rectas que forman manzanas llenas de criptas elegantes. Construcciones de mármol y cristal con decoraciones.
 Si bien la mayoría está adornada con cruces y ángeles, la decoración más común debe ser estatuas de mujeres jóvenes. Mujeres jóvenes llorando contra la puerta de la cripta, mujeres jóvenes semidesnudas de la mano con esqueletos, mujeres jóvenes con rostros invadidos por la tristeza.
 No entendés muy bien quién decidió que la parca debía ser tan sensual. Sospechás más que los artistas usaron modelo vivo y prefirieron explorar burdeles antes que morgues.
@@ -2829,12 +3098,15 @@ Encontraste a un Vampiro Superior. Ahora hay que decidir el siguiente paso.
 -> cap2b_encuentro_vampiro
 
 === cap2b_encuentro_vampiro ===
+# music:terror_ambient
 + [El único vampiro bueno es el vampiro muerto. Cargás contra él] -> cap2b_vampiro_atacar
 + [Te acercás a hablarle. Tal vez lográs sacarle algo de información] -> cap2b_vampiro_hablar
 + [Lo seguís con el mayor cuidado posible. Debe estar yendo a su cubil] -> cap2b_vampiro_seguir
 + [Intentás ir por un camino paralelo y poner una trampa # REQUIRES: conocimiento >= 25] -> cap2b_vampiro_trampa
 
 === cap2b_vampiro_atacar ===
+# stop_music
+# music:boss_arañas
 El peso de la espada en tu mano te da la confianza que necesitabas. Avanzás hacia la silueta y, cuando estás a unos pasos, cargás con un golpe perfecto directo para cortar la cabeza.
 {
     - fuerza < 25:
@@ -2852,6 +3124,8 @@ El peso de la espada en tu mano te da la confianza que necesitabas. Avanzás hac
 -> cap2b_frente_cubil
 
 === cap2b_vampiro_hablar ===
+# music:misterio_ambient
+# play_sfx:drone_tenso
 Salís de entre las criptas y le dirigís la palabra con un tono de voz que sale menos firme de lo que esperabas.
 \- Veo que no soy el único que aprecia la belleza del cementerio bajo la luz de la Luna. ¿Qué cripta pretende ver?
 # next
@@ -2881,6 +3155,7 @@ Sonríe, dejando asomar bajo los labios dos colmillos que son una promesa de dol
     -> cap2b_hablar_escalada
 
 === cap2b_hablar_resistido ===
+# music:misterio_ambient
 # WILLPOWER_STOP
 # MOUSE_RESISTANCE: none
 # UI_EFFECT: none
@@ -2894,6 +3169,7 @@ No le dejás terminar. La espada sale antes que la frase y le cruzás el cuello 
 -> cap2b_frente_cubil
 
 === cap2b_hablar_escalada ===
+# music:misterio_ambient
 La presión se intensifica. Sentís que tus pensamientos se vuelven lentos y pesados, como si caminaran por barro. La sonrisa del Vampiro se ensancha.
 \- Ahí estás. Casi puedo saborearte – sus palabras se mezclan con las tuyas hasta que no sabés cuáles son de quién.
 # WILLPOWER_START: fast
@@ -2920,6 +3196,7 @@ La presión se intensifica. Sentís que tus pensamientos se vuelven lentos y pes
     -> cap2b_hablar_dominado
 
 === cap2b_hablar_resistido_segundo ===
+# music:misterio_ambient
 # WILLPOWER_STOP
 # MOUSE_RESISTANCE: none
 # UI_EFFECT: none
@@ -2932,6 +3209,7 @@ Te levantás y cortás. El polvo cae sobre vos como nieve sucia.
 -> cap2b_frente_cubil
 
 === cap2b_hablar_dominado ===
+# music:horror_ambient
 # WILLPOWER_STOP
 # MOUSE_RESISTANCE: none
 # UI_EFFECT: none
@@ -2946,6 +3224,7 @@ No tenés fuerzas para responder pero tampoco las necesitás. El Vampiro huye, e
 -> cap2b_frente_cubil
 
 === cap2b_hablar_cedido ===
+# music:horror_ambient
 ~ sometimiento = sometimiento + 30
 Dejás que la presencia del Vampiro inunde tu mente. Es como sumergirse en agua helada: al principio duele, después se adormece todo.
 \- Buen ganado – susurra, y su aprobación se siente como una caricia en tu cerebro – Ahora mirá.
@@ -2958,6 +3237,7 @@ Lo que no sabés es si fuiste a buscarlo o si él te mandó como ofrenda.
 -> cap2b_frente_cubil
 
 === cap2b_vampiro_seguir ===
+# music:misterio_ambient
 El cementerio ofrece una infinidad de lugares para esconderte. No podés dar dos pasos sin encontrar una estatua, el marco de una entrada o un pequeño pasillo entre Criptas donde entra justo tu cuerpo. Aparte el trazado, similar a una ciudad, vuelve fácilmente predecible el camino que va a tomar una persona.
 # next
 Lo que sí, debés ser especialmente cuidadoso con tus pasos. La presencia del Vampiro parece haber acallado el ruido a su alrededor. Ni aves nocturnas o ratas chillando a lo lejos. Hasta los gusanos que se devoran a los cadáveres parecen tomarse un descanso.
@@ -2965,6 +3245,8 @@ Pero tu estrategia da resultado. Luego de un par de giros el Vampiro llega a la 
 -> cap2b_frente_cubil
 
 === cap2b_vampiro_trampa ===
+# music:terror_ambient
+# play_sfx:sal_romperse
 Te escurrís entre dos criptas y avanzás a paso rápido entre lo que parece ser una calle paralela. Llegás primero a una esquina donde el Vampiro tiene que doblar así que aprovechás los segundos que tenés para trazar un semicírculo de sal y esconderte detrás de una estatua. La idea es que entre dentro de la figura y, cuando esté adentro, tirar una capa más de sal para convertirlo en un círculo y dejarlo encerrado.
 (Sí, en tu mochila hay sal, ajo, mandrágora, amaranta y demás hierbas, suficiente para ser un buen cazador de monstruos o un chef de primer nivel.)
 # next
@@ -2992,6 +3274,7 @@ Ya con las señas para llegar a la cripta donde se encuentra el cubil, lo que re
 + [Sus argumentos son muy buenos. Pedís que te convierta en Vampiro] -> cap2b_trampa_convertirse
 
 === cap2b_trampa_dejar ===
+# music:misterio_ambient
 Intentás pensar una frase graciosa pero la vida no es una película de acción. Simplemente lo mirás unos segundos y él se da cuenta. Sus ojos dejan de tener la expresión vacía que conservaban hasta ahora y su rostro se desencaja con una lluvia de emociones. ¿Miedo? ¿Rabia?
 # next
 No te interesa ver más, te das vuelta y comenzás a caminar hasta la dirección que te dio del cubil. Atrás tuyo escuchás sus gritos. Una mezcla de insultos con súplicas. Durante un momento llora como un niño pequeño para después pasar a tratarte de ganado y mugir como una vaca.
@@ -3001,6 +3284,7 @@ Ojalá que arda lentamente.
 -> cap2b_frente_cubil
 
 === cap2b_trampa_liberar ===
+# music:misterio_ambient
 Le pedís que jure por todo lo que considere sagrado que no te va a atacar una vez que rompas el círculo de sal. Él lo hace, jura por la sed y la sangre (lo cual te da más miedo que seguridad) que una vez roto el círculo va a irse para el lado contrario, dejar Costa Alegre y buscar otra ciudad para instalarse.
 No promete que va a dejar de ser un asesino de personas, pero está bien, tampoco le hubieses creído si decía eso.
 # next
@@ -3013,6 +3297,9 @@ El sonido fue desagradable. La sensación en la muñeca, peor. Pero el resultado
 -> cap2b_frente_cubil
 
 === cap2b_trampa_convertirse ===
+# stop_music
+# music:horror_ambient
+# play_sfx:sting_moral
 \- Lo quiero – la frase sale entrecortada de tu boca, ahogada por la culpa y el miedo – Quiero ser inmortal. No morir nunca, no tener miedo jamás.
 El Vampiro te mira, mientras ladea la cabeza para el lado contrario. Ninguna expresión de emoción, solamente se limita a extender su brazo y señalar a sus pies.
 # next
@@ -3045,6 +3332,7 @@ Al final estás flotando. En un mar rojizo con un oleaje cada vez más tranquilo
     -> cap2b_convertirse_muerte_lucida
 
 === cap2b_convertirse_escape ===
+# music:horror_ambient
 # WILLPOWER_STOP
 # MOUSE_RESISTANCE: none
 # UI_EFFECT: none
@@ -3062,6 +3350,8 @@ Sobre vos llueve una fina capa de polvo y cenizas, el cadáver de algo que deber
 -> cap2b_frente_cubil
 
 === cap2b_convertirse_muerte_lucida ===
+# stop_music
+# music:horror_ambient
 # WILLPOWER_STOP
 # MOUSE_RESISTANCE: none
 # UI_EFFECT: none
@@ -3080,6 +3370,7 @@ ESTÁS MUERTO.
 // ---------------------------------------------------------
 
 === cap2b_frente_cubil ===
+# music:terror_ambient
 Al fin encontrás la cripta correcta. De afuera parece un edificio bastante aburrido, una imitación a un templo grecorromano con una serie de columnas jónicas y un techo en punta.
 Al mirar el lugar con más atención se puede observar unos pequeños detalles que dan cuenta de que está habitado. En el techo alguien colocó una antena (ser inmortal debe implicar mucho tiempo libre para llenar, por lo cual una conexión a internet debe ser un prerrequisito) y da la impresión de que alguien se tomó tiempo para limpiar la fachada.
 # next
@@ -3088,7 +3379,7 @@ En el frente de la construcción se observan un par de Vampiros. Figuras etérea
     Dos Vampiros son dos más de los que te gustaría. Agradecés haberte sacado de encima el otro Vampiro que te encontraste en el Cementerio, sino la misión suicida que tenés enfrente sería... ¿más suicida?
 }
 # next
-El cielo parece haberse puesto a tono con la situación, un par de truenos son la apertura de una tormenta bíblica que empieza a caer sobre todos. Rápidamente te encontrás mojado, irritado, y con la ropa pegada al cuerpo. En contraposición, los Vampiros parecen emitir un aura que mantiene el agua alejada de su piel (malditos sobrenaturales con ventajas innecesarias).
+El cielo parece haberse puesto a tono con la situación, un par de truenos son la apertura de una tormenta bíblica que empieza a caer sobre todos. Rápidamente te encontrás mojado, irritado, y con la ropa pegada al cuerpo. # play_sfx:trueno_lejano En contraposición, los Vampiros parecen emitir un aura que mantiene el agua alejada de su piel (malditos sobrenaturales con ventajas innecesarias).
 # next
 Cada par de segundos el rugido de un trueno tapa todos los ruidos, hasta los latidos de tu corazón, hasta la voz en tu cabeza que te dice que si no lográs idear un plan pronto esto va a ser un desastre.
 Es entonces cuando escuchás un grito proveniente del interior de la cripta. Lo reconocés de inmediato, es el llanto de un bebé. El ruido hace eco en tus huesos y te obliga a una respuesta.
@@ -3098,6 +3389,7 @@ Eso sí, si terminás muerto mucho no lo podrías ayudar. Tenés que pensar en a
 -> cap2b_cubil_opciones
 
 === cap2b_cubil_opciones ===
+# music:terror_ambient
 + [Los Vampiros están acostumbrados a cazar humanos. Pero un Guardián de El Faro no es una víctima. Atacás # REQUIRES: fuerza >= 30] -> cap2b_cubil_fuerza
 + [Esos Vampiros se ven muy inflamables. Que suerte que aprendiste a conjurar bolas de fuego # REQUIRES: magia >= 30] -> cap2b_cubil_magia
 + [Sin duda podés entrar a una de las criptas vecinas y armar una entrada # REQUIRES: conocimiento >= 30] -> cap2b_cubil_tunel
@@ -3106,7 +3398,8 @@ Eso sí, si terminás muerto mucho no lo podrías ayudar. Tenés que pensar en a
 + [No se te ocurre ningún plan. Simplemente te acercás e improvisás] -> cap2b_cubil_improvisar
 
 === cap2b_cubil_fuerza ===
-Dejás que pase un rayo, y la luz que trae, y salís a la carga. Está húmedo y estás mojado, así que tu avance épico es más un chapoteo infantil en los charcos. El primero de los Vampiros detecta tu presencia, hace un débil movimiento estirando la cabeza para adelante y un costado mientras sus ojos brillan como dos faroles en la oscuridad. Vos confirmás su punto disparando un tiro de escopeta directo a su pecho.
+# music:boss_arañas
+Dejás que pase un rayo, y la luz que trae, y salís a la carga. # play_sfx:trueno_cercano Está húmedo y estás mojado, así que tu avance épico es más un chapoteo infantil en los charcos. El primero de los Vampiros detecta tu presencia, hace un débil movimiento estirando la cabeza para adelante y un costado mientras sus ojos brillan como dos faroles en la oscuridad. Vos confirmás su punto disparando un tiro de escopeta directo a su pecho.
 # next
 El Vampiro recibe el disparo como si fuera una cachetada. La fuerza cinética del golpe apenas lo hace retroceder unos centímetros. Responde abriendo su boca, dejando salir un rugido animal y mostrándote unos colmillos que prometen dolor. Una movida atemorizante pero también un desperdicio de tiempo, y en un combate tan cercano cualquier minuto es clave.
 Vos no perdés el tiempo, cortás la distancia con un salto y descargás un golpe con tu espada directo al cuello de tu rival. Antes de terminar el movimiento, su cuerpo se dispersa en una nube de polvo que se lleva la lluvia.
@@ -3121,6 +3414,7 @@ Por suerte vos estás ahí con tu espada listo para impedir eso. Para cuando ter
 -> cap2b_dentro_cubil
 
 === cap2b_cubil_magia ===
+# music:boss_arañas
 Realizar magia bajo la lluvia es complicado. El agua corriendo tiende a barrer y difuminar las energías. Aparte, elegiste hacer magia de fuego como si fuera poco.
 Te escondés debajo de un techo y curvás tu cuerpo, en un intento de proteger a la primera llama que surge de la palma de tu mano.
 # next
@@ -3142,6 +3436,7 @@ Por suerte decís unas palabras y hacés un gesto con la mano. La carne se convi
 -> cap2b_dentro_cubil
 
 === cap2b_cubil_tunel ===
+# music:terror_ambient
 Das la vuelta a lo que podría considerarse una manzana y entrás en la cripta que se encuentra justo detrás. A diferencia del cubil de los Vampiros, este es un lugar olvidado, los familiares de los difuntos hace tiempo los olvidaron o también se encuentran en el reino de los muertos.
 La puerta está quebrada, protegida por un candado oxidado y vencido. Te basta con hacer un poco de fuerza para mover los tablones y hacer un resquicio para poder entrar.
 # next
@@ -3157,6 +3452,7 @@ No será la entrada más heroica, pero sin duda es la más inteligente.
 -> cap2b_dentro_cubil
 
 === cap2b_cubil_guardias ===
+# music:terror_ambient
 Te acercás a la garita que estaba a la entrada del Cementerio y encontrás al grupo de guardias juntos, compartiendo mate mientras una radio (que tira más interferencia que música) pasa un poco de chamamé.
 No hay que ser muy astuto para darse cuenta de que no son el grupo de duros cazadores de vampiros que necesitarías en un momento como este. Pero bueno, construís con lo que tenés a mano.
 # next
@@ -3171,11 +3467,13 @@ La distracción te da espacio para hacer algo.
 + [Ayudás a los guardias con el combate] -> cap2b_guardias_ayudar
 
 === cap2b_guardias_entrar ===
+# music:terror_ambient
 Sentís que los sacrificaste, como corderos al matadero, pero no vas a tener mejor posibilidad para entrar que esta. Te lanzás para la puerta de la Cripta mientras, atrás tuyo, escuchás puteadas, disparos y una risa macabra que seguro tendrá algún lugar en tus pesadillas.
 ~ todos_guardias_mueren = true
 -> cap2b_dentro_cubil
 
 === cap2b_guardias_ayudar ===
+# music:misterio_ambient
 Antes de entrar en la cripta decidís darles una oportunidad de combate a los guardias. Te acercás por atrás a uno de los vampiros, que viene parando con el pecho toda la sucesión de disparos que recibe, y vaciás sobre su cabeza la cantimplora llena de agua bendita que llevabas.
 Una mezcla de gritos de dolor, olor a carne quemada y sonidos de descreimiento llena el ambiente. El Vampiro intenta recobrar la compostura pero solo se encuentra con tu espada camino a su cuello.
 Ingresás al cubil antes de que el polvo de tu enemigo llegue al piso, esperando que los Guardias puedan encargarse del Vampiro restante.
@@ -3183,6 +3481,7 @@ Ingresás al cubil antes de que el polvo de tu enemigo llegue al piso, esperando
 -> cap2b_dentro_cubil
 
 === cap2b_cubil_tuco ===
+# music:misterio_ambient
 Si hay un momento donde es necesario llamar a la caballería, es este. Sacás el celular de tu bolsillo y, antes que nada, te asegurás de silenciarlo y dejar el brillo al mínimo. Lo peor sería llamar la atención de forma estúpida como un protagonista de película de terror de bajo presupuesto.
 Le enviás a Tuco tu ubicación y un resumen de lo que está pasando. La app de mensajes te da señales de que está escribiendo, escribiendo durante casi un minuto entero.
 Esperás una respuesta larga, tal vez un diagrama de un plan de acción. Pero después del minuto solo te llega un emoticón de una mano con el pulgar para arriba.
@@ -3205,6 +3504,7 @@ Necesitabas una distracción y sin duda te la dieron. Sin pensarlo dos veces te 
 -> cap2b_dentro_cubil
 
 === cap2b_cubil_improvisar ===
+# music:misterio_ambient
 Salís de tu escondite y te dirigís hacia la pareja de Vampiros que cubren la entrada del Cubil. La tormenta esconde el ruido de los pasos pero no logra tapar la voz en tu cabeza. En lugar de darte una idea brillante se dedica a repetir "esto es una pésima idea, esto es una pésima idea" (que es algo que ya sabías, pero tenías fe de tener una inspiración de último minuto que te permita resolver la cuestión).
 A fin de cuentas, hay bebés en peligro y tu trabajo es salvarlos. Mierda, aunque no sea tu trabajo igual irías a salvarlos.
 # next
@@ -3236,6 +3536,7 @@ Lo importante es que no dejás de avanzar.
     -> cap2b_improvisar_dominado
 
 === cap2b_improvisar_resistido ===
+# music:misterio_ambient
 # WILLPOWER_STOP
 # MOUSE_RESISTANCE: none
 # UI_EFFECT: none
@@ -3247,6 +3548,7 @@ La entrada del cubil está libre.
 -> cap2b_dentro_cubil
 
 === cap2b_improvisar_dominado ===
+# music:horror_ambient
 # WILLPOWER_STOP
 # MOUSE_RESISTANCE: none
 # UI_EFFECT: none
@@ -3264,6 +3566,7 @@ Aprovechás la confusión para lanzarte hacia la puerta de la cripta. Entrás sa
 // ---------------------------------------------------------
 
 === cap2b_dentro_cubil ===
+# music:terror_ambient
 El cubil está iluminado por una lamparita (roja) que le brinda un aspecto orgánico y morboso a todo el cuarto. Sin ningún ataúd a la vista, toda la habitación está seccionada en diversas áreas para sus habitantes. Una esquina tiene una biblioteca con tomos que parecen tener varios siglos de antigüedad, mientras en otra esquina hay colgada una serie de pósters de músicos de los ochentas (no hay otra década donde sean aceptados esos peinados).
 # next
 Das un par de pasos y casi te chocás con una pequeña mesita que tiene una partida de ajedrez en trámite (aunque sospechás que si contás con la inmortalidad, llegar al grado de gran maestro simplemente es cuestión de estar aburrido).
@@ -3275,6 +3578,8 @@ Avanzás por un pasillo con ataúdes a intervalos regulares, sin duda el lugar d
 -> cap2b_pasillo_horror
 
 === cap2b_pasillo_horror ===
+# music:horror_ambient
+# play_sfx:susurro_multiple
 La única luz viene del fondo del pasillo, del mismo lugar que provienen unas voces profundas que entonan un canto rítmico y gutural. Algo que nunca es buena señal.
 Avanzás a tientas, con el temor de que una luz llame la atención.
 Es entonces cuando un pequeño desnivel amenaza con hacerte caer. Te llevás una mano a la boca, para contener el grito reflejo que nació en tu garganta, y la otra se agarra de la pared para evitar que caigas al piso.
@@ -3284,6 +3589,7 @@ Húmedo. La mano que tocó la pared está en contacto con algo húmedo y pegajos
 + [Seguís a oscuras] -> cap2b_pasillo_oscuras
 
 === cap2b_pasillo_luz ===
+# music:horror_ambient
 Todo director de cine de terror sabe que insinuar es más efectivo que mostrar. Las cosas que crea tu mente con el estímulo adecuado tienden a ser más terroríficas (y adaptadas a tus miedos) que cualquier cosa que pueda hacer la oficina de efectos especiales.
 Esta era la excepción a la regla. Todo respecto a los Vampiros giraba en torno a la sangre, y esto no era la excepción.
 # next
@@ -3298,11 +3604,14 @@ No te queda más opción ahora, debés seguir avanzando y esperar que la terapia
 -> cap2b_monticulos
 
 === cap2b_pasillo_oscuras ===
+# music:horror_ambient
 La mente funciona de formas raras. Que una idea entre en tu cabeza es fácil, pero que salga es casi imposible. Cualquiera que estuvo toda una tarde tarareando una canción pegajosa lo sabe.
 Lo importante es que decidís que preferís no saber qué es la sustancia pegajosa que se encuentra en el pasillo. Te limpiás las manos en tu pantalón y seguís avanzando.
 -> cap2b_monticulos
 
 === cap2b_monticulos ===
+# music:terror_ambient
+# play_sfx:canto_gutural
 Las voces van tejiendo un canto que se hace cada vez más presente, casi tangible. El aire se vuelve espeso y te empieza a doler la cabeza. Te sentís embotado, como si te hubieses despertado en mitad de un sueño, con la mente confundida y las extremidades debilitadas.
 Es entonces cuando escuchás el ruido metálico, a la entrada de la habitación donde se está realizando el ritual hay pilas y pilas de adornos y decoración religiosa robada de otras criptas.
 # next
@@ -3315,12 +3624,14 @@ Te ponés en cuclillas para observar mejor los montículos y ver qué encontrás
 + [Pateás todos los montículos. Que se jodan] -> cap2b_monticulo_patear
 
 === cap2b_monticulo_placa ===
+# music:terror_ambient
 "Mientras mi corazón siga latiendo, lo hará al ritmo de tu nombre". La frase no tiene autor así que debe ser algo que se decía la pareja en vida, un fragmento real de su cariño. Tal vez una muestra de amor puro pueda ser un arma eficiente (aunque, por las dudas, dejás tu espada a mano).
 Dejás atrás el pasillo del horror y pasás a la siguiente habitación, debés agacharte para entrar, como un penitente o un suplicante.
 # inv:add:placa_amor
 -> cap2b_ritual_final
 
 === cap2b_monticulo_cruz ===
+# music:terror_ambient
 La cruz es de plata y tiene a Cristo crucificado en su frente. Te sorprende que, entre todas las tripas y la sangre que tapan los montículos, no tiene ni una mancha. Cuando la sacaste estaba atravesando un cráneo decrépito, tan viejo que estaba más cerca de la decoración que del horror, pero aun así había logrado mantenerse inmaculada.
 Tal vez era una señal de la bendición sagrada. En el peor de los casos, se sentía pesada en tu mano, así que podía servir como una buena maza.
 Dejás atrás el pasillo del horror y pasás a la siguiente habitación, debés agacharte para entrar, como un penitente o un suplicante.
@@ -3328,12 +3639,14 @@ Dejás atrás el pasillo del horror y pasás a la siguiente habitación, debés 
 -> cap2b_ritual_final
 
 === cap2b_monticulo_buda ===
+# music:terror_ambient
 La estatua de Buda se encuentra en la cima de su pequeño túmulo, justo debajo de un ojo (que hacés todo lo posible para no entrar en contacto directo con su mirada muerta). Te sorprende encontrar un adorno de este tipo, hasta donde sabés la comunidad budista en Costa Alegre es casi insignificante. Al agarrarla te das cuenta de que la estatua es de oro macizo, sin duda una excentricidad de un oligarca que tenía suficiente tiempo libre como para aburrirse. Pero bueno, no es momento para rechazar ningún tipo de ayuda.
 Dejás atrás el pasillo del horror y pasás a la siguiente habitación, debés agacharte para entrar, como un penitente o un suplicante.
 # inv:add:buda_oro
 -> cap2b_ritual_final
 
 === cap2b_monticulo_patear ===
+# music:horror_ambient
 Pateás el primer túmulo y explota repartiendo una lluvia de cruces, tripas, placas y carne. Una lluvia plateada y roja. Es bueno, es hacer algo. Esperás que destruirlo sirva de alguna manera para fastidiar el ritual. En el peor de los casos, al menos sirvió para convertir tu miedo en odio y acción. Si tenés que elegir, siempre es mejor estar enojado que asustado.
 Dejás atrás el pasillo del horror y pasás a la siguiente habitación, debés agacharte para entrar, como un penitente o un suplicante.
 -> cap2b_ritual_final
@@ -3343,6 +3656,7 @@ Dejás atrás el pasillo del horror y pasás a la siguiente habitación, debés 
 // ---------------------------------------------------------
 
 === cap2b_ritual_final ===
+# music:horror_ambient
 Sos lo menos interesante en la habitación. Esa es tu ventaja porque nadie te está mirando y te da espacio para actuar.
 En el piso de la habitación hay un círculo delimitado con cera roja (o carne quemada) que contiene una figura geométrica compleja que te da dolor de cabeza con solo verla. Notás que el diagrama pulsa, salvo unos pequeños bultos que aparecen cada tanto como engranajes del diagrama.
 # next
@@ -3379,6 +3693,7 @@ La pregunta ahora es: ¿Cómo actuar?
 -> cap2b_ritual_opciones
 
 === cap2b_ritual_opciones ===
+# music:horror_ambient
 + [Te tirás contra el Vampiro Superior. Estás seguro de que podés ganarle # REQUIRES: fuerza >= 30] -> cap2b_ritual_fuerza
 + [El principal problema de los Vampiros es que son inflamables. Liberás el fuego # REQUIRES: magia >= 30] -> cap2b_ritual_magia
 + [Con un poco de ingenio se puede modificar el diagrama en el piso # REQUIRES: conocimiento >= 30] -> cap2b_ritual_diagrama
@@ -3391,6 +3706,7 @@ La pregunta ahora es: ¿Cómo actuar?
 + [Tu sangre podría contaminar el ritual y convertirlo en un caos] -> cap2b_ritual_sangre
 
 === cap2b_ritual_fuerza ===
+# music:boss_arañas
 Avanzás hasta el borde del diagrama. Pisás con fuerza parte del trazado y movés frenéticamente el pie en un intento de borrar la imagen. Como insulto final, escupís sobre una de las figuras geométricas. El desafío está en el aire.
 El Vampiro Superior vuelve a colocar el bebé en su posición (el plan está funcionando) y te mira, su rostro denota cansancio y aburrimiento principalmente.
 # next
@@ -3410,6 +3726,7 @@ Antes de disiparse, un latigazo pasa por los vampiros que formaban el coro y los
 -> cap2b_epilogo
 
 === cap2b_ritual_magia ===
+# music:boss_arañas
 Juntás las yemas de los dedos de ambas manos formando un círculo, como si tuvieras una lente poderosa, y concentrás la energía. El primer fogonazo sale concentrado, más parecido a un chorro de agua a presión que a fuego, pero cumple su objetivo. El brazo del Vampiro Superior queda cercenado inmediatamente y el bebé queda libre (a una distancia considerable del piso, pero bueno, vas a echarle la culpa de eso a los vampiros).
 # next
 El Vampiro Superior carga contra vos. El coro del fondo carga contra vos. Parece que todo el mundo carga contra vos.
@@ -3425,6 +3742,7 @@ Te caés de rodilla y vomitás. Pero destruiste a los monstruos y, más importan
 -> cap2b_epilogo
 
 === cap2b_ritual_diagrama ===
+# music:horror_ambient
 Das un paso al frente y te detenés a ver el conjunto de símbolos y diagramas que forman la figura geométrica en el piso. Cuando uno está iniciando parecen símbolos extraños pero con onda (por eso tantos jóvenes entran al ocultismo, gran estética). A medida que uno aprende se da cuenta de que no son símbolos, son el lenguaje de la realidad.
 En esencia, lo que tenés frente a tus ojos son una serie de órdenes para juntar energía y descargarla de una forma precisa, no muy diferente a lo que sería un trabajo de programación (no por nada los abuelos de la informática vienen del ocultismo).
 # next
@@ -3445,6 +3763,7 @@ Pero lo importante es que lo lograste, contra todo pronóstico.
 -> cap2b_epilogo
 
 === cap2b_ritual_matar_bebe ===
+# music:horror_ambient
 Más pensás la idea más te das cuenta de que es un plan horrible. ¿La vida de uno es menos importante que la vida de muchos? Verdad, pero es fácil decirlo cuando la vida que va a ser sacrificada es la de otra persona. ¿Su red de relaciones humanas es casi nula por lo cual su muerte afectará a menos gente? Una idiotez, cualquier persona sabe que un bebé es puro futuro y esperanza.
 Uno puede racionalizarlo todo lo que quiera, pero los argumentos no pueden blindarse contra ese llanto que está pidiendo ayuda a gritos.
 Se supone que vos tenías que venir a salvar al bebé, no hay nada que te diferencie del Vampiro que está por devorarlo. Sos un fracaso y vas a tener que vivir con eso.
@@ -3465,6 +3784,7 @@ Pero vos sobrevivís.
 -> cap2b_epilogo
 
 === cap2b_ritual_tuco ===
+# music:misterio_ambient
 Si existió un momento en la historia de la humanidad en que fue necesario llamar a la caballería, era este. No te importaba quién venga, la caballería polaca, el General Custer o la Brigada Antidisturbios de la Provincia de Buenos Aires. Alguien tenía que poder traer las armas pesadas.
 Sacás una foto de lo que está pasando y se la enviás a Tuco junto con tu ubicación en tiempo real. Te agazapás entre unas sombras y esperás el mensaje de respuesta.
 # next
@@ -3484,6 +3804,7 @@ La caballería llegó al rescate y se encargó del asunto.
 -> cap2b_epilogo
 
 === cap2b_ritual_cruz ===
+# music:horror_ambient
 Es momento de pasar a la acción. Das un paso hacia adelante, tus pies cruzan el diagrama, y estirás la cruz hacia adelante.
 De repente sentís la energía atrás tuyo, como si una presencia gigante se encontrara a tu espalda. Igual no tenés tiempo para preocuparte por eso, estás demasiado concentrado en mantener tu agarre de la cruz que dejó de ser una estructura sólida de plata para convertirse en un pilar de luz vertiginoso.
 # next
@@ -3501,6 +3822,7 @@ Cuando podés volver a ver, después de un buen tiempo, delante tuyo solo hay un
 -> cap2b_epilogo
 
 === cap2b_ritual_buda ===
+# music:horror_ambient
 Avanzás con el Buda en tu mano esperando que haga... ¿algo? En el momento en que tu pie toca la figura geométrica el Vampiro Superior se da cuenta de tu presencia. Te mira a vos, al Buda, y de nuevo a vos como intentando entender qué parte del ritual es todo esto.
 Es cuando se da cuenta de que no es parte del ritual, y que la estatua de Buda lo único que está logrando es cansar tus brazos, cuando sonríe. Su sonrisa se va haciendo cada vez más grande hasta dejar al descubierto dos filosos colmillos.
 # next
@@ -3515,6 +3837,7 @@ ESTÁS MUERTO.
 -> END
 
 === cap2b_ritual_placa ===
+# music:horror_ambient
 Avanzás con la placa en tu mano esperando que haga... ¿algo? En el momento en que tu pie toca la figura geométrica el Vampiro Superior se da cuenta de tu presencia. Te mira a vos, a la placa, y de nuevo a vos como intentando entender qué parte del ritual es todo esto.
 Es cuando se da cuenta de que no es parte del ritual, y que la placa lo único que está logrando es cansar tus brazos, cuando sonríe. Su sonrisa se va haciendo cada vez más grande hasta dejar al descubierto dos filosos colmillos.
 # next
@@ -3529,6 +3852,7 @@ ESTÁS MUERTO.
 -> END
 
 === cap2b_ritual_musica ===
+# music:horror_ambient
 Sacás el celular y te asegurás de que esté en máximo volumen, abrís la aplicación de música y dejás que el algoritmo elija qué música pasar. Primero pasan un par de temas de trash metal, en el medio pasan un par de cumbias que te hacen mover la cintura aun en esta situación, para pasar por un par de música deprimente de la década del ochenta.
 Los Vampiros que forman el coro se desesperan e intentan cambiar su entonación y ritmo para compensar el sonido que estás insertando vos en el hechizo.
 Casi lo logran, hasta que los sorprendés con una sucesión de boleros.
@@ -3544,6 +3868,7 @@ La energía concentrada termina cayendo en el ambiente como una ligera lluvia de
 -> cap2b_epilogo
 
 === cap2b_ritual_sangre ===
+# music:horror_ambient
 Pasás la daga por tu palma. Primero sentís el frío de la hoja y luego el calor de la herida. Empieza a brotar sangre, la dualidad vida/muerte y el eje a través del cual gira toda la magia vampírica. Extendés tu mano y dejás que la herida gotee sobre la figura geométrica dibujada en el suelo.
 # stat:hp:-5
 # next
@@ -3567,6 +3892,8 @@ ESTÁS MUERTO.
 // ---------------------------------------------------------
 
 === cap2b_epilogo ===
+# stop_music
+# music:misterio_ambient
 # UI_EFFECT: none
 # MOUSE_RESISTANCE: none
 # WILLPOWER_STOP
@@ -3676,6 +4003,7 @@ Te queda un poco de tiempo antes de tu siguiente misión. Tal vez podés hacer a
 // ============================================================
 
 === inter2_playa ===
+~ inter2_actividad = "playa"
 # music:playa_ambient
 
 Costa Alegre está sufriendo la peor plaga que puede azotar a una ciudad: una invasión de turistas. Hay algún tipo de fin de semana largo o algo por el estilo — tu vida se volvió tan caótica que tardás un par de meses en recordar en qué mes estás — así que cada centímetro de arena es un campo de batalla entre turistas que intentan marcar posiciones a fuerza de sombrillas e infiltrarse entre las líneas enemigas extendiendo mantas y empujando ojotas.
@@ -3689,13 +4017,14 @@ Intentás ignorar la situación pero de repente notás que todo es sombras a tu 
 Terminás mojado, salado, y entendiendo que el mar no te quiere presente.
 # next
 
--> intermision_2
+-> inter2_convergencia
 
 // ============================================================
 // TAROT
 // ============================================================
 
 === inter2_tarot ===
+~ inter2_actividad = "tarot"
 # music:misterio_ambient
 
 Salís a caminar y te dejás llevar por el flujo de energías, por las pequeñas señales que hay en todas las ciudades. Cuando hay una bifurcación, basta lanzar una moneda al aire para saber por dónde seguir. Antes de darte cuenta, estás en la periferia de la ciudad.
@@ -3713,13 +4042,15 @@ El hogar de la tarotista está vacío. Solo hay un sobre en la mesa con tu nombr
 No entendés mucho lo que quiere decir, pero no es raro — la mayoría de las profecías son crípticas y solo se entienden después de que ocurran los hechos.
 # next
 
--> intermision_2
+-> inter2_convergencia
 
 // ============================================================
 // ENFERMERÍA
 // ============================================================
 
 === inter2_enfermeria ===
+~ inter2_actividad = "enfermeria"
+# music:misterio_ambient
 
 Entrás al laboratorio de Mary Shelley a esperarla. Como la científica oficial de El Faro, a ella le toca realizar las curaciones necesarias. Notás que su laboratorio está lleno de plantas que parecen haber sido castigadas por una plaga de insectos — las hojas tienen una sucesión de agujeros pero están siendo tratadas con una sustancia mucosa semitransparente que repara las heridas.
 
@@ -3743,13 +4074,14 @@ Mary Shelley te mira durante cinco segundos y te das cuenta de la idiotez que ac
 # stat:hp:+5
 # next
 
--> intermision_2
+-> inter2_convergencia
 
 // ============================================================
 // ABUELITA — HUB
 // ============================================================
 
 === inter2_abuelita ===
+~ inter2_actividad = "abuela"
 # music:city_ambient_b
 
 Un nuevo mensaje: otro Guardián está complicado con su misión. Parece ser un tema menor pero que, con la presencia de otro par de manos, se podría solucionar en una noche. Preferís estar ocupado — te sentís un inútil haciendo nada y el tiempo ocioso solo hace que tu mente camine hacia recuerdos oscuros.
@@ -3825,6 +4157,7 @@ Así que hay que buscar opciones alternativas.
 // ============================================================
 
 === inter2_abuela_cocina ===
+# music:orfanato_alegre
 
 Das la vuelta al local y, el destino te ama, encontrás una puerta abierta. Al lado se encuentra fumando un empleado con un delantal de cocina y un aspecto de tener ganas de estar en cualquier lugar menos ahí.
 
@@ -3894,16 +4227,17 @@ Tu compañera se ve satisfecha. Detrás de ella ves la puerta del baño entreabi
 — ¿Lo logramos?
 
 — Es una forma de decir. Tuviste tu colaboración. Lo importante es que hay un predador menos en Costa Alegre. Vamos a quedarnos con esa idea.
-# stat:amistad_abuela:+2
+# stat:amistad_abuela:+1
 # next
 
--> intermision_2
+-> inter2_convergencia
 
 // ============================================================
 // ABUELITA — ESCÁNDALO
 // ============================================================
 
 === inter2_abuela_escandalo ===
+# music:city_ambient_b
 
 Van con la abuelita hasta la puerta con toda la intención de hacer un escándalo. Hay algo en sus rostros que los delata: los jóvenes que están esperando para entrar al garito se corren para los costados y los miran de forma desafiante, mientras el guardia de seguridad pone su inmensidad frente a la puerta con los brazos cruzados y los mira desde arriba. Recién ahora, cuando se para del banquito, te das cuenta de lo alto que es.
 
@@ -3938,7 +4272,7 @@ Un policía baja de la patrulla y se acerca hacia ustedes. Tu compañera dice po
 — Sin duda, sino serías un traidor. Lamento que hayas venido hoy, pero no pudo salir.
 # next
 
--> intermision_2
+-> inter2_convergencia
 
 // ============================================================
 // ABUELITA — BANDA
@@ -4009,16 +4343,75 @@ Son las cuatro de la mañana y estás tomando una cerveza mientras mirás el oc�
 "Buena cacería, el problema del súcubo fue solucionado. Si no nos subíamos al escenario nunca la iba a encontrar. Sus métodos son poco ortodoxos pero divertidos. Espero que trabajemos juntos de nuevo".
 
 El mensaje está acompañado por una foto de ella saludando con la mano derecha, mientras en la izquierda tiene un machete bañado en una sangre negra viscosa. Sospechás que la abuelita no es alguien con quien joder.
-# stat:amistad_abuela:+2
+# stat:amistad_abuela:+1
 # next
 
--> intermision_2
+-> inter2_convergencia
+
+// ============================================================
+// CONVERGENCIA — BEAT DE CIERRE DE LA INTERMISIÓN 2
+// ============================================================
+
+=== inter2_convergencia ===
+La tarde se va apagando contra el horizonte. Volvés a tu departamento con el cuerpo cansado y la cabeza dando vueltas.
+
+// === Eje A: actividad de hoy ===
+{
+- inter2_actividad == "playa":
+    El gusto a sal del mar todavía te seca los labios. La ola que te tiró del espigón sigue retumbando en tu cabeza — no fue un accidente, el mar quiso decirte algo.
+- inter2_actividad == "tarot":
+    Las cartas que viste siguen barajándose detrás de tus párpados cuando cerrás los ojos. Sea lo que sea que esa mujer leyó en tu futuro, te dejó un peso raro en el pecho.
+- inter2_actividad == "enfermeria":
+    El olor a antiséptico te sigue pegado a la nariz. Te miraste demasiado en el espejo del consultorio y no te gustó del todo lo que viste — pero al menos el cuerpo responde otra vez como debería.
+- inter2_actividad == "abuela" && amistad_abuela >= 2:
+    Te queda la sonrisa filosa de la abuelita y la sensación de haber trabajado con alguien que sabe exactamente lo que hace. Ya pasaron varias misiones juntos y algo te dice que la próxima vez te va a llamar a vos primero.
+- inter2_actividad == "abuela" && amistad_abuela >= 1:
+    Te queda en la cabeza la abuelita: medio madre, medio asesina a sueldo. No fue una jornada perfecta pero ella parecía conforme con lo aportado.
+- inter2_actividad == "abuela":
+    Te queda la mirada decepcionada de la abuelita. La cagaste, y el rumor en El Faro va a llegar antes que vos a la próxima reunión.
+}
+# next
+
+// === Eje B: última misión, path Orfanato (cap 2A) ===
+{ultima_mision == "orfanato":
+    {
+    - belen_sobrevive && juan_vive:
+        Pensás en Belén y en Juan, en la cara que pusieron cuando los sacaste del lugar. Por una vez todos volvieron a casa. Es una sensación rara — no estás acostumbrado a que las cosas terminen así.
+    - belen_sobrevive:
+        Pensás en Belén, en cómo te apretó la mano cuando la subiste al auto. La sacaste a ella. No a Juan. Esa cuenta no se equilibra y vos lo sabés.
+    - else:
+        Pensás en el orfanato vacío, en los nombres de los chicos que te quedaron pendientes. Ni Belén ni Juan. La propiedad va a seguir tragando chicos cíclicamente y vos solo pudiste mirar.
+    }
+}
+
+// === Eje B: última misión, path Cementerio (cap 2B) ===
+{ultima_mision == "cementerio":
+    {
+    - traumado:
+        Pero por más que cierres los ojos volvés al cementerio. La voz del Vampiro sigue ahí, en el reverso de cada pensamiento — no es un recuerdo, es una presencia que se quedó adentro tuyo.
+    - todos_guardias_mueren || sin_guardias:
+        Pensás en los guardias del cementerio, en los que entraron con vos y no salieron. Los nombres no los sabías y ahora ya no importan. Quedó solo vos para contarlo.
+    - algunos_guardias_sobreviven:
+        Pensás en los guardias que salieron con vos del cementerio, en cómo se palmeaban entre ellos sin saber bien si reírse o llorar. No fue limpio, pero la mayoría volvió. Eso ya es algo.
+    - else:
+        Pensás en la familia del ritual, en las marcas en las paredes del cementerio, en lo poco que entendés todavía. Volviste con más preguntas que respuestas.
+    }
+}
+# next
+
+Algo se está moviendo en Costa Alegre y vos sos parte del engranaje, te guste o no.
+
+El celular vibra en la mesita. Es El Faro.
+# next
+
+-> inter2_siguiente
 
 // ============================================================
 // MISIÓN SIGUIENTE — GATE AL MUSEO
 // ============================================================
 
 === inter2_siguiente ===
+# music:misterio_ambient
 
 Desde El Faro te llaman de urgencia. Parece que hay un problema y, entre todas las disculpas que mandan respecto a cuánto lamentan volver a requerirte en una misión de campo, dan a entender que sos la persona más apta para solucionarlo.
 
@@ -4034,8 +4427,759 @@ De vuelta a la pista de baile.
 
 === capitulo_3 ===
 ~ capitulo_actual = "Cap. 3 — El Museo"
+# music:centinelas_base
 
-PRÓXIMAMENTE — Recuperá un objeto de poder en el Museo de Historia de Costa Alegre que puede ayudarte a conocer dónde se esconde la Secta que está sacrificando humanos.
+-> cap3_llegada_elfaro
+
+=== cap3_llegada_elfaro ===
+# next: Visita al Museo
+
+Te citan a El Faro a las 6 de la mañana. Es tan temprano que el campus universitario donde se encuentra el edificio esta vacío, ni el estudiante más aplicado va a aparecer a esta hora. Vos lograste llegar puntual dado que tenes el esquema de sueño completamente roto y las pesadillas no te dejan dormir. No es difícil madrugar cuando nunca te fuiste a dormir.
+# next
+
+Entras a El Faro y te sorprende no encontrar a Enriquez sentada tras su escritorio en la recepción. Hasta donde sabias, ella estaba biológicamente conectada a la silla (lo cual es sarcasmo, aunque no dudas que en este lugar eso sea posible). Notas que la puerta que lleva al laboratorio de Mary Shelley está abierta y de su interior se escuchan dos voces solamente. Parece que es muy temprano hasta para los otros Guardianes de El Faro.
+# next
+
+¿Qué hacés?
+* [Recorrer el lugar intentando encontrar a Enriquez]
+    -> cap3_recorrer_elfaro
+* [Meterte en la oficina del Profesor]
+    -> cap3_espiar_oficina
+* [Acercarte sigilosamente al laboratorio]
+    -> cap3_espiar_lab
+
+=== cap3_recorrer_elfaro ===
+Recorres el edificio, o las partes que podes entrar al menos. El baño esta vacío, la cocina parece desierta y la heladera solo contiene ese tapper que está en el fondo desde que empezaste a trabajar acá y nadie logra descifrar que es su contenido marrón semilíquido. Por muchas vueltas que des, Enriquez parece estar en su día libre asi que no te queda más opción que dejar de perder el tiempo.
+# next
+-> cap3_briefing_lab
+
+=== cap3_espiar_oficina ===
+Te descalzas para hacer menos ruido y subís por la escalera que da a su oficina. Crees que estás haciendo un muy buen trabajo, los escalones no chirrearon ni una sola vez bajo tu peso.
+# next
+Justo cuando estas por poner tu mano en la manija, suena tu celular. ¿Cómo es posible? Siempre lo tenes en silenció justo por situaciones como esta.
+# next
+Lo sacas y lees un mensaje de El Profesor Buen intento, pero no hay forma que puedas entrar. Deja de jugar y veinte al laboratorio. Te estamos esperando.
+# next
+-> cap3_briefing_lab
+
+=== cap3_espiar_lab ===
+~ espiaste_lab = true
+Avanzas lo más sigilo posible, haciendo tu cuerpo pequeño y prestando especial atención adonde pones los pies. Al principio lo conversación te llega como murmullos inentendibles.
+# next
+Estiras tu cuello un poco más y empezás a entender algunas palabras sueltas peligros, prohibido y locura. Es lamentable que, cuando espías, nunca escuchas cosas lindas como torta de chocolate o fiesta sorprensa.
+# next
+Es entonces cuando la voz de El Profesor te llega fuerte y claro.
+# next
+Deja de escuchar y entra de una vez {nombre_personaje}. Queremos hablar con vos y no tengo ganas de estar a los gritos.
+# achievement:unlock:espia_elfaro
+# next
+-> cap3_briefing_lab
+
+=== cap3_briefing_lab ===
+# music:misterio_ambient
+
+El Profesor y Mary Shelley estaban en la habitación y su presencia se notaba incomoda. Sin duda llegaste después de una confrontación. La tensión era tangible, hasta parecía haber una disputa por el control del ambiente entre el olor a pipa de El Profesor y la fragancia de productos químicos y velas que asociabas con Mary Shelley.
+# next
+
+Sobre una camilla en una de las esquinas de la habitación descansaba un cadáver. Extrañas la época donde la presencia de un cuerpo te incomodaba, ahora se siente un poco como un día más en la oficina.
+# next
+
+Haces los saludos correspondientes y te acercas directamente al cuerpo. Una sábana lo cubre de la cintura para abajo pero el torso está marcado por los mismos signos y las mismas marcas de tortura que el cadáver que viste en tu primera misión. Te detenes a ver su rostro, parece un hombre de mediana edad. No podes dejar de notar unos pequeños surcos bajo los ojos ¿marcas de lágrimas?
+# next
+
+No tenes duda que murió con dolor, unas marcas al costado de su rostro, como si alguien hubiese clavado repetidas veces un picahielos y jugado con la herida, te lo confirman.
+
+— Un nuevo cuerpo, la Secta sigue sacrificando gente y lanzándola al fondo del mar. Ya paso un mes desde la anterior misión, así que es claro el enfoque cíclico de su ritual
+— Así que vamos a seguir recibiendo más cuerpos si no hacemos algo — interrumpís al Profesor mientras intentas que tu odio no se vuelque en tus palabras.
+— Por eso llegó el momento de probar un enfoque más radical — Mary Shelley comienza a hablar pero se para en seco en cuanto El Profesor le da una mirada. Aprovechas el momento para meter una pregunta.
+
+-> cap3_briefing_preguntas
+
+=== cap3_briefing_preguntas ===
++ {not preg_identidad} [¿Sabemos quién es?]
+    ~ preg_identidad = true
+    — Por suerte, al contar con el cuerpo, pude comparar el registro dental con las bases de datos del Gobierno. Martín Gimenez — Mary Shelley empieza a hablar rápido mientras hojea la información que tiene en su carpeta — 22 años, vivía en Costa Alegre hace 8 años, luego de escaparse de su hogar donde era víctima de violencia. Vino a trabajar en la industria pesquera, hace 3 años se quedó sin trabajo y se encontraba en situación de calle.
+    Tenía solo 22 años, y pensar que para vos era un hombre de mediana edad. Supongo que, para él, los años golpearon más fuerte.
+    -> cap3_briefing_preguntas
+
++ {not preg_profundo} [El Tiburón humanoide que me encontré en la Morgue ¿Volvió a aparecer?]
+    ~ preg_profundo = true
+    — El Profundo — dice El Profesor poniendo voz de docente — por suerte no fue visto de nuevo. El cadáver fue encontrado por un barco pesquero que notó que algo se enganchó entre sus redes.
+    — Pobres, sin duda imaginaron que habían pescado algo grande — acotó Mary Shelley.
+    — Lo cual no quita que El Profundo esté dando vueltas por Costa Alegre intentando borrar las huellas de este ritual, te recomiendo estar atento.
+    -> cap3_briefing_preguntas
+
++ {not preg_runas} [¿Las runas son las mismas?]
+    ~ preg_runas = true
+    — Si, nuestro equipo sigue trabajando para intentar descifrarlas y darnos una mejor idea de qué están haciendo, pero es claro que se trata del mismo grupo — aclara El Profesor.
+    Te acercas al cuerpo y mirás las runas, intentas abstraerte, alejarte lo suficiente para no ver heridas sobre la piel sino símbolos sobre un lienzo.
+    { conocimiento < 30:
+        Lo único que lográs es darle nafta a tu rabia. Debés encontrar la forma de detener esto.
+    - else:
+        — Intercambio y pesca abundante — decís señalando un par de heridas juntas (tanto que a simple vista parecen una sola herida) que decidís interpretar como una palabra — No hay que ser literal por pesca abundante, me parece que es algo tan básico como un intercambio de vidas humanas por riqueza, decile al equipo que trabaje en base a esa idea.
+    }
+    -> cap3_briefing_preguntas
+
++ [Ya tengo suficiente información, pasemos al plan]
+    -> cap3_briefing_lab_plan
+
+=== cap3_briefing_lab_profundo ===
+-> cap3_briefing_preguntas
+
+=== cap3_briefing_lab_plan ===
+# next
+
+— Por suerte, estábamos cocinando un plan que puede darnos una ventaja — la sonrisa de Mary Shelley contrasta fuertemente con el cadáver que tiene solo a tres pasos.
+— No uses un plural. Es tu idea y yo no pienso hacerme cargo — El Profesor vuelve a mostrar un poco de tensión en su voz que denota que estuvieron discutiendo de esto durante las últimas horas.
+— Bueno, díganme la idea de una vez — decís esperando que no vuelva a iniciar la pelea.
+— Considero que, con un hechizo que todavía no fue probado, podríamos hacer que el cadáver nos muestre un rastro psíquico de donde estuvo antes de morir, lo cual podría ser una forma de llegar a la guarida de la secta — Mary Shelley habla rápido y mirando de reojo a El Profesor, con temor a que la interrumpa.
+— Es imposible contar la cantidad de condicionales que tiene ese último párrafo, podría causarle un infarto a un profesor de Lengua y Literatura — la interrumpe El Profesor.
+— Es mejor que no hacer nada
+— Sin contar que nunca se usó el hechizo
+— Pero su teoría es muy sólida
+— Y rompe las barreras naturales entre la vida y la muerte
+— También la penicilina
+Y volvió a iniciar la pelea.
+# next
+
+Los argumentos van de punta a punta. Para El Profesor es un experimento peligroso que no tiene garantía de éxito, mientras que para Mary Shelley es la única forma de resolver el problema sin esperar que aparezcan más cuerpos.
+Y nadie tiene pinta de que va a ceder su posición.
+
+* [Te vas de la habitación, no tiene sentido perder tiempo viendo este espectáculo]
+    Salís y aprovechás para ir a la cocina. Alguien trajo un par de medialunas así que te parece gran momento para hacerte un mate y desayunar algo. Pasan unos cinco minutos (y más medialunas de las que te animás a confesar) y te llega un mensaje de El Profesor pidiendo que vuelvas al laboratorio. Parece que ya tomaron una decisión.
+    -> cap3_briefing_lab_museo
+
+* [Interrumpís la pelea. Esto no va a ningún lado.]
+    — Basta — gritas con tanta fuerza que hasta lográs que se muevan un par de cabellos de Mary Shelley — No tiene sentido discutir esto. Y no puedo decir el mal gusto que es hacerlo delante de un cadáver que al fin de cuenta es nuestra responsabilidad.
+    Tus dos interlocutores empiezan a balbucear pero no les da tiempo de decir algo.
+    — Si existe una forma de impedir otro muerto, debemos intentarla, estoy dispuesto. Cuéntenme qué están planeando.
+    -> cap3_briefing_lab_museo
+
+* [Esperás que terminen]
+    Jurás que la conversación amaga con terminar tres veces. Y las tres veces vuelve a empezar con la misma intensidad. Es como estar perdido en un laberinto argumentativo.
+    A la larga (y muy a la larga) es El Profesor quien termina cediendo. No sabés si hace eco a los argumentos esgrimidos por Mary Shelley, si simplemente tiene otras cosas que hacer o si ya pensó cómo controlar cualquier efecto secundario peligroso.
+    -> cap3_briefing_lab_museo
+
+=== cap3_briefing_lab_museo ===
+# next
+
+— Un hechizo así requiere una gran cantidad de poder — Mary Shelley está tan emocionada que habla cada vez más rápido y resulta complicado seguirla — hay pocas personas en el mundo que pueden brindar tanto poder.
+— Y seguir vivas — acota El Profesor por lo bajo.
+— Exacto — grita Mary Shelley — Y como el homicidio es malo la otra opción es encontrar un objeto que haya contenido una cantidad exorbitante de poder sobrenatural y usarlo como fuente de energía.
+— Déjame adivinar — comentás con tristeza — El objeto está en algún tipo de fortaleza custodiado por, no sé, dragones zombis que tienen ametralladoras en la boca.
+— Casi — contesta Mary Shelley — Está de visita en el Museo de Historia de Costa Alegre.
+# next
+
+— El plan entonces es que vaya al Museo de Historia de Costa Alegre y robe un objeto histórico de incontable valor.
+— Sí, una momia incaica que está en una exposición ambulante de Jujuy. Aparenta ser un objeto de gran poder — la emoción desbordaba a Mary Shelley.
+— No me gusta la palabra aparenta — acotaste a la misma vez que El Profesor.
+— Sin duda lo es. Sacrificio humano, adoración religiosa. Mierda, hasta el hecho de que sea una pieza de museo es hasta un tipo de adoración. Si mis lecturas son correctas, es una batería lo suficientemente poderosa para darle poder al ritual que tengo en mente.
+— No sé si me siento cómodo robando una pieza de arte histórico.
+— El Museo Británico lo hace todo el tiempo y nadie le dice nada, lo tuyo hasta tendría más valor dado que lo hacés para salvar vidas — Mary Shelley hablaba tan rápido que las palabras se juntaban tanto hasta parecer una única gran palabra.
+# next
+
+En menos de quince minutos estaban apoyados sobre una mesa con fotos de la momia incaica, mapas del museo y folletos de las exposiciones.
+
+-> cap3_tiempo_libre
+
+=== cap3_tiempo_libre ===
+
+El plan era simple. Ibas a ir esta tarde a hacer un recorrido al Museo para conocer las instalaciones y obtener un poco información. A la noche ibas a volver con el objetivo de robarte la momia y venir directo a El Faro.
+# next
+En algún momento de la planificación entra Enriquez (tarde) con cara de pocos amigos y una jarra llena de café.
+# next
+* [Le haces un comentario]
+    -> cap3_tl_comentario_enriquez
+* [No le decís nada]
+    -> cap3_tl_sin_comentario
+
+=== cap3_tl_comentario_enriquez ===
+En cuanto entra señalás el reloj de tu muñeca.
+—Buenas tardes, ¿Querés que te preste mi reloj así te organizás?
+La mirada de Enriquez es suficiente como para asesinar a alguien y te das cuenta que tiene en las manos una jarra llena de café hirviendo y no tendría dudas en usarlo.
+Esto te va a pasar factura.
+~ item_enojo_enriquez = true
+# inv:add:enojo_enriquez
+# next
+-> cap3_tl_menu
+
+=== cap3_tl_sin_comentario ===
+Sos lo suficiente inteligente para darte cuenta que no te conviene tener una mala relación con Enriquez. Aparte trae café, nadie que traiga café puede ser malo. Te llenás una taza y te dedicás a ver una foto de la momia incaica hasta que la imagen queda grabada en tu memoria.
+# next
+-> cap3_tl_menu
+
+=== cap3_tl_menu ===
+
+Llega un punto que no es posible hacer más planificación desde El Faro. Solo resta que vayas al Museo y hagas una exploración en el terreno. Aún así es temprano todavía, por lo que tenés tiempo para hacer alguna acción más antes de comenzar tu misión.
+# next
+
+¿Cómo aprovechás el tiempo?
+* [Entrenar un poco con Cabral]
+    -> cap3_tl_cabral
+* [Ver si Enriquez tiene algo de conocimiento para compartir]
+    -> cap3_tl_biblioteca
+* [Hablar con Mary Shelley para afinar tus poderes sobrenaturales]
+    -> cap3_tl_mary_shelley
+* { belen_sobrevive } [Visitar a Belén en el nuevo orfanato]
+    -> cap3_tl_belen
+* { algunos_guardias_sobreviven } [Ver cómo están los guardias del cementerio]
+    -> cap3_tl_guardias
+* [No perder más tiempo — ir directo al Museo]
+    -> cap3_viaje_museo
+
+=== cap3_tl_cabral ===
+Cabral adaptó el sótano para convertirlo en una verdadera pista de obstáculos. Hay vallas para saltar, un muro para escalar y una intricada red de alambre de púa pensada para que te arrastres por debajo. Visto desde afuera, todo parece increíblemente divertido.
+# next
+Eso es, obviamente, hasta que empezás a hacerlo. A los cinco minutos de recorrido tus pulmones se sienten en llamas y tus rodillas parecen hechas de cristal.
+No ayuda que cuando terminás Cabral se limita a mirar el reloj, negar con la cabeza y gritar de nuevo.
+La primera vez que grita de nuevo te enojás, la segunda querés llorar. Para la tercera tu espíritu ya está roto y hacés el recorrido a pura inercia.
+# next
+Terminás en el piso, recostado sobre un charco de tu propio sudor. Por suerte Cabral siempre sabe cómo levantar tu ánimo y ya te está acercando una botella de agua mientras te hace una pregunta clave.
+—¿Qué preferís? ¿Sanguches de milanesa o hamburguesas?
+~ fuerza += 5
+# play_sfx:stinger_fuerza
+# next
+-> cap3_viaje_museo
+
+=== cap3_tl_biblioteca ===
+Te encontrás a Enriquez en su escritorio, con tan pocas ganas de sociabilizar como siempre.
+# next
+{ item_enojo_enriquez:
+    —Estuve chequeando tus pedidos de libros para estudiar y vi que hay un error burocrático. Es una lástima pero tuve que cancelar el pedido del día de hoy —Enriquez disfruta cada una de las palabras.
+    —¿Se puede hacer un nuevo pedido?
+    —Sí, tiene que ser acorde al protocolo 22-J, ¿lo conocés?
+    —Obviamente mentís.
+    —Genial. Igual tiene un plazo de 48 horas, así que hoy no vas a poder leer nada.
+    Te retirás aceptando tu derrota. Tal vez no debiste burlarte de ella.
+    # next
+- else:
+    Sobre el escritorio te espera un libro gigante con la letra H escrita en la tapa con letras doradas. Te sorprende que una letra muda en español tenga tantas palabras en el manual correspondiente.
+    # next
+    Ojeando el libro te das cuenta que hemo es el prefijo que significa sangre y pasás las siguientes horas aprendiendo sobre todas las cosas horribles que quieren beber, usar o robar tu sangre, incluido un mosquito de más de dos metros que tiene la costumbre de decapitar a las personas para poner su pico directo en la aorta.
+    # next
+    Terminás la lectura y te das cuenta lo codiciado que sos. De repente sentís que bajo la fina capa de tu piel hay un tesoro que todos quieren robar.
+    ~ conocimiento += 5
+    # play_sfx:stinger_conocimiento
+    # next
+}
+-> cap3_viaje_museo
+
+=== cap3_tl_mary_shelley ===
+Mary Shelley está intentando solucionar una ecuación en su pizarrón. Parece que la manía que la desbordaba esta mañana ahora se concentró en un punto focal. Aun así, mientras mira el pizarrón no deja de golpetear el piso con su pie derecho mientras su mano izquierda juguetea con una lapicera.
+# next
+—¿Problema difícil? —preguntás.
+—Técnicamente, existe la posibilidad de que cuando haga el ritual, tal vez despierte a todos los muertos del mundo y cree una invasión zombie.
+—¿El Profesor sabe esto?
+—Tranquilo, no va a ocurrir una invasión zombie.
+—Mejor, eso sería extremadamente poco original —contestás.
+# next
+Ella está ocupada pero te da un ejercicio para fortalecer tu concentración. Te coloca sobre un pentagrama durante las próximas horas y tu única tarea es usar tu voluntad para que una pequeña moneda se mantenga flotando a la altura de tus ojos.
+# next
+En cuanto te parás sobre el pentagrama empieza a ocurrir de todo. Pasás por picos de calor a picos de frío, de repente una terrible sensación de ingravidez se instala en tu estómago. En un momento estás seguro que cientos de bichos babosos encontraron la forma de meterse entre tu ropa y reptan sobre tu piel dejando una húmeda baba a su paso. Por último, sentís un bocinazo constante detrás de ti a pesar de no poder avanzar.
+# next
+Hay momentos difíciles, pero a pesar de todo lográs sobreponerte y la moneda nunca cae al piso.
+~ magia += 5
+# play_sfx:stinger_magia
+# next
+-> cap3_viaje_museo
+
+=== cap3_tl_belen ===
+El nuevo orfanato parece más feo. El edificio tiene claras marcas de descuido, vidrios rotos en la ventana, rejas oxidadas y paredes mal pintadas. El hecho de estar en una parte fea de la ciudad no ayuda mucho. Tampoco habla muy bien del lugar que, con muy poco sigilo burocrático, El Faro logró que autoricen que la visites de forma regular.
+# next
+Ella se sube a tu auto y te da un hola tímido. Siempre los primeros momentos son raros. Es verdad que una invasión de arañas demoniacas no es la mejor forma de conocer a alguien, pero en cierta forma te sentís responsable por su vida ahora. No tenés duda que algún burócrata en un sótano ya la anotó como posible futura Guardián.
+# next
+Aprovechás la mañana para comprarle un helado y dar una vuelta por la playa mientras los primeros rayos del sol expulsan el frío. La verdad es que verla bien sirve para darte cuenta lo importante de tu trabajo. Vos podés pasar por grandes cuotas de dolor físico o mental pero si al final una niña sobrevive, todo vale la pena.
+# next
+Después de un par de horas la volvés a llevar al orfanato y repetís la tradición del final de cada salida: le prometés que los monstruos no van a volver, le decís que cualquier problema puede llamarte y le pasás una bolsa de caramelos para que soborne a sus compañeros de orfanato.
+~ hp += 5
+# next
+-> cap3_viaje_museo
+
+=== cap3_tl_guardias ===
+Es raro volver al Cementerio. A simple vista no se ve ninguna señal de la batalla que ocurrió acá hace unas noches. La única novedad es un cartel de un blanco impoluto sobre el cual, en grandes letras negras, se aclara que está prohibido ingresar al predio luego del atardecer. No confiás mucho en que los Vampiros tengan un respeto obsesivo por la ley como para dejarse amedrentar por un simple letrero, pero entendés que es parte de una necesidad humana para normalizar la situación y sentir que se da una respuesta. Acá pasó algo una noche, así que pusimos un cartel y nunca se va a volver a repetir, los votantes ya pueden dormir tranquilos.
+# next
+Uno de los guardias te ve venir desde la garita y te saluda efusivamente, y luego en forma de chiste te hace un saludo militar. Desde los eventos en la entrada de la cripta (apodada la batalla de la cripta por los guardias) ellos bromean que sos su Capitán, General o Teniente. Generalmente ascendés de grado conforme hay más alcohol en la reunión.
+# next
+Si bien la mayoría no sabe de la existencia de El Faro, están conscientes de que en la oscuridad acechan cosas horribles y vos pertenecés a una organización indefinida que se encarga de mantenerlas a raya.
+# next
+Antes de darte cuenta estás con dos guardias tomando mate mientras un tercero está pidiendo un par de pizzas por delivery. Existe cierta comodidad que solo se da en la camaradería producto de haber atravesado juntos algo grande.
+# next
+Mucha gente atraviesa la vida sin tener una gran aventura, y es lógico, las grandes aventuras suenan bien en papel pero cuando uno las vive se da cuenta que están compuestas por temor, sufrimiento y pérdida. Los guardias tuvieron la tragedia de tener una gran aventura, pero la suerte de encontrar en ella la fuerza para sobrevivir y el coraje para sobrepasarlo. En cierta forma, están agradecidos por la oportunidad que les diste.
+# next
+Sabés que esta es la historia que se va a contar en fiestas familiares durante generaciones y no dudás que algún nieto lleve tu nombre. Pero ahora es momento de disfrutar del calor y el cariño que solo se tiene rodeado de compañeros de armas.
+La tarde sirve para relajar tu mente y prepararte para los retos que tengas que enfrentar a futuro.
+~ hp += 5
+# next
+-> cap3_viaje_museo
+
+=== cap3_viaje_museo ===
+El Museo se encuentra en la otra punta de Costa Alegre. No te queda otra opción que hacer el camino por la autopista que, a esta hora, es principalmente una sucesión de frenar y arrancar mientras crece tu nivel de frustración.
+{ traumado:
+    # next
+    Es entonces cuando lo ves, acostado en el piso del auto del lado del acompañante. Lo más correcto sería decir que primero lo oliste. Un olor fuerte, casi tangible, a carne podrida y muerte. Ese olor que toca una fibra instintiva en tu cuerpo y te hace saber que algo se encuentra muy mal.
+    Cuando girás tu cabeza lo ves: el bebé muerto se encuentra en tu auto. En su cabeza todavía se ve el orificio de bala —la bala que vos disparaste. Gatea y se sube al asiento del acompañante con torpeza, tal vez por su edad o tal vez por estar muerto; no se le puede culpar por eso. Te lanza una mirada de dos ojos completamente negros.
+    # next
+    Tus manos se endurecen en el volante hasta que te duelen los nudillos. Intentás concentrarte para no terminar encajando tu auto en la parte trasera del camión que va adelante. El bebé abre la boca pero su voz sale truncada, suena como un hombre de cincuenta años con cuarenta años de fumador.
+    —Que lindo que me llevás al Museo, nunca pude ir. Eso está bien, me vas a poder llevar a un montón de lugares. Casi todo es nuevo para mí.
+    # next
+}
+-> cap3_museo_dia
+
+=== cap3_museo_dia ===
+# music:agite_museo
+# next
+
+// DE DIA EN EL MUSEO
+El museo estaba en el medio de un parque arbolado. El día era lindo y un montón de personas habían aprovechado para salir a disfrutar de la naturaleza. Una familia estaba disfrutando un picnic (mientras un comando de hormigas se acercaba para robarle las migas), una pareja de enamorados estaban enfrascados en un abrazo tan largo que sus cuerpos habían encontrado la forma perfecta de encajar entre si y con el árbol donde se apoyaban. Tu reflexión es interrumpida por una pelota que pasa a centímetros de tu cabeza, un grupo de jóvenes estaba aprovechando el parque para improvisar un partido de futbol.
+# next
+
+El Museo, visto desde afuera, es una mole brutalista que parece más apta para ser guarida de supervillano que centro de saber. Un circulo de cemento al cual se accede subiendo por una escalera (también de cemento) atravesando en el camino estatuas (obviamente, de cemento) que representan diversos períodos históricos de Costa Alegre.
+# next
+
+Entrás al hall central del Museo y se encuentra casi vacío, solo cuenta con un mostrador detrás del cual hay un par de pasantes y una gigantografia de la Momia Incaica que está en exposición.
+Te tomás un momento para observar la momia. Generalmente cuando se escucha esa palabra uno piensa en Egipto, vendajes, sarcófagos de oro y maldiciones, pero este no era el caso con la Momia Incaica (aunque con tu suerte no estás dispuesto a descartar una maldición tan rápidamente).
+La momia era una adolescente cruzada de piernas, con ropa propia del Imperio Incaico, que había sido momificada mediante el uso de la aridez y el frio de los Andes. Su rostro miraba para abajo y el efecto de sombras dificultaba ver su expresión pero parecía estar durmiendo. Requería un esfuerzo consciente darse cuenta que uno estaba viendo un cadáver y no una obra de arte, supones que el paso del tiempo y las particularidades de la momificación generan esa distancia.
+# next
+
+Te acercás al mostrador y el pasante joven te pasa un folleto y te explica como es el recorrido del Museo. Te informa que la estructura es un círculo que se recorre de derecha a izquierda, consta de cinco salas y al final tenés una tienda para comprar recuerdos así como la posibilidad de acceder al café que se encuentra en el jardín ubicado en el centro de la estructura.
+Por último, te muestra una caja y te invita a dejar una colaboración para sostener la institución ante los cortes de financiación que lleva el Gobierno.
+
+* [Colaborás con el Museo]
+    ~ colaboraste_museo = true
+    Sacás unos billetes de tu billetera y ponés dinero en la caja de colaboración. Obviamente es de interés de toda Costa Alegre que sus instituciones educativas estén bien fundadas y te da un poco de vergüenza vivir en un país donde el Gobierno no financia la educación. Te preguntás donde va el dinero que ahorran, sin duda no están ayudando en combatir seres sobrenaturales.
+    # achievement:unlock:colaborador_museo
+    -> cap3_museo_primer_sala
+
+* [No colaborás con el Museo]
+    Sonreís y girás para la derecha, para entrar a la primera sala del Museo. Sentís que no es tu responsabilidad financiar la educación. Estás seguro que próximamente el Gobierno va a entrar en razón y librar el dinero que corresponde ¿No?, o sin duda otra persona va a venir y va a poner suficiente dinero como para compensar el día ¿No es así?
+    # achievement:unlock:no_colaborador_museo
+    -> cap3_museo_primer_sala
+
+=== cap3_museo_primer_sala ===
+La primera sala está dedicada a los Pueblos Originarios. Aparentemente eran hábiles pescadores y navegantes, en los costados ondulados de la sala se puede ver elementos de pesca, ropas tradicionales y vasijas de barro.
+En el centro de la sala hay una recreación de las canoas que usaban para navegar el mar y pescar kilómetros de la costa. Te basta ver la canoa cinco minutos, y recordar lo violento que se puede poner el mar, para darte cuenta que esta gente era mas valiente que vos.
+# next
+
+Ahora tocaba Costa Alegre en la época colonial. No tenías consciencia de que la ciudad era tan vieja pero parece que ya había un pequeño poblado en el siglo XVIII que había sido un poco un puerto de pescadores (y mucho un centro de contrabandistas).
+La mayoría de las vitrinas estaban compuestas por ropa de la época y objetos cotidianos de la Colonia donde abundaba el trabajo en plata y la iconografía cristiana.
+En el centro de la sala había un carruaje gigante con unos detalles marinos (sirenas, tritones, kraken y demás seres fantásticos). Hay que admitir que el vehículo era más elegante que cualquier cosa que te podías cruzar hoy por la calle.
+{ conocimiento >= 20:
+    En una esquina de la sala se expone una tabla de la evolución poblacional de la ciudad en esos primeros años. La mezcla de números y letra manuscrita aleja a la mayoría de la gente, pero vos te quedás un momento comparando números. Parece que los primeros pobladores de Costa Alegre la tuvieron muy duro, hambruna por las embarcaciones hundidas, crecidas repentinas del mar, pestes. El poblado estuvo cerca de desaparecer varias veces durante su primer año de existencia. Eso es hasta 1780 donde esos sucesos dejan de aparecer y el pueblo empieza a prosperar.
+    No te sorprende que la secta que estás buscando tal vez lleve actuando más de doscientos años haciendo esto y sus orígenes fueron para aplacar a las entidades que castigaban el poblado desde el fondo del mar.
+}
+# next
+
+La tercera sala correspondía a Costa Alegre en el siglo XX, la cual había crecido desde 1900 para convertirse en un parador turístico como un centro industrial.
+La mayoría de las vitrinas tenían fotos, planos o gigantografias de recortes periodísticos. Se veía fotos de la inauguración del Casino de Costa Alegre así como de los primeros hoteles sindicales que se había construido a metros del mar.
+En el centro de la sala había una maqueta que contaba la historia de la toma de los Astilleros Herrera, símbolo de la lucha sindical de los sesenta y setenta en la Ciudad. En esa época cada vez que salía un barco del astillero se cobraba la vida de un par de trabajadores que morían por las pésimas condiciones de seguridad. El conflicto llevó a la fábrica por parte de los trabajadores exigiendo condiciones dignas de trabajo y terminó con una brutal represión por parte de la dictadura militar.
+{ fuerza >= 20:
+    Viendo el mapa te das cuenta que el predio de la fábrica no era tan difícil de custodiar, el gran problema era la posibilidad que la marina haga un desembarco naval entrando desde la rampa de lanzamiento del astillero. Si vos hubieses estado encargado de la defensa del predio, con veinte hombres fuertes y un par de armas largas, podrías seguir hasta el día de hoy atrincherado en la fábrica.
+}
+# next
+
+Ya recorriste la mitad del circulo que compone el Museo y por fin llegás a la sala donde está la Momia Incaica. Aparte de la Momia (que está escondida de la vista detrás de unos biombos con información de la cultura Inca) en esta sala está la mayoría de los visitantes del museo que esperan su turno para entrar a ver la momia o dan vuelta entre las vitrinas donde se encuentran diversos objetos cotidianos propios del Imperio Inca.
+{ magia >= 20:
+    Mary Shelley tiene razón, la momia desborda de energía sobrenatural. Toda la sala se siente como un sauna, el aire está caliente y espeso y tenés que sentarte unos minutos para recuperar la compostura. La mera cercanía del objeto te hace sentir emocionado, excitado y energizado a la vez. No tenías esta mezcla tan particular desde que eras adolescente. Respirás y te concentrás en tu propio cuerpo y notás tus palmas mojadas, tu rostro colorado y tu corazón acelerado.
+    Agradecés que la comunidad sobrenatural de Costa Alegre sea bastante bruta y no visite de forma regular los Museos, sino alguien ya se hubiese dado cuenta de las particulares características de la Momia Inca y hubiese intentado robarla.
+    Aun así, te da un poco de miedo lo que puede pasar si quedás frente a frente a la Momia.
+}
+
+Se hace un hueco entre las masas de visitantes que quieren ver a la Momia Incaica. Si querés entrar a verla este es el mejor momento para hacerlo.
+
+* [Entrás a ver a la Momia Incaica]
+    -> cap3_museo_dia_momia
+
+* [Lo importante es explorar el Museo para volver a la noche, mejor terminar el recorrido]
+    -> cap3_museo_dia_recorrido_final
+
+=== cap3_museo_dia_momia ===
+Te metés entre los biombos que buscan recrear la cueva donde fue encontrada la Momia. Te sorprende lo pequeña que es, es obvio que en vida era solo una niña. Aparte su rostro, mirando hacia abajo y escondido detrás de un mechón de pelos, la hace parecer tímida e incómoda. No podés dejar de pensar que tal vez no es correcto que esté expuesta ante masas de desconocidos. Sentís que hay un doble sacrilegio, tanto al ritual religioso de su sacrificio como a la intimidad y respeto que le corresponde a los muertos.
+# next
+
+{ magia < 20:
+    La energía se siente más espesa. Tu camisa de repente está empapada de sudor y una presión aprieta tu frente. Durante unos segundos no podés actuar, pero te saca de tu ensoñación unas gotas de sangre que caen sobre tu pecho. Te llevás las manos a tu nariz, estás sangrando. Mucho.
+    Por lo menos la sangre es un vector que te pone en movimiento, te abrís paso a los empujones y vas a la siguiente sala en busca de un baño.
+    -> cap3_museo_dia_recorrido_final
+- else:
+    { magia < 30:
+        La energía de la momia es desbordante. Es como el sol o el mar. Aún más, esos conceptos tienen límites, son objetos finitos e ideas manejables. La energía de la momia es algo aun mayor, una luz rosada atraviesa todo. Los objetos, tu cuerpo, los espacios entre los átomos.
+        Sentís la energía desbordándote, difuminándote. Una sensación de vértigo y caída te inunda e intentás enfrentarla.
+        Los límites de tu ser se desdibujan e intentás torpemente mantenerlo, como un niño que dibuja unos palotes y dice que eso es una persona.
+        Es entonces cuando tu cuerpo dice basta.
+        ~ hp -= 10
+        -> cap3_museo_dia_hospital
+    - else:
+        La energía de la momia es desbordante. Se siente como tener el mejor sexo de tu vida, dentro de un auto de alta gama, que avanza a toda velocidad, por el infinito.
+        Naciste para manejar estas energías. Todo el tiempo anterior a esto, o sea toda tu vida, parece tan lenta y mundana. Gris y estática. Una pared de cemento.
+        Te emborrachás en la energía. A tu alrededor se escuchan gritos. El tono de esos gritos va más allá del miedo ¿Pánico? ¿Locura?.
+        Al olor después se le suma el olfato. Humo y el distintivo olor a carne quemada. Pero no te descompone, estás más allá de descomponerte.
+        Por último se agrega el tacto. Ahí te das cuenta que la carne que se está quemando es la tuya.
+        ~ hp -= 20
+        -> cap3_museo_dia_hospital
+    }
+}
+
+=== cap3_museo_dia_hospital ===
+Una luz gigante flotaba sobre tu cabeza. Tu primera impresión fue que habías muerto y estabas en el cielo. Estabas relajado y, por lo menos, no tenías que levantarte para ir a trabajar.
+Esa impresión duró hasta que la luz gigante titiló fruto de una falla de corriente y una polilla, confundida, huyó de la oscuridad y se chocó contra tu cara.
+Problemas de corriente, olor a desinfectante, una sábana rasposa y el tic tac constante de aparatos electrónicos.
+Estabas en el Hospital de Costa Alegre. Lejos del Cielo, con suerte estabas en su antesala.
+# next
+
+Parece que tu contacto cercano con la Momia había sobrecargado tu cuerpo. Después de hacer un análisis superficial (y carente de cualquier conocimiento técnico, simplemente te dedicaste a tocar todo lo que podías tocar para asegurar que seguía en su lugar) llegaste a la conclusión de que estabas bien.
+En cuanto te sentás en la cama tu conclusión cambia de bien a relativamente bien. Tu cabeza duele como si alguien le hubiese pegado con un martillo y tu cuerpo se siente liviano y carente de energía, sin duda por la pérdida de sangre.
+# next
+
+Es sorprendente lo fácil que es escapar de un Hospital. Teniendo en cuenta lo colapsado que está el sistema de salud de la ciudad, creo que si algún profesional de salud se da cuenta que sos un fugado solamente se alegra al saber que va a tener una cama libre para un paciente más grave. Al fin de cuentas, si tenés suficiente energía para poder escaparte, no deberías estar en un hospital en primer lugar.
+Al salir del Hospital notás una luna llena iluminando el paisaje nocturno. Tu pequeña experiencia te hizo perder todo el día y desperdiciar cualquier oportunidad de planificar el robo de la Momia.
+No te quedan más opciones que ir directo al Museo e improvisar sobre la marcha.
+# next
+-> cap3_museo_noche_entrada
+
+=== cap3_museo_dia_recorrido_final ===
+La última sala es el cuarto de recuerdos. Postales, remeras, vasos e imanes. La característica común es el sobreprecio.
+Si seguís avanzando volvés a la Sala principal y salís del Museo. A la derecha hay una arcada que da al centro del edificio, un jardín arbolado donde se instaló un café improvisado. Con ver el pizarrón con la oferta culinaria te das cuenta que el lugar también está marcado por el sobreprecio.
+Ya recorriste el lugar, antes de irte podrías dejar preparada alguna acción que te permita hacer más fácil tu incursión nocturna para robar la momia.
+
+* [Esconderte dentro del Museo es una opción. Y te ahorraría pensar cómo entrar a la noche.]
+    Intentás esconderte en el baño del Museo. Trabás la puerta de un privado y te parás sobre el inodoro para que el guardia de seguridad no se dé cuenta que estás ahí cuando haga su ronda. Tenés que hacer fuerza para contener tu risa al recordar que usaste la misma técnica para quedarte en el colegio una noche con unos amigos.
+    El plan funcionó esa vez. Lamentablemente, ya no estás en el colegio.
+    No sabés cómo se dan cuenta que estás ahí, posiblemente tengan un sistema de cámaras y les llamó la atención que alguien entró al baño y nunca salió (esperás que nadie se descomponga en el museo).
+    Un guardia con poco sentido del humor te escolta a la puerta.
+    Afuera ves una luna llena iluminando el paisaje nocturno. Tu pequeña experiencia te hizo perder todo el día y desperdiciar cualquier oportunidad de planificar el robo de la Momia.
+    No te quedan más opciones que ir directo al Museo e improvisar sobre la marcha.
+    -> cap3_museo_noche_entrada
+
+* { conocimiento >= 20 } [En las Salas hay guardias, podrías intentar robarle la llave a alguno para entrar tranquilo a la noche.]
+    El Museo no está lleno de gente. Chocarse a alguien por accidente es difícil. Así que buscás otro enfoque. Registrás el lugar y encontrás lo que buscás, te das cuenta porque no tienen el aspecto del típico visitante de un Museo, caminan demasiado rápido y hablan demasiado alto. Es una pareja de adolescentes que sin duda estaban pasando la tarde en la plaza y decidieron entrar a molestar un poco.
+    Uno de los guardias también los detecta y empieza a seguirlos, y vos lo seguís a él a unos metros (o, mejor dicho, al llavero que lleva colgado de su cinto). Al llegar a la Sala de la exposición Inca uno de los adolescentes hace una idiotez (obviamente) y golpea uno de los vidrios con sus nudillos un par de veces.
+    El guardia se acerca para retarlos y vos aprovechás para pasar por su lado y hacer la maniobra McPherson y terminás con su juego de llaves en tu bolsillo.
+    Esta noche vas a poder entrar por la puerta grande sin necesidad de tener problemas.
+    -> cap3_museo_ya_adentro
+
+* { magia >= 20 } [Un hechizo de invisibilidad y a esperar al baño.]
+    Hacerte invisible no es tan fácil como parece. Si no estás bien concentrado más que invisible sos difuso, por usar una palabra. Aparte, curiosamente, nada llama más la atención que hacerte invisible en mitad de una multitud.
+    Vas al baño y te escondés en un privado. Te concentrás mientras ejecutás una serie de precisos movimientos de manos a la par que repetís una onomatopeya de forma cada vez más baja.
+    Una vez que sos invisible (como confirma el espejo del baño) te parás en una esquina esperando no chocarte con nadie y solo te resta esperar a la noche.
+    -> cap3_museo_ya_adentro
+
+* { fuerza >= 20 } [La puerta va a estar protegida, lo más simple es entrar trepando. Buscás claraboyas y ductos de respiración.]
+    Das una nueva vuelta al museo, solamente que esta vez en lugar de observar los objetos en exposición te dedicás a estudiar el techo buscando una claraboya o los ductos de un aire acondicionado. La mayoría de las Salas carece de estos mecanismos, sospechás que para proteger las obras, pero el hall por el cual entrás tiene un ventanal gigante para facilitar la iluminación.
+    A la salida estudiás el bosque que rodea el lugar y notás un árbol con una rama convenientemente gruesa que llega cerca del techo del Museo.
+    Con un poco de suerte podrías saltar al techo del Museo, abrir el ventanal, y descolgarte con una soga. Arriesgado, pero divertido.
+    -> cap3_museo_ya_adentro
+
+* [A centímetros tuyos hay una alarma de incendio. No es necesario esperar. Simplemente generar caos y correr por la Momia.]
+    Siempre tuviste ganas de hacer esto. Ves la alarma de incendio en la pared y te parece la mejor idea del mundo. En cuanto bajás la palanca una sirena grave empieza a escucharse por todo el Museo, luego viene una luz roja parpadeante y por último los gritos de pánico de toda la gente presente.
+    La gente se convierte en una marea humana que va hacia la puerta. Vos avanzás contra corriente intentando llegar a la Sala donde se encuentra La Momia. Buscás los puntos de menor resistencia, aquella gente que parece que se va a correr a tu paso, en algún momento saltás por encima de un nene chiquito y girás todo tu cuerpo para no golpear de frente a una señora que no llegó a verte.
+    Vas a llegar. Estás seguro que vas a llegar. Por lo menos eso creés hasta que alguien te agarra con una llave por el cuello y te dice "Es para el otro lado amigo". Te encontraste con un puto héroe ¿Cuáles eran las posibilidades?.
+    Esos minutos que perdés son clave. Empezás a ver que el Museo se llena de uniformes azul (policía) y marrón (bomberos).
+    Todo se volvió demasiado público, no te queda más opción que salir del Museo y volver a intentarlo a la noche.
+    -> cap3_museo_noche_entrada
+
+=== cap3_museo_ya_adentro ===
+Tu plan fue un éxito y te encontrás dentro del Museo en cuanto cierra. Mientras avanzás bajo la semioscuridad escuchás unos ruidos en las otras Salas del Museo. Al principio no le das mucha importancia, este tipo de edificios viejos tienden a ser muy ruidosos cuando llega la noche y baja la temperatura. Sin duda es el metal de una cañería o algo por el estilo.
+Pero después te das cuenta que el ruido es demasiado continuo y parece provenir de diversos grupos en varias habitaciones. ¿Guardias de seguridad? Podría ser pero los pasos serían demasiado inconstantes.
+# next
+
+Estás en el Hall Central listo para iniciar el recorrido que te va a llevar a la Momia Incaica cuando escuchás que una puerta detrás tuyo se abre.
+Te escondés detrás del mostrador (el colmo de la falta de imaginación) mientras espiás por el filo del mueble. Un guardia de seguridad entra y recorre toda la habitación con el brillo de su linterna.
+Avanza al centro de la habitación y no se da cuenta de nada. Sos vos el que lo nota primero, detrás de él aparecieron tres maniquíes que simplemente antes no estaban ahí. Notás que su rostro es totalmente liso, carente de cualquier rasgo facial, y eso es aún más perturbador que su súbito aparecer.
+# next
+
+El guarda para unos segundos y los maniquíes comienzan a moverse. Su caminar al principio es torpe y carece de dirección clara hasta que de repente los tres a la vez aumentan su velocidad y, con su avance zigzagueante, rodean al guardia de todas las direcciones.
+La violencia generalmente ocurre muy rápido, por mucho que lo veas es increíble en qué tan poco tiempo las cosas pueden cambiar completamente para alguien. Uno de los maniquíes carga de frente, el guardia llega a darle un golpe fuerte en la cara con su pesada linterna (mala táctica, pero hay que reconocer que es valiente) pero el maniquí parece no sentir dolor.
+En cuestión de segundos el maniquí atrapó uno de sus brazos mientras que los otros dos, que llegaron por los costados, agarraron respectivamente su otro brazo y una pierna.
+Luego se dedican a tirar y doblar las extremidades.
+# next
+
+No hay malicia en la cara de los maniquíes (fácil al no haber rostro) ni emiten un sonido. Solo se escuchan los gritos desesperados del guardia que solo son superados por el ruido seco de huesos rompiéndose y carne siendo desgarrada.
+Cuando terminan su trabajo sueltan al guardia que cae pesadamente al piso. Una caída así de espalda sin duda le saca todo el aire de los pulmones y le impide seguir gritando ayuda.
+No pensás quedarte para ser la segunda víctima, aprovechás el momento y te colás en la Primera Sala del Museo mientras planeás cómo enfrentarte a esta nueva amenaza.
+~ llegaste_con_ventaja = true
+# inv:add:llegaste_con_ventaja
+# next
+-> cap3_museo_primera_sala
+
+=== cap3_museo_noche_entrada ===
+# music:terror_ambient
+Para tu desventaja, la noche está hermosa. Preferirías una de esas tormentas que traen el frio del mar y dejan la noche con olor a sal pero la noche es cálida con una brisa regular que llama a caminar.
+Eso significa que el parque que rodea el Museo está lleno de parejas que caminan lento y sin rumbo, adolescentes que se aburren y no hacen nada (pero prefieren hacerlo afuera de su casa) y hasta un par de familias con niños que quedaron energizados después de la visita al Museo y no se quieren ir todavía.
+Eso significa que te toca esperar un poco antes de ver cómo forzar tu entrada.
+# next
+
+Es entonces cuando te das cuenta que ya hay algo dentro del Museo. No es un ruido o una sensación sobrenatural, más una herencia genética de un pasado de cazador recolector que levanta pequeños detalles que no llegás a procesar y le da información a tu cerebro: hay algo entre esos arbustos ¿presa o peligro?.
+Que se joda la sutileza, es momento de entrar en el Museo.
+
+* { fuerza >= 20 } [Un poco de fuerza bastará para romper el mecanismo de la puerta.]
+    Te apoyás contra la puerta y empezás a forzar el mecanismo mientras empujás con tu hombro. Requiere más que un poco de fuerza pero, luego de unos minutos, escuchás el click del mecanismo rompiéndose y podés entrar al hall central del Museo.
+    -> cap3_museo_noche_convergencia
+
+* { conocimiento >= 20 } [Hace tiempo que las ganzúas no se usan. Es su momento de brillar.]
+    Las ganzúas bailan en la cerradura de la puerta haciendo un tintineo metálico. Apoyás tu oreja contra la puerta y vas escuchando el resultado de cada movimiento hasta encontrar la posición correcta. Eureka, la puerta se abre y entrás al hall central del Museo.
+    -> cap3_museo_noche_convergencia
+
+* { magia >= 20 } [Un poco de calor concentrado bastará para romper el mecanismo de la puerta.]
+    Concentrar el calor fue lo más difícil, lo que te sale más natural era prender fuego toda la puerta (y la mitad del Museo de yapa) pero este trabajo requería algo más sutil. A medida que pasaron los segundos el calor se fue concentrando y aumentando, hasta convertir el pico de la puerta en una baba candente que cayó al piso. Así, por arte de magia (textualmente) lograste entrar al hall central del Museo.
+    -> cap3_museo_noche_convergencia
+
+
+=== cap3_museo_noche_convergencia ===
+Te encontrás de nuevo en el hall central, bajo la tenue luz de la luna que entra por los ventanales. Tardás unos segundos en comprender lo que estás viendo, una pieza así sería más propia de un museo de arte moderno.
+En el piso hay una figura con el típico traje de guardia de seguridad, pero sus extremidades se encuentran dobladas en ángulos raros, ángulos que ningún cuerpo humano adoptaría voluntariamente.
+A su alrededor están parados tres maniquíes de aspecto humanoide pero con rostros planos, carentes de cualquier rasgo. Por alguna razón esta particularidad los hace parecer más perturbadores.
+Sospechás que, tal vez, dejaron en el hall central elementos que deben colocar en alguna vitrina mañana a primera hora para hacer una composición.
+# next
+
+Es entonces cuando escuchás un quejido en el piso. La figura con el traje de guardia de seguridad no era una maqueta ni un maniquí, era una persona que (por ese ruido) estaba en sus últimos minutos de vida.
+No tenés mucho tiempo, debés decidir cómo actuar.
+
+* [Te acercás a intentar salvar la vida al guardia de seguridad]
+    Te arrodillás al lado del guardia mientras intentás recordar los pocos conocimientos que tenés sobre primeros auxilios. Sentís que, aun si recuperás todo lo que olvidaste sobre salud, el guardia está más cerca de necesitar un milagro que un médico.
+    Solo llegás a notar cómo una sombra se mueve, antes de darte cuenta uno de los maniquíes te agarra firmemente del cuello. Movés los pies desesperadamente intentando encontrar algo sólido pero solo hay vacío. Lentamente te empezás a quedar sin aire.
+    { fuerza >= 25:
+        Sentís tus abdominales en llamas pero lográs elevar tus piernas y darle una patada al maniquí para forzar que te suelte. Corrés hacia la primera sala mientras ves delante de ti las sombras que produce el arbitrario movimiento del maniquí y escuchás detrás de ti el ruido inconexo de sus pisadas.
+        ~ hp -= 10
+    - else:
+        Es entonces cuando otro maniquí descarga un golpe contra tu estómago, dejándote sin aire mientras abrís la boca en un grito mudo.
+        Por suerte te lanza como un muñeco roto con tanta fuerza que atravesás la puerta hasta la siguiente habitación.
+        ~ hp -= 20
+    }
+    -> cap3_museo_primera_sala
+
+* [Alguien ya está en el Museo, vas a la siguiente sala para llegar rápido a la momia.]
+    -> cap3_museo_primera_sala
+
+* [Te acercás a estudiar los maniquíes.]
+    Das un par de pasos y solo ves un grupo de maniquíes. A esta distancia parecen completamente ordinarios y solo podés notar que no se están moviendo ni respiran —teniendo en cuenta que no tienen nariz, es esperable.
+    Te animás a dar un paso más y tocás su brazo. Notás que no tiene ninguna articulación, sin duda sus movimientos serán torpes. Aun así te sorprende sentir calor y algo ¿moviéndose? debajo del plástico.
+    { conocimiento >= 25:
+        Sabés que varios invocadores, cuando traen a entidades a este plano que carecen de forma física, utilizan muñecos, cadáveres o elementos similares para darles un vehículo para actuar. Eso es bueno —si son entidades de otro plano, pueden ser contenidas y alejadas con los métodos correspondientes.
+        ~ entidades_poseidas = true
+        # inv:add:entidades_poseidas
+    - else:
+        Entonces se mueve, más rápido de lo que esperás pero de forma torpe, usando la articulación del hombro en lugar de la del codo. El golpe cae directo en tu rostro y te llena la boca del gusto a sangre —tu sangre. El momento del estudio terminó.
+        ~ hp -= 10
+    }
+    Corrés hacia la primera sala mientras ves delante de ti las sombras que produce el arbitrario movimiento del maniquí y escuchás detrás de ti el ruido inconexo de sus pisadas.
+    -> cap3_museo_primera_sala
+
+* [Ya sos muy viejo para caer en esto. Sacás la pistola.]
+    # play_sfx:disparo
+    # flash_yellow
+    Debe ser el tiro más fácil que tuviste que hacer en toda tu vida. Apuntás, contenés la respiración y empezás a tirar del gatillo. Justo en ese momento, el maniquí hace un movimiento rápido, a caballo entre un salto y una caída, y se mueve hacia un costado. Tu disparo se pierde en el aire —el único efecto aparente fue avisarle a todos que llegaste, con el ruido que retumba en los techos altos del Museo.
+    Los maniquíes cargan hacia vos. Su avanzar es torpe y combina pasos largos con explosiones de velocidad. Todo su avance es zigzagueante y te hacen acordar a un borracho agresivo.
+    Pasaste de dispararle a un blanco inmóvil a estar perseguido por tres enemigos. Es momento de retirarse y repensar la estrategia.
+    Corrés hacia la primera sala mientras ves delante de ti las sombras que produce el arbitrario movimiento del maniquí y escuchás detrás de ti el ruido inconexo de sus pisadas.
+    -> cap3_museo_primera_sala
+
+=== cap3_museo_primera_sala ===
+# stop_music
+# play_sfx:pasos_monstruo
+# UI_EFFECT: blur_vignette
+
+Llegás a la primera Sala, la exposición de Costa Alegre en la época de los Pueblos Originarios. Ves un par de maquetas y lamentás que estas figuras con lanzas no cobren vida para ayudarte.
+Atrás tuyo escuchás cómo los pasos irregulares de los maniquíes se preparan para entrar. Cerrás la puerta de ingreso pero notás que es una madera de mala calidad —parece que el Museo estuvo desfinanciado desde su construcción. El cierre de la puerta es más una expresión de deseo que una defensa real.
+En unos segundos van a entrar, así que tenés que actuar rápido.
+# next
+
+* [Te apoyás contra la puerta, intentando trabarla e impedir que los maniquíes entren]
+    Apoyás tu espalda en el centro de la puerta intentando sostenerla contra el avance de los maniquíes.
+    Los golpes son torpes, pero están cargados con una fuerza que hace temblar la puerta y se propaga por tu espalda hasta tus rodillas, que ya se sienten de gelatina.
+    Es entonces cuando uno de sus brazos rompe la puerta y te aferra de la muñeca.
+    # play_sfx:golpe
+    # shake
+    # next
+    Las manos empiezan a atravesar la puerta. Antes de darte cuenta una está aferrando tu muñeca, otra un talón y la tercera está palpando el terreno en busca de tu cuello.
+    Es entonces cuando se abre la otra puerta y aparecen tres maniquíes más. Intentás forcejear mientras se acercan pero te encontrás atrapado contra la puerta.
+    Antes de darte cuenta, una lluvia de manos busca qué parte tuya agarrar, tirar y retorcer.
+    # next
+    # MINIGAME: type=keymash, key=SPACE, count=18, timeLimit=6, autostart=true
+    { minigame_result == 1:
+        Lográs zafarte y te lanzás hacia la siguiente sala con lo que te queda de energía.
+        ~ hp -= 10
+    - else:
+        Las manos logran aferrarte demasiado. Cuando finalmente salís, cada músculo grita.
+        ~ hp -= 25
+    }
+    # next
+    -> cap3_corres_museo
+
+* { magia >= 20 } [Un hechizo de invisibilidad podría ser útil en este momento]
+    En este momento volverte invisible te sale tan natural como contener la respiración. Buscás una esquina y ejecutás los movimientos necesarios para que el hechizo funcione.
+    Justo a tiempo, la puerta de entrada cede ante los maniquíes. A la par se abre la otra puerta, y otros tres maniquíes ingresan a la habitación.
+    # next
+    Su movimiento aleatorio es difícil de predecir. Antes de darte cuenta estás rodeado.
+    Es entonces cuando una idea te golpea: ¿qué sentido tiene ser invisible si los maniquíes no tienen ojos? Podrían estar moviéndose por ecolocalización o por lectura de energías mágicas.
+    Antes de poder procesar la idea, los seis cargan a la vez sobre vos.
+    # next
+    # MINIGAME: type=keymash, key=SPACE, count=18, timeLimit=6, autostart=true
+    { minigame_result == 1:
+        Lográs esquivar lo suficiente para abrirte paso hacia la puerta.
+        ~ hp -= 10
+        ~ magia -= 5
+    - else:
+        Te atrapan, pero lográs liberarte a costa de tu chaqueta —y de algo de piel.
+        ~ hp -= 22
+        ~ magia -= 8
+    }
+    # next
+    -> cap3_corres_museo
+
+* [Te escondés dentro de la canoa gigante que está expuesta en mitad de la Sala]
+    Subís a la canoa y la misma se queja a medida que se acostumbra a tu peso. Te acostás a lo largo en un intento de que los bordes de la embarcación tapen tu cuerpo. Desde este ángulo solo podés mirar el techo.
+    El ruido de la puerta siendo destrozada es claro. También sentís otro ruido en el extremo opuesto: la puerta que da a la siguiente sala se abrió y dejó entrar a más maniquíes.
+    # next
+    Su caminar aleatorio es muy complicado de seguir solo con el oído. Son las sombras lo que delatan su posición, proyectadas como seis dedos oscuros de una garra que está por caer sobre la canoa.
+    Es entonces cuando una idea te golpea: ¿qué sentido tiene esconderse si los maniquíes no tienen ojos? Antes de poder procesar la idea, los seis cargan a la vez sobre vos.
+    # next
+    # MINIGAME: type=keymash, key=SPACE, count=18, timeLimit=6, autostart=true
+    { minigame_result == 1:
+        Te tirás de la canoa y corrés hacia la puerta.
+        ~ hp -= 12
+    - else:
+        Te atrapan dentro de la canoa. Cuando lográs salir, los golpes ya te costaron caro.
+        ~ hp -= 24
+    }
+    # next
+    -> cap3_corres_museo
+
+* { entidades_poseidas } [Trazás un símbolo en la puerta para impedir la entrada de las entidades]
+    La puerta no es solo una construcción de madera, también es un símbolo. Separa una parte de la estructura de otra y representa lo que puede entrar —o lo que se debe quedar afuera. Es bastante para trabajar en este momento.
+    Metés la mano en tu bolsillo y encontrás una tiza. Las condiciones no son óptimas —la adrenalina te hace temblar la mano y la puerta tiembla ante los golpeteos de los maniquíes.
+    Aun así lo lográs. En cuanto trazás la última línea del sello los golpeteos se detienen. Las entidades que habitan los maniquíes no pueden atravesar la puerta.
+    # play_sfx:magia_oscura
+    # next
+    Estás llegando a la puerta que da a la siguiente Sala cuando la misma se abre de golpe y te deja casi encima de otro grupo de tres maniquíes. Tenés segundos para reaccionar.
+    * * [Te lanzás sobre ellos buscando un hueco donde pasar]
+        Amigás que te vas a lanzar para la izquierda y, a último minuto, lanzás tu cuerpo para el lado contrario. Sentís sus dedos plásticos intentando atraparte pero solo logran arrancarte un par de pelos.
+        -> cap3_corres_museo
+    * * [La sorpresa es el mejor momento para atacar — desenfundás y disparás]
+        # play_sfx:disparo
+        # shake
+        El disparo conecta justo en la frente del maniquí. No hay sangre ni gritos, solo el fuerte olor a plástico quemado.
+        { fuerza >= 25:
+            Los otros dos se te lanzan encima. Te movés rápido y usás el mango del revólver como porra. El combate te favorece y te abrís paso.
+            ~ hp -= 8
+        - else:
+            Los otros dos te rodean. Lográs sacarte la chaqueta antes de que puedan aferrarte la carne, y salís corriendo.
+            ~ hp -= 15
+        }
+        -> cap3_corres_museo
+
+* { llegaste_con_ventaja } [Rápido — agarrás una lanza de una vitrina y la usás para trabar la puerta]
+    Sentís un poco de lástima cuando rompés la vitrina para agarrar el arma, pero tus enemigos mataron a un guardia.
+    # play_sfx:vidrio_roto
+    { colaboraste_museo:
+        Al menos le dejaste suficiente dinero como para que puedan reparar los destrozos.
+    - else:
+        Sentís culpa de no haber colaborado con el Museo, al menos así tendrían dinero para reparar la vitrina que acabás de romper.
+    }
+    Colocás la lanza entre las manijas de la puerta. Eso va a retroceder un poco el avance de tus enemigos, así que aprovechás para avanzar hacia la siguiente habitación.
+    # next
+    Estás llegando a la puerta que da a la siguiente Sala cuando la misma se abre de golpe y te deja casi encima de otro grupo de tres maniquíes. Tenés segundos para reaccionar.
+    * * [Te lanzás sobre ellos buscando un hueco donde pasar]
+        Amigás que te vas a lanzar para la izquierda y, a último minuto, lanzás tu cuerpo para el lado contrario. Sentís sus dedos plásticos intentando atraparte pero solo logran arrancarte un par de pelos.
+        -> cap3_corres_museo
+    * * [La sorpresa es el mejor momento para atacar — desenfundás y disparás]
+        # play_sfx:disparo
+        # shake
+        El disparo conecta justo en la frente del maniquí. No hay sangre ni gritos, solo el fuerte olor a plástico quemado.
+        { fuerza >= 25:
+            Los otros dos se te lanzan encima. Te movés rápido y usás el mango del revólver como porra. El combate te favorece y te abrís paso.
+            ~ hp -= 8
+        - else:
+            Los otros dos te rodean. Lográs sacarte la chaqueta antes de que puedan aferrarte la carne, y salís corriendo.
+            ~ hp -= 15
+        }
+        -> cap3_corres_museo
+
+* [Corrés con toda la velocidad que dan tus piernas buscando llegar a la segunda sala]
+    Cerrás la puerta atrás tuyo y, antes de escuchar el ruido del portazo, ya estás dado vuelta y corriendo a toda velocidad.
+    Estás llegando a la puerta que da a la siguiente Sala cuando la misma se abre de golpe y te deja casi encima de otro grupo de tres maniquíes. Tenés segundos para reaccionar.
+    * * [Te detenés y buscás otro camino]
+        Venías tan ligero que te cuesta un poco parar. Te detenés justo a centímetros de la mano de uno de los maniquíes.
+        Te das media vuelta y volvés al centro de la sala buscando ventanas, ductos de aire, lo que sea para salir.
+        La puerta por la que entraste cede con el característico ruido de la madera quebrándose mientras tres maniquíes más entran en la Sala.
+        Por mucho que mirás no encontrás otro camino. Los maniquíes se colocan a tu alrededor.
+        # MINIGAME: type=keymash, key=SPACE, count=18, timeLimit=6, autostart=true
+        { minigame_result == 1:
+            Encontrás un hueco y te lanzás hacia la puerta.
+            ~ hp -= 10
+        - else:
+            Los maniquíes te aferran y tenés que forcejear para escapar.
+            ~ hp -= 25
+        }
+        -> cap3_corres_museo
+    * * [Aprovechás el momentum y te lanzás buscando pasar]
+        Vas tan rápido que es difícil detenerte. El maniquí del costado tiene los brazos elevados, lo que le dificulta defenderse.
+        Te sumergís en un tackle y sentís chocar tu hombro contra sus piernas. Antes de darte cuenta el maniquí sale volando por encima de tu cuerpo.
+        Ves en el borde de tu campo de visión cómo otras manos se extienden intentando detenerte, pero antes que cierren los dedos ya estás llegando a la próxima puerta.
+        -> cap3_corres_museo
+
+=== cap3_corres_museo ===
+Estás ya por la Segunda Sala del Museo y tenés miedo de mirar para atrás. Los maniquíes están más cerca de lo que te gustaría —el golpeteo irregular de sus pies de plástico detrás tuyo y sus sombras acercándose.
+# next
+Estás a segundos de llegar a la puerta de la siguiente sala y, a tu izquierda, notás que está expuesta la versión original del acta fundacional de Costa Alegre. Es un documento de un valor inconmensurable para la historia de la ciudad y sería una lástima que se pierda —aunque hay que admitir que, teniendo en cuenta tus últimas misiones, lo menos raro que puede pasar es que todo el Museo termine en llamas.
+
+* [Rescatás el acta fundacional]
+    Rompés la vitrina y, con todo el respeto que amerita la situación —que no es tanto dado que los maniquíes asesinos están intentando hacer una corrida para llegar antes que vos a la puerta— tomás el acta fundacional y la guardás en el bolsillo. Enríquez luego sabrá qué hilos tirar para que esto vuelva al Museo.
+    # achievement:unlock:acta_fundacional
+    # next
+    Recorrés la tercera Sala sin más inconvenientes. Por suerte un par de los maniquíes parece confundirse y se chocan de lleno contra la maqueta de la toma de los Astilleros Herrera, dándote un par de minutos de ventaja clave.
+    -> cap3_museo_momia
+
+* [Seguís avanzando]
+    Venís tan rápido que dudás que puedas parar si querés. El acta fundacional es un lindo simbolismo, pero tu trabajo es mucho más importante para que Costa Alegre siga existiendo.
+    # next
+    Recorrés la tercera Sala sin más inconvenientes. Por suerte un par de los maniquíes parece confundirse y se chocan de lleno contra la maqueta de la toma de los Astilleros Herrera, dándote un par de minutos de ventaja clave.
+    -> cap3_museo_momia
+
+=== cap3_museo_momia ===
+# music:horror_ambient
+
+Los maniquíes todavía no habían llegado a esta Sala. A simple vista la Momia está escondida dentro de los biombos de la cultura Incaica. El ambiente se siente cálido y pesado, como un sauna, y no es complicado darte cuenta que está cargado de magia. No sabes si la Momia esta reaccionando a la presencia de los maniquíes o si es un tipo de defensa de esta.
+
+Realmente te das cuenta que no sabes si los maniquíes son esbirros de otra facción rival que quiere primerearte para robar (digamos recuperar) la Momia o tal vez son aliados de esta que vienen a liberarla.
+
+Corres entre los biombos y llegas hasta la Momia. Estas listo para romper el vidrio cuando sentís el pico de energía mágica. La realidad se desgarra justo detrás de la Momia, una pequeña herida de medio metro que corta la tela del espacio.
+
+Te golpea la diferencia de presión y temperatura cuando se mezcla el clima del Museo con el del lugar que está del otro lado del portal. El aire se llena del olor a agua salada, donde sea que está el otro lado del portal se encuentra en alguna playa.
+# next
+
+No hay tiempo que perder. Golpeas con toda tu fuerza el vidrio de la vitrina que protege a la Momia y todo lo que obtenés es un dolor que sube de tu meñique hasta tu codo. El vidrio está reforzado.
+
+Del portal surgen dos manos femeninas con uñas pintadas de violeta, el mismo color que tiene los bordes del portal, y empieza a hacer fuerza para ensancharlo.
+
+Le das el segundo golpe a la vitrina, y un tercero, cuarto y hasta quinto. El vidrio termina con una pequeña muesca, vos terminás más lastimado.
+
+Las manos logran estirar suficiente el portal hasta que tenga el tamaño de la ventana de una casa. Un par de brazos femeninos se estiran y abrazan a la Momia.
+# next
+
+# play_sfx:sting_revelacion
+"el primero que lo encuentra se lo lleva" —dice un tono de voz juguetón mientras se lleva a la Momia por el portal.
+# next
+
+{ conocimiento >= 40:
+    ~ voz_conocida = true
+    # play_sfx:stinger_conocimiento
+    Esa voz te suena conocida, pero no estás seguro y el ruido de los maniquíes acercándose ocupa más tu atención.
+    # achievement:unlock:ratoncito_sabiduria
+}
+# next
+
+El portal se cierra y vos te quedás golpeando la vitrina, solo lográndote lastimar más. Perdiste. Te metiste al Museo, no lograste tu objetivo, y te quedaste con un grupo de maniquíes que quieren matarte.
+~ momia_robada = true
+# next
+
+-> cap3_final_fracaso
+
+=== cap3_final_fracaso ===
+# stop_music
+# CHAPTER_BREAK: title=Fracasaste, subtitle=Fin del Capítulo 3, music=terror_ambient
+
+Fin de la demo. El eco de los clack-clack se acerca.
+# next
 
 -> END
 
@@ -4044,6 +5188,7 @@ PRÓXIMAMENTE — Recuperá un objeto de poder en el Museo de Historia de Costa 
 // ============================================================
 
 === muerte ===
+# stop_music
 # CHAPTER_BREAK: title=Misión fallida, subtitle=Fin, image=muerte.jpg
 {~La enfermería quedaba a dos cuadras. Qué lástima.|Debiste haber ido a la enfermería antes de esto.|El parte de novedades va a decir simplemente: "baja en combate".|El sargento va a tener que dar muchas explicaciones.|Sobreviviste todo lo anterior para terminar así. Ironías de la vida.|En la academia te enseñaron primeros auxilios. Extraño que no lo recordaras ahora.}
 -> END

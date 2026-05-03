@@ -1,5 +1,113 @@
 # Changelog — BardoEngine
 
+## [0.25.0] - 2026-05-01
+
+### Features
+- **deferred tag timing**: SFX (`play_sfx:*`), `shake`, and `flash_*` tags now fire as the typewriter reaches the paragraph that emitted them, instead of all firing at render time. Music, bg, stats, inventory, and other tags remain instantaneous. New config module `src/config/tagTiming.js` classifies tags by timing behavior.
+- **TextDisplay segments**: `TextDisplay` now receives a `segments` prop (array of `{text, tags}`) that tracks which paragraph the typewriter cursor is in, enabling per-paragraph tag dispatch.
+- **Player/App wiring**: `Player.jsx` and `App.jsx` updated to pass `segments` and an `onSegmentReached` callback down to `TextDisplay`.
+
+### Fixes
+- **TextDisplay skip race condition**: fixed stale `isTyping` ref on mount/new-beat transition that caused the skip effect to fire incorrectly when the first beat loaded.
+
+### Tests
+- 9 new test cases for `tagTiming.js` (`src/config/__tests__/tagTiming.test.js`)
+- 1 new test case in `useStoryState` for segment-aware story state
+
+---
+
+## [0.24.2] - 2026-04-30
+
+### Content
+- **centinelas cap3**: revisión profunda del Capítulo 3 comparando crudo vs ink — párrafos faltantes en `cap3_briefing_lab` (Profesor/Mary Shelley, cadáver en camilla, rostro con surcos de lágrimas), refactor de preguntas del briefing a knot `cap3_briefing_preguntas` con sticky choices (identidad / Tiburón-Profundo / runas), fix de literal `NOMBRE DE PERSONAJE` → `{nombre_personaje}` en `cap3_espiar_lab`, reactividad nueva por `colaboraste_museo` en `cap3_museo_primera_sala`, nuevas VARs (`colaboraste_museo`, `preg_identidad`, `preg_profundo`, `preg_runas`), typo `modificación` → `momificación`
+
+---
+
+## [0.24.1] - 2026-04-30
+
+### Fixes
+- **chapter break**: el typewriter del knot que carga junto al `CHAPTER_BREAK` ya no corre detrás del overlay. Se añadió prop `paused` a `TextDisplay` que detiene los loops `setTimeout`/`rAF` y los reanuda desde el char actual al cerrar el overlay. Antes, si el jugador se quedaba viendo la imagen de capítulo, el texto se tipeaba en background y al dismissear ya estaba todo escrito.
+
+---
+
+## [0.24.0] - 2026-04-29
+
+### Features
+- **security**: harden story encryption with key splitting (2 env vars XOR'd with compile-time masks), HKDF-SHA256 derivation, ChaCha20 pre-AES obfuscation layer, and zeroize on drop
+- **build**: load encryption secrets from `.env` at repo root via `dotenvy` in `src-tauri/build.rs` — single source of truth, no shell exports needed
+- **docs**: add `SECURITY.md` with threat model — this is obfuscation, not DRM
+
+---
+
+## v0.23.1 (2026-04-29)
+
+### Fixes
+- **security(csp)**: replaced `null` Tauri CSP with a full policy covering `'self'`, Tauri asset/IPC schemes, Google Fonts, and `data:`/`blob:` sources — WebView is no longer wide open to XSS-to-IPC bridging
+
+---
+
+## v0.23.0 (2026-04-26)
+
+### Features
+- **comfy reading experience**: replaced per-character `scrollIntoView` jitter with a native `scrollTo({behavior:'smooth'})` bottom-anchored system. `pb-[35vh]` content padding creates a stable read-line at ~65% viewport height — new text always appears there, old text glides upward (Disco Elysium style). User scroll-up pauses auto-scroll. Zero custom RAF/tween code.
+
+---
+
+## v0.22.2 (2026-04-21)
+
+### Fixes
+- **audio assets committed**: 87 archivos `.mp3` en `public/sounds/` (SFX con variantes multi-take) ahora rastreados en git. Tag `paso_agua` removido del ink — el sonido existe pero no encajó narrativamente.
+- **achievement badges**: imágenes actualizadas (`duro rocky`, `ratoncito`), carpeta `old/` eliminada.
+
+---
+
+## v0.22.1 (2026-04-21)
+
+### Features
+- **SFX random variants**: engine (`useAudio.js`) ahora selecciona aleatoriamente entre múltiples takes cuando existen (`golpe_a/b/c/d` → uno random por call). Implementado via `SFX_VARIANTS` map inline antes de `playSfx`. También resuelve mismatches de nombre (`disparos_escopeta` → `escopeta_a/b`, `explosion_magica` → `magiexplosion_a/b`) sin tocar el ink.
+- **5 SFX nuevos en ink**: `trueno_cercano` (cubil_fuerza), `boladefuego` (combate_magia), `sal_romperse` (vampiro_trampa), `cuerda_rota` (pozo_bajar), `paso_agua` (epilogo charcos).
+
+---
+
+## v0.22.0 (2026-04-21)
+
+### Features
+- **audio Centinelas — T3 SFX + T4 stingers + stingers de origen**: 18 nuevos tags en el ink — music gaps reparados (8 knots), 3 stingers de origen en Cap 0 (`stinger_magia`, `stinger_fuerza`, `stinger_conocimiento`), SFX T3 diegéticos (`trueno_lejano`, `canto_gutural`, `susurro_multiple`), mood stingers T4 (`sting_horror`, `sting_moral`, `sting_revelacion`, `drone_tenso`). Los archivos de audio están documentados en `memory/sfx-prompts.md` (36 entradas con prompts ElevenLabs + queries Freesound). El engine acepta tags faltantes silenciosamente — los SFX se activan al depositar los `.mp3` en `public/sounds/`.
+
+---
+
+## v0.21.0 (2026-04-20)
+
+### Features
+- **cobertura de audio Centinelas — Tier 1 + Tier 2**: +~120 cues `music:` de ambiente por locación (orfanato, bóveda, cuevas, cementerio, cubil, pasillo, ritual, intermisión) + 7 inserciones `stop_music` en beats dramáticos clave (epílogo, conversión a vampiro, muerte lúcida). Cobertura sube de ~11% a ~50% del árbol narrativo. Minijuegos excluidos por diseño.
+
+---
+
+## v0.20.1 (2026-04-13)
+
+### Fixes
+- **modo daltónico — cambios de color reales**: rojo → naranja (`#ef4444` → `#f97316`), verde → azul (`#22c55e` → `#3b82f6`) en karma (StatsPanel), WillpowerMeter (ojo SVG), CSS global para clases Tailwind semánticas; paleta deuteranopia
+- **preview de colores en Opciones**: swatch animado debajo del toggle "Modo Daltónico" — muestra color actual de Peligro y Éxito, cambia en tiempo real al activar
+- **useSettings fuera de provider**: devuelve defaults seguros en lugar de lanzar error, evita crashes en tests unitarios sin wrapper
+
+---
+
+## v0.20.0 (2026-04-13)
+
+### Features
+- **modo daltónico**: toggle en Opciones → Accesibilidad; agrega indicadores no-color en WillpowerMeter (porcentaje numérico), StatsPanel karma (flechas ↑↓—), LockpickGame (icono ✗ en fallo); implementado via `data-colorblind` attribute + CSS helpers
+- **modo disléxico**: toggle en Opciones → Accesibilidad; cambia fuente narrativa a Atkinson Hyperlegible, aumenta letter-spacing/line-height, reemplaza itálicas con negrita; implementado via `data-dyslexic` attribute + CSS global
+- **Atkinson Hyperlegible**: cargada desde Google Fonts en `index.html`
+
+---
+
+## v0.19.1 (2026-04-13)
+
+### Refactor
+- **eliminación de BardoEditor**: borrado todo el código del editor visual (`src/editor/`, lazy import, estado `showEditor`, botón en StorySelector) — era código muerto deprecado, nunca se usará en producción
+
+---
+
 ## v0.19.0 (2026-04-11)
 
 ### Features
