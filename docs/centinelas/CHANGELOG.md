@@ -1,5 +1,12 @@
 # Changelog — Centinelas del Sur
 
+## [0.23.0] — 2026-05-03
+
+### Added
+- **museo/transiciones**: 4 páginas-cartel "ENTRAS A LA PRIMERA/SEGUNDA/TERCERA/CUARTA SALA" insertadas en el recorrido diurno del Museo (cap. 3, knot `cap3_museo_primer_sala`)
+
+---
+
 ## [0.22.2] — 2026-05-03
 
 ### Fixed
