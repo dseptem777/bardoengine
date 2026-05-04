@@ -1,5 +1,12 @@
 # Changelog — Centinelas del Sur
 
+## [0.23.1] — 2026-05-04
+
+### Fixed
+- **cueva/orfanato**: el sistema de arañitas y el cono de oscuridad ahora se detienen al llegar al orfanato (`regreso_orfanato`), antes del boss y de las decisiones con los chicos. Antes seguían activos durante todo el cap. 2a.
+
+---
+
 ## [0.23.0] — 2026-05-03
 
 ### Added
