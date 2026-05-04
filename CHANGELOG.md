@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## [0.26.1] - 2026-05-03
+
+### Fixes
+- **centinelas/museo**: agregadas 4 páginas de transición "ENTRAS A LA [N] SALA" en el recorrido diurno del Museo (cap. 3, knot `cap3_museo_primer_sala`)
+
+---
+
 ## [0.26.0] - 2026-05-03
 
 ### Fixes

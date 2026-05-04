@@ -4744,10 +4744,13 @@ Por último, te muestra una caja y te invita a dejar una colaboración para sost
     -> cap3_museo_primer_sala
 
 === cap3_museo_primer_sala ===
+ENTRAS A LA PRIMERA SALA
+# next
 La primera sala está dedicada a los Pueblos Originarios. Aparentemente eran hábiles pescadores y navegantes, en los costados ondulados de la sala se puede ver elementos de pesca, ropas tradicionales y vasijas de barro.
 En el centro de la sala hay una recreación de las canoas que usaban para navegar el mar y pescar kilómetros de la costa. Te basta ver la canoa cinco minutos, y recordar lo violento que se puede poner el mar, para darte cuenta que esta gente era mas valiente que vos.
 # next
-
+ENTRAS A LA SEGUNDA SALA
+# next
 Ahora tocaba Costa Alegre en la época colonial. No tenías consciencia de que la ciudad era tan vieja pero parece que ya había un pequeño poblado en el siglo XVIII que había sido un poco un puerto de pescadores (y mucho un centro de contrabandistas).
 La mayoría de las vitrinas estaban compuestas por ropa de la época y objetos cotidianos de la Colonia donde abundaba el trabajo en plata y la iconografía cristiana.
 En el centro de la sala había un carruaje gigante con unos detalles marinos (sirenas, tritones, kraken y demás seres fantásticos). Hay que admitir que el vehículo era más elegante que cualquier cosa que te podías cruzar hoy por la calle.
@@ -4756,7 +4759,8 @@ En el centro de la sala había un carruaje gigante con unos detalles marinos (si
     No te sorprende que la secta que estás buscando tal vez lleve actuando más de doscientos años haciendo esto y sus orígenes fueron para aplacar a las entidades que castigaban el poblado desde el fondo del mar.
 }
 # next
-
+ENTRAS A LA TERCERA SALA
+# next
 La tercera sala correspondía a Costa Alegre en el siglo XX, la cual había crecido desde 1900 para convertirse en un parador turístico como un centro industrial.
 La mayoría de las vitrinas tenían fotos, planos o gigantografias de recortes periodísticos. Se veía fotos de la inauguración del Casino de Costa Alegre así como de los primeros hoteles sindicales que se había construido a metros del mar.
 En el centro de la sala había una maqueta que contaba la historia de la toma de los Astilleros Herrera, símbolo de la lucha sindical de los sesenta y setenta en la Ciudad. En esa época cada vez que salía un barco del astillero se cobraba la vida de un par de trabajadores que morían por las pésimas condiciones de seguridad. El conflicto llevó a la fábrica por parte de los trabajadores exigiendo condiciones dignas de trabajo y terminó con una brutal represión por parte de la dictadura militar.
@@ -4764,7 +4768,8 @@ En el centro de la sala había una maqueta que contaba la historia de la toma de
     Viendo el mapa te das cuenta que el predio de la fábrica no era tan difícil de custodiar, el gran problema era la posibilidad que la marina haga un desembarco naval entrando desde la rampa de lanzamiento del astillero. Si vos hubieses estado encargado de la defensa del predio, con veinte hombres fuertes y un par de armas largas, podrías seguir hasta el día de hoy atrincherado en la fábrica.
 }
 # next
-
+ENTRAS A LA CUARTA SALA
+# next
 Ya recorriste la mitad del circulo que compone el Museo y por fin llegás a la sala donde está la Momia Incaica. Aparte de la Momia (que está escondida de la vista detrás de unos biombos con información de la cultura Inca) en esta sala está la mayoría de los visitantes del museo que esperan su turno para entrar a ver la momia o dan vuelta entre las vitrinas donde se encuentran diversos objetos cotidianos propios del Imperio Inca.
 { magia >= 20:
     Mary Shelley tiene razón, la momia desborda de energía sobrenatural. Toda la sala se siente como un sauna, el aire está caliente y espeso y tenés que sentarte unos minutos para recuperar la compostura. La mera cercanía del objeto te hace sentir emocionado, excitado y energizado a la vez. No tenías esta mezcla tan particular desde que eras adolescente. Respirás y te concentrás en tu propio cuerpo y notás tus palmas mojadas, tu rostro colorado y tu corazón acelerado.
