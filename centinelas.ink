@@ -2158,7 +2158,8 @@ Un corte. Otro. La daga se siente pesada pero tus brazos no paran. Cuando termin
 // =========================================================
 
 === regreso_orfanato ===
-# SPIDER_DIFFICULTY: fast
+# SPIDER_CHECK: 12
+# SPIDER_STOP
 # music:terror_ambient
 Corres por el bosque con el cuerpo de Juan en tus brazos. Será por qué es liviano, o el ruido afilado de los enemigos clavando sus extremidades en los árboles ayuda a empujar tu adrenalina, pero avanzas sin bajar el ritmo. No hay raíces que se interpongan en tu camino o ramas que te molesten
 # next
@@ -2263,10 +2264,7 @@ Solo queda esperar que no se encuentren más arañas en el largo camino hacia la
 -> cap2a_spider_check
 
 === cap2a_spider_check ===
-# SPIDER_CHECK: 12
-# SPIDER_STOP
-
-+ [→] -> combate_final
+-> combate_final
 
 // =========================================================
 // COMBATE FINAL

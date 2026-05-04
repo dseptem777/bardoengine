@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## [0.26.2] - 2026-05-04
+
+### Fixes
+- **centinelas**: no engine changes — ships Centinelas patch fix (arañitas y oscuridad al salir de la cueva al orfanato)
+
+---
+
 ## [0.26.1] - 2026-05-03
 
 ### Fixes
