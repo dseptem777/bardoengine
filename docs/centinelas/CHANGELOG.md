@@ -1,5 +1,12 @@
 # Changelog — Centinelas del Sur
 
+## [0.23.2] — 2026-05-04
+
+### Added
+- **cueva/post-combate**: nuevo beat narrativo tras matar a la segunda araña — corte feo en el estómago (`# stat:hp:-10`) antes de `regreso_orfanato`. Refuerza la sensación de costo físico del combate en la oscuridad.
+
+---
+
 ## [0.23.1] — 2026-05-04
 
 ### Fixed
