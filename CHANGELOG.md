@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## [0.26.3] - 2026-05-04
+
+### Fixes
+- **centinelas**: no engine changes — ships Centinelas patch (post-combate arañitas con corte HP en cueva)
+
+---
+
 ## [0.26.2] - 2026-05-04
 
 ### Fixes

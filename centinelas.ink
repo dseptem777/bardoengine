@@ -2151,6 +2151,9 @@ La primera araña salta hacia vos. La esquivas por centímetros y le clavas la d
 La segunda araña duda. Aprovechas para arrancar la daga y lanzar una patada al cadáver de la primera, empujándolo hacia ella. En la confusión, encontrás el hueco que necesitabas.
 # next
 Un corte. Otro. La daga se siente pesada pero tus brazos no paran. Cuando terminas, estas cubierto de un líquido translúcido y temblando. Pero vivo.
+# next
+# stat:hp:-10
+El dolor corta tu festejo, en algún momento del combate una de las arañas logró hacerte un corte feo en el estómago. Tal vez todavia tenes mucho que aprender sobre... ¿Combatir en la oscuridad contra demonios con formas de araña?
 -> regreso_orfanato
 
 // =========================================================
