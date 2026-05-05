@@ -2209,7 +2209,7 @@ Te das cuenta en cuestión de segundos que las arañas pequeñas (contextualment
     Cargas y, en el mismo, la empujas con tu hombro para sacarla del peligro (tal vez un poco más fuerte de lo que querías), descargas un mandoble con la espada que parte en dos a una de las arañas y terminas girando sobre tus tales para enfrentar a las tres arañas que quedan.
     Corte, esquiva, parada, amague. Clavar. Y clavar de nuevo. En cuestión de segundos convertiste a una de las arañas en una fracción extraña y terminas clavado a la otra al piso con y espada.
     La cuarta araña es más rápida y, antes que te des cuenta, llega a clavar sus colmillos en tu rodilla. El dolor recorre todo tu cuerpo pero es golosa y no se retira.
-    Colocas tu revolver sobre su cabeza y le destruido los sesos
+    Colocas tu revolver sobre su cabeza y le destruís los sesos
     # stat:hp:-5
 }
 -> ninos_decision
@@ -2222,13 +2222,13 @@ La Madre Alegría grita dia veces, la primera cuando una araña la muerde en la 
 En cuestión de segundos las arañas están caminando por el techo, haciendo colgar su cuerpo en el vacío. De repente todas las arañas de ponen a tirar a la vez.
 # flash_red
 El ruido de carnes desgarrados y huesos rotos es peor que los gritos, pero la Madre Alegría atraviesa su martirio como un verdadero mártir de la iglesia.
-Todo termina cuando las arañas logran llevarse cada una un pedazo de cuero. Si cuerpo cae al piso disparando chorros de sangre en todas direcciones
+Todo termina cuando las arañas logran llevarse cada una un pedazo de cuero. Su cuerpo cae al piso disparando chorros de sangre en todas direcciones.
 # next
-El grito de los niños vuelva a enfocarte, la araña gigante ya casi subió y las pequeñas están empezando a trepar por todo lados. Hay que tomar una decisión
 -> ninos_decision
 
 === ninos_decision ===
 # music:misterio_ambient
+El grito de los niños vuelva a enfocarte, la araña gigante ya casi subió y las pequeñas están empezando a trepar por todo lados. Hay que tomar una decisión.
 + [Que suban y se escondan en la pieza] -> ninos_habitacion
 + [En la capilla van a estar seguros] -> ninos_capilla
 + [La cocina parece un buen lugar para atrincherarse] -> ninos_cocina
