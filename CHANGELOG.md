@@ -1,23 +1,6 @@
 # Changelog — BardoEngine
 
-## [0.26.2] - 2026-05-04
-
-### Fixes
-- **centinelas**: no engine changes — ships Centinelas patch fix (arañitas y oscuridad al salir de la cueva al orfanato)
-
----
-
-## [0.26.1] - 2026-05-03
-
-### Fixes
-- **centinelas/museo**: agregadas 4 páginas de transición "ENTRAS A LA [N] SALA" en el recorrido diurno del Museo (cap. 3, knot `cap3_museo_primer_sala`)
-
----
-
-## [0.26.0] - 2026-05-03
-
-### Fixes
-- **centinelas/achievement**: removidos 3 unlocks erróneos de `juan_salvado` en knots de la intermisión Jesús (`jesus_frontal`, `jesus_distraccion`, `jesus_sigilo`); el unlock correcto se agregó exclusivamente en `cueva_capullo` bajo la rama `juan_vive = true`
+> **Nota (2026-05-04):** las entradas `0.26.0`, `0.26.1` y `0.26.2` fueron bumps erróneos del engine: en realidad solo cambiaba contenido de Centinelas, no había cambios al engine. Se reverte el `package.json` a `0.25.0` (la última versión real del engine) y de aquí en adelante el engine solo se bumpea cuando hay cambios reales al engine. Los cambios de Centinelas asociados quedan registrados en `docs/centinelas/CHANGELOG.md` (versiones 0.22.0, 0.23.0, 0.23.1).
 
 ---
 
