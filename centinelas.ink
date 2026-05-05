@@ -1467,7 +1467,7 @@ Pasa siempre lo mismo cuando uno tiene fotos de gente desaparecida, uno busca un
 === cap2_sin_cura ===
 # music:orfanato
 # next
-La Madre Alegría te hace entrar al hall central del edificio principal. En una esquina te observa una estatua gigante de Santa Inés mientras en las cerámicas del piso se forma el rostro de Jesús. La composición tan cristiana es cortada por pequeños detalles que delatan la presencia de niños, un par de juguetes repartidos por el piso, un dibujo infantil pegado al lado de la estatua. Por alguna razón alguien decidió atar una remera al pasamos de la escalera que lleva al primer piso.
+La Madre Alegría te hace entrar al hall central del edificio principal. En una esquina te observa una estatua gigante de Santa Inés mientras en las cerámicas del piso se forma el rostro de la Santa Patrona. La composición tan cristiana es cortada por pequeños detalles que delatan la presencia de niños, un par de juguetes repartidos por el piso, un dibujo infantil pegado al lado de la estatua. Por alguna razón alguien decidió atar una remera al pasamos de la escalera que lleva al primer piso.
 # next
 \- En el piso superior están las aulas, ahora cerradas, y así como los cuartos de las niñas y los niños. Si quiere puede subir y hacerles preguntas. Los castigue para que se queden en su habitación después de la broma que realizó Juan – La Madre Alegría señala la escalera.
 \- Al fondo está el comedor y la cocina donde ahora se encuentra trabajando La Hermana Paciencia, a la derecha están los baños y las duchas y a la izquierda está mi oficina. Intente no molestarme mientras trabajo – Como punto final, ella se da vuelta y se dirige a su oficina, se escucha como pasa la llave.
