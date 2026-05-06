@@ -1,0 +1,1 @@
+node compile-ink.cjs centinelas.ink src/stories/centinelas.json
