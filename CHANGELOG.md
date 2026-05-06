@@ -4,6 +4,13 @@
 
 ---
 
+## [0.25.1] - 2026-05-06
+
+### Fixes
+- **ChapterBreakOverlay z-index**: raised from z-200 to z-900 so the chapter break screen (including death screens) always renders above the spider infestation overlay (max z-850).
+
+---
+
 ## [0.25.0] - 2026-05-01
 
 ### Features
