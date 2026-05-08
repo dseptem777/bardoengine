@@ -134,7 +134,7 @@ export default function MinigameOverlay({
         <AnimatePresence>
             {(isPlaying || showingResult) && (
                 <motion.div
-                    className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm"
+                    className="fixed inset-0 z-[100] flex items-center justify-center bardo-overlay-bg"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -148,7 +148,7 @@ export default function MinigameOverlay({
                         initial={{ scale: 0.9, y: 30 }}
                         animate={{ scale: 1, y: 0 }}
                         exit={{ scale: 0.9, y: 30 }}
-                        transition={{ type: 'spring', damping: 25 }}
+                        transition={{ type: 'spring', damping: 25, ease: [0.16, 1, 0.3, 1] }}
                     >
                         {renderGame()}
 

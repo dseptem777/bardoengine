@@ -67,10 +67,31 @@ export function parseVFXTag(tag) {
         return { type: VFX_TYPES.MUSIC, action: 'play', id: value }
     }
 
-    // 6. UI Horror Effects (new!)
+    // 6. UI Horror Effects
     // Format: UI_EFFECT: blur_vignette | cold_blue | blood_pulse | static_mind | none
+    //         UI_EFFECT: scanlines_on | scanlines_off   (toggle scanlines overlay)
+    //         UI_EFFECT: bleed_burst                    (2s ink-bleed burst)
     if (t.toUpperCase().startsWith('UI_EFFECT:')) {
         const effect = t.split(':')[1]?.trim().toLowerCase()
+
+        // Scanlines toggle — separate state, does not clear horrorEffect
+        if (effect === 'scanlines_on' || effect === 'scanlines_off') {
+            return {
+                type: VFX_TYPES.UI_HORROR,
+                effect: null,        // don't touch horrorEffect
+                scanlines: effect === 'scanlines_on'
+            }
+        }
+
+        // Bleed burst — timed 2s effect, separate state
+        if (effect === 'bleed_burst') {
+            return {
+                type: VFX_TYPES.UI_HORROR,
+                effect: null,        // don't touch horrorEffect
+                bleedBurst: true
+            }
+        }
+
         return {
             type: VFX_TYPES.UI_HORROR,
             effect: effect === 'none' ? null : effect
