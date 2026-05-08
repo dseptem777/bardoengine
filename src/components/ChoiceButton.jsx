@@ -22,7 +22,9 @@ const ChoiceButton = forwardRef(function ChoiceButton({
     disabled = false,
     resistanceLevel = 'none',
     onResistanceClick,
-    lockedRequirement = null
+    lockedRequirement = null,
+    onHover = null,
+    onClickSound = null,
 }, ref) {
     const [isReady, setIsReady] = useState(false)
     const [clicksRemaining, setClicksRemaining] = useState(0)
@@ -92,6 +94,7 @@ const ChoiceButton = forwardRef(function ChoiceButton({
                 choiceProcessedRef.current = true
                 console.log('[ChoiceButton] Resistance broken - selecting')
                 // Small delay so user sees the 0 / final snap
+                onClickSound?.()
                 setTimeout(() => onClick(), 50)
             }
             return true  // Click was processed but not yet complete
@@ -99,9 +102,10 @@ const ChoiceButton = forwardRef(function ChoiceButton({
 
         // Already 0 resistance
         choiceProcessedRef.current = true
+        onClickSound?.()
         onClick()
         return true  // Click complete
-    }, [isReady, disabled, lockedRequirement, triggerStruggle, onResistanceClick, onClick])
+    }, [isReady, disabled, lockedRequirement, triggerStruggle, onResistanceClick, onClick, onClickSound])
 
     // Expose simulateClick for keyboard navigation
     useImperativeHandle(ref, () => ({
@@ -130,9 +134,10 @@ const ChoiceButton = forwardRef(function ChoiceButton({
             }}
             transition={{ delay: index * 0.1 }}
             onClick={handleClick}
+            onMouseEnter={() => { if (!effectiveDisabled) onHover?.() }}
             disabled={effectiveDisabled}
             className={`choice-button w-full text-left p-4 md:p-5 relative overflow-hidden
-                 rounded-lg border-2 transition-all duration-200
+                 rounded-lg border-2 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]
                  ${isLocked
                     ? 'bg-gray-900/30 border-gray-600/40 cursor-not-allowed opacity-60'
                     : disabled
@@ -142,7 +147,7 @@ const ChoiceButton = forwardRef(function ChoiceButton({
                             ? 'border-orange-500/60'
                             : 'border-red-700/40'
                         }`
-                        : 'bg-bardo-bg border-bardo-accent/40 hover:border-bardo-accent hover:bg-bardo-accent/10 active:scale-[0.98] group glow-hover'
+                        : 'bg-bardo-bg border-bardo-accent/40 hover:border-bardo-accent hover:bg-bardo-accent/10 hover:translate-x-[2px] hover:scale-[1.01] hover:shadow-[6px_6px_0_var(--bardo-accent)] active:scale-[0.99] group glow-hover'
                 }
                  ${!isReady ? 'pointer-events-none' : ''}`}
             style={hasResistance ? {

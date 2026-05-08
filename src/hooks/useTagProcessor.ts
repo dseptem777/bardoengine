@@ -37,6 +37,10 @@ interface TagProcessorOptions {
     onVisualDamage?: (config: { grayscale?: number, reset?: boolean }) => void;
     // Chapter break callback
     onChapterBreak?: (config: { title: string, subtitle?: string, image?: string, music?: string }) => void;
+    // Ambient layer callbacks
+    onAmbientLayerPlay?: (name: string, vol: number) => void;
+    onAmbientLayerStop?: (name: string) => void;
+    onAmbientLayerStopAll?: () => void;
 }
 
 export function useTagProcessor({
@@ -66,7 +70,10 @@ export function useTagProcessor({
     onBossCheck,
     onBossStop,
     onVisualDamage,
-    onChapterBreak
+    onChapterBreak,
+    onAmbientLayerPlay,
+    onAmbientLayerStop,
+    onAmbientLayerStopAll
 }: TagProcessorOptions) {
     const processTags = useCallback((tags: string[]) => {
         tags.forEach(rawTag => {
@@ -408,6 +415,46 @@ export function useTagProcessor({
             }
 
             // ============================================
+            // AMBIENT LAYER TAGS
+            // ============================================
+
+            // AMBIENT_LAYER: name, vol=0.4
+            if (tag.toUpperCase().startsWith('AMBIENT_LAYER_STOP_ALL')) {
+                console.log('[Tags] AMBIENT_LAYER_STOP_ALL')
+                if (onAmbientLayerStopAll) onAmbientLayerStopAll()
+                return
+            }
+
+            // AMBIENT_LAYER_STOP: name
+            if (tag.toUpperCase().startsWith('AMBIENT_LAYER_STOP:')) {
+                const name = tag.split(':')[1]?.trim()
+                if (name) {
+                    console.log(`[Tags] AMBIENT_LAYER_STOP: ${name}`)
+                    if (onAmbientLayerStop) onAmbientLayerStop(name)
+                }
+                return
+            }
+
+            // AMBIENT_LAYER: name, vol=0.4
+            if (tag.toUpperCase().startsWith('AMBIENT_LAYER:')) {
+                const payload = tag.substring('AMBIENT_LAYER:'.length).trim()
+                const parts = payload.split(',').map((s: string) => s.trim())
+                const name = parts[0]
+                let vol = 0.4
+                for (const part of parts.slice(1)) {
+                    const [key, val] = part.split('=').map((s: string) => s.trim())
+                    if (key?.toLowerCase() === 'vol' && val) {
+                        vol = parseFloat(val) || 0.4
+                    }
+                }
+                if (name) {
+                    console.log(`[Tags] AMBIENT_LAYER: ${name}, vol=${vol}`)
+                    if (onAmbientLayerPlay) onAmbientLayerPlay(name, vol)
+                }
+                return
+            }
+
+            // ============================================
             // EXISTING TAG PROCESSING
             // ============================================
 
@@ -507,7 +554,10 @@ export function useTagProcessor({
         onBossCheck,
         onBossStop,
         onVisualDamage,
-        onChapterBreak
+        onChapterBreak,
+        onAmbientLayerPlay,
+        onAmbientLayerStop,
+        onAmbientLayerStopAll
     ])
 
     return useMemo(() => ({ processTags }), [processTags])
