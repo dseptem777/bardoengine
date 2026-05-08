@@ -4346,22 +4346,22 @@ El mensaje está acompañado por una foto de ella saludando con la mano derecha,
 // ============================================================
 
 === inter2_convergencia ===
-La tarde se va apagando contra el horizonte. Volvés a tu departamento con el cuerpo cansado y la cabeza dando vueltas.
+Un día más en el que seguís vivo. Eso es un tipo de victoria. Volves a tu apartamento listo para continuar tu trabajo de Guardian, proteger a todos de una amenaza que ni siquiera saben que existe.
 
 // === Eje A: actividad de hoy ===
 {
 - inter2_actividad == "playa":
-    El gusto a sal del mar todavía te seca los labios. La ola que te tiró del espigón sigue retumbando en tu cabeza — no fue un accidente, el mar quiso decirte algo.
+    Hoy un niño se perdió en la playa. Gritos, palmas y llantos. Por suerte el guardacosta lo encontró rápidamente. Mientras el chico estaba perdido vos no podias dejar de ver el mar enbravecido, algo ahí tiene hambre de carne inocente.
 - inter2_actividad == "tarot":
-    Las cartas que viste siguen barajándose detrás de tus párpados cuando cerrás los ojos. Sea lo que sea que esa mujer leyó en tu futuro, te dejó un peso raro en el pecho.
+    La información que te dio la tarotista no tiene sentido. ¿No tiene sentido o vos no se lo encontras? A veces esa información es así, lo suficientemente vaga para entrar en cualquier lado. Esperas que, cuando llegue el momento, puedas ver la conexión.
 - inter2_actividad == "enfermeria":
-    El olor a antiséptico te sigue pegado a la nariz. Te miraste demasiado en el espejo del consultorio y no te gustó del todo lo que viste — pero al menos el cuerpo responde otra vez como debería.
+    La sutura te tira cada vez que haces un movimiento brusco, o no tan brusco. Bueno, cada vez que respiras realmente. Esperas que el dolor te mantenga atento y sirva como un recordatorio de donde fallaste así no volves a repetir el mismo error.
 - inter2_actividad == "abuela" && amistad_abuela >= 2:
-    Te queda la sonrisa filosa de la abuelita y la sensación de haber trabajado con alguien que sabe exactamente lo que hace. Ya pasaron varias misiones juntos y algo te dice que la próxima vez te va a llamar a vos primero.
+    La abuelita es todo lo que queres ser. Esperas que la próxima vez que tenga un problema te llame a vos primero. Aunque sospechas que va a ser al revés, vos vas a tener un problema y la vas a terminar llamando.
 - inter2_actividad == "abuela" && amistad_abuela >= 1:
-    Te queda en la cabeza la abuelita: medio madre, medio asesina a sueldo. No fue una jornada perfecta pero ella parecía conforme con lo aportado.
+    La noche con la abuelita fue una misión completamente diferente a lo que te venias enfrentando hasta ahora. Es increíble que haya tantas amenazas diferentes, por suerte a Guardianes preparados para todas.
 - inter2_actividad == "abuela":
-    Te queda la mirada decepcionada de la abuelita. La cagaste, y el rumor en El Faro va a llegar antes que vos a la próxima reunión.
+    Esperas que, la próxima vez que vayas a El Faro, la abuelita no les haya contado a todos lo mal que actuaste en tu operación. La culpa de haber dejado suelto a un predador ya es suficiente carga.
 }
 # next
 
@@ -4369,11 +4369,11 @@ La tarde se va apagando contra el horizonte. Volvés a tu departamento con el cu
 {ultima_mision == "orfanato":
     {
     - belen_sobrevive && juan_vive:
-        Pensás en Belén y en Juan, en la cara que pusieron cuando los sacaste del lugar. Por una vez todos volvieron a casa. Es una sensación rara — no estás acostumbrado a que las cosas terminen así.
+        Salvaste a Belén y a Juan. Eso es ser un verdadero Guardian. Dos vidas más, cientos de interacciones positivas, alegres (y tristes también) que la humanidad va a tener gracias a que salvaste a dos niños de la garra de la muerte.
     - belen_sobrevive:
         Pensás en Belén, en cómo te apretó la mano cuando la subiste al auto. La sacaste a ella. No a Juan. Esa cuenta no se equilibra y vos lo sabés.
     - else:
-        Pensás en el orfanato vacío, en los nombres de los chicos que te quedaron pendientes. Ni Belén ni Juan. La propiedad va a seguir tragando chicos cíclicamente y vos solo pudiste mirar.
+        La imagen del orfanato, con esos pequeños cuerpos tirados en el piso, pesa en tu corazón. Destruir la amenaza es importante pero, si no salvaste a nadie ¿Para que sirvió realmente? Tu presencia fue tan mala como lo que acechaba en esas cuevas.
     }
 }
 
@@ -4381,19 +4381,18 @@ La tarde se va apagando contra el horizonte. Volvés a tu departamento con el cu
 {ultima_mision == "cementerio":
     {
     - traumado:
-        Pero por más que cierres los ojos volvés al cementerio. La voz del Vampiro sigue ahí, en el reverso de cada pensamiento — no es un recuerdo, es una presencia que se quedó adentro tuyo.
+        El cuerpo del bebe muerto esta en todos lados. Esta bajo tus colchas cuando te vas a dormir, del otro lado de la cortina mientras te bañas, gateando en la habitación de al lado cuando estas en otro cuarto. El olor a putefracción se asienta y, no importa cuando aires el departamento, nunca se va. El olor te acompaña. Del bebe muerto…muerto por tu mano.
     - todos_guardias_mueren || sin_guardias:
-        Pensás en los guardias del cementerio, en los que entraron con vos y no salieron. Los nombres no los sabías y ahora ya no importan. Quedó solo vos para contarlo.
+        Te enteraste que el Municipio de Costa Alegre está juntando fondos para hacer una estatua a los Guardias muertos en el cementerio. La versión oficial habla de sectas violentas y cosas asi. Esperas que levanten la estatua, te gustaría pasar a dejarles unas flores.
     - algunos_guardias_sobreviven:
-        Pensás en los guardias que salieron con vos del cementerio, en cómo se palmeaban entre ellos sin saber bien si reírse o llorar. No fue limpio, pero la mayoría volvió. Eso ya es algo.
+        Las noticias hablan de los guardias heroicos del cementerio. La versión oficial habla de sectas violentas y demás cosas por el estilo. Tal vez cuando tengas un tiempo libre deberías pasar a compartir un mate con tus compañeros de combate.
     - else:
-        Pensás en la familia del ritual, en las marcas en las paredes del cementerio, en lo poco que entendés todavía. Volviste con más preguntas que respuestas.
+        Otra crisis evitada. ¿Cuántas así ocurren todas las semanas? Sentis que la realidad es frágil, como si cualquier paso podría abrir una grieta bajo tus pies y hacerte caer al infierno. La gente normal puede vivir su vida sin preocupaciones solamente por su total ignorancia a estas crisis constantes.
     }
 }
 # next
 
-Algo se está moviendo en Costa Alegre y vos sos parte del engranaje, te guste o no.
-
+Algo malvado y hambriento se esta moviendo en Costa Alegre. Esperas poder detenerlo.
 # next
 El celular vibra en la mesita.
 // TODO: sfx de celular vibrando con ringtone especifico

@@ -1,5 +1,12 @@
 # Changelog — Centinelas del Sur
 
+## [0.23.3] — 2026-05-08
+
+### Fixed
+- **inter2_convergencia**: texto definitivo del escritor reemplaza el placeholder en el beat de cierre de la Intermisión 2. Todas las ramas actualizadas: actividad del día (playa, tarot, enfermería, abuela ×3), path orfanato (ambos/solo Belén/nadie), path cementerio (traumado/guardias muertos/guardias vivos/else).
+
+---
+
 ## [0.23.2] — 2026-05-04
 
 ### Added
