@@ -1,5 +1,56 @@
 # Changelog — Centinelas del Sur
 
+## [0.23.3] — 2026-05-08
+
+### Fixed
+- **inter2_convergencia**: texto definitivo del escritor reemplaza el placeholder en el beat de cierre de la Intermisión 2. Todas las ramas actualizadas: actividad del día (playa, tarot, enfermería, abuela ×3), path orfanato (ambos/solo Belén/nadie), path cementerio (traumado/guardias muertos/guardias vivos/else).
+
+---
+
+## [0.23.2] — 2026-05-04
+
+### Added
+- **cueva/post-combate**: nuevo beat narrativo tras matar a la segunda araña — corte feo en el estómago (`# stat:hp:-10`) antes de `regreso_orfanato`. Refuerza la sensación de costo físico del combate en la oscuridad.
+
+---
+
+## [0.23.1] — 2026-05-04
+
+### Fixed
+- **cueva/orfanato**: el sistema de arañitas y el cono de oscuridad ahora se detienen al llegar al orfanato (`regreso_orfanato`), antes del boss y de las decisiones con los chicos. Antes seguían activos durante todo el cap. 2a.
+
+---
+
+## [0.23.0] — 2026-05-03
+
+### Added
+- **museo/transiciones**: 4 páginas-cartel "ENTRAS A LA PRIMERA/SEGUNDA/TERCERA/CUARTA SALA" insertadas en el recorrido diurno del Museo (cap. 3, knot `cap3_museo_primer_sala`)
+
+---
+
+## [0.22.2] — 2026-05-03
+
+### Fixed
+- **paginación/next**: corregidas 22 instancias del patrón `# next` ubicado después del texto de cierre antes de un divert — el tag ahora va antes del texto para que inkjs lo incluya en el mismo `Continue()` y la pausa ocurra en la página correcta; afectaba `conocimiento_esperar`, `inter_enfermeria`, todas las ramas de `inter2_*`, `cap3_recorrer_elfaro`, `cap3_espiar_oficina`, `cap3_espiar_lab`, `cap3_tl_*`, `cap3_museo_dia_hospital`, `cap3_museo_ya_adentro` y las tres ramas de minijuego en `cap3_museo_primera_sala`
+
+---
+
+## [0.22.1] — 2026-05-03
+
+### Fixed
+- **paginación/next**: corregida la colocación del tag `# next` al final de `despues_combate_ninos` — ahora pausa correctamente en "FIN DEL EPISODIO." antes de entrar a `intermision_2`, y el overlay del CHAPTER_BREAK "Costa Alegre" aparece correctamente tras el click
+- **paginación/next**: corregido el tag `# next` antes de `-> inter2_siguiente` (rama "El Faro llama") — el CHAPTER_BREAK del capítulo 3 ahora muestra su overlay correctamente
+- **paginación/next**: eliminado tag `# next` redundante antes de `-> cap3_final_fracaso` — el overlay "Fracasaste / Fin del Capítulo 3" ahora aparece correctamente
+
+---
+
+## [0.22.0] — 2026-05-03
+
+### Fixed
+- **achievement/juan_salvado**: eliminados 3 unlocks incorrectos del achievement en los knots `jesus_frontal`, `jesus_distraccion` y `jesus_sigilo` (intermisión Jesús); el unlock ahora ocurre únicamente en `cueva_capullo` cuando `juan_vive = true`, reflejando el momento narrativo correcto
+
+---
+
 ## [0.21.0] — 2026-05-02
 
 ### Added

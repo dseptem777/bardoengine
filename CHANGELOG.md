@@ -1,5 +1,16 @@
 # Changelog — BardoEngine
 
+> **Nota (2026-05-04):** las entradas `0.26.0`, `0.26.1` y `0.26.2` fueron bumps erróneos del engine: en realidad solo cambiaba contenido de Centinelas, no había cambios al engine. Se reverte el `package.json` a `0.25.0` (la última versión real del engine) y de aquí en adelante el engine solo se bumpea cuando hay cambios reales al engine. Los cambios de Centinelas asociados quedan registrados en `docs/centinelas/CHANGELOG.md` (versiones 0.22.0, 0.23.0, 0.23.1).
+
+---
+
+## [0.25.1] - 2026-05-06
+
+### Fixes
+- **ChapterBreakOverlay z-index**: raised from z-200 to z-900 so the chapter break screen (including death screens) always renders above the spider infestation overlay (max z-850).
+
+---
+
 ## [0.25.0] - 2026-05-01
 
 ### Features

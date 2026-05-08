@@ -60,7 +60,7 @@ export default function ChapterBreakOverlay({
             {isOpen && (
                 <motion.div
                     key="chapter-break"
-                    className={`fixed inset-0 z-[200] bg-bardo-bg flex flex-col items-center justify-center overflow-hidden ${isFadingOut ? 'pointer-events-none' : 'cursor-pointer'}`}
+                    className={`fixed inset-0 z-[900] bg-bardo-bg flex flex-col items-center justify-center overflow-hidden ${isFadingOut ? 'pointer-events-none' : 'cursor-pointer'}`}
                     onClick={handleDismiss}
                     initial={{ opacity: 1 }}
                     animate={{ opacity: 1 }}

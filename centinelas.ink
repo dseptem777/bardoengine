@@ -448,8 +448,8 @@ Estás encerrado en tu cuerpo, con tu miedo como único compañero de celda.
 # music:misterio_ambient
 Ayacucho Olavarría sale de tu campo de visión, ni siquiera podés mover tu ojo para ver adónde va. Tu vista está clavada en el marco de la puerta, ahora vacía, y en la nuca de Julieta.
 
-Lo escuchás caminar, canturrear algo, un poco de ruido de vidrio. La incertidumbre te vuelve loco, estás completamente consciente de que estás totalmente a su merced.
 # next
+Lo escuchás caminar, canturrear algo, un poco de ruido de vidrio. La incertidumbre te vuelve loco, estás completamente consciente de que estás totalmente a su merced.
 -> conocimiento_final
 
 === conocimiento_final ===
@@ -557,7 +557,7 @@ Ellos te ofrecieron un trabajo y una nueva oportunidad y no pensás desperdiciar
 }
 
 # next
-Abrís la ventana de tu departamento y entra un poco de aire acompañado por el olor a sal del agua salada. El viento trae unos gritos de diversión y alegría.
+Abrís la ventana de tu departamento y entra un poco de aire acompañado por el olor a sal del agua de Mar. El viento trae unos gritos de diversión y alegría.
 Te queda un poco de tiempo para tu siguiente misión. Tal vez podés hacer algo antes de ir.
 ¿Qué querés hacer?
 
@@ -642,13 +642,13 @@ Faltan cinco minutos para la hora en que te citaron para darte una misión de ca
 # music:escuela_ambient
 El hall central es un cuarto gigante, en el cual en el piso está representado el mismo logo que la puerta. A pesar de que el edificio no tiene ventanas el clima es agradable y no está viciado.
 # shake
-No es necesario ser un gran practicante de magia para darse cuenta de la gran cantidad de magia defensiva que hay en el lugar. Lo sentís como un dejo de gusto amargo en tu boca.
+No es necesario ser un gran practicante de magia para darse cuenta de la enorme cantidad de magia defensiva que hay en el lugar. Lo sentís como un dejo de gusto amargo en tu boca.
 # next
 El único ruido proviene del escritorio de la secretaria, la Sra. Enríquez, que está tipeando algo en su máquina de escribir.
 
 + [¿Por qué no pasamos a computadoras?]
     { entrada_temprana:
-        — El tiempo no es una construcción social que todos intentamos acatar. En especial cuando se realiza tareas complejas. Y todas las tareas de El Faro son complejas.
+        — El tiempo es una construcción social que todos intentamos acatar. En especial cuando se realiza tareas complejas. Y todas las tareas de El Faro son complejas.
         Enríquez te da una mirada que te hace sospechar que el título de "secretaria" es menospreciar la totalidad de su capacidad.
         Intentás justificarte pero levanta la mano para callarte. Un gesto simple pero efectivo.
         — Tal vez la hora de tu llegada era clave y al adelantarte arruinaste todo. Que no se repita, por favor.
@@ -667,7 +667,7 @@ El único ruido proviene del escritorio de la secretaria, la Sra. Enríquez, que
 # music:misterio_ambient
 - — El Profesor lo espera en el piso de arriba para darle su primera misión de campo. Por favor, no la arruine. Ya llené un formulario con sus datos y no quiero perder tiempo destruyendo el formulario… y llenando los formularios correspondientes para justificar la destrucción de documentación.
 # next
-El Profesor, Enríquez. Ninguno era un nombre real. Todos los guardianes de El Faro usan alias para proteger su vida civil.
+El Profesor, Enríquez. Ninguno era un nombre real. Todos los centinelas de El Faro usan alias para proteger su vida civil.
 Vos también. ¿Cuál es?
 # next
 # input:nombre_personaje:Tu nombre en clave...
@@ -706,7 +706,7 @@ Tal vez sea la alfombra y el techo rojo, pero algo te da la sensación de que es
 — Cadáveres que hasta no hace tanto eran personas – El Profesor te mira a los ojos y sube un tono la voz – Es nuestra ciudad, las personas que debemos cuidar, y alguien los está sacrificando.
 # next
 Muchas cosas acechan a los humanos. Nuestros fluidos, nuestra carne, nuestras emociones. Para la mayoría de los seres sobrenaturales no estamos en la cima de la pirámide alimenticia.
-Aun así, los sacrificios humanos son un gran NO. Generalmente significa que algo consiguió armar una organización de humanos que lo apoye y está acumulando poder. Sea lo que sea, ya te imaginás yendo directo a la cueva oscura y llevarlos ante la justicia.
+Aun así, los sacrificios humanos son un gran NO. Generalmente significa que algo consiguió armar una organización de humanos que lo apoye y está acumulando poder. Sea lo que sea, ya te imaginás yendo directo a su guarida y llevarlos ante la justicia.
 # next
 — Tu trabajo es recolectar información en el campo. El día de ayer apareció un nuevo cuerpo en la costa y fue llevado a la morgue de la ciudad. Hasta ahora es un NN, sería de gran ayuda que vayas y nos consigas cualquier tipo de información.
 Estamos teniendo problemas con los cuerpos, muchos tienen la tendencia a desaparecer.
@@ -718,13 +718,13 @@ Tu primera misión. Sacrificios humanos, cadáveres, figuras misteriosas. ¿Est�
 + [Obviamente. Llegó mi momento de brillar.] -> en_la_morgue
 + [No, voy a terminar muerto.]
     — Disculpe Profesor, pero esta misión suena un poco peligrosa para mí. ¿No sería conveniente que usted arregle el problema?
-    El Profesor suspira. — La ventaja de estar en esta oficina es que podés tener el plano general. Créame guardián, cuando yo salgo es para algo más importante. Vaya a la morgue y vuelva con un informe que no me haga arrepentir.
+    El Profesor suspira. — La ventaja de estar en esta oficina es que podés tener el plano general. Créame centinela, cuando yo salgo es para algo más importante. Vaya a la morgue y vuelva con un informe que no me haga arrepentir.
     -> en_la_morgue
 + [Pedir ayuda antes de salir] -> pedir_ayuda
 
 === pedir_ayuda ===
 # music:misterio_ambient
-— Tenemos tres guardianes en la sede que podrían ayudarte...
+— Tenemos tres centinelas en la sede que podrían ayudarte...
 + [Hablar con Enríquez (Sabiduría)] -> ayuda_enriquez
 + [Entrenar con Cabral (Fuerza)] -> ayuda_cabral
 + [Visitar a Mary Shelley (Magia)] -> ayuda_shelley
@@ -775,7 +775,7 @@ Adentro el cuadro es aún más caótico. Mientras en una esquina tenés equipo m
 Una mente respetada que viaja en un cuerpo de metro cincuenta y tiene un pelo caótico donde pelean mechones azules, rosas y lo que suponés que es un color castaño natural.
 # next
 — Buenos días, estoy por salir a mi primer misión de campo y pasaba a ver si había algo que tenías ganas de probar, algo que tal vez me pueda dar una ventaja en la misión.
-— Eso también me sirve — Mary Shelley te pasa un formulario que firmás sin ver — Genial, muy bien que firmaste todas las formas. Si te llega a pasar algo voy a intentar revivirte por todos los medios posibles. Y si llegás a morir tu cuerpo pasa a ser propiedad del Ministerio.
+— Eso también me sirve — Mary Shelley te pasa un formulario que firmás sin ver — Genial, muy bien que firmaste todas las formas. Si te llega a pasar algo voy a intentar revivirte por todos los medios posibles. Y si llegás a morir tu cuerpo pasa a ser propiedad del Faro.
 # next
 Mary Shelley te clava una aguja llena de una sustancia de un verde antinatural que no te inspira confianza. Según dice, es una sustancia ya probada para relajar barreras psicológicas y culturales. Una de las grandes dificultades para acceder a la magia en el mundo moderno es que subconsciente estamos educados para rechazarla. Esta inyección soluciona eso.
 # next
@@ -787,7 +787,7 @@ Luego del mareo inicial te sentís mejor que nunca. Tus sentidos se sienten más
 === en_la_morgue ===
 # music:terror_ambient
 El palacio de justicia era, bueno, un palacio. Una mole de diez pisos de mármol y cemento donde alguien había decidido agregar una serie de gárgolas a medio camino que miraban de forma amenazante a la Avenida.
-La morgue judicial se encontraba en algún lugar de este edificio. Por suerte El Faro les daba a sus guardianes una identificación relativamente vaga que permitía hacerse pasar por agentes de alguna organización gubernamental. Eso, una buena camisa y caminar rápido, era suficiente para engañar a todos los policías que estaban vigilando el lugar a esa hora de la madrugada.
+La morgue judicial se encontraba en algún lugar de este edificio. Por suerte El Faro les daba a sus centinelas una identificación relativamente vaga que permitía hacerse pasar por agentes de alguna organización gubernamental. Eso, una buena camisa y caminar rápido, era suficiente para engañar a todos los policías que estaban vigilando el lugar a esa hora de la madrugada.
 # next
 Las entrañas de la bestia eran… pobres. La mayoría del mobiliario parecía más viejo que vos y la mitad de las lamparitas titilaban de cansancio. Nadie se había molestado en poner un mapa así que tuviste que preguntar dos veces la dirección (a un empleado ojeroso que caminaba un pasillo oscuro y a un empleado de limpieza que evitaba hacer su trabajo).
 Aparentemente la morgue judicial estaba en el segundo subsuelo, pero para llegar a ese subsuelo había que tomar una escalera que por alguna razón empezaba en el segundo piso. Solo esperabas no tener que salir huyendo de ese lugar, era un verdadero laberinto.
@@ -871,7 +871,7 @@ Aparte, esperás que en algún momento tengas la posibilidad de devolverle una p
     Mientras tanto, algo está pasando en el pasillo fuera de la morgue. El agente de policía está levantando la voz mientras discute con alguien. Una voz grave y amenazante. Esperás poder terminar antes que esto se vuelva un problema.
 }
 { not rapido:
-    La discusión de afuera de la morgue se convirtió en una discusión a toda regla. Los argumentos se convierten en gritos y, si bien la puerta te impide entender qué se está diciendo, es claro que la violencia está cerca.
+    La discusión de afuera de la morgue se convirtió en una pelea a toda regla. Los argumentos se convierten en gritos y, si bien la puerta te impide entender qué se está diciendo, es claro que la violencia está cerca.
 }
 # next
 Girás para irte y notás, sobre una de las camillas, una sierra médica. Una idea llega a tu cabeza. Con una mano se pueden hacer muchas cosas: El Faro tiene acceso a bases de datos donde tal vez encontraría información para identificar al NN. Y los Guardianes con mayor talento sobrenatural también podrían hacer algo. Si bien no sirve para una Mano de Gloria (la persona no fue ahorcada) tal vez se puede convocar al espíritu para obtener cierta información.
@@ -1148,7 +1148,7 @@ El Profesor se para dejando en claro que la reunión ha terminado.
     — Profesor, ¿qué me puede decir de la criatura que me encontré? Es claro que la enviaron por el cuerpo y podría volver a encontrarla.
     — Sin duda era un Profundo — cuando El Profesor nota que esa respuesta por sí sola no basta decide continuar la explicación.
     # next: El Profesor se explaya
-    — Existen lugares donde la frontera entre nuestro mundo y otros planos es más frágil. Lugares donde, con un poco de fuerza, se puede trasladar las barreras de la realidad. La mayoría de esos lugares fueron destruidos, sea de forma consciente o por la voracidad humana de extenderse en todas direcciones. Algunos pocos fueron contenidos, o al menos están vigilados.
+    — Existen lugares donde la frontera entre nuestro mundo y otros planos es más frágil. Lugares donde, con un poco de fuerza, se puede atravesar las barreras de la realidad. La mayoría de esos lugares fueron destruidos, sea de forma consciente o por la voracidad humana de extenderse en todas direcciones. Algunos pocos fueron contenidos, o al menos están vigilados.
     # next: Continúa monologando
     — El fondo del mar, por ser un clima altamente hostil, es uno de los pocos lugares donde esas barreras no están controladas. Los Profundos son seres de otros planos que pasaron esa barrera y viven en nuestro fondo marino. Durante generaciones se cruzaron, de forma voluntaria o no, con los humanos generando unos híbridos que pueden actuar en la superficie como sus embajadores, agentes y campeones.
     Atento al tipo de ritual, sospecho que los sacrificios humanos están relacionados con una secta que los adora o, al menos, busca algo de ellos.
@@ -1226,7 +1226,6 @@ En el piso notás el cadáver de una mujer de unos treinta años, su garganta de
 # next
 Jesús vuelve a su forma humana y mira decepcionado el cadáver a tus pies.
 — Creo que pudimos hacer eso mucho mejor — hay amargura y crítica en sus palabras y, a pesar de que usa el plural, sabés que van dirigidas a vos.
-# achievement:unlock:juan_salvado
 -> inter1_convergencia
 
 === jesus_distraccion ===
@@ -1237,7 +1236,7 @@ Tocás el timbre al lado de la puerta y esperás.
 La puerta se entreabre y ves la cara de una mujer de unos treinta años. Sus ojos están vidriosos y enmarcados por las ojeras correspondientes. Su piel estaba reseca y quebradiza. Los signos claros de una persona que había sufrido repetidas mordidas de un vampiro.
 — ¿Qué... necesitás? — su voz era quebradiza y le resultaba complicado sacar dos palabras por la garganta.
 # next
-Nunca mentiste tanto y tan rápido. Tu coche se había quedado sin batería. También tu celular. Necesitabas ayuda de un buen samaritano y ella parecía la persona indicada (esa era la mayor mentira, esa parecía alguien que necesitaba una buena comida y una semana de sueño).
+Nunca mentiste tanto y tan rápido. Tu coche se había quedado sin batería. También tu celular. Necesitabas ayuda de un buen samaritano y ella parecía la persona indicada (esa era la mayor mentira, ella es la que parecía alguien que necesitaba una buena comida y una semana de sueño).
 En algún momento del discurso, notás por el rabillo del ojo cómo una sombra cae dentro del galpón.
 # next
 Un rugido y ruidos de combate. La mujer deja la puerta para ir a ayudar a su vampiro. En menos de un minuto Jesús, de nuevo en forma humana, te está abriendo la puerta.
@@ -1245,7 +1244,6 @@ El vampiro es una montaña de polvo en una esquina del galpón (notás que tambi
 La mujer está sentada contra una de las paredes, con un poco de sangre brotando de una herida superficial de un brazo.
 — Bueno, pudo haber salido mejor, pero pudo haber salido mucho peor. Muchas gracias compañero.
 # stat:amistad_jesus:+1
-# achievement:unlock:juan_salvado
 -> inter1_convergencia
 
 === jesus_sigilo ===
@@ -1264,7 +1262,6 @@ La mujer grita cuando la tackleás e inmovilizás en el suelo. Atrás tuyo se es
 La mujer patalea, llora y te araña. Te promete la muerte de formas horribles mientras se retuerce en su llanto. El síndrome de abstinencia va a ser horrible pero está viva. Y eso siempre es una promesa de futuro.
 — Lo logramos — Jesús aparece atrás tuyo de forma humana — gracias Guardián, nunca olvidaré esto.
 # stat:amistad_jesus:+2
-# achievement:unlock:juan_salvado
 -> inter1_convergencia
 
 === inter_enfermeria ===
@@ -1273,9 +1270,9 @@ La mujer patalea, llora y te araña. Te promete la muerte de formas horribles mi
 Mary Shelley da un gritito de alegría cuando pasás a verla a El Faro. Siendo la médica oficial (y también chamán y científica loca) le toca a ella realizarte las curaciones necesarias.
 Utiliza una mezcla de medicina occidental junto con hierbas, cantos y rituales extraños.
 — Lindo cuerpo — dice para sí misma mientras te sutura una herida — si morís intentá por favor mantener las extremidades pegadas al torso que es un tedio volver a conectar los nervios y las venas.
+# next
 — ¿Eso significa que si muero me pueden revivir? — preguntás. Toda la respuesta que recibís es una risa que no te da mucha seguridad.
 # stat:hp:+20
-# next
 -> inter1_convergencia
 
 // ============================================================
@@ -1380,7 +1377,7 @@ Pero aun así había nutrida información sobre como falsificar documentos, hace
 
 === cap2_prep_magia ===
 # music:orfanato
-En cuanto entre al laboratorio de Mary Shelley encontré la cabeza de un carnero negro colocada sobre una mesa, dentro de un pentagrama, y con una vela roja en su cabeza. Por alguna razón la cabeza estaba cantando "La Marsellesa" (con un mejor francés que el mio) y tenía una serie de electrodos pegados a su cabeza. Seguí el cableado con la vista y encontré a Mary Shelley muy interesada viendo los datos de un electroencefalograma en la pantalla.
+En cuanto entre al laboratorio de Mary Shelley encontré la cabeza de un carnero negro colocada sobre una mesa, dentro de un pentagrama, y con una vela roja en su cabeza. Por alguna razón la cabeza estaba cantando "La Marsellesa" (con un mejor francés que el tuyo) y tenía una serie de electrodos pegados a su cabeza. Seguí el cableado con la vista y encontré a Mary Shelley muy interesada viendo los datos de un electroencefalograma en la pantalla.
 La mire a ella, al experimento, y de nuevo a ella.
 \- Te juro que todo esto es muy necesario – Dijo la Doctora con la voz de una niña atrapada en una travesura.
 \- Prefiero no saber.
@@ -1470,7 +1467,7 @@ Pasa siempre lo mismo cuando uno tiene fotos de gente desaparecida, uno busca un
 === cap2_sin_cura ===
 # music:orfanato
 # next
-La Madre Alegría te hace entrar al hall central del edificio principal. En una esquina te observa una estatua gigante de Santa Inés mientras en las cerámicas del piso se forma el rostro de Jesús. La composición tan cristiana es cortada por pequeños detalles que delatan la presencia de niños, un par de juguetes repartidos por el piso, un dibujo infantil pegado al lado de la estatua. Por alguna razón alguien decidió atar una remera al pasamos de la escalera que lleva al primer piso.
+La Madre Alegría te hace entrar al hall central del edificio principal. En una esquina te observa una estatua gigante de Santa Inés mientras en las cerámicas del piso se forma el rostro de la Santa Patrona. La composición tan cristiana es cortada por pequeños detalles que delatan la presencia de niños, un par de juguetes repartidos por el piso, un dibujo infantil pegado al lado de la estatua. Por alguna razón alguien decidió atar una remera al pasamos de la escalera que lleva al primer piso.
 # next
 \- En el piso superior están las aulas, ahora cerradas, y así como los cuartos de las niñas y los niños. Si quiere puede subir y hacerles preguntas. Los castigue para que se queden en su habitación después de la broma que realizó Juan – La Madre Alegría señala la escalera.
 \- Al fondo está el comedor y la cocina donde ahora se encuentra trabajando La Hermana Paciencia, a la derecha están los baños y las duchas y a la izquierda está mi oficina. Intente no molestarme mientras trabajo – Como punto final, ella se da vuelta y se dirige a su oficina, se escucha como pasa la llave.
@@ -2117,6 +2114,7 @@ Los minutos dejan de tener sentido y el tiempo se cuenta solamente en las compre
     Te cargas el cuerpo de Juan, te sorprende lo poco que pesa su cuerpo. Frágil y liviano, no entendes como hay gente que le puede hacer daño a los niños. Al menos te vas a asegurar que tenga un entierro decente.
 - else:
     ~ juan_vive = true
+    # achievement:unlock:juan_salvado
     Juan toce. Pones su cuerpo de costado y le das ligeros golpes en la espalda. Hace un poco mas de fuerza y escupe una sustancia viscosa y blancuzca que estaba alojada en sus entrañas. Por el borde de tus ojos ves brillos entre la oscuridad. Las arañas te observan. Si bien su forma de pensar debe ser considerablemente alienígena (al fin y al cabo son demonios y eligieron forma de araña), esperas que sientan el fracaso.
     No hay tiempo para sutilezas, te cargas el cuerpo de Juan y corres hacia la salida.
 }
@@ -2153,6 +2151,9 @@ La primera araña salta hacia vos. La esquivas por centímetros y le clavas la d
 La segunda araña duda. Aprovechas para arrancar la daga y lanzar una patada al cadáver de la primera, empujándolo hacia ella. En la confusión, encontrás el hueco que necesitabas.
 # next
 Un corte. Otro. La daga se siente pesada pero tus brazos no paran. Cuando terminas, estas cubierto de un líquido translúcido y temblando. Pero vivo.
+# next
+# stat:hp:-10
+El dolor corta tu festejo, en algún momento del combate una de las arañas logró hacerte un corte feo en el estómago. Tal vez todavia tenes mucho que aprender sobre... ¿Combatir en la oscuridad contra demonios con formas de araña?
 -> regreso_orfanato
 
 // =========================================================
@@ -2160,7 +2161,8 @@ Un corte. Otro. La daga se siente pesada pero tus brazos no paran. Cuando termin
 // =========================================================
 
 === regreso_orfanato ===
-# SPIDER_DIFFICULTY: fast
+# SPIDER_CHECK: 12
+# SPIDER_STOP
 # music:terror_ambient
 Corres por el bosque con el cuerpo de Juan en tus brazos. Será por qué es liviano, o el ruido afilado de los enemigos clavando sus extremidades en los árboles ayuda a empujar tu adrenalina, pero avanzas sin bajar el ritmo. No hay raíces que se interpongan en tu camino o ramas que te molesten
 # next
@@ -2207,7 +2209,7 @@ Te das cuenta en cuestión de segundos que las arañas pequeñas (contextualment
     Cargas y, en el mismo, la empujas con tu hombro para sacarla del peligro (tal vez un poco más fuerte de lo que querías), descargas un mandoble con la espada que parte en dos a una de las arañas y terminas girando sobre tus tales para enfrentar a las tres arañas que quedan.
     Corte, esquiva, parada, amague. Clavar. Y clavar de nuevo. En cuestión de segundos convertiste a una de las arañas en una fracción extraña y terminas clavado a la otra al piso con y espada.
     La cuarta araña es más rápida y, antes que te des cuenta, llega a clavar sus colmillos en tu rodilla. El dolor recorre todo tu cuerpo pero es golosa y no se retira.
-    Colocas tu revolver sobre su cabeza y le destruido los sesos
+    Colocas tu revolver sobre su cabeza y le destruís los sesos
     # stat:hp:-5
 }
 -> ninos_decision
@@ -2220,13 +2222,13 @@ La Madre Alegría grita dia veces, la primera cuando una araña la muerde en la 
 En cuestión de segundos las arañas están caminando por el techo, haciendo colgar su cuerpo en el vacío. De repente todas las arañas de ponen a tirar a la vez.
 # flash_red
 El ruido de carnes desgarrados y huesos rotos es peor que los gritos, pero la Madre Alegría atraviesa su martirio como un verdadero mártir de la iglesia.
-Todo termina cuando las arañas logran llevarse cada una un pedazo de cuero. Si cuerpo cae al piso disparando chorros de sangre en todas direcciones
+Todo termina cuando las arañas logran llevarse cada una un pedazo de cuero. Su cuerpo cae al piso disparando chorros de sangre en todas direcciones.
 # next
-El grito de los niños vuelva a enfocarte, la araña gigante ya casi subió y las pequeñas están empezando a trepar por todo lados. Hay que tomar una decisión
 -> ninos_decision
 
 === ninos_decision ===
 # music:misterio_ambient
+El grito de los niños vuelva a enfocarte, la araña gigante ya casi subió y las pequeñas están empezando a trepar por todo lados. Hay que tomar una decisión.
 + [Que suban y se escondan en la pieza] -> ninos_habitacion
 + [En la capilla van a estar seguros] -> ninos_capilla
 + [La cocina parece un buen lugar para atrincherarse] -> ninos_cocina
@@ -2265,10 +2267,7 @@ Solo queda esperar que no se encuentren más arañas en el largo camino hacia la
 -> cap2a_spider_check
 
 === cap2a_spider_check ===
-# SPIDER_CHECK: 12
-# SPIDER_STOP
-
-+ [→] -> combate_final
+-> combate_final
 
 // =========================================================
 // COMBATE FINAL
@@ -2326,7 +2325,7 @@ Todo eso está muy bien, pero la araña está a unos metros tuyos y dudas que es
 # next
 Sacas tu libreta de un bolsillo y empezas a recitar un exorcismo genérico, mientras lo cruzas con oraciones de protección y asistencia a todas la deidades de arañas y naturaleza que se puedan sentir insultadas por la forma que eligió el demonio.
 Es un cambalache pero, al fin y al cabo es una discusión. Cómo toda discusión, la confianza y la autoridad importa más que los argumentos.
-Y vos sos un guardián de El Faro, plantado frente a ella solo con un cuaderno como arma. Es difícil que al proyecte más certeza (o soberbia) que eso.
+Y vos sos un centinela de El Faro, plantado frente a ella solo con un cuaderno como arma. Es difícil que al proyecte más certeza (o soberbia) que eso.
 # next
 Algo te escucha. Y te da la razón. Un viento empieza a recorrer la habitación. Un tornado que a vos no te mueve un pelo pero que a las arañas pequeñas las hace volar como hojas en otoño.
 La araña más grande se resiste, clava sus extremidades en la pared pero están no resisten. Una extremidad directamente es cercenada por el viento.
@@ -2454,7 +2453,7 @@ Pero Juan no era el único niño. Cuando las arañas atacaron el orfanato se tom
 { madre_alegria_vive:
     # achievement:unlock:alegria_vive
 }
-
+# next
 FIN DEL EPISODIO.
 -> intermision_2
 
@@ -2527,7 +2526,7 @@ Terminás el tomo con un nuevo aprecio por la abstinencia.
 Entraste a la oficina de la Dra. y te encontraste con un cuadro particular. En una mesa ratona se encontraba la Dra. Mary Shelley junto a una cabra negra, que por lo cómoda que estaba sentada parecía no tener problema en moverse en dos patas, y cuya cabeza estaba rapada y con marcas de suturas recientes.
 En el centro de la mesa, un mazo de cartas. Parece que entraste en mitad de una partida de truco (la cabra estaba ganando).
 # next
-\- Me creés si te digo que es parte de un experimento esencial para trasladar la conciencia de los guardianes caídos a otros cuerpos – la Dra. miró al horizonte y cambió el tono de voz, como si le hablase a una audiencia – imaginá una organización donde ningún Guardián muera, donde su consciencia esté siempre segura y su cuerpo sea un mero objeto, como un auto, o un traje que se elige el que mejor se ajusta para cada misión.
+\- Me creés si te digo que es parte de un experimento esencial para trasladar la conciencia de los centinelas caídos a otros cuerpos – la Dra. miró al horizonte y cambió el tono de voz, como si le hablase a una audiencia – imaginá una organización donde ningún Guardián muera, donde su consciencia esté siempre segura y su cuerpo sea un mero objeto, como un auto, o un traje que se elige el que mejor se ajusta para cada misión.
 \- Lo peor es que le creo Dra. No necesita explicarme nada.
 Después de perder la partida de truco, la Dra. dedicó su tarde a repasar con vos principios claves de la magia así como cuestiones de anatomía que debés tener en cuenta si no querés lastimarte por canalizar grandes energías.
 # stat:magia:+5
@@ -2988,7 +2987,7 @@ Los seguís desde las sombras, viendo cómo hacen chistes, sacan fotos y toman a
 === cap2b_municipal_susto ===
 # stop_music
 # music:terror_ambient
-Salís de la oscuridad con tu mejor voz de Vincent Price y las manos en alto, imitando garras mientras gritás "¡Sangre nueva para mis huesos viejos!". Antes de darte cuenta los jóvenes están corriendo a los gritos por el cementerio. Vas a tener que llamar a El Faro para avisarle que no manden a ningún guardián a investigar esto.
+Salís de la oscuridad con tu mejor voz de Vincent Price y las manos en alto, imitando garras mientras gritás "¡Sangre nueva para mis huesos viejos!". Antes de darte cuenta los jóvenes están corriendo a los gritos por el cementerio. Vas a tener que llamar a El Faro para avisarle que no manden a ningún centinela a investigar esto.
 -> cap2b_elegir_cementerio
 
 === cap2b_municipal_retirar ===
@@ -4014,9 +4013,8 @@ Encontrás un lugar alejado en un espigón que corta las olas del mar. A medida 
 
 Intentás ignorar la situación pero de repente notás que todo es sombras a tu alrededor. Una ola gigante se eleva tapando el sol y cae sobre tu cabeza. Son segundos enteros de agua y su fuerza azotando tu cuerpo.
 
-Terminás mojado, salado, y entendiendo que el mar no te quiere presente.
 # next
-
+Terminás mojado, salado, y entendiendo que el mar no te quiere presente.
 -> inter2_convergencia
 
 // ============================================================
@@ -4039,9 +4037,8 @@ El hogar de la tarotista está vacío. Solo hay un sobre en la mesa con tu nombr
 
 "No voy a volver a aparecer durante la Demo. Lo único que veo en tu futuro ahora es que prontamente vas a tener la versión completa del juego, y ahí te voy a estar esperando".
 
-No entendés mucho lo que quiere decir, pero no es raro — la mayoría de las profecías son crípticas y solo se entienden después de que ocurran los hechos.
 # next
-
+No entendés mucho lo que quiere decir, pero no es raro — la mayoría de las profecías son crípticas y solo se entienden después de que ocurran los hechos.
 -> inter2_convergencia
 
 // ============================================================
@@ -4070,10 +4067,9 @@ Mary Shelley te mira durante cinco segundos y te das cuenta de la idiotez que ac
 
 — Al menos decime, ¿duele mucho?
 
+# next
 — Las plantas nunca se quejaron — contesta Mary Shelley con una sonrisa.
 # stat:hp:+5
-# next
-
 -> inter2_convergencia
 
 // ============================================================
@@ -4226,10 +4222,9 @@ Tu compañera se ve satisfecha. Detrás de ella ves la puerta del baño entreabi
 
 — ¿Lo logramos?
 
+# next
 — Es una forma de decir. Tuviste tu colaboración. Lo importante es que hay un predador menos en Costa Alegre. Vamos a quedarnos con esa idea.
 # stat:amistad_abuela:+1
-# next
-
 -> inter2_convergencia
 
 // ============================================================
@@ -4269,9 +4264,8 @@ Un policía baja de la patrulla y se acerca hacia ustedes. Tu compañera dice po
 
 — Lo lamento, no era mi intención.
 
-— Sin duda, sino serías un traidor. Lamento que hayas venido hoy, pero no pudo salir.
 # next
-
+— Sin duda, sino serías un traidor. Lamento que hayas venido hoy, pero no pudo salir.
 -> inter2_convergencia
 
 // ============================================================
@@ -4342,10 +4336,9 @@ Son las cuatro de la mañana y estás tomando una cerveza mientras mirás el oc�
 
 "Buena cacería, el problema del súcubo fue solucionado. Si no nos subíamos al escenario nunca la iba a encontrar. Sus métodos son poco ortodoxos pero divertidos. Espero que trabajemos juntos de nuevo".
 
+# next
 El mensaje está acompañado por una foto de ella saludando con la mano derecha, mientras en la izquierda tiene un machete bañado en una sangre negra viscosa. Sospechás que la abuelita no es alguien con quien joder.
 # stat:amistad_abuela:+1
-# next
-
 -> inter2_convergencia
 
 // ============================================================
@@ -4353,22 +4346,22 @@ El mensaje está acompañado por una foto de ella saludando con la mano derecha,
 // ============================================================
 
 === inter2_convergencia ===
-La tarde se va apagando contra el horizonte. Volvés a tu departamento con el cuerpo cansado y la cabeza dando vueltas.
+Un día más en el que seguís vivo. Eso es un tipo de victoria. Volves a tu apartamento listo para continuar tu trabajo de Guardian, proteger a todos de una amenaza que ni siquiera saben que existe.
 
 // === Eje A: actividad de hoy ===
 {
 - inter2_actividad == "playa":
-    El gusto a sal del mar todavía te seca los labios. La ola que te tiró del espigón sigue retumbando en tu cabeza — no fue un accidente, el mar quiso decirte algo.
+    Hoy un niño se perdió en la playa. Gritos, palmas y llantos. Por suerte el guardacosta lo encontró rápidamente. Mientras el chico estaba perdido vos no podias dejar de ver el mar enbravecido, algo ahí tiene hambre de carne inocente.
 - inter2_actividad == "tarot":
-    Las cartas que viste siguen barajándose detrás de tus párpados cuando cerrás los ojos. Sea lo que sea que esa mujer leyó en tu futuro, te dejó un peso raro en el pecho.
+    La información que te dio la tarotista no tiene sentido. ¿No tiene sentido o vos no se lo encontras? A veces esa información es así, lo suficientemente vaga para entrar en cualquier lado. Esperas que, cuando llegue el momento, puedas ver la conexión.
 - inter2_actividad == "enfermeria":
-    El olor a antiséptico te sigue pegado a la nariz. Te miraste demasiado en el espejo del consultorio y no te gustó del todo lo que viste — pero al menos el cuerpo responde otra vez como debería.
+    La sutura te tira cada vez que haces un movimiento brusco, o no tan brusco. Bueno, cada vez que respiras realmente. Esperas que el dolor te mantenga atento y sirva como un recordatorio de donde fallaste así no volves a repetir el mismo error.
 - inter2_actividad == "abuela" && amistad_abuela >= 2:
-    Te queda la sonrisa filosa de la abuelita y la sensación de haber trabajado con alguien que sabe exactamente lo que hace. Ya pasaron varias misiones juntos y algo te dice que la próxima vez te va a llamar a vos primero.
+    La abuelita es todo lo que queres ser. Esperas que la próxima vez que tenga un problema te llame a vos primero. Aunque sospechas que va a ser al revés, vos vas a tener un problema y la vas a terminar llamando.
 - inter2_actividad == "abuela" && amistad_abuela >= 1:
-    Te queda en la cabeza la abuelita: medio madre, medio asesina a sueldo. No fue una jornada perfecta pero ella parecía conforme con lo aportado.
+    La noche con la abuelita fue una misión completamente diferente a lo que te venias enfrentando hasta ahora. Es increíble que haya tantas amenazas diferentes, por suerte a Guardianes preparados para todas.
 - inter2_actividad == "abuela":
-    Te queda la mirada decepcionada de la abuelita. La cagaste, y el rumor en El Faro va a llegar antes que vos a la próxima reunión.
+    Esperas que, la próxima vez que vayas a El Faro, la abuelita no les haya contado a todos lo mal que actuaste en tu operación. La culpa de haber dejado suelto a un predador ya es suficiente carga.
 }
 # next
 
@@ -4376,11 +4369,11 @@ La tarde se va apagando contra el horizonte. Volvés a tu departamento con el cu
 {ultima_mision == "orfanato":
     {
     - belen_sobrevive && juan_vive:
-        Pensás en Belén y en Juan, en la cara que pusieron cuando los sacaste del lugar. Por una vez todos volvieron a casa. Es una sensación rara — no estás acostumbrado a que las cosas terminen así.
+        Salvaste a Belén y a Juan. Eso es ser un verdadero Guardian. Dos vidas más, cientos de interacciones positivas, alegres (y tristes también) que la humanidad va a tener gracias a que salvaste a dos niños de la garra de la muerte.
     - belen_sobrevive:
         Pensás en Belén, en cómo te apretó la mano cuando la subiste al auto. La sacaste a ella. No a Juan. Esa cuenta no se equilibra y vos lo sabés.
     - else:
-        Pensás en el orfanato vacío, en los nombres de los chicos que te quedaron pendientes. Ni Belén ni Juan. La propiedad va a seguir tragando chicos cíclicamente y vos solo pudiste mirar.
+        La imagen del orfanato, con esos pequeños cuerpos tirados en el piso, pesa en tu corazón. Destruir la amenaza es importante pero, si no salvaste a nadie ¿Para que sirvió realmente? Tu presencia fue tan mala como lo que acechaba en esas cuevas.
     }
 }
 
@@ -4388,22 +4381,21 @@ La tarde se va apagando contra el horizonte. Volvés a tu departamento con el cu
 {ultima_mision == "cementerio":
     {
     - traumado:
-        Pero por más que cierres los ojos volvés al cementerio. La voz del Vampiro sigue ahí, en el reverso de cada pensamiento — no es un recuerdo, es una presencia que se quedó adentro tuyo.
+        El cuerpo del bebe muerto esta en todos lados. Esta bajo tus colchas cuando te vas a dormir, del otro lado de la cortina mientras te bañas, gateando en la habitación de al lado cuando estas en otro cuarto. El olor a putefracción se asienta y, no importa cuando aires el departamento, nunca se va. El olor te acompaña. Del bebe muerto…muerto por tu mano.
     - todos_guardias_mueren || sin_guardias:
-        Pensás en los guardias del cementerio, en los que entraron con vos y no salieron. Los nombres no los sabías y ahora ya no importan. Quedó solo vos para contarlo.
+        Te enteraste que el Municipio de Costa Alegre está juntando fondos para hacer una estatua a los Guardias muertos en el cementerio. La versión oficial habla de sectas violentas y cosas asi. Esperas que levanten la estatua, te gustaría pasar a dejarles unas flores.
     - algunos_guardias_sobreviven:
-        Pensás en los guardias que salieron con vos del cementerio, en cómo se palmeaban entre ellos sin saber bien si reírse o llorar. No fue limpio, pero la mayoría volvió. Eso ya es algo.
+        Las noticias hablan de los guardias heroicos del cementerio. La versión oficial habla de sectas violentas y demás cosas por el estilo. Tal vez cuando tengas un tiempo libre deberías pasar a compartir un mate con tus compañeros de combate.
     - else:
-        Pensás en la familia del ritual, en las marcas en las paredes del cementerio, en lo poco que entendés todavía. Volviste con más preguntas que respuestas.
+        Otra crisis evitada. ¿Cuántas así ocurren todas las semanas? Sentis que la realidad es frágil, como si cualquier paso podría abrir una grieta bajo tus pies y hacerte caer al infierno. La gente normal puede vivir su vida sin preocupaciones solamente por su total ignorancia a estas crisis constantes.
     }
 }
 # next
 
-Algo se está moviendo en Costa Alegre y vos sos parte del engranaje, te guste o no.
-
-El celular vibra en la mesita. Es El Faro.
+Algo malvado y hambriento se esta moviendo en Costa Alegre. Esperas poder detenerlo.
 # next
-
+El celular vibra en la mesita.
+// TODO: sfx de celular vibrando con ringtone especifico
 -> inter2_siguiente
 
 // ============================================================
@@ -4417,12 +4409,12 @@ Desde El Faro te llaman de urgencia. Parece que hay un problema y, entre todas l
 
 De vuelta a la pista de baile.
 
-# CHAPTER_BREAK: title=Visita al Museo, subtitle=Capítulo 3, music=misterio_ambient
+# CHAPTER_BREAK: title=Visita al Museo, subtitle=Capítulo 3, music=misterio_ambient, image=title_cap3_museo.jpg
 
 -> capitulo_3
 
 // ============================================================
-// CAPÍTULO 3 — PLACEHOLDER
+// CAPÍTULO 3 — EL MUSEO
 // ============================================================
 
 === capitulo_3 ===
@@ -4449,8 +4441,8 @@ Entras a El Faro y te sorprende no encontrar a Enriquez sentada tras su escritor
     -> cap3_espiar_lab
 
 === cap3_recorrer_elfaro ===
-Recorres el edificio, o las partes que podes entrar al menos. El baño esta vacío, la cocina parece desierta y la heladera solo contiene ese tapper que está en el fondo desde que empezaste a trabajar acá y nadie logra descifrar que es su contenido marrón semilíquido. Por muchas vueltas que des, Enriquez parece estar en su día libre asi que no te queda más opción que dejar de perder el tiempo.
 # next
+Recorres el edificio, o las partes que podes entrar al menos. El baño esta vacío, la cocina parece desierta y la heladera solo contiene ese tapper que está en el fondo desde que empezaste a trabajar acá y nadie logra descifrar que es su contenido marrón semilíquido. Por muchas vueltas que des, Enriquez parece estar en su día libre asi que no te queda más opción que dejar de perder el tiempo.
 -> cap3_briefing_lab
 
 === cap3_espiar_oficina ===
@@ -4459,7 +4451,6 @@ Te descalzas para hacer menos ruido y subís por la escalera que da a su oficina
 Justo cuando estas por poner tu mano en la manija, suena tu celular. ¿Cómo es posible? Siempre lo tenes en silenció justo por situaciones como esta.
 # next
 Lo sacas y lees un mensaje de El Profesor Buen intento, pero no hay forma que puedas entrar. Deja de jugar y veinte al laboratorio. Te estamos esperando.
-# next
 -> cap3_briefing_lab
 
 === cap3_espiar_lab ===
@@ -4472,7 +4463,6 @@ Es entonces cuando la voz de El Profesor te llega fuerte y claro.
 # next
 Deja de escuchar y entra de una vez {nombre_personaje}. Queremos hablar con vos y no tengo ganas de estar a los gritos.
 # achievement:unlock:espia_elfaro
-# next
 -> cap3_briefing_lab
 
 === cap3_briefing_lab ===
@@ -4597,15 +4587,15 @@ En algún momento de la planificación entra Enriquez (tarde) con cara de pocos 
 En cuanto entra señalás el reloj de tu muñeca.
 —Buenas tardes, ¿Querés que te preste mi reloj así te organizás?
 La mirada de Enriquez es suficiente como para asesinar a alguien y te das cuenta que tiene en las manos una jarra llena de café hirviendo y no tendría dudas en usarlo.
+# next
 Esto te va a pasar factura.
 ~ item_enojo_enriquez = true
 # inv:add:enojo_enriquez
-# next
 -> cap3_tl_menu
 
 === cap3_tl_sin_comentario ===
-Sos lo suficiente inteligente para darte cuenta que no te conviene tener una mala relación con Enriquez. Aparte trae café, nadie que traiga café puede ser malo. Te llenás una taza y te dedicás a ver una foto de la momia incaica hasta que la imagen queda grabada en tu memoria.
 # next
+Sos lo suficiente inteligente para darte cuenta que no te conviene tener una mala relación con Enriquez. Aparte trae café, nadie que traiga café puede ser malo. Te llenás una taza y te dedicás a ver una foto de la momia incaica hasta que la imagen queda grabada en tu memoria.
 -> cap3_tl_menu
 
 === cap3_tl_menu ===
@@ -4635,10 +4625,10 @@ No ayuda que cuando terminás Cabral se limita a mirar el reloj, negar con la ca
 La primera vez que grita de nuevo te enojás, la segunda querés llorar. Para la tercera tu espíritu ya está roto y hacés el recorrido a pura inercia.
 # next
 Terminás en el piso, recostado sobre un charco de tu propio sudor. Por suerte Cabral siempre sabe cómo levantar tu ánimo y ya te está acercando una botella de agua mientras te hace una pregunta clave.
+# next
 —¿Qué preferís? ¿Sanguches de milanesa o hamburguesas?
 ~ fuerza += 5
 # play_sfx:stinger_fuerza
-# next
 -> cap3_viaje_museo
 
 === cap3_tl_biblioteca ===
@@ -4680,7 +4670,6 @@ En cuanto te parás sobre el pentagrama empieza a ocurrir de todo. Pasás por pi
 Hay momentos difíciles, pero a pesar de todo lográs sobreponerte y la moneda nunca cae al piso.
 ~ magia += 5
 # play_sfx:stinger_magia
-# next
 -> cap3_viaje_museo
 
 === cap3_tl_belen ===
@@ -4692,7 +4681,6 @@ Aprovechás la mañana para comprarle un helado y dar una vuelta por la playa mi
 # next
 Después de un par de horas la volvés a llevar al orfanato y repetís la tradición del final de cada salida: le prometés que los monstruos no van a volver, le decís que cualquier problema puede llamarte y le pasás una bolsa de caramelos para que soborne a sus compañeros de orfanato.
 ~ hp += 5
-# next
 -> cap3_viaje_museo
 
 === cap3_tl_guardias ===
@@ -4707,9 +4695,9 @@ Antes de darte cuenta estás con dos guardias tomando mate mientras un tercero e
 Mucha gente atraviesa la vida sin tener una gran aventura, y es lógico, las grandes aventuras suenan bien en papel pero cuando uno las vive se da cuenta que están compuestas por temor, sufrimiento y pérdida. Los guardias tuvieron la tragedia de tener una gran aventura, pero la suerte de encontrar en ella la fuerza para sobrevivir y el coraje para sobrepasarlo. En cierta forma, están agradecidos por la oportunidad que les diste.
 # next
 Sabés que esta es la historia que se va a contar en fiestas familiares durante generaciones y no dudás que algún nieto lleve tu nombre. Pero ahora es momento de disfrutar del calor y el cariño que solo se tiene rodeado de compañeros de armas.
+# next
 La tarde sirve para relajar tu mente y prepararte para los retos que tengas que enfrentar a futuro.
 ~ hp += 5
-# next
 -> cap3_viaje_museo
 
 === cap3_viaje_museo ===
@@ -4756,10 +4744,13 @@ Por último, te muestra una caja y te invita a dejar una colaboración para sost
     -> cap3_museo_primer_sala
 
 === cap3_museo_primer_sala ===
+ENTRAS A LA PRIMERA SALA
+# next
 La primera sala está dedicada a los Pueblos Originarios. Aparentemente eran hábiles pescadores y navegantes, en los costados ondulados de la sala se puede ver elementos de pesca, ropas tradicionales y vasijas de barro.
 En el centro de la sala hay una recreación de las canoas que usaban para navegar el mar y pescar kilómetros de la costa. Te basta ver la canoa cinco minutos, y recordar lo violento que se puede poner el mar, para darte cuenta que esta gente era mas valiente que vos.
 # next
-
+ENTRAS A LA SEGUNDA SALA
+# next
 Ahora tocaba Costa Alegre en la época colonial. No tenías consciencia de que la ciudad era tan vieja pero parece que ya había un pequeño poblado en el siglo XVIII que había sido un poco un puerto de pescadores (y mucho un centro de contrabandistas).
 La mayoría de las vitrinas estaban compuestas por ropa de la época y objetos cotidianos de la Colonia donde abundaba el trabajo en plata y la iconografía cristiana.
 En el centro de la sala había un carruaje gigante con unos detalles marinos (sirenas, tritones, kraken y demás seres fantásticos). Hay que admitir que el vehículo era más elegante que cualquier cosa que te podías cruzar hoy por la calle.
@@ -4768,7 +4759,8 @@ En el centro de la sala había un carruaje gigante con unos detalles marinos (si
     No te sorprende que la secta que estás buscando tal vez lleve actuando más de doscientos años haciendo esto y sus orígenes fueron para aplacar a las entidades que castigaban el poblado desde el fondo del mar.
 }
 # next
-
+ENTRAS A LA TERCERA SALA
+# next
 La tercera sala correspondía a Costa Alegre en el siglo XX, la cual había crecido desde 1900 para convertirse en un parador turístico como un centro industrial.
 La mayoría de las vitrinas tenían fotos, planos o gigantografias de recortes periodísticos. Se veía fotos de la inauguración del Casino de Costa Alegre así como de los primeros hoteles sindicales que se había construido a metros del mar.
 En el centro de la sala había una maqueta que contaba la historia de la toma de los Astilleros Herrera, símbolo de la lucha sindical de los sesenta y setenta en la Ciudad. En esa época cada vez que salía un barco del astillero se cobraba la vida de un par de trabajadores que morían por las pésimas condiciones de seguridad. El conflicto llevó a la fábrica por parte de los trabajadores exigiendo condiciones dignas de trabajo y terminó con una brutal represión por parte de la dictadura militar.
@@ -4776,7 +4768,8 @@ En el centro de la sala había una maqueta que contaba la historia de la toma de
     Viendo el mapa te das cuenta que el predio de la fábrica no era tan difícil de custodiar, el gran problema era la posibilidad que la marina haga un desembarco naval entrando desde la rampa de lanzamiento del astillero. Si vos hubieses estado encargado de la defensa del predio, con veinte hombres fuertes y un par de armas largas, podrías seguir hasta el día de hoy atrincherado en la fábrica.
 }
 # next
-
+ENTRAS A LA CUARTA SALA
+# next
 Ya recorriste la mitad del circulo que compone el Museo y por fin llegás a la sala donde está la Momia Incaica. Aparte de la Momia (que está escondida de la vista detrás de unos biombos con información de la cultura Inca) en esta sala está la mayoría de los visitantes del museo que esperan su turno para entrar a ver la momia o dan vuelta entre las vitrinas donde se encuentran diversos objetos cotidianos propios del Imperio Inca.
 { magia >= 20:
     Mary Shelley tiene razón, la momia desborda de energía sobrenatural. Toda la sala se siente como un sauna, el aire está caliente y espeso y tenés que sentarte unos minutos para recuperar la compostura. La mera cercanía del objeto te hace sentir emocionado, excitado y energizado a la vez. No tenías esta mezcla tan particular desde que eras adolescente. Respirás y te concentrás en tu propio cuerpo y notás tus palmas mojadas, tu rostro colorado y tu corazón acelerado.
@@ -4832,8 +4825,8 @@ En cuanto te sentás en la cama tu conclusión cambia de bien a relativamente bi
 
 Es sorprendente lo fácil que es escapar de un Hospital. Teniendo en cuenta lo colapsado que está el sistema de salud de la ciudad, creo que si algún profesional de salud se da cuenta que sos un fugado solamente se alegra al saber que va a tener una cama libre para un paciente más grave. Al fin de cuentas, si tenés suficiente energía para poder escaparte, no deberías estar en un hospital en primer lugar.
 Al salir del Hospital notás una luna llena iluminando el paisaje nocturno. Tu pequeña experiencia te hizo perder todo el día y desperdiciar cualquier oportunidad de planificar el robo de la Momia.
-No te quedan más opciones que ir directo al Museo e improvisar sobre la marcha.
 # next
+No te quedan más opciones que ir directo al Museo e improvisar sobre la marcha.
 -> cap3_museo_noche_entrada
 
 === cap3_museo_dia_recorrido_final ===
@@ -4895,10 +4888,10 @@ Luego se dedican a tirar y doblar las extremidades.
 
 No hay malicia en la cara de los maniquíes (fácil al no haber rostro) ni emiten un sonido. Solo se escuchan los gritos desesperados del guardia que solo son superados por el ruido seco de huesos rompiéndose y carne siendo desgarrada.
 Cuando terminan su trabajo sueltan al guardia que cae pesadamente al piso. Una caída así de espalda sin duda le saca todo el aire de los pulmones y le impide seguir gritando ayuda.
+# next
 No pensás quedarte para ser la segunda víctima, aprovechás el momento y te colás en la Primera Sala del Museo mientras planeás cómo enfrentarte a esta nueva amenaza.
 ~ llegaste_con_ventaja = true
 # inv:add:llegaste_con_ventaja
-# next
 -> cap3_museo_primera_sala
 
 === cap3_museo_noche_entrada ===
@@ -4996,13 +4989,14 @@ En unos segundos van a entrar, así que tenés que actuar rápido.
     # next
     # MINIGAME: type=keymash, key=SPACE, count=18, timeLimit=6, autostart=true
     { minigame_result == 1:
+        # next
         Lográs zafarte y te lanzás hacia la siguiente sala con lo que te queda de energía.
         ~ hp -= 10
     - else:
+        # next
         Las manos logran aferrarte demasiado. Cuando finalmente salís, cada músculo grita.
         ~ hp -= 25
     }
-    # next
     -> cap3_corres_museo
 
 * { magia >= 20 } [Un hechizo de invisibilidad podría ser útil en este momento]
@@ -5015,15 +5009,16 @@ En unos segundos van a entrar, así que tenés que actuar rápido.
     # next
     # MINIGAME: type=keymash, key=SPACE, count=18, timeLimit=6, autostart=true
     { minigame_result == 1:
+        # next
         Lográs esquivar lo suficiente para abrirte paso hacia la puerta.
         ~ hp -= 10
         ~ magia -= 5
     - else:
+        # next
         Te atrapan, pero lográs liberarte a costa de tu chaqueta —y de algo de piel.
         ~ hp -= 22
         ~ magia -= 8
     }
-    # next
     -> cap3_corres_museo
 
 * [Te escondés dentro de la canoa gigante que está expuesta en mitad de la Sala]
@@ -5035,13 +5030,14 @@ En unos segundos van a entrar, así que tenés que actuar rápido.
     # next
     # MINIGAME: type=keymash, key=SPACE, count=18, timeLimit=6, autostart=true
     { minigame_result == 1:
+        # next
         Te tirás de la canoa y corrés hacia la puerta.
         ~ hp -= 12
     - else:
+        # next
         Te atrapan dentro de la canoa. Cuando lográs salir, los golpes ya te costaron caro.
         ~ hp -= 24
     }
-    # next
     -> cap3_corres_museo
 
 * { entidades_poseidas } [Trazás un símbolo en la puerta para impedir la entrada de las entidades]
@@ -5170,8 +5166,6 @@ Las manos logran estirar suficiente el portal hasta que tenga el tamaño de la v
 
 El portal se cierra y vos te quedás golpeando la vitrina, solo lográndote lastimar más. Perdiste. Te metiste al Museo, no lograste tu objetivo, y te quedaste con un grupo de maniquíes que quieren matarte.
 ~ momia_robada = true
-# next
-
 -> cap3_final_fracaso
 
 === cap3_final_fracaso ===
