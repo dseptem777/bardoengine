@@ -142,7 +142,7 @@ export function useBardoEngine({
         sfxVolume: getSfxVolume(),
         musicVolume: getMusicVolume(),
     })
-    const { playSfx, playMusic, stopMusic, stopAll: stopAllAudio, duckMusic, unduckMusic, playStinger, playAmbientLayer, stopAmbientLayer, stopAllAmbientLayers } = audio
+    const { playSfx, playMusic, stopMusic, stopAll: stopAllAudio } = audio
 
     // Chapter Break handlers (after audio init)
     // Counter to track break identity — used to detect if continueStory triggered a new break
@@ -626,9 +626,6 @@ export function useBardoEngine({
         onVisualDamage: handleVisualDamage,
         onGenjutsuBreak: handleGenjutsuBreak,
         onChapterBreak: handleChapterBreak,
-        onAmbientLayerPlay: playAmbientLayer,
-        onAmbientLayerStop: stopAmbientLayer,
-        onAmbientLayerStopAll: stopAllAmbientLayers,
     })
 
     // ==================
@@ -1112,7 +1109,7 @@ export function useBardoEngine({
     ])
 
     const subsystems = useMemo(() => ({
-        audio: { playSfx, playMusic, stopMusic, stopAllAudio, duckMusic, unduckMusic, playStinger, playAmbientLayer, stopAmbientLayer, stopAllAmbientLayers },
+        audio: { playSfx, playMusic, stopMusic, stopAllAudio },
         vfx: { vfxState, triggerVFX, clearVFX },
         saveSystem,
         gameSystems,
@@ -1147,7 +1144,7 @@ export function useBardoEngine({
             cooldown: chapterBreakCooldown,
         },
     }), [
-        playSfx, playMusic, stopMusic, stopAllAudio, duckMusic, unduckMusic, playStinger, playAmbientLayer, stopAmbientLayer, stopAllAmbientLayers,
+        playSfx, playMusic, stopMusic, stopAllAudio,
         vfxState, triggerVFX, clearVFX,
         saveSystem, gameSystems, achievementsSystem, minigameController, pendingInput, commitInput,
         willpowerState, willpowerActions,

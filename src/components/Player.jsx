@@ -4,7 +4,6 @@ import { BookOpen, Settings, Save, Heart, Backpack, FastForward } from 'lucide-r
 import TextDisplay from './TextDisplay'
 import ChoiceButton from './ChoiceButton'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation'
-import { useUiSounds } from '../hooks/useUiSounds'
 import { HeaderStats } from './StatsPanel'
 import BossHPIndicator from './BossHPIndicator'
 import ScrollGrabOverlay from './ScrollGrabOverlay'
@@ -76,9 +75,6 @@ export default function Player({
     textSegments = null,
     onSegmentReached = null,
 }) {
-    // UI sounds — low-volume feedback on choice interactions
-    const uiSounds = useUiSounds(audio)
-
     // If no text but has interactive content, skip typewriter
     const hasInteractiveContent = choices.length > 0 || isEnded
     const [isTyping, setIsTyping] = useState(text ? true : !hasInteractiveContent)
@@ -347,7 +343,7 @@ export default function Player({
                         {onOptions && (
                             <div className="flex items-center gap-1 sm:gap-2">
                                 <button
-                                    onClick={() => { uiSounds.onMenuOpen(); onToggleHistory?.() }}
+                                    onClick={() => { onToggleHistory?.() }}
                                     className="flex items-center gap-1.5 font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
                                     title="Bitácora (L)"
                                 >
@@ -355,7 +351,7 @@ export default function Player({
                                     {!isMobile && 'BITÁCORA'}
                                 </button>
                                 <button
-                                    onClick={() => { uiSounds.onMenuOpen(); onOptions?.() }}
+                                    onClick={() => { onOptions?.() }}
                                     className="flex items-center gap-1.5 font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
                                     title="Opciones"
                                 >
@@ -366,7 +362,7 @@ export default function Player({
                         )}
                         {onSave && (
                             <button
-                                onClick={() => { uiSounds.onSave(); onSave?.() }}
+                                onClick={() => { onSave?.() }}
                                 disabled={isMinigameActive}
                                 className={`flex items-center gap-1.5 font-mono text-sm transition-colors ${isMinigameActive ? 'text-neutral-600 cursor-not-allowed' : 'text-bardo-muted hover:text-bardo-accent'}`}
                             >
@@ -476,8 +472,6 @@ export default function Player({
                                             lockedRequirement={isLocked ? lockResult.displayText : null}
                                             // Last choice (resistir) has resistance, first (ceder) is easy
                                             resistanceLevel={willpowerActive && index === choices.length - 1 ? choiceResistanceLevel : 'none'}
-                                            onHover={uiSounds.onChoiceHover}
-                                            onClickSound={uiSounds.onChoiceClick}
                                         />
                                     )
                                 })}

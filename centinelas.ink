@@ -1,4 +1,4 @@
-// ---------------------------------------------------------
+﻿// ---------------------------------------------------------
 // PROYECTO: Centinelas del Sur
 // MOTOR: BardoEngine
 // CONTENIDO: Capítulo 0 (Orígenes) + Capítulo 1 + Intermisión 1
@@ -925,7 +925,6 @@ Antes de darte cuenta te encontrás en tu auto, con la llave puesta en la cerrad
 
 === observar_monstruo ===
 # music:terror_ambient
-# AMBIENT_LAYER: drone_tenso, vol=0.4
 Eso no se hace esperar. La puerta del Palacio de Justicia se abre y las luces del edificio dejan ver una silueta.
 Es enorme, muy por encima de los dos metros y cada extremidad es del tamaño de tu torso.
 Usa un sobretodo que le tapa todo el cuerpo junto con una bufanda que le oculta el rostro, lo cual es una locura con este calor. A medida que avanza podés notar más detalles.
@@ -1110,8 +1109,6 @@ Ya no es posible retroceder. Hay que seguir corriendo, nada más importa. Ganarl
 
 === keymash_arrastre_exito ===
 # music:misterio_ambient
-# AMBIENT_LAYER_STOP: drone_tenso
-# play_sfx:escape_sting
 Abrís la puerta del auto con dedos que ya casi no sentís. Arrancás. No mirás atrás.
 Te dirigís a El Faro.
 -> final_morgue_exito
@@ -1125,7 +1122,6 @@ MORISTE. FIN DEL JUEGO.
 === final_morgue_exito ===
 # achievement:unlock:morgue_sin_mordisco
 # music:misterio_ambient
-# AMBIENT_LAYER_STOP: drone_tenso
 Entraste al edificio de El Faro y la Sra. Enríquez continuaba sentada en su escritorio tipeando en la máquina de escribir. Dejás la mano del NN sobre su escritorio, que estaba en una bolsa marrón que fue adquiriendo un tono negruzco.
 Enríquez te mira, mira al bulto apestoso que dejaste en su escritorio, y comienza a tipear con más fuerza la máquina de escribir.
 # next: De vuelta en El Faro
@@ -2063,8 +2059,6 @@ Puteas por lo bajo. Pateas el cadáver de la araña a tus pies, y decidís segu�
 
 === boveda ===
 # SPIDER_START: difficulty=normal, fuerza={fuerza}, magia={magia}, sabiduria={conocimiento}
-# play_sfx:spider_screech
-# AMBIENT_LAYER: drone_tenso, vol=0.5
 # next: Llegas a una gran bóveda
 # music:boveda_ambient
 Avanzas atento. Generalmente una característica de los monstros sobrenaturales que imitan insectos es que forman parte de una gran familia, no te extrañaría enterarte que tiene unos centenares de primos esperando en algún lugar de esta cueva.
@@ -2140,7 +2134,6 @@ Entonces las vez. Primero son meramente el reflejo de luz en la oscuridad. El br
 === cueva_pelea_fuerza ===
 # music:boss_arañas
 # UI_EFFECT: bleed_burst
-# play_sfx:roar_amplified
 Antes que te des cuenta una sustancia babosa y pegajosa rodea tu muñeca, la inhábil por suerte. Una de las arañas te atrapo con su tela y te tira hacia ella mientras la otra se prepara para flanquearte.
 Sorprendentemente, Cabral te entrenó para situaciones así. En vez de ofrecer resistencia a la araña que te atrapó, cargas contra ella.
 Atrás tuyo notas movimiento, la otra araña saltó hacia donde deberías haber estado. Pero vos ya estas con la daga en la mano.
@@ -2154,7 +2147,6 @@ De un corte preciso la abrís al medio. La tierra de la cueva se llena de entra�
 === cueva_pelea_normal ===
 # music:boss_arañas
 # UI_EFFECT: bleed_burst
-# play_sfx:roar_amplified
 No tenes la fuerza para cargar contra ellas, así que haces lo único que se te ocurre: esperar. Daga en mano, espalda contra la pared, dejas que vengan.
 # next
 La primera araña salta hacia vos. La esquivas por centímetros y le clavas la daga en el costado. No es un golpe limpio, pero basta. El bicho se retuerce y cae.
@@ -2173,8 +2165,6 @@ El dolor corta tu festejo, en algún momento del combate una de las arañas logr
 === regreso_orfanato ===
 # SPIDER_CHECK: 12
 # SPIDER_STOP
-# AMBIENT_LAYER_STOP: drone_tenso
-# play_sfx:relief_sting
 # music:terror_ambient
 Corres por el bosque con el cuerpo de Juan en tus brazos. Será por qué es liviano, o el ruido afilado de los enemigos clavando sus extremidades en los árboles ayuda a empujar tu adrenalina, pero avanzas sin bajar el ritmo. No hay raíces que se interpongan en tu camino o ramas que te molesten
 # next
@@ -3136,7 +3126,6 @@ El peso de la espada en tu mano te da la confianza que necesitabas. Avanzás hac
 
 === cap2b_vampiro_hablar ===
 # music:misterio_ambient
-# play_sfx:vampiro_appear
 Salís de entre las criptas y le dirigís la palabra con un tono de voz que sale menos firme de lo que esperabas.
 \- Veo que no soy el único que aprecia la belleza del cementerio bajo la luz de la Luna. ¿Qué cripta pretende ver?
 # next
@@ -3146,17 +3135,16 @@ El Vampiro gira y te mira con ojos vacíos. Su cabeza un poco caída para el cos
 Sonríe, dejando asomar bajo los labios dos colmillos que son una promesa de dolor. Pero no ataca. En su lugar sentís algo mucho peor: una presión invisible detrás de tus ojos, como si alguien estuviera empujando tus pensamientos hacia un costado para hacer lugar a los suyos.
 \- Qué valiente el ganado que se acerca solo – su voz resuena dentro de tu cráneo, no en tus oídos – Hace mucho que no me divierto así.
 # WILLPOWER_START: normal
-# AMBIENT_LAYER: drone_tenso, vol=0.45
 # UI_EFFECT: blur_vignette
 # UI_EFFECT: scanlines_on
 # MOUSE_RESISTANCE: medium
 {
     - magia >= fuerza and magia >= conocimiento:
-        La realidad se dobla. El cementerio sigue siendo el mismo pero lo sentís como algo tuyo, familiar, casi hogareño. El Vampiro extiende un brazo y en su palma hay algo que parece un recuerdo que perdiste. La ilusión es buena: sólida, coherente, construida con materiales que reconocés. El olor es exacto. Los sonidos son exactos. Hasta la temperatura del aire tiene algo de correcto. Sería perfecta si no fuera porque los bordes de ese recuerdo brillan con un azul frío y residual que ninguna cosa real debería tener. —La costura del hilo. Un mago aprende a distinguir la energía de prestado de la energía propia, y esto claramente es lo primero. El hilo que cose la mentira, perfectamente visible para quien sabe mirar ese tipo de costuras. La ilusión sigue funcionando alrededor pero la grieta ya no puede ocultarse. # GENJUTSU_BREAK: magia:cap2b_hablar_resistido:—La costura del hilo. # play_sfx:stinger_magia
+        La realidad se dobla. El cementerio sigue siendo el mismo pero lo sentís como algo tuyo, familiar, casi hogareño. El Vampiro extiende un brazo y en su palma hay algo que parece un recuerdo que perdiste. La ilusión es buena: sólida, coherente, construida con materiales que reconocés. El olor es exacto. Los sonidos son exactos. Hasta la temperatura del aire tiene algo de correcto. Sería perfecta si no fuera porque los bordes de ese recuerdo brillan con un azul frío y residual que ninguna cosa real debería tener. —La costura del hilo. Un mago aprende a distinguir la energía de prestado de la energía propia, y esto claramente es lo primero. El hilo que cose la mentira, perfectamente visible para quien sabe mirar ese tipo de costuras. La ilusión sigue funcionando alrededor pero la grieta ya no puede ocultarse. # GENJUTSU_BREAK: magia:cap2b_hablar_resistido:—La costura del hilo.
     - fuerza >= magia and fuerza >= conocimiento:
-        La realidad se dobla. El cementerio sigue siendo el mismo pero lo sentís como algo tuyo, familiar, casi hogareño. El Vampiro extiende un brazo y en su palma hay algo que parece un recuerdo que perdiste. La ilusión es buena, casi impecable. Te hace sentir en paz, a salvo, en el lugar exacto donde deberías estar. Y sin embargo hay algo que no cierra. Sería perfecta si no fuera porque tu cuerpo tiene un depredador a dos metros con colmillos y aun así no produce ni una gota de adrenalina. —Ninguna adrenalina. Ningún músculo en tensión, ningún latido extra, ninguna mandíbula apretada. Tu cuerpo debería estar gritando pero la ilusión le tiene tapada la boca. La paz que sentís no es tuya. # GENJUTSU_BREAK: fuerza:cap2b_hablar_resistido:—Ninguna adrenalina. # play_sfx:stinger_fuerza
+        La realidad se dobla. El cementerio sigue siendo el mismo pero lo sentís como algo tuyo, familiar, casi hogareño. El Vampiro extiende un brazo y en su palma hay algo que parece un recuerdo que perdiste. La ilusión es buena, casi impecable. Te hace sentir en paz, a salvo, en el lugar exacto donde deberías estar. Y sin embargo hay algo que no cierra. Sería perfecta si no fuera porque tu cuerpo tiene un depredador a dos metros con colmillos y aun así no produce ni una gota de adrenalina. —Ninguna adrenalina. Ningún músculo en tensión, ningún latido extra, ninguna mandíbula apretada. Tu cuerpo debería estar gritando pero la ilusión le tiene tapada la boca. La paz que sentís no es tuya. # GENJUTSU_BREAK: fuerza:cap2b_hablar_resistido:—Ninguna adrenalina.
     - else:
-        La realidad se dobla. El cementerio sigue siendo el mismo pero lo sentís como algo tuyo, familiar, casi hogareño. El Vampiro extiende un brazo y en su palma hay algo que parece un recuerdo que perdiste. La ilusión es buena, meticulosa, construida con suficiente verosimilitud para engañar a alguien que no haya prestado atención. Hay una historia, hay un contexto, hay datos que encajan. Casi todos. Sería perfecta si no fuera porque en algún momento afirma que los primeros enterramientos de este cementerio fueron en el ala norte. —El ala este. Lo sabés porque lo leíste: los registros más viejos siempre citan el ala este. Los datos incorrectos tienen una textura particular, se sienten como una piedra en el zapato. La mentira es casi perfecta pero ese detalle la delata por completo. # GENJUTSU_BREAK: conocimiento:cap2b_hablar_resistido:—El ala este. # play_sfx:stinger_conocimiento
+        La realidad se dobla. El cementerio sigue siendo el mismo pero lo sentís como algo tuyo, familiar, casi hogareño. El Vampiro extiende un brazo y en su palma hay algo que parece un recuerdo que perdiste. La ilusión es buena, meticulosa, construida con suficiente verosimilitud para engañar a alguien que no haya prestado atención. Hay una historia, hay un contexto, hay datos que encajan. Casi todos. Sería perfecta si no fuera porque en algún momento afirma que los primeros enterramientos de este cementerio fueron en el ala norte. —El ala este. Lo sabés porque lo leíste: los registros más viejos siempre citan el ala este. Los datos incorrectos tienen una textura particular, se sienten como una piedra en el zapato. La mentira es casi perfecta pero ese detalle la delata por completo. # GENJUTSU_BREAK: conocimiento:cap2b_hablar_resistido:—El ala este.
 }
 
 * [Cedés ante la presencia del Vampiro]
@@ -3191,11 +3179,11 @@ La presión se intensifica. Sentís que tus pensamientos se vuelven lentos y pes
 # MOUSE_RESISTANCE: high
 {
     - magia >= fuerza and magia >= conocimiento:
-        La ilusión se vuelve más densa. El Vampiro ya no te muestra recuerdos: te mete adentro de uno. Estás en algún lugar que reconocés a medias, rodeado de caras borrosas que deberían importarte. El peso del suelo bajo tus pies, la temperatura del aire, los sonidos de fondo: todo está construido con una precisión que da miedo. Es más convincente que antes. Te hablan, te tocan el brazo, hacen referencias que deberían emocionarte. Casi funciona. Pero las caras tienen los movimientos del labio ligeramente desfasados respecto de las voces. —Labios desfasados. Como una película a la que le modificaron el audio. Un defecto de sincronía, un error en la fabricación del sueño que un mago con menos práctica no notaría. Pero vos lo notás. # GENJUTSU_BREAK: magia:cap2b_hablar_resistido_segundo:—Labios desfasados. # play_sfx:stinger_magia
+        La ilusión se vuelve más densa. El Vampiro ya no te muestra recuerdos: te mete adentro de uno. Estás en algún lugar que reconocés a medias, rodeado de caras borrosas que deberían importarte. El peso del suelo bajo tus pies, la temperatura del aire, los sonidos de fondo: todo está construido con una precisión que da miedo. Es más convincente que antes. Te hablan, te tocan el brazo, hacen referencias que deberían emocionarte. Casi funciona. Pero las caras tienen los movimientos del labio ligeramente desfasados respecto de las voces. —Labios desfasados. Como una película a la que le modificaron el audio. Un defecto de sincronía, un error en la fabricación del sueño que un mago con menos práctica no notaría. Pero vos lo notás. # GENJUTSU_BREAK: magia:cap2b_hablar_resistido_segundo:—Labios desfasados.
     - fuerza >= magia and fuerza >= conocimiento:
-        La ilusión se vuelve más densa, el recuerdo inventado más cálido. Te envuelve como una manta: sonidos familiares, caras conocidas, la sensación de estar exactamente donde tenés que estar. Tu mente acepta casi todo sin pelear. Pero tu cuerpo empieza a filtrar la verdad que tu mente no puede: transpiración fría en la nuca, mandíbula apretada, puño cerrado sin que lo hayas decidido. —Frío en la nuca. No elegiste cerrar ese puño. Tu sistema nervioso le mandó a tus músculos la señal de combate que la ilusión está tratando de apagar. Peligro real, ahí afuera. No es paz lo que sentís. Cada segundo que pasa la ilusión se afina pero tu cuerpo sigue gritando que algo está mal. # GENJUTSU_BREAK: fuerza:cap2b_hablar_resistido_segundo:—Frío en la nuca. # play_sfx:stinger_fuerza
+        La ilusión se vuelve más densa, el recuerdo inventado más cálido. Te envuelve como una manta: sonidos familiares, caras conocidas, la sensación de estar exactamente donde tenés que estar. Tu mente acepta casi todo sin pelear. Pero tu cuerpo empieza a filtrar la verdad que tu mente no puede: transpiración fría en la nuca, mandíbula apretada, puño cerrado sin que lo hayas decidido. —Frío en la nuca. No elegiste cerrar ese puño. Tu sistema nervioso le mandó a tus músculos la señal de combate que la ilusión está tratando de apagar. Peligro real, ahí afuera. No es paz lo que sentís. Cada segundo que pasa la ilusión se afina pero tu cuerpo sigue gritando que algo está mal. # GENJUTSU_BREAK: fuerza:cap2b_hablar_resistido_segundo:—Frío en la nuca.
     - else:
-        La ilusión se vuelve más densa. Ahora el Vampiro habla con la voz de alguien que conocés, usando frases que suenan auténticas. La entonación está bien. Los patrones de habla están bien. Los temas de conversación son los correctos. Casi funciona. Pero en un momento usa una expresión que esa persona nunca usaría, con una cadencia que aprendió de memoria sin entender el contexto. —No es su voz. Una combinación de palabras que esa persona evitaría por razones que el Vampiro no puede saber porque nunca realmente la conoció. No es la persona. Es una copia que estudió a la persona de afuera, y ahora que lo notaste no podés dejar de notar las costuras en cada frase que dice. # GENJUTSU_BREAK: conocimiento:cap2b_hablar_resistido_segundo:—No es su voz. # play_sfx:stinger_conocimiento
+        La ilusión se vuelve más densa. Ahora el Vampiro habla con la voz de alguien que conocés, usando frases que suenan auténticas. La entonación está bien. Los patrones de habla están bien. Los temas de conversación son los correctos. Casi funciona. Pero en un momento usa una expresión que esa persona nunca usaría, con una cadencia que aprendió de memoria sin entender el contexto. —No es su voz. Una combinación de palabras que esa persona evitaría por razones que el Vampiro no puede saber porque nunca realmente la conoció. No es la persona. Es una copia que estudió a la persona de afuera, y ahora que lo notaste no podés dejar de notar las costuras en cada frase que dice. # GENJUTSU_BREAK: conocimiento:cap2b_hablar_resistido_segundo:—No es su voz.
 }
 
 * [Cedés ante la presencia del Vampiro]
@@ -3328,11 +3316,11 @@ Al final estás flotando. En un mar rojizo con un oleaje cada vez más tranquilo
 # MOUSE_RESISTANCE: high
 {
     - magia >= fuerza and magia >= conocimiento:
-        Flotás en ese mar carmesí. Es hermoso. Cada fibra de tu cuerpo quiere creerlo. El oleaje es suave y caliente, las preocupaciones se disuelven antes de llegar a la orilla, hay una voz que te dice que estás bien, que esto está bien, que siempre estuvo bien. Es lo más hermoso que sentiste en tu vida. Pero un mago sabe distinguir entre una sensación real y una que le fabricaron: hay una corriente de energía entrando por tu cuello que no es sangre, es la manipulación directa de tu sistema límbico. —El hechizo. La costura. No es tuya esa paz. El placer es un hechizo y la emoción es una instrucción. Ahora que ves las costuras del encantamiento, el mar carmesí empieza a perder color en los bordes. # GENJUTSU_BREAK: magia:cap2b_convertirse_escape:—El hechizo. La costura. # play_sfx:stinger_magia
+        Flotás en ese mar carmesí. Es hermoso. Cada fibra de tu cuerpo quiere creerlo. El oleaje es suave y caliente, las preocupaciones se disuelven antes de llegar a la orilla, hay una voz que te dice que estás bien, que esto está bien, que siempre estuvo bien. Es lo más hermoso que sentiste en tu vida. Pero un mago sabe distinguir entre una sensación real y una que le fabricaron: hay una corriente de energía entrando por tu cuello que no es sangre, es la manipulación directa de tu sistema límbico. —El hechizo. La costura. No es tuya esa paz. El placer es un hechizo y la emoción es una instrucción. Ahora que ves las costuras del encantamiento, el mar carmesí empieza a perder color en los bordes. # GENJUTSU_BREAK: magia:cap2b_convertirse_escape:—El hechizo. La costura.
     - fuerza >= magia and fuerza >= conocimiento:
-        Flotás en ese mar carmesí. Es hermoso. Cada fibra de tu cuerpo quiere quedarse aquí para siempre. El oleaje te lleva y te trae, el sol carmesí pulsa despacio, la orilla siempre parece cerca. Es lo más hermoso que sentiste en tu vida. Pero tu cuerpo manda señales que el placer no puede tapar del todo: presión arterial bajando, extremidades frías, ritmo cardíaco cada vez más irregular. —Te estás vaciando. Tus dedos están azules. No te estás relajando. No estás flotando en ningún mar. Ese sol carmesí que pulsa es tu propio corazón quedándose sin combustible. # GENJUTSU_BREAK: fuerza:cap2b_convertirse_escape:—Te estás vaciando. # play_sfx:stinger_fuerza
+        Flotás en ese mar carmesí. Es hermoso. Cada fibra de tu cuerpo quiere quedarse aquí para siempre. El oleaje te lleva y te trae, el sol carmesí pulsa despacio, la orilla siempre parece cerca. Es lo más hermoso que sentiste en tu vida. Pero tu cuerpo manda señales que el placer no puede tapar del todo: presión arterial bajando, extremidades frías, ritmo cardíaco cada vez más irregular. —Te estás vaciando. Tus dedos están azules. No te estás relajando. No estás flotando en ningún mar. Ese sol carmesí que pulsa es tu propio corazón quedándose sin combustible. # GENJUTSU_BREAK: fuerza:cap2b_convertirse_escape:—Te estás vaciando.
     - else:
-        Flotás en ese mar carmesí. Es hermoso. Cada parte de vos quiere creerlo. La sensación es tan total que casi es un argumento en sí misma, casi prueba que debe ser real. Es lo más hermoso que sentiste en tu vida. Pero leíste sobre esta situación demasiadas veces: el mar carmesí y el sol palpitante son una mentira que tu cuerpo compra con entusiasmo. Lo que realmente ocurre es que estás perdiendo sangre en un cementerio mientras un depredador te vacía por el cuello. —No es placer. Esta escena tiene nombre y tiene diagnóstico. El éxtasis es el truco, el mecanismo de anestesia que la mordida usa para que no te resistas. Cada segundo que seguís flotando es un segundo menos de sangre en tus venas. # GENJUTSU_BREAK: conocimiento:cap2b_convertirse_escape:—No es placer. # play_sfx:stinger_conocimiento
+        Flotás en ese mar carmesí. Es hermoso. Cada parte de vos quiere creerlo. La sensación es tan total que casi es un argumento en sí misma, casi prueba que debe ser real. Es lo más hermoso que sentiste en tu vida. Pero leíste sobre esta situación demasiadas veces: el mar carmesí y el sol palpitante son una mentira que tu cuerpo compra con entusiasmo. Lo que realmente ocurre es que estás perdiendo sangre en un cementerio mientras un depredador te vacía por el cuello. —No es placer. Esta escena tiene nombre y tiene diagnóstico. El éxtasis es el truco, el mecanismo de anestesia que la mordida usa para que no te resistas. Cada segundo que seguís flotando es un segundo menos de sangre en tus venas. # GENJUTSU_BREAK: conocimiento:cap2b_convertirse_escape:—No es placer.
 }
 * [Te dejás llevar]
     # WILLPOWER_STOP
@@ -3386,7 +3374,6 @@ ESTÁS MUERTO.
 === cap2b_frente_cubil ===
 # music:terror_ambient
 # UI_EFFECT: scanlines_off
-# AMBIENT_LAYER_STOP: drone_tenso
 Al fin encontrás la cripta correcta. De afuera parece un edificio bastante aburrido, una imitación a un templo grecorromano con una serie de columnas jónicas y un techo en punta.
 Al mirar el lugar con más atención se puede observar unos pequeños detalles que dan cuenta de que está habitado. En el techo alguien colocó una antena (ser inmortal debe implicar mucho tiempo libre para llenar, por lo cual una conexión a internet debe ser un prerrequisito) y da la impresión de que alguien se tomó tiempo para limpiar la fachada.
 # next
@@ -3533,11 +3520,11 @@ Lo importante es que no dejás de avanzar.
 # MOUSE_RESISTANCE: extreme
 {
     - magia >= fuerza and magia >= conocimiento:
-        Tus piernas siguen avanzando. No las mandaste a avanzar pero siguen haciéndolo, una zancada detrás de la otra, como si hubieran recibido órdenes de una cadena de mando que no pasa por tu cabeza. Y entonces lo ves: hilos de energía, finos como telarañas, conectados a tus rodillas y tus tobillos. Los Vampiros los sostienen desde el otro extremo como si fueran las cuerdas de una marioneta. —Los hilos en tus rodillas. No es voluntad lo que te mueve. No es valentía, no es coraje, no es decisión. Es magia de compulsión, vieja y burda, de alguien que asumió que no sabrías reconocerla. Ahora que la identificaste, sus costuras son tan visibles como cualquier otro hechizo que hayas deshecho. Los hilos tiritan cuando los mirás directo. # GENJUTSU_BREAK: magia:cap2b_improvisar_resistido:—Los hilos en tus rodillas. # play_sfx:stinger_magia
+        Tus piernas siguen avanzando. No las mandaste a avanzar pero siguen haciéndolo, una zancada detrás de la otra, como si hubieran recibido órdenes de una cadena de mando que no pasa por tu cabeza. Y entonces lo ves: hilos de energía, finos como telarañas, conectados a tus rodillas y tus tobillos. Los Vampiros los sostienen desde el otro extremo como si fueran las cuerdas de una marioneta. —Los hilos en tus rodillas. No es voluntad lo que te mueve. No es valentía, no es coraje, no es decisión. Es magia de compulsión, vieja y burda, de alguien que asumió que no sabrías reconocerla. Ahora que la identificaste, sus costuras son tan visibles como cualquier otro hechizo que hayas deshecho. Los hilos tiritan cuando los mirás directo. # GENJUTSU_BREAK: magia:cap2b_improvisar_resistido:—Los hilos en tus rodillas.
     - fuerza >= magia and fuerza >= conocimiento:
-        Tus piernas siguen avanzando. No las estás moviendo vos. Intentás frenarlas y hay un segundo de confusión, como si el comando se perdiera en el camino, como si la señal de tu cerebro llegara con eco. Existe una diferencia entre caminar hacia el peligro porque sos un idiota valiente y no poder dejar de caminar aunque quieras. Tus piernas ahora son lo segundo. Un cuerpo entrenado sabe cuando algo va en contra de su propio movimiento. —El músculo que resiste. Lo reconocés antes que en tu cabeza: el tendón que tironea en sentido contrario, el instinto de supervivencia que grita parate aunque la ilusión diga avanzá. Tu cuerpo ya lo sabe aunque tu mente tarde en aceptarlo. Cada paso que das sin quererlo es una confirmación más de que algo externo te está moviendo. # GENJUTSU_BREAK: fuerza:cap2b_improvisar_resistido:—El músculo que resiste. # play_sfx:stinger_fuerza
+        Tus piernas siguen avanzando. No las estás moviendo vos. Intentás frenarlas y hay un segundo de confusión, como si el comando se perdiera en el camino, como si la señal de tu cerebro llegara con eco. Existe una diferencia entre caminar hacia el peligro porque sos un idiota valiente y no poder dejar de caminar aunque quieras. Tus piernas ahora son lo segundo. Un cuerpo entrenado sabe cuando algo va en contra de su propio movimiento. —El músculo que resiste. Lo reconocés antes que en tu cabeza: el tendón que tironea en sentido contrario, el instinto de supervivencia que grita parate aunque la ilusión diga avanzá. Tu cuerpo ya lo sabe aunque tu mente tarde en aceptarlo. Cada paso que das sin quererlo es una confirmación más de que algo externo te está moviendo. # GENJUTSU_BREAK: fuerza:cap2b_improvisar_resistido:—El músculo que resiste.
     - else:
-        Tus piernas siguen avanzando. Sentís que querés ir hacia allá. O al menos eso es lo que te parece que sentís. Hay una diferencia entre los dos y tardan unos segundos en separarse en tu cabeza. Recordás haber leído sobre esto: la compulsión vampírica genera una sensación de "querer ir" artificialmente, pero tiene un tell conductual específico. El movimiento involuntario tiene una firma distinta al voluntario. La cabeza no hace los microajustes de equilibrio que haría un movimiento voluntario. —Demasiado uniformes. Tus piernas van demasiado rectas, demasiado mecánicas, sin la microoscilación constante que tiene un cuerpo que se mueve por su propia voluntad. Nada orgánico se mueve así. El patrón es tan claro que ahora no podés dejar de verlo en cada zancada. # GENJUTSU_BREAK: conocimiento:cap2b_improvisar_resistido:—Demasiado uniformes. # play_sfx:stinger_conocimiento
+        Tus piernas siguen avanzando. Sentís que querés ir hacia allá. O al menos eso es lo que te parece que sentís. Hay una diferencia entre los dos y tardan unos segundos en separarse en tu cabeza. Recordás haber leído sobre esto: la compulsión vampírica genera una sensación de "querer ir" artificialmente, pero tiene un tell conductual específico. El movimiento involuntario tiene una firma distinta al voluntario. La cabeza no hace los microajustes de equilibrio que haría un movimiento voluntario. —Demasiado uniformes. Tus piernas van demasiado rectas, demasiado mecánicas, sin la microoscilación constante que tiene un cuerpo que se mueve por su propia voluntad. Nada orgánico se mueve así. El patrón es tan claro que ahora no podés dejar de verlo en cada zancada. # GENJUTSU_BREAK: conocimiento:cap2b_improvisar_resistido:—Demasiado uniformes.
 }
 
 * [Cedés al control]
@@ -4020,7 +4007,6 @@ Te queda un poco de tiempo antes de tu siguiente misión. Tal vez podés hacer a
 
 === inter2_playa ===
 ~ inter2_actividad = "playa"
-# AMBIENT_LAYER_STOP_ALL
 # UI_EFFECT: scanlines_off
 # music:playa_ambient
 
@@ -4365,7 +4351,6 @@ El mensaje está acompañado por una foto de ella saludando con la mano derecha,
 // ============================================================
 
 === inter2_convergencia ===
-# AMBIENT_LAYER_STOP_ALL
 # UI_EFFECT: scanlines_off
 Un día más en el que seguís vivo. Eso es un tipo de victoria. Volves a tu apartamento listo para continuar tu trabajo de Guardian, proteger a todos de una amenaza que ni siquiera saben que existe.
 
@@ -4670,7 +4655,7 @@ Te encontrás a Enriquez en su escritorio, con tan pocas ganas de sociabilizar c
     # next
     Terminás la lectura y te das cuenta lo codiciado que sos. De repente sentís que bajo la fina capa de tu piel hay un tesoro que todos quieren robar.
     ~ conocimiento += 5
-    # play_sfx:stinger_conocimiento
+   
     # next
 }
 -> cap3_viaje_museo
@@ -4991,7 +4976,6 @@ No tenés mucho tiempo, debés decidir cómo actuar.
 # stop_music
 # play_sfx:pasos_monstruo
 # UI_EFFECT: blur_vignette
-# AMBIENT_LAYER: drone_tenso, vol=0.3
 
 Llegás a la primera Sala, la exposición de Costa Alegre en la época de los Pueblos Originarios. Ves un par de maquetas y lamentás que estas figuras con lanzas no cobren vida para ayudarte.
 Atrás tuyo escuchás cómo los pasos irregulares de los maniquíes se preparan para entrar. Cerrás la puerta de ingreso pero notás que es una madera de mala calidad —parece que el Museo estuvo desfinanciado desde su construcción. El cierre de la puerta es más una expresión de deseo que una defensa real.
@@ -5180,7 +5164,7 @@ Las manos logran estirar suficiente el portal hasta que tenga el tamaño de la v
 
 { conocimiento >= 40:
     ~ voz_conocida = true
-    # play_sfx:stinger_conocimiento
+   
     Esa voz te suena conocida, pero no estás seguro y el ruido de los maniquíes acercándose ocupa más tu atención.
     # achievement:unlock:ratoncito_sabiduria
 }

@@ -12,19 +12,9 @@ export default function ChapterBreakOverlay({
     subtitle = null,
     image = null,
     onDismiss,
-    audio = null,
 }) {
     const [isFadingOut, setIsFadingOut] = useState(false)
     const [isReady, setIsReady] = useState(false)
-
-    // Duck music and play stinger on open
-    useEffect(() => {
-        if (!isOpen) return
-        audio?.duckMusic?.(0.1, 200)
-        // chapter_break_in.mp3 — TODO: produce dedicated asset (see sfx-prompts.md)
-        // Fallback: sting_horror covers the dramatic reveal feel
-        audio?.playStinger?.('chapter_break_in')
-    }, [isOpen]) // eslint-disable-line react-hooks/exhaustive-deps
 
     // 1200ms delay before accepting input (prevent accidental skip)
     useEffect(() => {
@@ -42,19 +32,15 @@ export default function ChapterBreakOverlay({
         setIsFadingOut(true)
     }, [isReady, isFadingOut])
 
-    // Complete after content fade out — play exit stinger and unduck music
+    // Complete after content fade out
     useEffect(() => {
         if (isFadingOut) {
-            // chapter_break_out.mp3 — TODO: produce dedicated asset (see sfx-prompts.md)
-            // Fallback: sting_moral for the "moving on" feel
-            audio?.playStinger?.('chapter_break_out')
-            audio?.unduckMusic?.(800)
             const fadeTimer = setTimeout(() => {
                 onDismiss?.()
             }, 500)
             return () => clearTimeout(fadeTimer)
         }
-    }, [isFadingOut, onDismiss]) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [isFadingOut, onDismiss])
 
     // Keyboard handler — ignore held keys (e.repeat) to prevent skip-through
     useEffect(() => {

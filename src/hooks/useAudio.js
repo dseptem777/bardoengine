@@ -18,7 +18,6 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
     const pendingMusicRef = useRef(null)
     const fadeTimeoutRef = useRef(null)
     const audioUnlockedRef = useRef(false)
-    const ambientLayersRef = useRef(new Map()) // name → Howl
 
     // Store current volumes in refs for real-time updates
     const sfxVolumeRef = useRef(sfxVolume)
@@ -89,8 +88,6 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
                 musicRef.current = null
             }
             currentTrackRef.current = null
-            ambientLayersRef.current.forEach(layer => layer.unload())
-            ambientLayersRef.current.clear()
         }
     }, [])
 
@@ -127,24 +124,13 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
         // Naming mismatches: ink tag → actual filenames
         disparos_escopeta: ['escopeta_a', 'escopeta_b'],
         explosion_magica:  ['magiexplosion_a', 'magiexplosion_b'],
-        // Block 3 fallbacks — replace with dedicated assets when produced
-        escape_sting:      ['jumpscare_a', 'jumpscare_b'],        // TODO: replace with escape_sting.mp3
-        spider_screech:    ['rugido_monstruo_a', 'rugido_monstruo_b'], // TODO: replace with spider_screech.mp3
-        roar_amplified:    ['rugido_monstruo_c', 'rugido_monstruo_d'], // TODO: replace with roar_amplified.mp3
-        relief_sting:      ['sting_moral'],                        // TODO: replace with relief_sting.mp3
-        vampiro_appear:    ['groan_long'],                         // TODO: replace with vampiro_appear.mp3
     }
 
-    const playSfx = useCallback((id, options = {}) => {
+    const playSfx = useCallback((id) => {
         const variants = SFX_VARIANTS[id]
         const resolvedId = variants
             ? variants[Math.floor(Math.random() * variants.length)]
             : id
-
-        // Allow callers to override volume (e.g. UI sounds at 0.18)
-        const vol = options.volume !== undefined
-            ? options.volume * sfxVolumeRef.current
-            : sfxVolumeRef.current
 
         console.log(`[Audio] Play SFX: ${id}${resolvedId !== id ? ` → ${resolvedId}` : ''}`)
 
@@ -153,7 +139,7 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
         if (!soundsRef.current[resolvedId]) {
             soundsRef.current[resolvedId] = new Howl({
                 src: [sfxSrc],
-                volume: vol,
+                volume: sfxVolumeRef.current,
                 onloaderror: (soundId, error) => {
                     console.warn(`[Audio] Failed to load SFX ${resolvedId}:`, error)
                 },
@@ -162,7 +148,7 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
                 }
             })
         } else {
-            soundsRef.current[resolvedId].volume(vol)
+            soundsRef.current[resolvedId].volume(sfxVolumeRef.current)
         }
 
         soundsRef.current[resolvedId].play()
@@ -257,86 +243,11 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
     }, [])
 
     // ==================
-    // Duck / Unduck Music
-    // ==================
-    const duckMusic = useCallback((level = 0.3, durationMs = 300) => {
-        if (!musicRef.current) return
-        musicRef.current.fade(musicRef.current.volume(), level, durationMs)
-    }, [])
-
-    const unduckMusic = useCallback((durationMs = 400) => {
-        if (!musicRef.current) return
-        musicRef.current.fade(musicRef.current.volume(), musicVolumeRef.current, durationMs)
-    }, [])
-
-    // ==================
-    // Stingers (one-shot, no loop)
-    // ==================
-    const playStinger = useCallback((name) => {
-        const stingerSrc = `/sounds/${name}.mp3`
-        const stinger = new Howl({
-            src: [stingerSrc],
-            volume: Math.min(sfxVolumeRef.current * 1.2, 1.0),
-            loop: false,
-            onloaderror: (id, err) => {
-                console.warn(`[Audio] Stinger not found: ${name}`, err)
-            },
-            onend: () => stinger.unload(),
-        })
-        stinger.play()
-    }, [])
-
-    // ==================
-    // Ambient Layers (additive over music)
-    // ==================
-    const playAmbientLayer = useCallback((name, vol = 0.4) => {
-        if (ambientLayersRef.current.has(name)) return // already playing
-
-        const src = `/sounds/${name}.mp3`
-        const layer = new Howl({
-            src: [src],
-            volume: 0,
-            loop: true,
-            onloaderror: (id, err) => {
-                console.warn(`[Audio] Ambient layer not found: ${name}`, err)
-                ambientLayersRef.current.delete(name)
-            },
-            onload: () => {
-                layer.play()
-                layer.fade(0, vol, FADE_DURATION)
-            },
-        })
-        ambientLayersRef.current.set(name, layer)
-    }, [])
-
-    const stopAmbientLayer = useCallback((name, fadeMs = 400) => {
-        const layer = ambientLayersRef.current.get(name)
-        if (!layer) return
-        layer.fade(layer.volume(), 0, fadeMs)
-        setTimeout(() => {
-            layer.unload()
-            ambientLayersRef.current.delete(name)
-        }, fadeMs)
-    }, [])
-
-    // ==================
     // Global Controls
     // ==================
-    const stopAllAmbientLayers = useCallback((fadeMs = 400) => {
-        ambientLayersRef.current.forEach((layer, name) => {
-            layer.fade(layer.volume(), 0, fadeMs)
-            setTimeout(() => {
-                layer.unload()
-                ambientLayersRef.current.delete(name)
-            }, fadeMs)
-        })
-    }, [])
-
     const stopAll = useCallback(() => {
         stopAllSfx()
         stopMusic(false)
-        ambientLayersRef.current.forEach(layer => { layer.stop(); layer.unload() })
-        ambientLayersRef.current.clear()
     }, [stopAllSfx, stopMusic])
 
     const setMasterVolume = useCallback((volume) => {
@@ -351,15 +262,6 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
         playMusic,
         stopMusic,
         setMusicVolume,
-        // Duck / Unduck
-        duckMusic,
-        unduckMusic,
-        // Stingers
-        playStinger,
-        // Ambient layers
-        playAmbientLayer,
-        stopAmbientLayer,
-        stopAllAmbientLayers,
         // Global
         stopAll,
         setMasterVolume
@@ -369,12 +271,6 @@ export function useAudio({ sfxVolume = DEFAULT_SFX_VOLUME, musicVolume = DEFAULT
         playMusic,
         stopMusic,
         setMusicVolume,
-        duckMusic,
-        unduckMusic,
-        playStinger,
-        playAmbientLayer,
-        stopAmbientLayer,
-        stopAllAmbientLayers,
         stopAll,
         setMasterVolume
     ])

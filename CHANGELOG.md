@@ -4,21 +4,26 @@
 
 ---
 
+## [0.26.1] - 2026-05-08
+
+### Notes
+- **Scope correction over 0.26.0**: la versión 0.26.0 (mergeada y revertida en `dev`) incluía cableado de audio (extensiones de `useAudio`, `useUiSounds`, handlers `AMBIENT_LAYER`, stingers en `ChapterBreakOverlay`/`ChoiceButton`). Ese cableado no debió hacerse por IA — el audio/música es decisión de oficio del autor humano. Esta versión re-deja el engine con **solo las partes visuales, tipográficas y de micro-interacciones** del trabajo original. La entrada `[0.26.0]` abajo refleja este alcance corregido.
+
+---
+
 ## [0.26.0] - 2026-05-08
 
 ### Features
 
-- **Audio system extended**: `useAudio.js` now exposes `duckMusic(level, durationMs)`, `unduckMusic(durationMs)`, `playStinger(name)`, `playAmbientLayer(name, vol)`, `stopAmbientLayer(name, fadeMs)`, and `stopAllAmbientLayers()`. Ambient layers use a `Map<name, Howl>` so multiple drones can sum on top of music. Fallback SFX variants added for `escape_sting`, `spider_screech`, `roar_amplified`, `relief_sting`, `vampiro_appear`, `genjutsu_break_*`.
-- **UI sounds wired**: new `useUiSounds` hook fires `ui_hover` and `ui_click` from `ChoiceButton`, plus stinger + duck on `ChapterBreakOverlay` mount/unmount. Engine no longer ships silent.
-- **New tag handlers**: `AMBIENT_LAYER:`, `AMBIENT_LAYER_STOP:`, `AMBIENT_LAYER_STOP_ALL`, `UI_EFFECT: scanlines_on/off`, `UI_EFFECT: bleed_burst`. Wired through `useTagProcessor` and `vfxRegistry`.
-- **SVG filter library**: `src/components/vfx/SvgFilters.jsx` mounts global `<defs>` with `bardo-noise` (RAF-animated fractalNoise), `bardo-displace`, `bardo-displace-boss`, `bardo-glitch` (RGB channel split), `bardo-bleed`. `static_mind` rewritten to use `url(#bardo-noise)` + `mix-blend-mode: screen` instead of opacity flicker only.
-- **Visual effects upgraded**: real CRT scanlines (`.bardo-scanlines`), 800ms RGB-split glitch on `GENJUTSU_BREAK`, 2s `bleed_burst` flash for boss beats, subtle viewport displace under spider activity, `backdrop-filter` on `MinigameOverlay` and `ChapterBreakOverlay` via new `.bardo-overlay-bg` utility.
-- **Variable typography**: Fraunces (opsz + SOFT axes) loaded as narrative font; CSS vars `--bardo-narrative-tracking/weight/opsz` modulated linearly by willpower (0-100 → tracking 0→0.05em, weight 400→300, opsz 14→30) so the prose visually decays as willpower drops. Font-feature-settings enable old-style numerals and ligatures.
-- **Micro-interactions**: custom `bardo-in/out/elastic` cubic-bezier easings registered in Tailwind; `ChoiceButton` hover gains weight (translate + scale + accent-colored offset shadow + active scale); `GhostCursor` portal follows the mouse with lerp factors 0.08/0.05/0.03 at medium/high/extreme heavy-cursor levels (hidden on touch).
-- **Tailwind plugin**: new `tailwind.bardo.plugin.js` exposes `.bardo-vignette`, `.bardo-glitch-filter`, `.bardo-bleed-filter`, `.bardo-noise-filter` utilities.
+- **New tag handlers (visual)**: `UI_EFFECT: scanlines_on/off`, `UI_EFFECT: bleed_burst`. Wired through `useTagProcessor` y `vfxRegistry`.
+- **SVG filter library**: `src/components/vfx/SvgFilters.jsx` monta `<defs>` globales con `bardo-noise` (fractalNoise animado por RAF), `bardo-displace`, `bardo-displace-boss`, `bardo-glitch` (RGB channel split), `bardo-bleed`. `static_mind` reescrito para usar `url(#bardo-noise)` + `mix-blend-mode: screen` en lugar de solo flicker de opacidad.
+- **Visual effects upgraded**: scanlines CRT reales (`.bardo-scanlines`), glitch RGB-split de 800ms en `GENJUTSU_BREAK`, flash `bleed_burst` de 2s para beats de boss, displace sutil del viewport bajo actividad de arañas, `backdrop-filter` en `MinigameOverlay` y `ChapterBreakOverlay` vía nueva utility `.bardo-overlay-bg`.
+- **Variable typography**: Fraunces (axes opsz + SOFT) como narrative font; CSS vars `--bardo-narrative-tracking/weight/opsz` moduladas linealmente por willpower (0-100 → tracking 0→0.05em, weight 400→300, opsz 14→30) para que la prosa decaiga visualmente. `font-feature-settings` habilita old-style numerals y ligaduras.
+- **Micro-interactions**: easings custom `bardo-in/out/elastic` (cubic-bezier) registrados en Tailwind; hover de `ChoiceButton` con peso (translate + scale + sombra accent + active scale); `GhostCursor` portal sigue al mouse con lerp 0.08/0.05/0.03 en cursor pesado medium/high/extreme (oculto en touch).
+- **Tailwind plugin**: nuevo `tailwind.bardo.plugin.js` expone utilities `.bardo-vignette`, `.bardo-glitch-filter`, `.bardo-bleed-filter`, `.bardo-noise-filter`.
 
 ### Tests
-- `useVFX.test.js` updated for new `scanlinesActive` / `bleedActive` initial state. 652 tests pass.
+- `useVFX.test.js` actualizado para el nuevo estado inicial `scanlinesActive` / `bleedActive`. 652 tests pass.
 
 ---
 

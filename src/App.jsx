@@ -713,7 +713,6 @@ function AppContent({ onStorySelect }) {
                 subtitle={chapterBreak?.data?.subtitle}
                 image={chapterBreak?.data?.image}
                 onDismiss={chapterBreak?.dismiss}
-                audio={subsystems.audio}
             />
 
             {/* Debug Spawn Button */}
