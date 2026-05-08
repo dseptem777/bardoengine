@@ -14,11 +14,8 @@ export function useVFX(audioCallbacks = {}, vfxEnabled = true) {
             if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current)
             if (flashTimerRef.current) clearTimeout(flashTimerRef.current)
             if (flashIntervalRef.current) clearInterval(flashIntervalRef.current)
-            if (bleedTimerRef.current) clearTimeout(bleedTimerRef.current)
         }
     }, [])
-
-    const bleedTimerRef = useRef(null)
 
     const [vfxState, setVfxState] = useState({
         shake: false,
@@ -26,10 +23,7 @@ export function useVFX(audioCallbacks = {}, vfxEnabled = true) {
         background: null,
         // Horror system additions
         horrorEffect: null,
-        horrorIntensity: 1.0,
-        // Overlay toggles (independent of horrorEffect)
-        scanlinesActive: false,
-        bleedActive: false,
+        horrorIntensity: 1.0
     })
 
     const triggerVFX = useCallback((tag) => {
@@ -113,23 +107,6 @@ export function useVFX(audioCallbacks = {}, vfxEnabled = true) {
             // Horror VFX handling
             case VFX_TYPES.UI_HORROR:
                 if (vfxEnabled) {
-                    // Scanlines toggle
-                    if (effect.scanlines !== undefined) {
-                        console.log(`[VFX] Scanlines: ${effect.scanlines}`)
-                        setVfxState(prev => ({ ...prev, scanlinesActive: effect.scanlines }))
-                        break
-                    }
-                    // Bleed burst — auto-clears after 2s
-                    if (effect.bleedBurst) {
-                        console.log('[VFX] Bleed burst 2s')
-                        if (bleedTimerRef.current) clearTimeout(bleedTimerRef.current)
-                        setVfxState(prev => ({ ...prev, bleedActive: true }))
-                        bleedTimerRef.current = setTimeout(() => {
-                            setVfxState(prev => ({ ...prev, bleedActive: false }))
-                        }, 2000)
-                        break
-                    }
-                    // Standard horror effect
                     console.log(`[VFX] Horror effect: ${effect.effect}`)
                     setVfxState(prev => ({
                         ...prev,

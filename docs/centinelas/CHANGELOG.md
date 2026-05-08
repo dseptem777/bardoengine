@@ -1,21 +1,5 @@
 # Changelog — Centinelas del Sur
 
-## [0.24.0] — 2026-05-08
-
-### Added
-- **Atmospheric tag pass — todos los capítulos**: capa de audio + VFX cableada beat por beat sobre Centinelas, aprovechando los nuevos tags del engine 0.26.0.
-  - **Cap 1 Morgue**: `AMBIENT_LAYER: drone_tenso` al entrar a `observar_monstruo`; `AMBIENT_LAYER_STOP` + `play_sfx:escape_sting` en `keymash_arrastre_exito` y `final_morgue_exito`.
-  - **Cap 2a Boveda**: tras `SPIDER_START` se dispara `play_sfx:spider_screech` + `AMBIENT_LAYER: drone_tenso, vol=0.5`. En los dos beats de `boss_arañas` se añade `UI_EFFECT: bleed_burst` + `play_sfx:roar_amplified`. En `regreso_orfanato` se cierra con `AMBIENT_LAYER_STOP` + `play_sfx:relief_sting`.
-  - **Cap 2b Cementerio**: tras el primer `WILLPOWER_START` se cablea `AMBIENT_LAYER: drone_tenso, vol=0.45` + `UI_EFFECT: scanlines_on`. En `cap2b_vampiro_hablar` aparece `play_sfx:vampiro_appear`. En `cap2b_hablar_escalada` (junto a `static_mind`) refuerzan `scanlines_on`. Cierre en `cap2b_frente_cubil` con `scanlines_off` + `AMBIENT_LAYER_STOP`.
-  - **Inter2 Convergencia**: `AMBIENT_LAYER_STOP_ALL` + `UI_EFFECT: scanlines_off` al entrar a `inter2_playa` e `inter2_convergencia` para limpiar cualquier resto de horror del cap 2b — el respiro se diseña en silencio.
-  - **Cap 3 Museo**: `AMBIENT_LAYER: drone_tenso, vol=0.3` tras `blur_vignette` en `cap3_museo_primera_sala` para ansiedad sostenida.
-- **GENJUTSU_BREAK stingers**: cada uno de los 3 GENJUTSU_BREAK del cap 2b dispara su propio `play_sfx:genjutsu_break_<magia|fuerza|conocimiento>` y el engine añade un destello de RGB-split de 800ms sincronizado.
-
-### Notes
-- Los stingers nuevos (`escape_sting`, `spider_screech`, `roar_amplified`, `relief_sting`, `vampiro_appear`, `genjutsu_break_*`) usan fallbacks de `useAudio.js` mientras se producen los audios definitivos. TODOs registrados en `docs/centinelas/sfx-prompts.md`.
-
----
-
 ## [0.23.3] — 2026-05-08
 
 ### Fixed

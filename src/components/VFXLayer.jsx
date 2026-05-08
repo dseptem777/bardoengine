@@ -37,7 +37,7 @@ export default function VFXLayer({ vfxState }) {
                         initial={{ opacity: 0.8 }}
                         animate={{ opacity: 0.6 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 0.3 }}
                         className="fixed inset-0 pointer-events-none z-50"
                         style={{ backgroundColor: FLASH_COLORS[flash] || FLASH_COLORS.white }}
                     />

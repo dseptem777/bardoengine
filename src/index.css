@@ -56,11 +56,6 @@ input, textarea {
   --ui-border-radius: 0.5rem;
   /* rounded-lg */
   --ui-border-width: 1px;
-
-  /* Narrative typography — modulated by willpower via JS */
-  --bardo-narrative-tracking: 0em;
-  --bardo-narrative-weight: 400;
-  --bardo-narrative-opsz: 14;
 }
 
 body {
@@ -115,37 +110,6 @@ input[type='range']::-moz-range-thumb {
   border: none;
   background: var(--bardo-accent);
   cursor: pointer;
-}
-
-/* ============================================
-   BARDO VFX UTILITY CLASSES
-   SVG filter helpers + overlay styles
-   ============================================ */
-
-/* Scanlines — CRT monitor line overlay.
-   Activated by UI_EFFECT: scanlines_on Ink tag.
-   HorrorVFXLayer renders this div when scanlinesActive=true. */
-.bardo-scanlines {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.18) 0,
-    rgba(0, 0, 0, 0.18) 1px,
-    transparent 1px,
-    transparent 3px
-  );
-  mix-blend-mode: multiply;
-  z-index: 30;
-}
-
-/* Overlay background — semi-transparent glass effect for modals/menus.
-   Use instead of opaque bg-bardo-bg on overlay containers. */
-.bardo-overlay-bg {
-  background-color: rgba(10, 10, 10, 0.55);
-  backdrop-filter: blur(8px) contrast(1.05) hue-rotate(-8deg);
-  -webkit-backdrop-filter: blur(8px) contrast(1.05) hue-rotate(-8deg);
 }
 
 /* VFX Classes */

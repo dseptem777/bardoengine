@@ -15,17 +15,8 @@ export default {
                 }
             },
             fontFamily: {
-                narrative: ['Fraunces', 'Playfair Display', 'Georgia', 'serif'],
-                mono: ['JetBrains Mono Variable', 'JetBrains Mono', 'ui-monospace', 'monospace']
-            },
-            transitionTimingFunction: {
-                'bardo-in': 'cubic-bezier(0.7, 0, 0.84, 0)',
-                'bardo-out': 'cubic-bezier(0.16, 1, 0.3, 1)',
-                'bardo-elastic': 'cubic-bezier(0.68, -0.55, 0.27, 1.55)',
-            },
-            transitionDuration: {
-                '350': '350ms',
-                '450': '450ms',
+                narrative: ['Playfair Display', 'Georgia', 'serif'],
+                mono: ['JetBrains Mono', 'Fira Code', 'monospace']
             },
             animation: {
                 shake: 'shake 0.5s ease-in-out',
@@ -46,5 +37,5 @@ export default {
             }
         },
     },
-    plugins: [require('./tailwind.bardo.plugin.js')],
+    plugins: [],
 }

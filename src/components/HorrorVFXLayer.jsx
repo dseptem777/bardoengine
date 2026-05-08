@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 
 /**
  * HorrorVFXLayer - Extended VFX for Horror/Meta-Horror Effects
@@ -37,18 +37,13 @@ export default function HorrorVFXLayer({
     effect,
     intensity = 1,
     sometimiento = 0,
-    willpower = 100,
-    glitchActive = false,
-    scanlinesActive = false,
-    bleedActive = false,
+    willpower = 100
 }) {
-    // glitchActive, scanlinesActive, bleedActive are driven from outside (App.jsx state)
-
-    // Legacy: keep staticSeed for submission_fade compatibility (no longer used for static_mind)
     const [staticSeed, setStaticSeed] = useState(0)
 
+    // Generate new static pattern periodically for mental effects
     useEffect(() => {
-        if (effect === 'submission_fade') {
+        if (effect === 'static_mind' || effect === 'submission_fade') {
             const interval = setInterval(() => {
                 setStaticSeed(Date.now())
             }, 100)
@@ -223,32 +218,58 @@ export default function HorrorVFXLayer({
                     </motion.div>
                 )}
 
-                {/* Mental Static - Mind Control Interference (real noise via #bardo-noise SVG filter) */}
+                {/* Mental Static - Mind Control Interference */}
                 {effect === 'static_mind' && (
                     <motion.div
                         key="static_mind"
                         className="absolute inset-0"
                         initial={{ opacity: 0 }}
-                        animate={{ opacity: Math.min(0.6, intensity * (1 - willpowerFactor * 0.6 + 0.15)) }}
+                        animate={{ opacity: intensity * 0.4 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
                     >
-                        {/* Real TV-static noise using the global #bardo-noise SVG filter (animated via RAF in SvgFilters) */}
+                        {/* Noise overlay */}
                         <div
-                            className="absolute inset-0"
+                            className="absolute inset-0 mix-blend-overlay"
                             style={{
-                                filter: 'url(#bardo-noise)',
-                                mixBlendMode: 'screen',
-                                backgroundColor: 'rgba(255,255,255,0.04)',
+                                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='${staticSeed}'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+                                opacity: 0.5
                             }}
                         />
 
                         {/* Purple/mental color tint */}
                         <motion.div
                             className="absolute inset-0"
-                            animate={{ opacity: [0.08, 0.18, 0.08] }}
-                            transition={{ repeat: Infinity, duration: 0.15 }}
-                            style={{ backgroundColor: HORROR_PALETTES.mental.primary }}
+                            animate={{
+                                opacity: [0.1, 0.2, 0.1]
+                            }}
+                            transition={{
+                                repeat: Infinity,
+                                duration: 0.15
+                            }}
+                            style={{
+                                backgroundColor: HORROR_PALETTES.mental.primary
+                            }}
+                        />
+
+                        {/* Scan lines */}
+                        <motion.div
+                            className="absolute inset-0"
+                            animate={{
+                                backgroundPosition: ['0 0', '0 4px']
+                            }}
+                            transition={{
+                                repeat: Infinity,
+                                duration: 0.1
+                            }}
+                            style={{
+                                background: `repeating-linear-gradient(
+                                    0deg,
+                                    rgba(0, 0, 0, 0.1) 0px,
+                                    rgba(0, 0, 0, 0.1) 1px,
+                                    transparent 1px,
+                                    transparent 2px
+                                )`
+                            }}
                         />
                     </motion.div>
                 )}
@@ -314,39 +335,6 @@ export default function HorrorVFXLayer({
                 )}
 
             </AnimatePresence>
-
-            {/* ── Scanlines overlay — activated by UI_EFFECT: scanlines_on tag ── */}
-            {scanlinesActive && (
-                <div className="bardo-scanlines" />
-            )}
-
-            {/* ── Glitch burst — activated by GENJUTSU_BREAK tag ── */}
-            {glitchActive && (
-                <div
-                    style={{
-                        position: 'absolute',
-                        inset: 0,
-                        pointerEvents: 'none',
-                        filter: 'url(#bardo-glitch)',
-                        backgroundColor: 'rgba(255,255,255,0.03)',
-                        mixBlendMode: 'screen',
-                    }}
-                />
-            )}
-
-            {/* ── Bleed burst — activated by UI_EFFECT: bleed_burst tag ── */}
-            {bleedActive && (
-                <div
-                    style={{
-                        position: 'absolute',
-                        inset: 0,
-                        pointerEvents: 'none',
-                        filter: 'url(#bardo-bleed)',
-                        backgroundColor: 'rgba(180,0,0,0.08)',
-                        mixBlendMode: 'screen',
-                    }}
-                />
-            )}
         </div>
     )
 }
