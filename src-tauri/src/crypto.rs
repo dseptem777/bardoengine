@@ -168,13 +168,13 @@ pub fn decrypt_story_content(encrypted_base64: &str) -> Result<String, String> {
         .decrypt(nonce, ciphertext_with_tag.as_ref())
         .map_err(|_| "Decryption failed — wrong keys or corrupted data".to_string())?;
 
-    let result = String::from_utf8(plaintext.clone())
-        .map_err(|e| format!("UTF-8 decode error: {}", e));
-
-    // Layer 5: zeroize the plaintext buffer before it's dropped
-    plaintext.zeroize();
-
-    result
+    // Layer 5: consume plaintext directly — no second copy escapes zeroize.
+    // On UTF-8 error, recover the Vec via into_bytes() and zeroize it before returning.
+    String::from_utf8(plaintext).map_err(|e| {
+        let mut bytes = e.into_bytes();
+        bytes.zeroize();
+        format!("UTF-8 decode error: invalid UTF-8 sequence")
+    })
 }
 
 /// Encrypt a plaintext string with the same KDF pipeline.
