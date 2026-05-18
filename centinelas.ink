@@ -1,4 +1,4 @@
-﻿// ---------------------------------------------------------
+// ---------------------------------------------------------
 // PROYECTO: Centinelas del Sur
 // MOTOR: BardoEngine
 // CONTENIDO: Capítulo 0 (Orígenes) + Capítulo 1 + Intermisión 1
@@ -2133,7 +2133,6 @@ Entonces las vez. Primero son meramente el reflejo de luz en la oscuridad. El br
 
 === cueva_pelea_fuerza ===
 # music:boss_arañas
-# UI_EFFECT: bleed_burst
 Antes que te des cuenta una sustancia babosa y pegajosa rodea tu muñeca, la inhábil por suerte. Una de las arañas te atrapo con su tela y te tira hacia ella mientras la otra se prepara para flanquearte.
 Sorprendentemente, Cabral te entrenó para situaciones así. En vez de ofrecer resistencia a la araña que te atrapó, cargas contra ella.
 Atrás tuyo notas movimiento, la otra araña saltó hacia donde deberías haber estado. Pero vos ya estas con la daga en la mano.
@@ -2146,7 +2145,6 @@ De un corte preciso la abrís al medio. La tierra de la cueva se llena de entra�
 
 === cueva_pelea_normal ===
 # music:boss_arañas
-# UI_EFFECT: bleed_burst
 No tenes la fuerza para cargar contra ellas, así que haces lo único que se te ocurre: esperar. Daga en mano, espalda contra la pared, dejas que vengan.
 # next
 La primera araña salta hacia vos. La esquivas por centímetros y le clavas la daga en el costado. No es un golpe limpio, pero basta. El bicho se retuerce y cae.
@@ -3126,6 +3124,7 @@ El peso de la espada en tu mano te da la confianza que necesitabas. Avanzás hac
 
 === cap2b_vampiro_hablar ===
 # music:misterio_ambient
+# play_sfx:drone_tenso
 Salís de entre las criptas y le dirigís la palabra con un tono de voz que sale menos firme de lo que esperabas.
 \- Veo que no soy el único que aprecia la belleza del cementerio bajo la luz de la Luna. ¿Qué cripta pretende ver?
 # next
@@ -3136,7 +3135,6 @@ Sonríe, dejando asomar bajo los labios dos colmillos que son una promesa de dol
 \- Qué valiente el ganado que se acerca solo – su voz resuena dentro de tu cráneo, no en tus oídos – Hace mucho que no me divierto así.
 # WILLPOWER_START: normal
 # UI_EFFECT: blur_vignette
-# UI_EFFECT: scanlines_on
 # MOUSE_RESISTANCE: medium
 {
     - magia >= fuerza and magia >= conocimiento:
@@ -3175,7 +3173,6 @@ La presión se intensifica. Sentís que tus pensamientos se vuelven lentos y pes
 \- Ahí estás. Casi puedo saborearte – sus palabras se mezclan con las tuyas hasta que no sabés cuáles son de quién.
 # WILLPOWER_START: fast
 # UI_EFFECT: static_mind
-# UI_EFFECT: scanlines_on
 # MOUSE_RESISTANCE: high
 {
     - magia >= fuerza and magia >= conocimiento:
@@ -3373,7 +3370,6 @@ ESTÁS MUERTO.
 
 === cap2b_frente_cubil ===
 # music:terror_ambient
-# UI_EFFECT: scanlines_off
 Al fin encontrás la cripta correcta. De afuera parece un edificio bastante aburrido, una imitación a un templo grecorromano con una serie de columnas jónicas y un techo en punta.
 Al mirar el lugar con más atención se puede observar unos pequeños detalles que dan cuenta de que está habitado. En el techo alguien colocó una antena (ser inmortal debe implicar mucho tiempo libre para llenar, por lo cual una conexión a internet debe ser un prerrequisito) y da la impresión de que alguien se tomó tiempo para limpiar la fachada.
 # next
@@ -4007,7 +4003,6 @@ Te queda un poco de tiempo antes de tu siguiente misión. Tal vez podés hacer a
 
 === inter2_playa ===
 ~ inter2_actividad = "playa"
-# UI_EFFECT: scanlines_off
 # music:playa_ambient
 
 Costa Alegre está sufriendo la peor plaga que puede azotar a una ciudad: una invasión de turistas. Hay algún tipo de fin de semana largo o algo por el estilo — tu vida se volvió tan caótica que tardás un par de meses en recordar en qué mes estás — así que cada centímetro de arena es un campo de batalla entre turistas que intentan marcar posiciones a fuerza de sombrillas e infiltrarse entre las líneas enemigas extendiendo mantas y empujando ojotas.
@@ -4351,7 +4346,6 @@ El mensaje está acompañado por una foto de ella saludando con la mano derecha,
 // ============================================================
 
 === inter2_convergencia ===
-# UI_EFFECT: scanlines_off
 Un día más en el que seguís vivo. Eso es un tipo de victoria. Volves a tu apartamento listo para continuar tu trabajo de Guardian, proteger a todos de una amenaza que ni siquiera saben que existe.
 
 // === Eje A: actividad de hoy ===
@@ -4655,7 +4649,7 @@ Te encontrás a Enriquez en su escritorio, con tan pocas ganas de sociabilizar c
     # next
     Terminás la lectura y te das cuenta lo codiciado que sos. De repente sentís que bajo la fina capa de tu piel hay un tesoro que todos quieren robar.
     ~ conocimiento += 5
-   
+    # play_sfx:stinger_conocimiento
     # next
 }
 -> cap3_viaje_museo
@@ -5164,7 +5158,7 @@ Las manos logran estirar suficiente el portal hasta que tenga el tamaño de la v
 
 { conocimiento >= 40:
     ~ voz_conocida = true
-   
+    # play_sfx:stinger_conocimiento
     Esa voz te suena conocida, pero no estás seguro y el ruido de los maniquíes acercándose ocupa más tu atención.
     # achievement:unlock:ratoncito_sabiduria
 }

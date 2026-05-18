@@ -27,7 +27,6 @@ export default function Player({
     continueLabel = null,
     onOptions,
     onToggleHistory,
-    audio = null,
     // Branding
     gameTitle = null,
     // Settings props
@@ -343,7 +342,7 @@ export default function Player({
                         {onOptions && (
                             <div className="flex items-center gap-1 sm:gap-2">
                                 <button
-                                    onClick={() => { onToggleHistory?.() }}
+                                    onClick={onToggleHistory}
                                     className="flex items-center gap-1.5 font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
                                     title="Bitácora (L)"
                                 >
@@ -351,7 +350,7 @@ export default function Player({
                                     {!isMobile && 'BITÁCORA'}
                                 </button>
                                 <button
-                                    onClick={() => { onOptions?.() }}
+                                    onClick={onOptions}
                                     className="flex items-center gap-1.5 font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
                                     title="Opciones"
                                 >
@@ -362,7 +361,7 @@ export default function Player({
                         )}
                         {onSave && (
                             <button
-                                onClick={() => { onSave?.() }}
+                                onClick={onSave}
                                 disabled={isMinigameActive}
                                 className={`flex items-center gap-1.5 font-mono text-sm transition-colors ${isMinigameActive ? 'text-neutral-600 cursor-not-allowed' : 'text-bardo-muted hover:text-bardo-accent'}`}
                             >

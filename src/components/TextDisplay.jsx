@@ -489,13 +489,6 @@ export default function TextDisplay({
                             key={i}
                             data-paragraph-index={i}
                             className={`font-narrative ${fontSizeClass} leading-relaxed text-bardo-text`}
-                            style={{
-                                fontFamily: 'Fraunces, Playfair Display, Georgia, serif',
-                                fontWeight: 'var(--bardo-narrative-weight, 400)',
-                                letterSpacing: 'var(--bardo-narrative-tracking, 0em)',
-                                fontVariationSettings: '"opsz" var(--bardo-narrative-opsz, 14), "SOFT" 50',
-                                fontFeatureSettings: '"liga" 1, "onum" 1, "ss01" 1',
-                            }}
                         >
                             {hasFisura ? (
                                 <>

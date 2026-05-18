@@ -11,7 +11,7 @@ export default function ChapterBreakOverlay({
     title = '',
     subtitle = null,
     image = null,
-    onDismiss,
+    onDismiss
 }) {
     const [isFadingOut, setIsFadingOut] = useState(false)
     const [isReady, setIsReady] = useState(false)
@@ -60,7 +60,7 @@ export default function ChapterBreakOverlay({
             {isOpen && (
                 <motion.div
                     key="chapter-break"
-                    className={`fixed inset-0 z-[900] bardo-overlay-bg flex flex-col items-center justify-center overflow-hidden ${isFadingOut ? 'pointer-events-none' : 'cursor-pointer'}`}
+                    className={`fixed inset-0 z-[900] bg-bardo-bg flex flex-col items-center justify-center overflow-hidden ${isFadingOut ? 'pointer-events-none' : 'cursor-pointer'}`}
                     onClick={handleDismiss}
                     initial={{ opacity: 1 }}
                     animate={{ opacity: 1 }}
@@ -122,7 +122,7 @@ export default function ChapterBreakOverlay({
                                 className="text-4xl md:text-6xl lg:text-7xl font-bold text-bardo-accent text-center tracking-wider accent-text-shadow-title"
                                 initial={{ opacity: 0, y: -30, scale: 0.9 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                                transition={{ delay: 0.5, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                                transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
                             >
                                 {title}
                             </motion.h1>

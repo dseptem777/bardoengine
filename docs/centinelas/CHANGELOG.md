@@ -1,19 +1,5 @@
 # Changelog — Centinelas del Sur
 
-## [0.24.1] — 2026-05-08
-
-### Notes
-- **Scope correction over 0.24.0**: la versión 0.24.0 incluía cableado de audio (`AMBIENT_LAYER`, `play_sfx:*` por capítulo) que no debió hacer la IA. Esa parte fue revertida. La entrada `[0.24.0]` abajo refleja solo los tags **visuales** (`UI_EFFECT: scanlines_on/off`, `UI_EFFECT: bleed_burst`) que sí cabe que la IA cablee porque son efectos de pantalla del engine, no decisiones de banda sonora.
-
----
-
-## [0.24.0] — 2026-05-08
-
-### Added
-- **Visual atmospheric tag pass**: `UI_EFFECT: bleed_burst` en los dos beats de `boss_arañas` (cap 2a) para sincronizar el flash de tinta del engine; `UI_EFFECT: scanlines_on` en cap 2b cementerio (`frente_vampiro` tras WILLPOWER_START y `cap2b_hablar_escalada` junto a `static_mind`); `UI_EFFECT: scanlines_off` al cerrar cap 2b (`cap2b_frente_cubil`) y al entrar a `inter2_playa` / `inter2_convergencia` para limpiar el horror antes del respiro.
-
----
-
 ## [0.23.3] — 2026-05-08
 
 ### Fixed

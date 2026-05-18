@@ -25,9 +25,7 @@ describe('useVFX', () => {
                 flash: null,
                 background: null,
                 horrorEffect: null,
-                horrorIntensity: 1.0,
-                scanlinesActive: false,
-                bleedActive: false,
+                horrorIntensity: 1.0
             })
         })
     })

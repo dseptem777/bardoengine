@@ -4,42 +4,6 @@
 
 ---
 
-## [0.27.0] - 2026-05-18
-
-### Features
-
-- **DRM Capa 0 — Hardening de producción**: devtools deshabilitadas en release build (`tauri.conf.json`); limpieza de `plaintext.clone()` innecesario en `crypto.rs` para evitar material sensible en stack frames.
-- **DRM Capa 1 — Watermarking narrativo**: sistema de marcas de agua invisibles embebidas en el texto compilado (`scripts/watermark-story.cjs`); registry de builds con hash de historia + timestamp + fingerprint de comprador (`scripts/build-registry.cjs`); herramientas de tracing para identificar copias filtradas; tests en `src/tests/watermark.test.js` (12 casos).
-- **DRM Capa 2 — Rotación de claves por minor**: las claves de cifrado rotan automáticamente por versión minor, de modo que una clave filtrada solo compromete una generación de builds; test cross-key en Rust confirma que versiones distintas no pueden desencriptar entre sí.
-
-### Tests
-- 664 tests pass (vitest) + 4 tests pass (cargo).
-
----
-
-## [0.26.1] - 2026-05-08
-
-### Notes
-- **Scope correction over 0.26.0**: la versión 0.26.0 (mergeada y revertida en `dev`) incluía cableado de audio (extensiones de `useAudio`, `useUiSounds`, handlers `AMBIENT_LAYER`, stingers en `ChapterBreakOverlay`/`ChoiceButton`). Ese cableado no debió hacerse por IA — el audio/música es decisión de oficio del autor humano. Esta versión re-deja el engine con **solo las partes visuales, tipográficas y de micro-interacciones** del trabajo original. La entrada `[0.26.0]` abajo refleja este alcance corregido.
-
----
-
-## [0.26.0] - 2026-05-08
-
-### Features
-
-- **New tag handlers (visual)**: `UI_EFFECT: scanlines_on/off`, `UI_EFFECT: bleed_burst`. Wired through `useTagProcessor` y `vfxRegistry`.
-- **SVG filter library**: `src/components/vfx/SvgFilters.jsx` monta `<defs>` globales con `bardo-noise` (fractalNoise animado por RAF), `bardo-displace`, `bardo-displace-boss`, `bardo-glitch` (RGB channel split), `bardo-bleed`. `static_mind` reescrito para usar `url(#bardo-noise)` + `mix-blend-mode: screen` en lugar de solo flicker de opacidad.
-- **Visual effects upgraded**: scanlines CRT reales (`.bardo-scanlines`), glitch RGB-split de 800ms en `GENJUTSU_BREAK`, flash `bleed_burst` de 2s para beats de boss, displace sutil del viewport bajo actividad de arañas, `backdrop-filter` en `MinigameOverlay` y `ChapterBreakOverlay` vía nueva utility `.bardo-overlay-bg`.
-- **Variable typography**: Fraunces (axes opsz + SOFT) como narrative font; CSS vars `--bardo-narrative-tracking/weight/opsz` moduladas linealmente por willpower (0-100 → tracking 0→0.05em, weight 400→300, opsz 14→30) para que la prosa decaiga visualmente. `font-feature-settings` habilita old-style numerals y ligaduras.
-- **Micro-interactions**: easings custom `bardo-in/out/elastic` (cubic-bezier) registrados en Tailwind; hover de `ChoiceButton` con peso (translate + scale + sombra accent + active scale); `GhostCursor` portal sigue al mouse con lerp 0.08/0.05/0.03 en cursor pesado medium/high/extreme (oculto en touch).
-- **Tailwind plugin**: nuevo `tailwind.bardo.plugin.js` expone utilities `.bardo-vignette`, `.bardo-glitch-filter`, `.bardo-bleed-filter`, `.bardo-noise-filter`.
-
-### Tests
-- `useVFX.test.js` actualizado para el nuevo estado inicial `scanlinesActive` / `bleedActive`. 652 tests pass.
-
----
-
 ## [0.25.1] - 2026-05-06
 
 ### Fixes

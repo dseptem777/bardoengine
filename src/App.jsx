@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import Player from './components/Player'
 import StorySelector from './components/StorySelector'
 import StartScreen from './components/StartScreen'
@@ -16,8 +16,6 @@ import MinigameOverlay from './components/MinigameOverlay'
 import InputOverlay from './components/InputOverlay'
 import DebugSpawnModal from './components/DebugSpawnModal'
 import HorrorVFXLayer from './components/HorrorVFXLayer'
-import SvgFilters from './components/vfx/SvgFilters'
-import GhostCursor from './components/vfx/GhostCursor'
 import WillpowerMeter from './components/WillpowerMeter'
 import SpiderOverlay from './components/SpiderOverlay'
 import ChapterBreakOverlay from './components/ChapterBreakOverlay'
@@ -69,9 +67,6 @@ function AppContent({ onStorySelect }) {
     const [inventoryOpen, setInventoryOpen] = useState(false)
     const [relationshipsOpen, setRelationshipsOpen] = useState(false)
     const [extrasOpen, setExtrasOpen] = useState(false)
-
-    const [glitchActive, setGlitchActive] = useState(false)
-    const glitchTimerRef = useRef(null)
 
     const [choicesVisible, setChoicesVisible] = useState(false)  // True when Player's typewriter is done
     const [meterRevealed, setMeterRevealed] = useState(false)    // True once bar has been shown for first time
@@ -195,42 +190,6 @@ function AppContent({ onStorySelect }) {
         if (isMenuOpen) spiderInfestation.actions.pause()
         else spiderInfestation.actions.resume()
     }, [isMenuOpen, spiderInfestation?.actions])
-
-    // ==================
-    // Glitch Burst — fires 800ms visual glitch when GENJUTSU_BREAK tag is received
-    // ==================
-    useEffect(() => {
-        if (!genjutsu?.break) return
-        // Fire the glitch when a genjutsu break becomes active
-        if (glitchTimerRef.current) clearTimeout(glitchTimerRef.current)
-        setGlitchActive(true)
-        glitchTimerRef.current = setTimeout(() => {
-            setGlitchActive(false)
-        }, 800)
-        return () => {
-            if (glitchTimerRef.current) clearTimeout(glitchTimerRef.current)
-        }
-    }, [genjutsu?.break])
-
-    // ==================
-    // Willpower-driven typography modulation (Block 4)
-    // Updates CSS vars on :root so TextDisplay Fraunces font "decays" with WP
-    // ==================
-    useEffect(() => {
-        const wp = willpower?.state?.value ?? 100
-        // Linear interpolation: wp 100→0 maps to increasing decay
-        // Breakpoints: 100→calm, 60→slight, 40→noticeable, <20→extreme
-        const t = Math.max(0, Math.min(1, (100 - wp) / 100))
-        const tracking = (t * 0.05).toFixed(4) + 'em'
-        // weight: 400 at WP=100, 300 at WP=0
-        const weight = Math.round(400 - t * 100)
-        // opsz: 14 at WP=100, 30 at WP=0
-        const opsz = Math.round(14 + t * 16)
-
-        document.documentElement.style.setProperty('--bardo-narrative-tracking', tracking)
-        document.documentElement.style.setProperty('--bardo-narrative-weight', String(weight))
-        document.documentElement.style.setProperty('--bardo-narrative-opsz', String(opsz))
-    }, [willpower?.state?.value])
 
     // ==================
     // Heavy Cursor Effect (Meta-Horror)
@@ -398,26 +357,13 @@ function AppContent({ onStorySelect }) {
             className="min-h-screen bg-bardo-bg relative overflow-hidden transition-colors duration-500"
             data-colorblind={settings.colorblindMode ? 'true' : undefined}
             data-dyslexic={settings.dyslexicMode ? 'true' : undefined}
-            style={spiderInfestation?.state?.active ? { filter: 'url(#bardo-displace-boss)' } : undefined}
         >
-            {/* SVG Filter Library — mounted once, available globally via filter: url(#bardo-*) */}
-            <SvgFilters />
-
-            {/* Ghost Cursor — React portal lerp cursor for medium/high/extreme resistance */}
-            {['medium', 'high', 'extreme'].includes(getResistanceLevel()) && (
-                <GhostCursor resistanceLevel={getResistanceLevel()} />
-            )}
-
             <VFXLayer vfxState={vfx.vfxState} />
 
             {/* Horror VFX Layer - Extended effects for meta-horror */}
             <HorrorVFXLayer
                 effect={vfx.vfxState.horrorEffect}
                 intensity={vfx.vfxState.horrorIntensity}
-                willpower={willpower?.state?.value ?? 100}
-                glitchActive={glitchActive}
-                scanlinesActive={vfx.vfxState.scanlinesActive}
-                bleedActive={vfx.vfxState.bleedActive}
             />
 
             {/* Parallel Willpower Meter - Shows after first reveal, stays until inactive */}
@@ -663,7 +609,6 @@ function AppContent({ onStorySelect }) {
                     onGenjutsuTypingComplete={genjutsu?.onTypingComplete}
                     textSegments={textSegments}
                     onSegmentReached={onSegmentReached}
-                    audio={subsystems.audio}
                 />
             )}
 
