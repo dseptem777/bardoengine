@@ -2464,7 +2464,7 @@ FIN DEL EPISODIO.
 === capitulo_2b ===
 ~ capitulo_actual = "Cap. 2 — El nuevo amanecer"
 ~ ultima_mision = "cementerio"
-# CHAPTER_BREAK: title=El nuevo amanecer, subtitle=Capítulo 2, music=city_ambient
+# CHAPTER_BREAK: title=El nuevo amanecer, subtitle=Capítulo 2, music=city_ambient, image=title_cap2b_amanecer.jpg
 # inv:clear_mission
 # achievement:unlock:nuevo_amanecer
 # music:city_ambient
