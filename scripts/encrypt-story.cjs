@@ -23,6 +23,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { applyNarrativeWatermark } = require('./watermark.cjs');
 
 // ---------------------------------------------------------------------------
 // Layer 1 masks — MUST be kept in sync with src-tauri/src/crypto.rs
@@ -182,6 +183,12 @@ function main() {
         storyTitle = args[titleIndex + 1];
     }
 
+    let buildId = null;
+    const buildIdIndex = args.indexOf('--build-id');
+    if (buildIdIndex !== -1 && args[buildIdIndex + 1]) {
+        buildId = args[buildIdIndex + 1];
+    }
+
     if (!storyId || storyId.startsWith('-')) {
         console.error('Usage: npm run encrypt-story <story-id>');
         console.error('   or: node scripts/encrypt-story.cjs <story-id>');
@@ -224,6 +231,17 @@ function main() {
         content = content.slice(1);
     }
 
+    // Apply narrative watermark if a buildId was provided
+    if (buildId) {
+        console.log(`  - Watermarking with buildId: ${buildId}`);
+        const jsonObj = JSON.parse(content);
+        const watermarked = applyNarrativeWatermark(jsonObj, buildId);
+        content = JSON.stringify(watermarked);
+        console.log(`  - Watermark applied`);
+    } else {
+        console.log(`  - No --build-id provided; skipping watermark (dev build)`);
+    }
+
     const encrypted = encrypt(content);
     fs.writeFileSync(outputFile, encrypted, 'utf8');
 
@@ -234,6 +252,7 @@ function main() {
         title: storyTitle,
         encrypted: true,
         buildTime: new Date().toISOString(),
+        buildId: buildId || null,
     };
     fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
 
