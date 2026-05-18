@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// PROYECTO: Centinelas del Sur
+// PROYECTO: centinelas del Sur
 // MOTOR: BardoEngine
 // CONTENIDO: Capítulo 0 (Orígenes) + Capítulo 1 + Intermisión 1
 // ---------------------------------------------------------
@@ -530,7 +530,7 @@ Ellos te ofrecieron un trabajo y una nueva oportunidad y no pensás desperdiciar
     # next
     Corriste por la playa hasta que tus rodillas se sintieron a punto de estallar, tomaste clases de yoga antes de la siesta en compañía de jubiladas y amas de casa aburridas, pasaste tardes enteras leyendo una extraña lista de libros en la Biblioteca de Costa Alegre (desde etnología hasta leyendas de la Polinesia). Por alguna razón también te hicieron tomar clases de violín, nunca lograste que sonara diferente a un gato siendo destripado, pero al menos aprendiste a esconder tu frustración.
     # next
-    Sospechás que el tipo de entrenamiento de El Faro era tirarte todo lo que se les ocurría y ver en qué sobresalías. Cada tanto, cuando ibas o volvías de una actividad, te parabas frente a una vidriera a ver tu reflejo en la vitrina, a ver si detectabas ese supuesto Centinela que te estaba siguiendo para dar un informe de tus avances. Solo lograste que una mujer con aspecto de secretaria y cara de pocos amigos te lleve puesto y te grite "no es momento para detenerse", sumado a un montón de comentarios poco cariñosos a la rama femenina de tu familia.
+    Sospechás que el tipo de entrenamiento de El Faro era tirarte todo lo que se les ocurría y ver en qué sobresalías. Cada tanto, cuando ibas o volvías de una actividad, te parabas frente a una vidriera a ver tu reflejo en la vitrina, a ver si detectabas ese supuesto centinela que te estaba siguiendo para dar un informe de tus avances. Solo lograste que una mujer con aspecto de secretaria y cara de pocos amigos te lleve puesto y te grite "no es momento para detenerse", sumado a un montón de comentarios poco cariñosos a la rama femenina de tu familia.
     # next
     Una noche entraste a tu casa y te encontraste con un manco sentado en un sillón. Raro, pero no te parecía peligroso, al fin de cuentas en lugar de un arma tenía un brazo menos. Grave error, en menos de un minuto terminaste en el piso, con tres moretones y un mueble roto. Se fue sin decir nada, pero cuando el siguiente lunes pasaron la lista de actividades debajo de tu puerta, te habían agregado clases de judo.
 
@@ -541,7 +541,7 @@ Ellos te ofrecieron un trabajo y una nueva oportunidad y no pensás desperdiciar
     - conocimiento >= 20:
         A lo último ya no ibas a la biblioteca. Directamente te enviaban cajas y cajas llenas de libros que debías estudiar y presentar un resumen, monografía u opinión. Los plazos eran cada vez más cortos y los libros más largos. Aparte, los temas no tenían relación, pasabas de un manual de latín a una ficción como Matadero Cinco. Fue en una noche de insomnio y ansiedad cuando tu cerebro hizo click y empezaste a ver las conexiones (muchas veces tenues o irracionales) entre los textos que te brindaban. Después de eso absorbiste conocimiento como una esponja.
     - magia >= 20:
-        Tuviste una extraña reunión con un Guardián. Una joven que no podía tener más de treinta años, tenía cada mechón de pelo de un color diferente y usaba una bata sucia que podía indicar que era profesional de salud o encargada de limpieza. Fue ella quien te informó que aquellas personas que tienen talento para la magia (usó esa palabra, sin eufemismos o risas) descubren su poder con una explosión de energía, pero luego pueden pasar años para que vuelvan a llegar a ese nivel.
+        Tuviste una extraña reunión con un centinela. Una joven que no podía tener más de treinta años, tenía cada mechón de pelo de un color diferente y usaba una bata sucia que podía indicar que era profesional de salud o encargada de limpieza. Fue ella quien te informó que aquellas personas que tienen talento para la magia (usó esa palabra, sin eufemismos o risas) descubren su poder con una explosión de energía, pero luego pueden pasar años para que vuelvan a llegar a ese nivel.
         # next
         Te dio una serie de ejercicios simples, movimientos de manos y frases guturales que te hicieron perder un fin de semana de lluvia. La frustración creció fuerte… hasta que de un simple movimiento de mano lograste encender una vela (y casi tus cortinas, pero ese es un detalle menor).
     }
@@ -660,7 +660,7 @@ El único ruido proviene del escritorio de la secretaria, la Sra. Enríquez, que
 
 + [Toser un poco hasta que ella se fije en vos]
     Enríquez te mira. Mira el reloj. Y te ignora hasta la hora exacta en la cual fuiste citado.
-    — Guardián, voy a asegurarme de descontar de su próximo sueldo las sumas necesarias para comprarle un reloj.
+    — centinela, voy a asegurarme de descontar de su próximo sueldo las sumas necesarias para comprarle un reloj.
     -> mision_profe
 
 === mision_profe ===
@@ -742,7 +742,7 @@ Hojeás el libro y hay capítulos enteros dedicados a "Abrir cerraduras", "Anato
 También notás que todas las recomendaciones en ese manual son de palabras que empiezan con A.
 — Tranquilo — dice Enríquez mientras no puede contener una sonrisa — El manual que corresponde a la letra X es bastante más corto.
 # next
-Leés sobre la sabiduría de los anteriores Guardianes de El Faro. Aprendés mucho de sus aciertos y forma de hacer las cosas. Aprendés más de las notas al pie que dan cuenta de sus errores.
+Leés sobre la sabiduría de los anteriores centinelas de El Faro. Aprendés mucho de sus aciertos y forma de hacer las cosas. Aprendés más de las notas al pie que dan cuenta de sus errores.
 # stat:conocimiento:+5
 # next: En la morgue
 -> en_la_morgue
@@ -751,14 +751,14 @@ Leés sobre la sabiduría de los anteriores Guardianes de El Faro. Aprendés muc
 # music:misterio_ambient
 # achievement:unlock:conociste_cabral
 El campo de entrenamiento se encuentra en el subsuelo del edificio. Es una mezcla ecléctica entre un dojo, un gimnasio y un campo de tiro ubicado aún más abajo. Cabral se encuentra de espaldas pero, en cuanto ponés un pie en el dojo, se da cuenta de tu presencia.
-— Bienvenido Guardián. Es tu primera vez en el campo de entrenamiento, así que la tradición dicta que tengamos un sparring amistoso.
+— Bienvenido centinela. Es tu primera vez en el campo de entrenamiento, así que la tradición dicta que tengamos un sparring amistoso.
 # next
-Cabral no parece gran cosa, un hombre pequeño de piel oliva que parece evitar el contacto visual. No podés ignorar que una de las mangas de su judogi cuelga vacía. No sabías que había perdido un brazo en el ejercicio de su deber. Eso explica que uno de los mejores Guardianes haya terminado asignado a la base.
+Cabral no parece gran cosa, un hombre pequeño de piel oliva que parece evitar el contacto visual. No podés ignorar que una de las mangas de su judogi cuelga vacía. No sabías que había perdido un brazo en el ejercicio de su deber. Eso explica que uno de los mejores centinelas haya terminado asignado a la base.
 Es un manco, esto no va a ser difícil.
 # next
 Es difícil. Eso es lo que pensás la tercera vez que Cabral te tira al piso. Para la quinta vez, que terminás hecho un bollo sobre vos mismo luego de que una certera patada en el esternón te dejó sin aire, recibís una buena dosis de humildad.
 # next
-— Buen entrenamiento Guardián. Vamos a tomar unos mates y descansar un poco. Aunque no te des cuenta aprendiste mucho hoy. Y yo aprendí de vos, así que voy a poder adaptar un entrenamiento para fortalecer tus ventajas y enseñarte a esconder tus debilidades.
+— Buen entrenamiento centinela. Vamos a tomar unos mates y descansar un poco. Aunque no te des cuenta aprendiste mucho hoy. Y yo aprendí de vos, así que voy a poder adaptar un entrenamiento para fortalecer tus ventajas y enseñarte a esconder tus debilidades.
 # next
 Cabral te somete a una sesión de entrenamiento completa. Practican un par de golpes y terminan con una pequeña visita al campo de tiro. Te sentís más preparado para enfrentarte a lo que sea.
 # stat:fuerza:+5
@@ -874,7 +874,7 @@ Aparte, esperás que en algún momento tengas la posibilidad de devolverle una p
     La discusión de afuera de la morgue se convirtió en una pelea a toda regla. Los argumentos se convierten en gritos y, si bien la puerta te impide entender qué se está diciendo, es claro que la violencia está cerca.
 }
 # next
-Girás para irte y notás, sobre una de las camillas, una sierra médica. Una idea llega a tu cabeza. Con una mano se pueden hacer muchas cosas: El Faro tiene acceso a bases de datos donde tal vez encontraría información para identificar al NN. Y los Guardianes con mayor talento sobrenatural también podrían hacer algo. Si bien no sirve para una Mano de Gloria (la persona no fue ahorcada) tal vez se puede convocar al espíritu para obtener cierta información.
+Girás para irte y notás, sobre una de las camillas, una sierra médica. Una idea llega a tu cabeza. Con una mano se pueden hacer muchas cosas: El Faro tiene acceso a bases de datos donde tal vez encontraría información para identificar al NN. Y los centinelas con mayor talento sobrenatural también podrían hacer algo. Si bien no sirve para una Mano de Gloria (la persona no fue ahorcada) tal vez se puede convocar al espíritu para obtener cierta información.
 # next: Tomas la sierra
 Agarrás fuerte la mano y empezás a serruchar. Por suerte no hay sangre ni gritos, pero la carne resulta más dura de lo que esperabas.
 # next: Corta, corta. Corta
@@ -895,7 +895,7 @@ Ahora, hay que buscar una forma de salir de la morgue.
 }
 + [Esconderme dentro de un frigorífico] -> escape_escondite
 + [Preparar una trampa] -> escape_trampa
-+ [Soy un Guardián. Lo que entre se va a encontrar con una verdadera pelea] -> pelea_monstruo
++ [Soy un centinela. Lo que entre se va a encontrar con una verdadera pelea] -> pelea_monstruo
 
 === escape_ducto ===
 # music:terror_ambient
@@ -1186,9 +1186,9 @@ Salís a la calle con más dudas que respuestas. Pensando si lo que te dijo la t
 === inter_jesus ===
 ~ inter1_actividad = "jesus"
 # music:misterio_ambient
-Te llega un mensaje de que un Guardián está con una misión complicada y podría necesitar una mano. Te subís a tu auto y manejás hasta los puertos de la ciudad a toda la velocidad posible, esperando que El Faro tenga una ayuda monetaria para pagar las multas de tránsito adquiridas en el ejercicio del deber.
+Te llega un mensaje de que un centinela está con una misión complicada y podría necesitar una mano. Te subís a tu auto y manejás hasta los puertos de la ciudad a toda la velocidad posible, esperando que El Faro tenga una ayuda monetaria para pagar las multas de tránsito adquiridas en el ejercicio del deber.
 # next
-El Guardián está apoyado contra una pared. La luz de la luna ilumina su piel cobriza aunque su rostro está escondido detrás de una maraña de pelo oscuro. A pesar de que la noche trajo un viento frío del mar, el Guardián está en cuero y descalzo, usando solamente un pantalón corto de fútbol.
+El centinela está apoyado contra una pared. La luz de la luna ilumina su piel cobriza aunque su rostro está escondido detrás de una maraña de pelo oscuro. A pesar de que la noche trajo un viento frío del mar, el centinela está en cuero y descalzo, usando solamente un pantalón corto de fútbol.
 # next
 — El Faro me envía, soy {nombre_personaje}.
 — Un gusto, soy Jesús.
@@ -1203,7 +1203,7 @@ Jesús rápidamente te explica la situación. En el galpón del frente hay un va
 }
 Como si fuese poco, la persona es la madre de dos hijos que la están esperando. Jesús les prometió que iba a tomar todas las medidas necesarias para que su madre regrese.
 # next
-— El problema Guardián, es que la sutileza no es mi fuerte.
+— El problema centinela, es que la sutileza no es mi fuerte.
 Cuando termina de decir esta frase Jesús deja caer su pantalón con un simple movimiento y su cuerpo comienza a cambiar.
 Su piel se rasga y quiebra ante el crecimiento de la masa muscular que esconde. Su altura de repente superó los dos metros. De su cabeza surgió un ruido de "crack" (que por lo general no pronostica nada bueno) mientras sus ojos se movían a los costados de la cabeza para dar pie a un hocico.
 Antes de darte cuenta su nueva masa muscular ya se estaba cubriendo con una fina y hermosa capa de pelo dorado con manchas negras.
@@ -1260,7 +1260,7 @@ Esperás que Jesús entienda lo que hay que hacer y avanzás hacia donde se fue 
 # next
 La mujer grita cuando la tackleás e inmovilizás en el suelo. Atrás tuyo se escucha un rugido y un ruido de pelea que dura unos segundos.
 La mujer patalea, llora y te araña. Te promete la muerte de formas horribles mientras se retuerce en su llanto. El síndrome de abstinencia va a ser horrible pero está viva. Y eso siempre es una promesa de futuro.
-— Lo logramos — Jesús aparece atrás tuyo de forma humana — gracias Guardián, nunca olvidaré esto.
+— Lo logramos — Jesús aparece atrás tuyo de forma humana — gracias centinela, nunca olvidaré esto.
 # stat:amistad_jesus:+2
 -> inter1_convergencia
 
@@ -1312,7 +1312,7 @@ La noche se asienta sobre Buenos Aires. Caminás de vuelta con el cuerpo pesado 
 
 === inter_misiones ===
 # music:misterio_ambient
-El Faro te informó de dos situaciones que se están dando y sería conveniente que un Guardián se ponga a investigar. Aun así, el tiempo es tirano y es imposible hacer las dos misiones a la vez. Vas a tener que elegir qué es más importante.
+El Faro te informó de dos situaciones que se están dando y sería conveniente que un centinela se ponga a investigar. Aun así, el tiempo es tirano y es imposible hacer las dos misiones a la vez. Vas a tener que elegir qué es más importante.
 
 + [PEQUEÑOS INOCENTES — Ir a un orfanato donde desaparecieron dos niños] -> prox_mision_1
 + [EL NUEVO AMANECER — Una familia asesinada con marcas de ritual] -> prox_mision_2
@@ -1371,7 +1371,7 @@ Cabral sonrió cuando me vio entrar al mat. Y luego paso las siguientes horas in
 # music:orfanato
 Enriquez volvió a tirar un libro grueso sobre su escritorio. Esta vez la letra era la F, lo cual me hacía dudar mucho sobre el mecanismo organizativo del El Faro.
 Pero aun así había nutrida información sobre como falsificar documentos, hacer fotografías y, por alguna razón, un anexo entero sobre los hongos llamdo "Fungi" (que al parecer habían estado cerca de controlar el mundo en 1367 y 1865).
-\- Siempre es importan leer sobre las acciones de los Guardianes más importantes de la antigüedad. Debería mentirte y decirte que, tal vez un día vos puedas poner tu propia entrada en el manual, pero no me parece correcto decir mentiras.
+\- Siempre es importan leer sobre las acciones de los centinelas más importantes de la antigüedad. Debería mentirte y decirte que, tal vez un día vos puedas poner tu propia entrada en el manual, pero no me parece correcto decir mentiras.
 # stat:conocimiento:+5
 -> frente_orfanato
 
@@ -1388,7 +1388,7 @@ Aun así, se tomó un par de horas para profundizar mis conocimientos del mundo 
 === cap2_prep_cura ===
 # music:orfanato
 ~ visito_cura = true
-La tarea bajó por la cadena de mando de El Faro hasta llegar al encargado de hacer llamadas (por suerte yo ya no tenía que hacer eso). Un Guardián joven me informó que ya estaban avisados de mi llegada. Me esperaba un cura llamado Miguel Ponsatti.
+La tarea bajó por la cadena de mando de El Faro hasta llegar al encargado de hacer llamadas (por suerte yo ya no tenía que hacer eso). Un centinela joven me informó que ya estaban avisados de mi llegada. Me esperaba un cura llamado Miguel Ponsatti.
 -> frente_orfanato
 
 // =========================================================
@@ -1571,7 +1571,7 @@ Le das espacio y la dejas hablar.
 \- Tranquila, yo estoy acá exactamente para encargarme de eso. No me importa cuántos ojos tengan – Omitís decirle que te preocupa más que la cosa parece ser gigante, pero bueno, ella ya está suficientemente asustada por los dos
 # next
 \- Juan estaba seguro que eso se llevó a Darío, él siempre estaba en el bosque y una noche simplemente no volvió. Nosotros nos quejamos pero la Madre Alegría no quiso salir a buscarlos – la joven se lleva la mano a la mejilla – me pegó con una regla dado que le dije una mala palabra, pero estaba enojada. No lo dije a propósito, solo quería que salgamos a buscar a Darío.
-\- ¿Así que Juan decidió ir a buscarlo el mismo? – Mierda que era valiente Juan, es más digno de ser un Guardián que muchos.
+\- ¿Así que Juan decidió ir a buscarlo el mismo? – Mierda que era valiente Juan, es más digno de ser un centinela que muchos.
 \- Si, pero lo pensó bien, estuvo recorriendo el bosque buscando donde está el escondido de…de ese animal. Cuando estuvo seguro, se metió a la cocina y le robó un cuchillo a la Hermana Esperanza – Belén puso la hermana en forma de O al darse cuenta lo que había confesado.
 \- Te prometo que no solo voy a traer a Juan, sino que voy a traer también el cuchillo de la Hermana Esperanza asi le pide perdón y se lo devuelven.
 # next
@@ -2399,7 +2399,7 @@ Te acercas a Juan
     Su respiración es regular. Teniendo en consideración todo lo que pasó a su alrededor es un milagro.
     Te sentas en el piso a su lado y comenzas, con mucho cuidado, a sacarle la tela de araña que sigue pegada a tu cuerpo.
     La euforia te invade. Salvaste una vida. Hay una persona que va a crecer, amar y tener hijos gracias a vos.
-    Esto es ser un Guardián y es hermoso.
+    Esto es ser un centinela y es hermoso.
     { madre_alegria_vive:
         La hermana Alegria se acerca y te da un abrazo para el cual ninguno estaba preparado. Es huesuda y se mantiene rígida. Aún así te susurra "Gracias" y te dice "yo me encargo. Conozco suficiente de primeros auxilios".
         No sabes qué decirle, pero está bueno que alguien se encargue de las cosas, vos no querés pensar más
@@ -2473,7 +2473,7 @@ Te encontrás en uno de los barrios periféricos de Costa Alegre. A esta distanc
 Ya es de noche, así que las calles están vacías. Solo llega el ruido de televisores y familias cenando desde adentro de las casas. Aunque no te cuesta imaginar que de día esto está lleno de pibes andando en bicicleta y hasta alguna calle cortada por un partido improvisado de fútbol.
 Es por ese clima tan relajado que te permite darte cuenta enseguida cuál es la casa que El Faro te mandó a investigar.
 # next
-La información viene de un Guardián que forma parte de las Fuerzas de Seguridad. Ya es el quinto ataque a una casa que tiene un patrón común. Para no exponer a sus fuentes, El Faro decidió tercerizar el trabajo en vos.
+La información viene de un centinela que forma parte de las Fuerzas de Seguridad. Ya es el quinto ataque a una casa que tiene un patrón común. Para no exponer a sus fuentes, El Faro decidió tercerizar el trabajo en vos.
 Pero antes de concurrir esta noche a la casa te preparaste.
 ¿Cómo?
 
@@ -2481,7 +2481,7 @@ Pero antes de concurrir esta noche a la casa te preparaste.
 * [Pasaste a ver a Cabral para reforzar el entrenamiento] -> cap2b_prep_fuerza
 * [Leíste el último tomo que Enriquez tenía para vos] -> cap2b_prep_conocimiento
 * [Le pediste ayuda a la Dra. Mary Shelley para reforzar tu arsenal mágico] -> cap2b_prep_magia
-* [Pediste el contacto del Guardián en las Fuerzas de Seguridad] -> cap2b_prep_tuco
+* [Pediste el contacto del centinela en las Fuerzas de Seguridad] -> cap2b_prep_tuco
 * [Descansaste. Necesitabas recuperarte para la misión] -> cap2b_prep_descanso
 
 === cap2b_prep_expediente ===
@@ -2526,7 +2526,7 @@ Terminás el tomo con un nuevo aprecio por la abstinencia.
 Entraste a la oficina de la Dra. y te encontraste con un cuadro particular. En una mesa ratona se encontraba la Dra. Mary Shelley junto a una cabra negra, que por lo cómoda que estaba sentada parecía no tener problema en moverse en dos patas, y cuya cabeza estaba rapada y con marcas de suturas recientes.
 En el centro de la mesa, un mazo de cartas. Parece que entraste en mitad de una partida de truco (la cabra estaba ganando).
 # next
-\- Me creés si te digo que es parte de un experimento esencial para trasladar la conciencia de los centinelas caídos a otros cuerpos – la Dra. miró al horizonte y cambió el tono de voz, como si le hablase a una audiencia – imaginá una organización donde ningún Guardián muera, donde su consciencia esté siempre segura y su cuerpo sea un mero objeto, como un auto, o un traje que se elige el que mejor se ajusta para cada misión.
+\- Me creés si te digo que es parte de un experimento esencial para trasladar la conciencia de los centinelas caídos a otros cuerpos – la Dra. miró al horizonte y cambió el tono de voz, como si le hablase a una audiencia – imaginá una organización donde ningún centinela muera, donde su consciencia esté siempre segura y su cuerpo sea un mero objeto, como un auto, o un traje que se elige el que mejor se ajusta para cada misión.
 \- Lo peor es que le creo Dra. No necesita explicarme nada.
 Después de perder la partida de truco, la Dra. dedicó su tarde a repasar con vos principios claves de la magia así como cuestiones de anatomía que debés tener en cuenta si no querés lastimarte por canalizar grandes energías.
 # stat:magia:+5
@@ -2534,7 +2534,7 @@ Después de perder la partida de truco, la Dra. dedicó su tarde a repasar con v
 
 === cap2b_prep_tuco ===
 # music:city_ambient
-Al Profesor no le gusta mucho tu pedido. Hace referencia a un montón de reglamentos (que fingís conocer) respecto a la importancia de centralizar la información y limitar el contacto entre los Guardianes para que, en caso de caer uno, no sea un total caos para la organización.
+Al Profesor no le gusta mucho tu pedido. Hace referencia a un montón de reglamentos (que fingís conocer) respecto a la importancia de centralizar la información y limitar el contacto entre los centinelas para que, en caso de caer uno, no sea un total caos para la organización.
 Literalmente, lo perseguís desde su despacho, atravesando el Hall Central donde trabaja Enriquez, hasta el estacionamiento de la Universidad donde guarda su coche.
 # next
 Lográs convencerlo cuando le hacés notar que, al ser un caso en el que obviamente va a estar involucrada la policía, tal vez sería necesario el contacto en caso de que te detengan u obstaculicen la investigación.
@@ -2853,7 +2853,7 @@ Seguramente El Faro cumple su tarea de soborno, amenazas y sabotaje informático
 Pedís tu llamada. Esperás que se nieguen y estás preparando tus argumentos cuando un policía cansado viene a buscarte y, mientras bosteza, te lleva a un pasillo donde hay una verdadera reliquia: un teléfono de línea colgado en la pared. Juntás fuerza y marcás el número de emergencia que te dieron en El Faro. Del otro lado escuchás una tos grave y una sola palabra: "identifíquese".
 # next
 \- Sos un pelotudo – Ese es el único comentario que te dedica el Sargento Tuco cuando le terminás de contar la situación. La frase viene acompañada por un silencio largo que sospechás que lo dedica a decir para adentro todo el resto de los insultos que tiene pensado para vos.
-\- Supongo que a todo Guardián le puede pasar algo así – decís con cierta duda.
+\- Supongo que a todo centinela le puede pasar algo así – decís con cierta duda.
 \- Pibe, ¿te das cuenta la cantidad de problemas que me podés traer llamándome desde adentro de la comisaría?
 \- Perdón, de verdad no había pensado en eso.
 \- No, porque sos un pelotudo – Sospechás que "pelotudo" es la palabra favorita del Sargento Tuco.
@@ -2872,7 +2872,7 @@ Pedís tu llamada. Esperás que se nieguen y estás preparando tus argumentos cu
 # next
 \- Pero, ¿Me estás llamando de la Comisaría? – Es la tercera vez que Enriquez te hace la misma pregunta en sucesión, solamente cambió su tono. De la sorpresa a la ira y de ahí a la burla.
 \- Sí, necesito que arreglen todo para sacarme lo más rápido así puedo continuar con la investigación.
-\- Es sorprendente. Generalmente cuando los Guardianes llaman a este número real están rodeados o en un Hospital. O en la Morgue.
+\- Es sorprendente. Generalmente cuando los centinelas llaman a este número real están rodeados o en un Hospital. O en la Morgue.
 \- Dudo que alguien te llame de la Morgue – le contestás.
 \- Podrían llamarme de la Morgue, en especial si están avanzando en su investigación sobre Vampiros.
 # next
@@ -3389,7 +3389,7 @@ Eso sí, si terminás muerto mucho no lo podrías ayudar. Tenés que pensar en a
 
 === cap2b_cubil_opciones ===
 # music:terror_ambient
-+ [Los Vampiros están acostumbrados a cazar humanos. Pero un Guardián de El Faro no es una víctima. Atacás # REQUIRES: fuerza >= 30] -> cap2b_cubil_fuerza
++ [Los Vampiros están acostumbrados a cazar humanos. Pero un centinela de El Faro no es una víctima. Atacás # REQUIRES: fuerza >= 30] -> cap2b_cubil_fuerza
 + [Esos Vampiros se ven muy inflamables. Que suerte que aprendiste a conjurar bolas de fuego # REQUIRES: magia >= 30] -> cap2b_cubil_magia
 + [Sin duda podés entrar a una de las criptas vecinas y armar una entrada # REQUIRES: conocimiento >= 30] -> cap2b_cubil_tunel
 + {not sin_guardias} [Tal vez sería momento de requerirle ayuda a los guardias del Cementerio] -> cap2b_cubil_guardias
@@ -3685,7 +3685,7 @@ Con total indiferencia, y siguiendo un recorrido que parecía aleatorio pero esp
 En contraste, el Vampiro Superior parece una versión fallida del ser humano. Sus dedos eran largos al punto de generar inconformidad, como si se tratara de apéndices extraños. Como colmo se dejó las uñas largas, uñas que está usando para cortar la piel del bebé hasta hacerlo llorar.
 # next
 El llanto del bebé replicaba en todas las paredes hasta generar verdadero dolor físico, era la necesidad de actuar hecha sonido. El Vampiro lo tomó de una muñeca y lo elevó hasta la altura de su rostro, mirándolo con un brillo predador en sus ojos, mientras seguía levitando como si bailaran juntos un vals al son del llanto.
-Pero vos estabas acá, un Guardián del Faro, y te ibas a asegurar de que esa persona sobreviva.
+Pero vos estabas acá, un centinela del Faro, y te ibas a asegurar de que esa persona sobreviva.
 # next
 Todas las piezas estaban claras ahora. El diagrama en el piso, el Vampiro levitando arriba a punto de devorar al bebé, los hilos de energía roja concentrándose en el techo y el resto del grupo en el fondo recitando para mantener la sonoridad que necesitaba el ritual.
 La pregunta ahora es: ¿Cómo actuar?
@@ -3975,7 +3975,7 @@ Suena la alarma de tu celular antes de que el sol entre por la ventana. Fue una 
 En tu mesita de luz hay un blíster de medicación que te dejó Mary Shelley pero sospechás que es un camino de ida. No querés que tu vida pase a ser una sucesión de pastillas para bajar y pastillas para subir mientras tu hígado se convierte en un pedazo de desecho orgánico.
 # next
 
-Tu última misión mostró los horrores que se esconden en las sombras y se aprovechan de los más vulnerables. Pero, a pesar de todo, no dejan de ser monstruos desorganizados que pudieron ser contenidos por un solo Guardián.
+Tu última misión mostró los horrores que se esconden en las sombras y se aprovechan de los más vulnerables. Pero, a pesar de todo, no dejan de ser monstruos desorganizados que pudieron ser contenidos por un solo centinela.
 
 Lo que te preocupa es la Secta que está llevando adelante los sacrificios humanos. Con solo recordar el cuerpo mutilado, imaginás que está al lado tuyo en la cama. La idea te obliga a salir con temor al bulto que forman las dos almohadas bajo las sábanas.
 
@@ -3990,7 +3990,7 @@ Te queda un poco de tiempo antes de tu siguiente misión. Tal vez podés hacer a
     -> inter2_playa
 + [Recorrer lo sobrenatural]
     -> inter2_tarot
-+ [Ayudar a otro Guardián]
++ [Ayudar a otro centinela]
     -> inter2_abuelita
 + [Ir a enfermería]
     -> inter2_enfermeria
@@ -4080,14 +4080,14 @@ Mary Shelley te mira durante cinco segundos y te das cuenta de la idiotez que ac
 ~ inter2_actividad = "abuela"
 # music:city_ambient_b
 
-Un nuevo mensaje: otro Guardián está complicado con su misión. Parece ser un tema menor pero que, con la presencia de otro par de manos, se podría solucionar en una noche. Preferís estar ocupado — te sentís un inútil haciendo nada y el tiempo ocioso solo hace que tu mente camine hacia recuerdos oscuros.
+Un nuevo mensaje: otro centinela está complicado con su misión. Parece ser un tema menor pero que, con la presencia de otro par de manos, se podría solucionar en una noche. Preferís estar ocupado — te sentís un inútil haciendo nada y el tiempo ocioso solo hace que tu mente camine hacia recuerdos oscuros.
 
 Al menos vas a distraerte, o conseguir nuevos recuerdos oscuros para atormentarte.
 # next
 
 Te citan en la puerta de un garito frente al mar. En cuanto llegás al lugar te das cuenta de que no estás a la moda. No conocés la música que sale de las entrañas del local (es una mezcla de géneros que, para vos, hace el mismo ruido que el lavarropas que se te rompió), la gente tiene diez años menos que vos y no entendés cómo están tan ligeros de ropa cuando la brisa fría del mar castiga tu piel y llega hasta los huesos.
 
-Es entonces cuando escuchás un carraspeo atrás tuyo y notás que el Guardián que requirió tu ayuda aún está menos apto que vos para entrar al lugar.
+Es entonces cuando escuchás un carraspeo atrás tuyo y notás que el centinela que requirió tu ayuda aún está menos apto que vos para entrar al lugar.
 # next
 
 Su aspecto es el de una abuelita. Piel arrugada, una cabellera larga canosa que forma un rodete en su cabeza, un traje sastre negro que parece haber sobrevivido la década del cincuenta (y tiene el olor a naftalina para acreditarlo) y un tono de voz dulce y poco amenazante.
@@ -4346,7 +4346,7 @@ El mensaje está acompañado por una foto de ella saludando con la mano derecha,
 // ============================================================
 
 === inter2_convergencia ===
-Un día más en el que seguís vivo. Eso es un tipo de victoria. Volves a tu apartamento listo para continuar tu trabajo de Guardian, proteger a todos de una amenaza que ni siquiera saben que existe.
+Un día más en el que seguís vivo. Eso es un tipo de victoria. Volves a tu apartamento listo para continuar tu trabajo de centinela, proteger a todos de una amenaza que ni siquiera saben que existe.
 
 // === Eje A: actividad de hoy ===
 {
@@ -4359,7 +4359,7 @@ Un día más en el que seguís vivo. Eso es un tipo de victoria. Volves a tu apa
 - inter2_actividad == "abuela" && amistad_abuela >= 2:
     La abuelita es todo lo que queres ser. Esperas que la próxima vez que tenga un problema te llame a vos primero. Aunque sospechas que va a ser al revés, vos vas a tener un problema y la vas a terminar llamando.
 - inter2_actividad == "abuela" && amistad_abuela >= 1:
-    La noche con la abuelita fue una misión completamente diferente a lo que te venias enfrentando hasta ahora. Es increíble que haya tantas amenazas diferentes, por suerte a Guardianes preparados para todas.
+    La noche con la abuelita fue una misión completamente diferente a lo que te venias enfrentando hasta ahora. Es increíble que haya tantas amenazas diferentes, por suerte a centinelas preparados para todas.
 - inter2_actividad == "abuela":
     Esperas que, la próxima vez que vayas a El Faro, la abuelita no les haya contado a todos lo mal que actuaste en tu operación. La culpa de haber dejado suelto a un predador ya es suficiente carga.
 }
@@ -4369,7 +4369,7 @@ Un día más en el que seguís vivo. Eso es un tipo de victoria. Volves a tu apa
 {ultima_mision == "orfanato":
     {
     - belen_sobrevive && juan_vive:
-        Salvaste a Belén y a Juan. Eso es ser un verdadero Guardian. Dos vidas más, cientos de interacciones positivas, alegres (y tristes también) que la humanidad va a tener gracias a que salvaste a dos niños de la garra de la muerte.
+        Salvaste a Belén y a Juan. Eso es ser un verdadero centinela. Dos vidas más, cientos de interacciones positivas, alegres (y tristes también) que la humanidad va a tener gracias a que salvaste a dos niños de la garra de la muerte.
     - belen_sobrevive:
         Pensás en Belén, en cómo te apretó la mano cuando la subiste al auto. La sacaste a ella. No a Juan. Esa cuenta no se equilibra y vos lo sabés.
     - else:
@@ -4429,7 +4429,7 @@ De vuelta a la pista de baile.
 Te citan a El Faro a las 6 de la mañana. Es tan temprano que el campus universitario donde se encuentra el edificio esta vacío, ni el estudiante más aplicado va a aparecer a esta hora. Vos lograste llegar puntual dado que tenes el esquema de sueño completamente roto y las pesadillas no te dejan dormir. No es difícil madrugar cuando nunca te fuiste a dormir.
 # next
 
-Entras a El Faro y te sorprende no encontrar a Enriquez sentada tras su escritorio en la recepción. Hasta donde sabias, ella estaba biológicamente conectada a la silla (lo cual es sarcasmo, aunque no dudas que en este lugar eso sea posible). Notas que la puerta que lleva al laboratorio de Mary Shelley está abierta y de su interior se escuchan dos voces solamente. Parece que es muy temprano hasta para los otros Guardianes de El Faro.
+Entras a El Faro y te sorprende no encontrar a Enriquez sentada tras su escritorio en la recepción. Hasta donde sabias, ella estaba biológicamente conectada a la silla (lo cual es sarcasmo, aunque no dudas que en este lugar eso sea posible). Notas que la puerta que lleva al laboratorio de Mary Shelley está abierta y de su interior se escuchan dos voces solamente. Parece que es muy temprano hasta para los otros centinelas de El Faro.
 # next
 
 ¿Qué hacés?
@@ -4675,7 +4675,7 @@ Hay momentos difíciles, pero a pesar de todo lográs sobreponerte y la moneda n
 === cap3_tl_belen ===
 El nuevo orfanato parece más feo. El edificio tiene claras marcas de descuido, vidrios rotos en la ventana, rejas oxidadas y paredes mal pintadas. El hecho de estar en una parte fea de la ciudad no ayuda mucho. Tampoco habla muy bien del lugar que, con muy poco sigilo burocrático, El Faro logró que autoricen que la visites de forma regular.
 # next
-Ella se sube a tu auto y te da un hola tímido. Siempre los primeros momentos son raros. Es verdad que una invasión de arañas demoniacas no es la mejor forma de conocer a alguien, pero en cierta forma te sentís responsable por su vida ahora. No tenés duda que algún burócrata en un sótano ya la anotó como posible futura Guardián.
+Ella se sube a tu auto y te da un hola tímido. Siempre los primeros momentos son raros. Es verdad que una invasión de arañas demoniacas no es la mejor forma de conocer a alguien, pero en cierta forma te sentís responsable por su vida ahora. No tenés duda que algún burócrata en un sótano ya la anotó como posible futura centinela.
 # next
 Aprovechás la mañana para comprarle un helado y dar una vuelta por la playa mientras los primeros rayos del sol expulsan el frío. La verdad es que verla bien sirve para darte cuenta lo importante de tu trabajo. Vos podés pasar por grandes cuotas de dolor físico o mental pero si al final una niña sobrevive, todo vale la pena.
 # next
