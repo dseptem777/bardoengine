@@ -4,6 +4,19 @@
 
 ---
 
+## [0.27.0] - 2026-05-18
+
+### Features
+
+- **DRM Capa 0 — Hardening de producción**: devtools deshabilitadas en release build (`tauri.conf.json`); limpieza de `plaintext.clone()` innecesario en `crypto.rs` para evitar material sensible en stack frames.
+- **DRM Capa 1 — Watermarking narrativo**: sistema de marcas de agua invisibles embebidas en el texto compilado (`scripts/watermark-story.cjs`); registry de builds con hash de historia + timestamp + fingerprint de comprador (`scripts/build-registry.cjs`); herramientas de tracing para identificar copias filtradas; tests en `src/tests/watermark.test.js` (12 casos).
+- **DRM Capa 2 — Rotación de claves por minor**: las claves de cifrado rotan automáticamente por versión minor, de modo que una clave filtrada solo compromete una generación de builds; test cross-key en Rust confirma que versiones distintas no pueden desencriptar entre sí.
+
+### Tests
+- 664 tests pass (vitest) + 4 tests pass (cargo).
+
+---
+
 ## [0.26.1] - 2026-05-08
 
 ### Notes
