@@ -44,3 +44,9 @@ CLAUDE.md
 tech demo vamp.txt
 # Added by code-review-graph
 .code-review-graph/
+
+# DRM — never commit these
+.omc/build-registry.json
+.env.release.*
+docs/INTERNAL_DRM_NOTES.md
+src-tauri/resources/build-id.txt

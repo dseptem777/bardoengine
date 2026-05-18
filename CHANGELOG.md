@@ -1,5 +1,14 @@
 # Changelog — BardoEngine
 
+## [0.26.0] - 2026-05-18
+
+### Features
+- **Capa 0 — hardening de release**: devtools desactivados en builds de release (`tauri.conf.json`); CSP endurecida para bloquear eval/inline scripts; eliminado `plaintext.clone()` innecesario en el pipeline de cifrado (`crypto.rs`).
+- **Capa 1 — watermarking narrativo**: sistema de esteganografía Unicode que inyecta un ID de build en los strings `^text` de la historia cifrada (`watermark.cjs`, `watermark-table.cjs`). Registro automático de builds en `.omc/build-registry.json`. Herramientas `identify-leak.cjs` (trazar copia filtrada hasta el comprador) y `verify-watermark.cjs` (gate de integridad pre-distribución). Tests en `src/tests/watermark.test.js`.
+- **Capa 2 — rotación de claves por minor release**: `build-game.cjs` rota automáticamente el secreto de cifrado en cada bump minor; descifrado cross-key falla de forma cerrada (verified by new Rust test).
+
+---
+
 > **Nota (2026-05-04):** las entradas `0.26.0`, `0.26.1` y `0.26.2` fueron bumps erróneos del engine: en realidad solo cambiaba contenido de Centinelas, no había cambios al engine. Se reverte el `package.json` a `0.25.0` (la última versión real del engine) y de aquí en adelante el engine solo se bumpea cuando hay cambios reales al engine. Los cambios de Centinelas asociados quedan registrados en `docs/centinelas/CHANGELOG.md` (versiones 0.22.0, 0.23.0, 0.23.1).
 
 ---

@@ -14,10 +14,13 @@
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
+const crypto = require('crypto');
 const { execSync, spawn } = require('child_process');
 
 const STORIES_DIR = path.join(__dirname, '..', 'src', 'stories');
 const TAURI_CONF = path.join(__dirname, '..', 'src-tauri', 'tauri.conf.json');
+const BUILD_REGISTRY = path.join(__dirname, '..', '.omc', 'build-registry.json');
+const BUILD_ID_FILE = path.join(__dirname, '..', 'src-tauri', 'resources', 'build-id.txt');
 
 // Load .env file for BARDO_ENCRYPTION_KEY (needed for both encrypt-story and Rust compile)
 function loadDotEnv() {
@@ -170,6 +173,106 @@ function checkAndroidPrerequisites(expectedIdentifier) {
     return true;
 }
 
+// ---------------------------------------------------------------------------
+// DRM: buildId generation + registry
+// ---------------------------------------------------------------------------
+
+function generateBuildId() {
+    return crypto.randomBytes(6).toString('hex'); // 12 hex chars
+}
+
+function appendBuildRegistry(entry) {
+    const omcDir = path.join(__dirname, '..', '.omc');
+    if (!fs.existsSync(omcDir)) {
+        fs.mkdirSync(omcDir, { recursive: true });
+    }
+    const line = JSON.stringify(entry) + '\n';
+    fs.appendFileSync(BUILD_REGISTRY, line, 'utf8');
+}
+
+function writeBuildIdFile(buildId) {
+    const resourcesDir = path.join(__dirname, '..', 'src-tauri', 'resources');
+    if (!fs.existsSync(resourcesDir)) {
+        fs.mkdirSync(resourcesDir, { recursive: true });
+    }
+    fs.writeFileSync(BUILD_ID_FILE, buildId, 'utf8');
+}
+
+// ---------------------------------------------------------------------------
+// DRM: key rotation per minor/patch release
+// ---------------------------------------------------------------------------
+
+/** Parse semver string → { major, minor, patch } */
+function parseSemver(v) {
+    const m = String(v).match(/^(\d+)\.(\d+)\.(\d+)/);
+    if (!m) return null;
+    return { major: parseInt(m[1]), minor: parseInt(m[2]), patch: parseInt(m[3]) };
+}
+
+/** Read package.json version */
+function readPackageVersion() {
+    const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
+    return pkg.version || '0.0.0';
+}
+
+/**
+ * Load an existing .env.release.{X.Y.0} for the current minor series, or
+ * generate fresh secrets for a new minor release.
+ * Sets BARDO_SECRET_A, BARDO_SECRET_B, BARDO_OBFUSCATION_SEED in process.env.
+ * Returns { isNewMinor: boolean, envFile: string }.
+ */
+function resolveSecrets(version) {
+    const sv = parseSemver(version);
+    if (!sv) throw new Error(`Cannot parse semver from version: ${version}`);
+
+    const minorTag = `${sv.major}.${sv.minor}.0`;
+    const envFile = path.join(__dirname, '..', `.env.release.${minorTag}`);
+
+    const isMinorRelease = sv.patch === 0;
+
+    if (isMinorRelease) {
+        // Generate fresh secrets for new minor
+        console.log(`\n[DRM] Minor release detected (${version}) — generating fresh secrets`);
+        const secretA = crypto.randomBytes(32).toString('hex');
+        const secretB = crypto.randomBytes(32).toString('hex');
+        const obfSeed = crypto.randomBytes(32).toString('hex');
+
+        const envContent = [
+            `BARDO_SECRET_A=${secretA}`,
+            `BARDO_SECRET_B=${secretB}`,
+            `BARDO_OBFUSCATION_SEED=${obfSeed}`,
+            `# Generated for ${version} on ${new Date().toISOString()}`,
+            `# BACKUP THIS FILE. Without it you cannot rebuild this version.`,
+        ].join('\n') + '\n';
+
+        fs.writeFileSync(envFile, envContent, 'utf8');
+        console.log(`[DRM] Secrets written to ${envFile}`);
+        console.log(`[DRM] IMPORTANT: Back up this file — it cannot be recovered if lost.`);
+
+        process.env.BARDO_SECRET_A = secretA;
+        process.env.BARDO_SECRET_B = secretB;
+        process.env.BARDO_OBFUSCATION_SEED = obfSeed;
+
+        return { isNewMinor: true, envFile };
+    } else {
+        // Patch: reuse the minor's secrets
+        console.log(`\n[DRM] Patch release detected (${version}) — loading secrets from ${envFile}`);
+        if (!fs.existsSync(envFile)) {
+            console.error(`[DRM] ERROR: .env.release.${minorTag} not found.`);
+            console.error(`       Cannot build patch without the minor's secrets.`);
+            console.error(`       Check your secrets vault and restore the file.`);
+            process.exit(1);
+        }
+        const lines = fs.readFileSync(envFile, 'utf8').split('\n');
+        for (const line of lines) {
+            const m = line.match(/^([A-Z0-9_]+)=(.+)$/);
+            if (m) process.env[m[1]] = m[2].trim();
+        }
+        console.log(`[DRM] Secrets loaded from ${envFile}`);
+        return { isNewMinor: false, envFile };
+    }
+}
+
 function detectCurrentPlatform() {
     switch (process.platform) {
         case 'win32': return 'windows';
@@ -289,14 +392,64 @@ async function main() {
         }
     }
 
-    // Step 2: Encrypt story (skip for editor builds — no story needed)
+    // Step 2: DRM — resolve secrets + generate buildId + prompt channel
+    let buildId = null;
     if (!isEditorBuild) {
-        if (!runCommand(`node scripts/encrypt-story.cjs ${storyId} --title "${gameConfig.title}"`, 'Encriptando historia')) {
+        // Key rotation: minor generates new secrets, patch reuses them
+        const version = gameConfig.version;
+        resolveSecrets(version);
+
+        // Generate buildId for this specific build
+        buildId = generateBuildId();
+        console.log(`\n[DRM] Build ID: ${buildId}`);
+
+        // Channel prompt
+        console.log('\nCanales de distribución disponibles:');
+        console.log('  itch / steam / web / press / beta / dev / other');
+        const channel = await prompt('Channel para este build? [dev]: ') || 'dev';
+        const recipient = await prompt('Destinatario (opcional, ej: "beta-tester-01"): ');
+
+        // Write buildId to sidecar resource file (binary tracing)
+        writeBuildIdFile(buildId);
+        console.log(`[DRM] buildId escrito en src-tauri/resources/build-id.txt`);
+
+        // Get git SHA for registry
+        let gitSha = 'unknown';
+        try {
+            gitSha = execSync('git rev-parse --short HEAD', { cwd: path.join(__dirname, '..'), encoding: 'utf8' }).trim();
+        } catch (_) { /* not a git repo or no commits */ }
+
+        // Append to build registry
+        const registryEntry = {
+            buildId,
+            timestamp: new Date().toISOString(),
+            channel,
+            recipient: recipient || null,
+            version,
+            gitSha,
+        };
+        appendBuildRegistry(registryEntry);
+        console.log(`[DRM] Registry entry saved to .omc/build-registry.json`);
+    }
+
+    // Step 2b: Encrypt story (skip for editor builds — no story needed)
+    if (!isEditorBuild) {
+        const buildIdFlag = buildId ? `--build-id ${buildId}` : '';
+        if (!runCommand(`node scripts/encrypt-story.cjs ${storyId} --title "${gameConfig.title}" ${buildIdFlag}`.trim(), 'Encriptando historia')) {
             process.exit(1);
         }
     }
 
-    // Step 3: Build Tauri with selected target
+    // Step 3: If new minor release, force cargo clean so new secrets bake in
+    if (!isEditorBuild) {
+        const sv = parseSemver(gameConfig.version);
+        if (sv && sv.patch === 0) {
+            console.log('\n[DRM] Minor release — forzando cargo clean para que los nuevos secretos se compilen...');
+            runCommand('cargo clean --manifest-path src-tauri/Cargo.toml', 'cargo clean');
+        }
+    }
+
+    // Step 4: Build Tauri with selected target
     if (isAndroid) {
         // Android build flow
         console.log('\n▶ Compilando para Android...\n');
