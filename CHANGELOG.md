@@ -1,5 +1,10 @@
 # Changelog — BardoEngine
 
+## [0.26.1] - 2026-05-18
+
+### Fixes
+- **InventoryPanel tooltip**: el tooltip de descripción de items ahora usa un React portal + `position: fixed` con coordenadas de viewport calculadas via `getBoundingClientRect()`. Escapa el clipping causado por el `backdrop-filter` del panel y el `overflow-y: auto` del scroll container. Elige automáticamente arriba/abajo según espacio disponible en viewport. Agrega listener de scroll/resize para cerrar el tooltip si el panel scrollea.
+
 ## [0.26.0] - 2026-05-18
 
 ### Features
