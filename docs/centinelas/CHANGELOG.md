@@ -1,5 +1,13 @@
 # Changelog — Centinelas del Sur
 
+## [0.23.5] — 2026-05-19
+
+### Fixed
+- **cap3/museo**: reemplazadas 4 páginas-cartel en mayúsculas ("ENTRAS A LA PRIMERA/SEGUNDA/TERCERA/CUARTA SALA") por etiquetas `# next: <label>` en el botón SIGUIENTE, usando la sintaxis ya soportada por la engine. También se agregó `# next:` en las choices "Colaborás"/"No colaborás" del knot anterior para una transición limpia.
+- **branding**: corregida capitalización del título "Centinelas del Sur" en `centinelas.ink`, `centinelas.config.json`, `story-config.json` y `tauri.conf.json` (estaba como `CENTINELAS DEL SUR` o `centinelas del Sur`).
+
+---
+
 ## [0.23.4] — 2026-05-18
 
 ### Fixed

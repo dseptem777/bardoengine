@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "CENTINELAS DEL SUR",
-  "version": "0.23.3",
+  "productName": "Centinelas del Sur",
+  "version": "0.23.5",
   "identifier": "com.bardoengine.centinelas",
   "build": {
     "frontendDist": "../dist",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "CENTINELAS DEL SUR",
+        "title": "Centinelas del Sur",
         "width": 1024,
         "height": 768,
         "resizable": true,
