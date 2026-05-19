@@ -1,5 +1,12 @@
 # Changelog — Centinelas del Sur
 
+## [0.23.6] — 2026-05-19
+
+### Fixed
+- **cap1/intermisión**: agregados `# music:misterio_ambient` en `intermision`, `entrada_faro` y `volver_faro` para cortar la `escuela_ambient` del Cap 0 que seguía sonando incorrectamente al entrar al Faro.
+
+---
+
 ## [0.23.5] — 2026-05-19
 
 ### Fixed
