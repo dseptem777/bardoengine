@@ -4410,6 +4410,7 @@ Desde El Faro te llaman de urgencia. Parece que hay un problema y, entre todas l
 De vuelta a la pista de baile.
 
 # CHAPTER_BREAK: title=Visita al Museo, subtitle=Capítulo 3, music=misterio_ambient, image=title_cap3_museo.jpg
+# inv:clear_mission
 
 -> capitulo_3
 
