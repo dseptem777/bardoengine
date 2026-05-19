@@ -168,13 +168,13 @@ pub fn decrypt_story_content(encrypted_base64: &str) -> Result<String, String> {
         .decrypt(nonce, ciphertext_with_tag.as_ref())
         .map_err(|_| "Decryption failed — wrong keys or corrupted data".to_string())?;
 
-    let result = String::from_utf8(plaintext.clone())
-        .map_err(|e| format!("UTF-8 decode error: {}", e));
-
-    // Layer 5: zeroize the plaintext buffer before it's dropped
-    plaintext.zeroize();
-
-    result
+    // Layer 5: consume plaintext directly — no second copy escapes zeroize.
+    // On UTF-8 error, recover the Vec via into_bytes() and zeroize it before returning.
+    String::from_utf8(plaintext).map_err(|e| {
+        let mut bytes = e.into_bytes();
+        bytes.zeroize();
+        format!("UTF-8 decode error: invalid UTF-8 sequence")
+    })
 }
 
 /// Encrypt a plaintext string with the same KDF pipeline.
@@ -216,6 +216,40 @@ pub fn encrypt_story_content(plaintext: &str) -> Result<String, String> {
     Ok(STANDARD.encode(&combined))
 }
 
+/// Test-only helper: decrypt using an explicitly supplied 32-byte AES key.
+/// This lets us verify that a ciphertext produced with key A cannot be
+/// decrypted with key B (simulating cross-minor-version key rotation).
+#[cfg(test)]
+fn decrypt_with_explicit_key(encrypted_base64: &str, aes_key_bytes: &[u8; 32]) -> Result<String, String> {
+    let combined = base64::engine::general_purpose::STANDARD
+        .decode(encrypted_base64.trim())
+        .map_err(|e| format!("Base64 decode error: {}", e))?;
+
+    if combined.len() < 28 {
+        return Err("Invalid encrypted data: too short".to_string());
+    }
+
+    let iv = &combined[0..12];
+    let auth_tag = &combined[12..28];
+    let mut chacha_wrapped = combined[28..].to_vec();
+
+    chacha_xor(&mut chacha_wrapped)?;
+
+    let mut ciphertext_with_tag = chacha_wrapped;
+    ciphertext_with_tag.extend_from_slice(auth_tag);
+
+    let cipher = Aes256Gcm::new_from_slice(aes_key_bytes)
+        .map_err(|e| format!("Cipher init error: {}", e))?;
+
+    let nonce = Nonce::from_slice(iv);
+
+    let plaintext = cipher
+        .decrypt(nonce, ciphertext_with_tag.as_ref())
+        .map_err(|_| "Decryption failed — wrong keys or corrupted data".to_string())?;
+
+    String::from_utf8(plaintext).map_err(|_| "UTF-8 decode error".to_string())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -247,5 +281,49 @@ mod tests {
     fn too_short_blob_returns_error() {
         let result = decrypt_story_content("dGVzdA=="); // "test" in base64
         assert!(result.is_err());
+    }
+
+    /// Capa 2 validation: encrypting with key_A and decrypting with key_B
+    /// must fail with an authentication error. This validates that key rotation
+    /// across minor releases actually invalidates cross-version .enc files.
+    #[test]
+    fn cross_key_decrypt_fails_with_auth_error() {
+        use aes_gcm::aead::OsRng;
+        use aes_gcm::aead::rand_core::RngCore;
+
+        let plaintext = "cross-key test payload";
+
+        // Key A: derived from the compiled-in secrets (normal path)
+        let key_a = derive_aes_key().expect("derive_aes_key must succeed");
+
+        // Key B: a distinct random key simulating a different minor release
+        let mut key_b = [0u8; 32];
+        OsRng.fill_bytes(&mut key_b);
+        // Ensure key_b actually differs from key_a (astronomically likely but assert anyway)
+        assert_ne!(key_a, key_b, "key_b must differ from key_a");
+
+        // Encrypt with key_a (via normal encrypt path)
+        let encrypted = encrypt_story_content(plaintext)
+            .expect("encrypt with key_a should succeed");
+
+        // Decrypt with key_a — must succeed
+        let decrypted_a = decrypt_story_content(&encrypted)
+            .expect("decrypt with key_a must succeed");
+        assert_eq!(decrypted_a, plaintext);
+
+        // Decrypt with key_b — must fail (GCM auth tag mismatch)
+        let result_b = decrypt_with_explicit_key(&encrypted, &key_b);
+        assert!(
+            result_b.is_err(),
+            "decrypting key_a ciphertext with key_b must fail (got: {:?})",
+            result_b
+        );
+        // Verify it's an auth failure, not a coding error
+        let err = result_b.unwrap_err();
+        assert!(
+            err.contains("wrong keys") || err.contains("Decryption failed"),
+            "error message should indicate auth failure, got: {}",
+            err
+        );
     }
 }
