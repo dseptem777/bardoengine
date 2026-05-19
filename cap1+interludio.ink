@@ -4,6 +4,7 @@
 === intermision ===
 
 # INTERMISIÓN
+# music:misterio_ambient
 
 Te despertas a las tres de la mañana, hace un par de días te acosa una pesadilla donde te estas ahogando en un mar de sangre y sentís, rozando tus pies, que una gran entidad marina está dando vueltas. Jugando con vos, esperando el momento para atacar.
 
@@ -223,6 +224,7 @@ A lo lejos se escuchaban los ruidos de algunos universitarios, festejando haber 
     -> entrada_faro
 
 = entrada_faro
+# music:misterio_ambient
 Cómo seas. Estaba frente a la puerta de la sede de "El Faro". Una mole sin ventanas con una puerta gigante de dos hojas. En una de veía un Faro gigante emanando su luz y en la otra se representa un mar embravecido. Más tiempo pasas mirando la puerta más te das cuenta de figuras raras entre las olas. Ojos. Manos. Colmillos. Cosas que no podes definir.
 
 Te preguntas que pensaran los estudiantes que se alejan (a fumar un porro o tener algo de intimidad) cuando ven está puerta.
@@ -768,6 +770,7 @@ Estás muriendo. Y en tu primer misión de campo. Deberías sentir vergüenza o 
 -> volver_faro
 
 = volver_faro
+# music:misterio_ambient
 
 # DE NUEVO EN EL FARO
 
