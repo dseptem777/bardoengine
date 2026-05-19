@@ -1,5 +1,12 @@
 # Changelog — Centinelas del Sur
 
+## [0.23.4] — 2026-05-18
+
+### Fixed
+- **cap3/inicio**: agregado `# inv:clear_mission` al `CHAPTER_BREAK` del Capítulo 3 ("Visita al Museo"). Los ítems del Capítulo 2B que no son persistentes ahora se limpian correctamente al comenzar el Cap. 3.
+
+---
+
 ## [0.23.3] — 2026-05-08
 
 ### Fixed
