@@ -1,5 +1,12 @@
 # Changelog — Centinelas del Sur
 
+## [0.23.7] — 2026-05-19
+
+### Fixed
+- **deadends fatales**: 9 ocurrencias de `-> END` en finales letales reemplazadas por `-> muerte` en `centinelas.ink`. Ahora todos los caminos fatales pasan por el knot `muerte` y activan el `GameOverMenu`.
+
+---
+
 ## [0.23.6] — 2026-05-19
 
 ### Fixed

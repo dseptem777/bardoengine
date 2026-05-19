@@ -130,6 +130,9 @@ export function useBardoEngine({
     // so spamming spacebar doesn't skip through post-break content
     const [chapterBreakCooldown, setChapterBreakCooldown] = useState(false)
 
+    // Game over flag — set when the story enters the `muerte` knot
+    const [isGameOver, setIsGameOver] = useState(false)
+
     // Scroll container ref (shared with Player for scroll manipulation)
     const scrollContainerRef = useRef<HTMLElement | null>(null)
 
@@ -716,11 +719,20 @@ export function useBardoEngine({
             spiderInfestation.actions.notifyAdvance()
         }
 
+        // Detect entry into muerte knot — set game over flag
+        const currentPath = story.state.currentPathString || ''
+        const currentKnot = currentPath.split('.')[0]
+        if (currentKnot === 'muerte' && !story.canContinue) {
+            setIsGameOver(true)
+        }
+
         // Don't autosave if story just ended (preserves last save before death/ending)
         // Don't autosave after MINIGAME break — save is past the tag, loading it skips the minigame
+        // Only autosave at choice points — guarantees "Continue" always restores to a playable state
         const storyEnded = !story.canContinue && story.currentChoices.length === 0
         const hasMinigameTag = tags.some((t: string) => t.trim().toLowerCase().startsWith('minigame:'))
-        if (storyId && newText && !storyEnded && !hasMinigameTag) {
+        const hasChoices = story.currentChoices.length > 0
+        if (storyId && newText && !storyEnded && !hasMinigameTag && hasChoices) {
             // @ts-ignore
             saveSystem.autoSave(story.state.toJson(), newText, gameSystems.exportGameSystems() || undefined, buildParallelSystemsSaveState())
         }
@@ -922,8 +934,10 @@ export function useBardoEngine({
         }
 
         // Don't autosave if story just ended (preserves last save before death/ending)
+        // Don't autosave if no choices are available (mid-knot linear beat, could be a fatal path)
         const storyEnded = !story.canContinue && story.currentChoices.length === 0
-        if (storyId && newText && !storyEnded) {
+        const hasChoices = story.currentChoices.length > 0
+        if (storyId && newText && !storyEnded && hasChoices) {
             // @ts-ignore
             saveSystem.autoSave(story.state.toJson(), newText, gameSystems.exportGameSystems() || undefined, buildParallelSystemsSaveState())
         }
@@ -1186,10 +1200,14 @@ export function useBardoEngine({
         actions,
         subsystems,
         config: configRef,
-        settingsHelpers
+        settingsHelpers,
+        // Game over state
+        isGameOver,
+        clearGameOver: () => setIsGameOver(false),
     }), [
         story, text, choices, canContinue, continueLabel, isEnded, history, isThemeReady,
         textSegments, onSegmentReached,
-        actions, subsystems, configRef, settingsHelpers
+        actions, subsystems, configRef, settingsHelpers,
+        isGameOver
     ])
 }

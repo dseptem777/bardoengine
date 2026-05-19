@@ -1001,8 +1001,7 @@ Al menos recuperaste una mano, mejor ir para El Faro a ver qué pueden hacer con
 # shake # flash_red # play_sfx:jumpscare
 La puerta del privado se abre de golpe. Garras oscuras se cierran alrededor de tu tobillo y te sacan arrastrando.
 Lo último que ves es esa boca inmensa abriéndose de oreja a oreja.
-MORISTE. FIN DEL JUEGO.
--> END
+-> muerte
 
 === escape_trampa ===
 # music:terror_ambient
@@ -1065,7 +1064,7 @@ Luego se calma y te encontrás en el piso. Todo está húmedo y sentís lentamen
 Estás muriendo. Y en tu primera misión de campo. Deberías sentir vergüenza o indignación pero ya no tenés energías como para sentir algo. Solo sueño…
 # next
 FIN DE TU HISTORIA.
--> END
+-> muerte
 
 === encuentro_monstruo ===
 # music:terror_ambient
@@ -1116,8 +1115,7 @@ Te dirigís a El Faro.
 === keymash_arrastre_fallo ===
 # stop_music
 # flash_red
-MORISTE. FIN DEL JUEGO.
--> END
+-> muerte
 
 === final_morgue_exito ===
 # achievement:unlock:morgue_sin_mordisco
@@ -1867,8 +1865,7 @@ Basta un tirón a la soga para hacerte perder el agarre.
 Cerras los ojos de forma instintiva, aun así en la oscuridad no podrías ver nada. Recordás la moneda que tiraste de lo alto del pozo y todo el tiempo que tardó en caer. La caída es lo peor, la velocidad golpea tus sentidos y te da vértigo mientras en tu mente hay una tormenta de idea, desde planes desesperados para salvarte hasta otras decisiones posibles que te hubiesen evitado terminar acá. A lo último solo una idea persiste en tu cabeza "espero morir del golpe, y no quedarme paralitico y a merced de lo que este ahí abajo".
 Por suerte el destino es piadoso y tu cuerpo explota al chocar el cuerpo. Lo que acecha en el fondo esta feliz, comida fresca
 # flash_red
-FIN DEL JUEGO.
--> END
+-> muerte
 
 === sotano_acido_hub ===
 # music:horror_ambient
@@ -2289,8 +2286,7 @@ La araña gigante logra clavar una de sus extremidades en la pared y eso le da e
 # music:boss_arañas
 # flash_red
 La sorpresa dura solo unos segundos. La impresión fuerte cuando una de las extremidades atraviesa tu pecho de punta a punta. Cuando empezas a sentir frío y tu ropa mojada (por tu propia sangre) llega la calma. ¿Cómo se te ocurrió que podías cargar directamente contra eso?. Mientras la araña lentamente te acerca hacia sus colmillos, ya nada te importa. Solo esperas que los niños sobrevivan
-MORISTE. FIN DEL JUEGO.
--> END
+-> muerte
 
 === combate_magia ===
 # music:boss_arañas
@@ -3362,7 +3358,7 @@ Lo último que pensás, con una claridad cruel, es que morís sabiendo exactamen
 # next
 ESTÁS MUERTO.
 # achievement:unlock:cambio_de_bando
--> END
+-> muerte
 
 // ---------------------------------------------------------
 // SECCIÓN 9: FRENTE AL CUBIL
@@ -3833,7 +3829,7 @@ El Vampiro se mueve a la velocidad de tu pensamiento. Solo dos de sus dedos, lar
 Tu cerebro tarda unos segundos en darse cuenta, lo suficiente para escuchar el crack de tus huesos al quebrarse y tener un último pensamiento coherente antes de irte. "¿Cómo pensaste que esto iba a funcionar?"
 # next
 ESTÁS MUERTO.
--> END
+-> muerte
 
 === cap2b_ritual_placa ===
 # music:horror_ambient
@@ -3848,7 +3844,7 @@ El Vampiro se mueve a la velocidad de tu pensamiento. Solo dos de sus dedos, lar
 Tu cerebro tarda unos segundos en darse cuenta, lo suficiente para escuchar el crack de tus huesos al quebrarse y tener un último pensamiento coherente antes de irte. "¿Cómo pensaste que esto iba a funcionar?"
 # next
 ESTÁS MUERTO.
--> END
+-> muerte
 
 === cap2b_ritual_musica ===
 # music:horror_ambient
@@ -3884,7 +3880,7 @@ El Vampiro se mueve a la velocidad de tu pensamiento. Solo dos de sus dedos, lar
 Tu cerebro tarda unos segundos en darse cuenta, lo suficiente para escuchar el crack de tus huesos al quebrarse y tener un último pensamiento coherente antes de irte. "¿Cómo pensaste que esto iba a funcionar?"
 # next
 ESTÁS MUERTO.
--> END
+-> muerte
 
 // ---------------------------------------------------------
 // SECCIÓN 12: EPÍLOGO
