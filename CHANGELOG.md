@@ -1,5 +1,11 @@
 # Changelog — BardoEngine
 
+## [0.26.2] - 2026-05-19
+
+### Fixes
+- **GameOverMenu**: nuevo componente que se muestra cuando el jugador llega a un final letal (`-> muerte`), con opciones para cargar partida guardada o volver al menú principal. Integrado en `App.jsx` via flag `isGameOver` expuesto por `useBardoEngine`.
+- **autosave guard**: `useBardoEngine.ts` ya no dispara autosave cuando `isGameOver` es `true`, previniendo loops de save/load en deadends fatales.
+
 ## [0.26.1] - 2026-05-18
 
 ### Fixes

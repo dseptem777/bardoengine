@@ -19,6 +19,7 @@ import HorrorVFXLayer from './components/HorrorVFXLayer'
 import WillpowerMeter from './components/WillpowerMeter'
 import SpiderOverlay from './components/SpiderOverlay'
 import ChapterBreakOverlay from './components/ChapterBreakOverlay'
+import GameOverMenu from './components/GameOverMenu'
 import { useHeavyCursor } from './hooks/useHeavyCursor'
 import { useStoryLoader } from './hooks/useStoryLoader'
 import { useBardoEngine } from './hooks/useBardoEngine'
@@ -156,7 +157,8 @@ function AppContent({ onStorySelect }) {
     const {
         story, text, choices, canContinue, continueLabel, isEnded, history,
         actions, subsystems, config,
-        textSegments, onSegmentReached
+        textSegments, onSegmentReached,
+        isGameOver, clearGameOver
     } = engine
     const { audio, vfx, saveSystem, gameSystems, achievementsSystem, minigameController, willpower, spiderInfestation, scrollFriction, bossController, visualDamage, scrollContainerRef, genjutsu, chapterBreak } = subsystems
 
@@ -659,6 +661,24 @@ function AppContent({ onStorySelect }) {
                 image={chapterBreak?.data?.image}
                 onDismiss={chapterBreak?.dismiss}
             />
+
+            {/* Game Over Menu — shown after muerte chapter break is dismissed */}
+            {isGameOver && !chapterBreak?.data && !chapterBreak?.cooldown && (
+                <GameOverMenu
+                    onContinue={() => {
+                        clearGameOver()
+                        actions.continueGame()
+                    }}
+                    onLoadMenu={() => {
+                        clearGameOver()
+                        setSaveModalMode('load')
+                    }}
+                    onMainMenu={() => {
+                        clearGameOver()
+                        backToStartScreen()
+                    }}
+                />
+            )}
 
             {/* Debug Spawn Button */}
             {debugUnlocked && story && (
