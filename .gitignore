@@ -50,5 +50,6 @@ tech demo vamp.txt
 # DRM — never commit these
 .omc/build-registry.json
 .env.release.*
+.env.master
 docs/INTERNAL_DRM_NOTES.md
 src-tauri/resources/build-id.txt

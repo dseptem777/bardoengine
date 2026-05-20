@@ -4,6 +4,21 @@ description: Ship — yo (Claude) escribo el changelog y corro el script atómic
 
 ## Ship workflow (BardoEngine)
 
+### Gate previo — DRM master secret
+
+Antes de cualquier paso, verificar que `.env.master` existe:
+
+```powershell
+if (-not (Test-Path .env.master)) {
+    Write-Error "DRM master missing — run 'npm run drm:init' or restore from vault before shipping."
+    exit 1
+}
+```
+
+Si no existe, abortar. No shippear sin él.
+
+---
+
 Cuando el usuario diga "ship", "shippealo a dev", "ship a dev", etc., el flujo es:
 
 ### Paso 1 — YO escribo el bullet del CHANGELOG

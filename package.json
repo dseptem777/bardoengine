@@ -17,6 +17,7 @@
     "android:release": "npx tauri android build",
     "encrypt-story": "node scripts/encrypt-story.cjs",
     "build-game": "node scripts/build-game.cjs",
+    "drm:init": "node scripts/build-game.cjs --init-master",
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage"
