@@ -1,5 +1,10 @@
 # Changelog — BardoEngine
 
+## [0.27.2] - 2026-05-20
+
+### Fixes
+- **ship workflow**: `.claude/commands/ship.md` ahora aclara que el script atómico se invoca BARE (sin `2>&1 | Select-Object`, sin pipes). Sufijos rompen el match de la allowlist en `.claude/settings.local.json` y causan permission prompts innecesarios.
+
 ## [0.27.1] - 2026-05-20
 
 ### Fixes

@@ -22,6 +22,8 @@ Redactá los bullets vos mismo a partir del diff, en español, claros y orientad
 powershell -ExecutionPolicy Bypass -File scripts/ship.ps1 -Bump <patch|minor>
 ```
 
+**IMPORTANTE: invocar el script BARE — sin pipes ni `Select-Object` ni `2>&1`.** La allowlist de `.claude/settings.local.json` matchea el patrón `PowerShell(powershell -ExecutionPolicy Bypass -File scripts/ship.ps1*)`, pero si agregás sufijos tipo `2>&1 | Select-Object -First 40`, el match falla y vas a pedir permisos innecesarios al usuario. El output del script lo trunca la tool sola si es largo — no hace falta filtrarlo desde fuera.
+
 - **patch** (default): bug fixes, ajustes.
 - **minor**: nuevas features, archivos nuevos significativos.
 
