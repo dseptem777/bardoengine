@@ -2,9 +2,11 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import path from 'path'
 import { createRequire } from 'module'
+import { fileURLToPath } from 'url'
 import fs from 'fs'
 
 const require = createRequire(import.meta.url)
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 function inkWatchPlugin() {
     function compileInk(inkPath, server) {
