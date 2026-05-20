@@ -1,5 +1,10 @@
 # Changelog — BardoEngine
 
+## [0.27.1] - 2026-05-20
+
+### Fixes
+- **ship workflow versionado**: `.claude/commands/ship.md` ahora se versiona en el repo. La instrucción que define el flujo de ship (escribir bullet del changelog → correr `scripts/ship.ps1`) queda como parte del proyecto, no solo local. `.claude/settings.json`, `.claude/settings.local.json` y `.claude/skills/` siguen gitignored.
+
 ## [0.27.0] - 2026-05-20
 
 ### Features
