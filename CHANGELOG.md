@@ -1,5 +1,10 @@
 # Changelog — BardoEngine
 
+## [0.27.0] - 2026-05-20
+
+### Features
+- **scripts/ship.ps1**: nuevo script atómico de release que reemplaza el flujo manual de ship.md por un solo comando. Valida tests y entradas de CHANGELOG, bumpea versiones en `package.json` y `tauri.conf.json`, commitea, mergea a dev con `--no-ff`, y pushea. Soporta `-DryRun` para preview sin efecto y `-Bump` para elegir `patch`/`minor`/`major`.
+
 ## [0.26.2] - 2026-05-19
 
 ### Fixes
