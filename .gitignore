@@ -39,7 +39,9 @@ android-builds/
 
 # AI / Agent
 .agent/
-.claude/
+.claude/*
+!.claude/commands/
+!.claude/commands/**
 CLAUDE.md
 tech demo vamp.txt
 # Added by code-review-graph
