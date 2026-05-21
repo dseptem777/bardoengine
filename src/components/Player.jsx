@@ -30,6 +30,9 @@ export default function Player({
     onToggleHistory,
     // Branding
     gameTitle = null,
+    playerName = null,
+    nickname = null,
+    chapterName = null,
     // Settings props
     typewriterDelay = 30,
     fontSize = 'normal',
@@ -293,11 +296,10 @@ export default function Player({
                             <>
                             {/* Row 1: title (left) + back arrow (right) */}
                             <div className="flex justify-between items-center mb-1.5">
-                                <h1
-                                    className="text-bardo-accent text-sm tracking-wider truncate max-w-[12rem]"
-                                    style={{ fontFamily: 'var(--bardo-font-mono)' }}
-                                >
-                                    {gameTitle ? gameTitle : 'BARDO'}
+                                <h1 className="text-bardo-accent text-sm tracking-wider truncate min-w-0" style={{ fontFamily: 'var(--bardo-font-mono)' }}>
+                                    {playerName
+                                        ? <>{playerName}{nickname && <> &ldquo;<span className="italic">{nickname}</span>&rdquo;</>}{chapterName && <> · {chapterName}</>}</>
+                                        : (gameTitle || 'BARDO')}
                                 </h1>
                                 <button
                                     onClick={onBack}
@@ -307,13 +309,13 @@ export default function Player({
                                 </button>
                             </div>
                             {/* Row 2: stats (left) + inventory/action icons (right) */}
-                            <div className="flex justify-between items-center">
-                                <div className="min-w-0">
+                            <div className="flex justify-between items-center w-full">
+                                <div className="min-w-0 flex-shrink overflow-hidden">
                                     {headerStatsProps && (
                                         <HeaderStats {...headerStatsProps} />
                                     )}
                                 </div>
-                                <div className="flex items-center gap-1 shrink-0">
+                                <div className="flex items-center gap-1 flex-shrink-0 ml-2">
                                     {onOptions && (
                                         <>
                                             <button
@@ -469,7 +471,7 @@ export default function Player({
                 */}
                 <div
                     ref={contentRef}
-                    className={`w-full px-4 sm:px-6 md:px-12 pt-[10vh] sm:pt-[15vh] pb-[35vh] ${hasDesktopStatsPanel ? '' : 'mx-auto'}`}
+                    className={`w-full px-4 sm:px-6 md:px-12 pt-4 sm:pt-[15vh] pb-[35vh] ${hasDesktopStatsPanel ? '' : 'mx-auto'}`}
                     style={hasDesktopStatsPanel ? {
                         maxWidth: 'var(--player-max-width, 48rem)',
                         marginLeft: 'max(calc((100% - var(--player-max-width, 48rem)) / 2), var(--stats-panel-inset, 260px))',

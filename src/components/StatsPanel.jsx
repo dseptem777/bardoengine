@@ -23,53 +23,39 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
     const barStats = allStats.filter(s => s.displayType === 'bar')
     const valueStats = allStats.filter(s => s.displayType === 'value')
 
-    // Mobile: slim bar stats + compact ID strip
+    // Mobile: slim bar stats only (no ID strip — player name + chapter shown in header)
     if (isMobile) {
-        const hasIdData = !!(playerName || chapterName)
-        if (barStats.length === 0 && !hasIdData) return null
+        if (barStats.length === 0) return null
 
         return (
             <div className="fixed top-0 left-0 right-0 z-[820] pointer-events-none mobile-slim-bars">
-                {barStats.length > 0 && (
-                    <div className="flex w-full">
-                        {barStats.map(stat => {
-                            const percentage = stat.max ? Math.max(0, Math.min(100, (stats[stat.id] / stat.max) * 100)) : 0
-                            const isCritical = percentage <= 10
-                            return (
-                                <div
-                                    key={stat.id}
-                                    className="flex-1 h-1.5 bg-gray-900/80"
-                                    title={`${stat.label}: ${stats[stat.id]}/${stat.max}`}
-                                >
-                                    <motion.div
-                                        className="h-full"
-                                        style={{ backgroundColor: stat.color || '#facc15' }}
-                                        initial={{ width: 0 }}
-                                        animate={{
-                                            width: `${percentage}%`,
-                                            opacity: isCritical ? [1, 0.5, 1] : 1
-                                        }}
-                                        transition={{
-                                            width: { duration: 0.3, ease: 'easeOut' },
-                                            opacity: isCritical ? { duration: 0.5, repeat: Infinity } : {}
-                                        }}
-                                    />
-                                </div>
-                            )
-                        })}
-                    </div>
-                )}
-                {hasIdData && (
-                    <div className="bg-black/60 backdrop-blur-sm px-3 py-1 text-xs text-bardo-muted flex items-center gap-2 justify-center">
-                        {playerName && (
-                            <span>
-                                {playerName}{nickname && <> &ldquo;<span className="italic">{nickname}</span>&rdquo;</>}
-                            </span>
-                        )}
-                        {playerName && chapterName && <span>·</span>}
-                        {chapterName && <span>{chapterName}</span>}
-                    </div>
-                )}
+                <div className="flex w-full">
+                    {barStats.map(stat => {
+                        const percentage = stat.max ? Math.max(0, Math.min(100, (stats[stat.id] / stat.max) * 100)) : 0
+                        const isCritical = percentage <= 10
+                        return (
+                            <div
+                                key={stat.id}
+                                className="flex-1 h-1.5 bg-gray-900/80"
+                                title={`${stat.label}: ${stats[stat.id]}/${stat.max}`}
+                            >
+                                <motion.div
+                                    className="h-full"
+                                    style={{ backgroundColor: stat.color || '#facc15' }}
+                                    initial={{ width: 0 }}
+                                    animate={{
+                                        width: `${percentage}%`,
+                                        opacity: isCritical ? [1, 0.5, 1] : 1
+                                    }}
+                                    transition={{
+                                        width: { duration: 0.3, ease: 'easeOut' },
+                                        opacity: isCritical ? { duration: 0.5, repeat: Infinity } : {}
+                                    }}
+                                />
+                            </div>
+                        )
+                    })}
+                </div>
             </div>
         )
     }
