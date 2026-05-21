@@ -287,7 +287,10 @@ export default function Player({
                 >
                     {isPortraitDevice ? (
                         /* Portrait mobile: two-row layout to prevent clipping */
-                        <>
+                        (() => {
+                            const PORTRAIT_ICON_BTN = 'min-w-[44px] min-h-[44px] flex items-center justify-center text-bardo-muted hover:text-bardo-accent transition-colors'
+                            return (
+                            <>
                             {/* Row 1: title (left) + back arrow (right) */}
                             <div className="flex justify-between items-center mb-1.5">
                                 <h1
@@ -298,7 +301,7 @@ export default function Player({
                                 </h1>
                                 <button
                                     onClick={onBack}
-                                    className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors shrink-0 ml-2"
+                                    className={`${PORTRAIT_ICON_BTN} font-mono text-sm shrink-0 ml-2`}
                                 >
                                     ←
                                 </button>
@@ -310,19 +313,19 @@ export default function Player({
                                         <HeaderStats {...headerStatsProps} />
                                     )}
                                 </div>
-                                <div className="flex items-center gap-2 shrink-0">
+                                <div className="flex items-center gap-1 shrink-0">
                                     {onOptions && (
                                         <>
                                             <button
                                                 onClick={onToggleHistory}
-                                                className="text-bardo-muted hover:text-bardo-accent transition-colors"
+                                                className={PORTRAIT_ICON_BTN}
                                                 title="Bitácora (L)"
                                             >
                                                 <BookOpen size={14} />
                                             </button>
                                             <button
                                                 onClick={onOptions}
-                                                className="text-bardo-muted hover:text-bardo-accent transition-colors"
+                                                className={PORTRAIT_ICON_BTN}
                                                 title="Opciones"
                                             >
                                                 <Settings size={14} />
@@ -333,7 +336,7 @@ export default function Player({
                                         <button
                                             onClick={onSave}
                                             disabled={isMinigameActive}
-                                            className={`transition-colors ${isMinigameActive ? 'text-neutral-600 cursor-not-allowed' : 'text-bardo-muted hover:text-bardo-accent'}`}
+                                            className={`${PORTRAIT_ICON_BTN} ${isMinigameActive ? 'text-neutral-600 cursor-not-allowed hover:text-neutral-600' : ''}`}
                                         >
                                             <Save size={14} />
                                         </button>
@@ -341,7 +344,7 @@ export default function Player({
                                     {relationshipsEnabled && onToggleRelationships && (
                                         <button
                                             onClick={onToggleRelationships}
-                                            className="text-bardo-muted hover:text-bardo-accent transition-colors"
+                                            className={PORTRAIT_ICON_BTN}
                                             title="Relaciones"
                                         >
                                             <Heart size={16} />
@@ -350,7 +353,7 @@ export default function Player({
                                     {inventoryEnabled && onToggleInventory && (
                                         <button
                                             onClick={onToggleInventory}
-                                            className="relative text-bardo-muted hover:text-bardo-accent transition-colors"
+                                            className={`relative ${PORTRAIT_ICON_BTN}`}
                                             title="Inventario"
                                         >
                                             <Backpack size={16} />
@@ -363,7 +366,9 @@ export default function Player({
                                     )}
                                 </div>
                             </div>
-                        </>
+                            </>
+                            )
+                        })()
                     ) : (
                         /* Desktop / landscape: original single-row layout */
                         <div className="flex justify-between items-center">
