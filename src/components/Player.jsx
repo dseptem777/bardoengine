@@ -89,12 +89,7 @@ export default function Player({
     const contentRef = useRef(null)
     const isStickyRef = useRef(true)
 
-    // Auto-hide header state (mobile only)
-    const [headerVisible, setHeaderVisible] = useState(true)
-    const lastScrollTopRef = useRef(0)
-    const scrollDeltaRef = useRef(0)
-
-    // Handle user scroll to detect if they want to stick to bottom + auto-hide header
+    // Handle user scroll to detect if they want to stick to bottom
     const handleScroll = useCallback(() => {
         if (!scrollContainerRef.current) return
 
@@ -102,35 +97,7 @@ export default function Player({
         // If user is within 50px of bottom, sticky is ON
         const isAtBottom = scrollHeight - scrollTop - clientHeight < 50
         isStickyRef.current = isAtBottom
-
-        // Auto-hide header on mobile
-        if (isMobile) {
-            const delta = scrollTop - lastScrollTopRef.current
-            lastScrollTopRef.current = scrollTop
-
-            // Accumulate scroll delta for threshold
-            if (delta > 0) {
-                // Scrolling down
-                scrollDeltaRef.current = Math.max(0, scrollDeltaRef.current + delta)
-                if (scrollDeltaRef.current > 30) {
-                    setHeaderVisible(false)
-                    scrollDeltaRef.current = 0
-                }
-            } else if (delta < 0) {
-                // Scrolling up
-                scrollDeltaRef.current = Math.min(0, scrollDeltaRef.current + delta)
-                if (scrollDeltaRef.current < -10) {
-                    setHeaderVisible(true)
-                    scrollDeltaRef.current = 0
-                }
-            }
-
-            // Always show header at top of page
-            if (scrollTop < 10) {
-                setHeaderVisible(true)
-            }
-        }
-    }, [isMobile])
+    }, [])
 
     // Setup resize observer for auto-scrolling
     // Disabled during scroll friction — player must scroll manually
@@ -307,16 +274,11 @@ export default function Player({
 
     const isPortraitDevice = useIsPortraitDevice()
 
-    // Header transition classes
-    const headerTransformClass = isMobile
-        ? `transition-transform duration-300 ease-in-out ${headerVisible ? 'translate-y-0' : '-translate-y-full'}`
-        : ''
-
     return (
         <div className="h-screen flex flex-col bg-bardo-bg overflow-hidden transition-colors duration-500">
             {/* Header */}
             <header
-                className={`flex-none border-b border-bardo-accent/20 bg-black/40 backdrop-blur-md z-30 ${headerTransformClass}`}
+                className="flex-none border-b border-bardo-accent/20 bg-black/40 backdrop-blur-md z-30"
                 style={{ padding: isMobile ? '0.625rem' : '1rem', paddingTop: isMobile ? 'calc(0.625rem + var(--safe-area-top, 0px))' : 'calc(1rem + var(--safe-area-top, 0px))' }}
             >
                 <div
