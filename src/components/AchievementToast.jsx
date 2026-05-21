@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useIsPortraitDevice } from '../hooks/useMediaQuery.js'
 
 /**
  * AchievementToast - Animated notification for unlocked achievements
@@ -8,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion'
  * FIX: Uses key-based remounting to ensure each new achievement triggers animation
  */
 export default function AchievementToast({ achievement, onDismiss, playSound }) {
+    const isPortrait = useIsPortraitDevice()
     const [isVisible, setIsVisible] = useState(false)
     const [displayedAchievement, setDisplayedAchievement] = useState(null)
     const timerRef = useRef(null)
@@ -70,14 +72,15 @@ export default function AchievementToast({ achievement, onDismiss, playSound }) 
                     transition={{ type: 'spring', damping: 20, stiffness: 300 }}
                 >
                     <div
-                        className="flex items-center gap-4 px-6 py-4 rounded-lg border-2 border-bardo-accent/60
-                                   bg-bardo-accent/20 backdrop-blur-sm
-                                   shadow-lg cursor-pointer"
+                        className={`flex items-center rounded-lg border-2 border-bardo-accent/60
+                                   bg-bardo-accent/20 backdrop-blur-sm shadow-lg cursor-pointer
+                                   ${isPortrait ? 'gap-3 px-4 py-3' : 'gap-4 px-6 py-4'}`}
                         onClick={() => setIsVisible(false)}
                     >
                         {/* Achievement Icon */}
-                        <div className="flex-shrink-0 w-14 h-14 flex items-center justify-center
-                                        bg-bardo-accent/20 rounded-full border border-bardo-accent/40 overflow-hidden">
+                        <div className={`flex-shrink-0 flex items-center justify-center
+                                        bg-bardo-accent/20 rounded-full border border-bardo-accent/40 overflow-hidden
+                                        ${isPortrait ? 'w-10 h-10' : 'w-14 h-14'}`}>
                             {displayedAchievement.image
                                 ? <img src={displayedAchievement.image} alt={displayedAchievement.title} className="w-full h-full object-cover" />
                                 : <span className="text-3xl">{displayedAchievement.icon || '🏆'}</span>

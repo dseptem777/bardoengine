@@ -3,9 +3,9 @@ import { scrollToBottomSmooth, userIsReadingUp } from '../utils/readingScroll.js
 
 // Font size classes mapping
 const FONT_SIZE_CLASSES = {
-    small: 'text-lg md:text-xl',
-    normal: 'text-xl md:text-2xl',
-    large: 'text-2xl md:text-3xl',
+    small: 'text-base sm:text-lg md:text-xl',
+    normal: 'text-lg sm:text-xl md:text-2xl',
+    large: 'text-xl sm:text-2xl md:text-3xl',
 }
 
 // Characters to reveal per animation frame during fast-forward
@@ -462,7 +462,7 @@ export default function TextDisplay({
 
     return (
         <div
-            className="relative cursor-default space-y-6"
+            className="relative cursor-default space-y-4 sm:space-y-6"
             style={{
                 textAlign: 'var(--player-text-align, left)',
                 fontFamily: 'var(--bardo-font-main)'
