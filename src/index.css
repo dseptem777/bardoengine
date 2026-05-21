@@ -842,3 +842,29 @@ input[type='range']::-moz-range-thumb {
 
 .lockpick-fail-icon { display: none; }
 [data-colorblind] .lockpick-fail-icon { display: inline; }
+
+/* ============================================
+   PORTRAIT MOBILE — layout helpers
+   Used by TitleScreen and ChapterBreakOverlay
+   portrait reflow (stacked image + text panel)
+   ============================================ */
+@media (orientation: portrait) and (max-width: 639px) {
+  /* Ensure portrait hero image fills its container cleanly */
+  .portrait-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* Text panel base styles for portrait overlays */
+  .portrait-text-panel {
+    background-color: var(--bardo-bg, #0a0a0a);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+}
