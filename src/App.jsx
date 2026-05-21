@@ -27,6 +27,7 @@ import { processChoiceRequirements } from './utils/choiceRequirements'
 import { getDominantStat } from './utils/getDominantStat'
 import { SettingsProvider, useSettings } from './hooks/useSettings'
 import { useIsMobile, useIsNarrowViewport } from './hooks/useMediaQuery'
+import DebugViewportOverlay from './components/DebugViewportOverlay' // TEMP DEBUG — remove before merge
 
 // Import the compiled stories (used in development mode)
 import partuzaStory from './stories/partuza.json'
@@ -360,6 +361,7 @@ function AppContent({ onStorySelect }) {
             data-colorblind={settings.colorblindMode ? 'true' : undefined}
             data-dyslexic={settings.dyslexicMode ? 'true' : undefined}
         >
+            <DebugViewportOverlay />{/* TEMP DEBUG — remove before merge */}
             <VFXLayer vfxState={vfx.vfxState} />
 
             {/* Horror VFX Layer - Extended effects for meta-horror */}
