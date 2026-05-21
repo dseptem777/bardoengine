@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useIsMobile, useIsPortrait } from '../hooks/useMediaQuery'
+import { useIsPortraitDevice } from '../hooks/useMediaQuery'
 import ImageZoomViewer from './ImageZoomViewer'
 
 /**
@@ -25,9 +25,7 @@ export default function TitleScreen({
     const [isReady, setIsReady] = useState(false)
     const [zoomOpen, setZoomOpen] = useState(false)
 
-    const isMobile = useIsMobile()
-    const isPortrait = useIsPortrait()
-    const usePortraitLayout = isMobile && isPortrait && !!backgroundImage
+    const usePortraitLayout = useIsPortraitDevice() && !!backgroundImage
 
     // Delay before showing "press to start"
     useEffect(() => {

@@ -25,3 +25,7 @@ export function useIsNarrowViewport() {
 export function useIsPortrait() {
     return useMediaQuery('(orientation: portrait)')
 }
+
+export function useIsPortraitDevice() {
+    return useMediaQuery('(orientation: portrait) and (max-width: 1023px)')
+}

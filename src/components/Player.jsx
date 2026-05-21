@@ -4,6 +4,7 @@ import { BookOpen, Settings, Save, Heart, Backpack, FastForward } from 'lucide-r
 import TextDisplay from './TextDisplay'
 import ChoiceButton from './ChoiceButton'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation'
+import { useIsPortraitDevice } from '../hooks/useMediaQuery'
 import { HeaderStats } from './StatsPanel'
 import BossHPIndicator from './BossHPIndicator'
 import ScrollGrabOverlay from './ScrollGrabOverlay'
@@ -304,6 +305,8 @@ export default function Player({
         onChoice(index)
     }, [onChoice, cancelAutoAdvance])
 
+    const isPortraitDevice = useIsPortraitDevice()
+
     // Header transition classes
     const headerTransformClass = isMobile
         ? `transition-transform duration-300 ease-in-out ${headerVisible ? 'translate-y-0' : '-translate-y-full'}`
@@ -317,90 +320,171 @@ export default function Player({
                 style={{ padding: isMobile ? '0.625rem' : '1rem', paddingTop: isMobile ? 'calc(0.625rem + var(--safe-area-top, 0px))' : 'calc(1rem + var(--safe-area-top, 0px))' }}
             >
                 <div
-                    className="mx-auto flex justify-between items-center w-full"
+                    className="mx-auto w-full"
                     style={{ maxWidth: 'var(--player-max-width, 48rem)' }}
                 >
-                    {/* Left side: title + mobile header stats */}
-                    <div className="flex items-center gap-3 min-w-0">
-                        <h1
-                            className={`text-bardo-accent text-sm tracking-wider shrink-0 ${isMobile ? 'max-w-[8rem] truncate' : ''}`}
-                            style={{ fontFamily: 'var(--bardo-font-mono)' }}
-                        >
-                            {gameTitle
-                                ? gameTitle
-                                : (isMobile ? 'BARDO' : `BARDO ENGINE v${engineVersion}`)
-                            }
-                        </h1>
-                        {/* Compact viewports: value stats inline in header */}
-                        {headerStatsProps && (
-                            <HeaderStats {...headerStatsProps} />
-                        )}
-                    </div>
-
-                    {/* Right side: buttons */}
-                    <div className="flex items-center gap-2 sm:gap-4">
-                        {onOptions && (
-                            <div className="flex items-center gap-1 sm:gap-2">
-                                <button
-                                    onClick={onToggleHistory}
-                                    className="flex items-center gap-1.5 font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
-                                    title="Bitácora (L)"
+                    {isPortraitDevice ? (
+                        /* Portrait mobile: two-row layout to prevent clipping */
+                        <>
+                            {/* Row 1: title (left) + back arrow (right) */}
+                            <div className="flex justify-between items-center mb-1.5">
+                                <h1
+                                    className="text-bardo-accent text-sm tracking-wider truncate max-w-[12rem]"
+                                    style={{ fontFamily: 'var(--bardo-font-mono)' }}
                                 >
-                                    <BookOpen size={14} />
-                                    {!isMobile && 'BITÁCORA'}
-                                </button>
+                                    {gameTitle ? gameTitle : 'BARDO'}
+                                </h1>
                                 <button
-                                    onClick={onOptions}
-                                    className="flex items-center gap-1.5 font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
-                                    title="Opciones"
+                                    onClick={onBack}
+                                    className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors shrink-0 ml-2"
                                 >
-                                    <Settings size={14} />
-                                    {!isMobile && 'OPCIONES'}
+                                    ←
                                 </button>
                             </div>
-                        )}
-                        {onSave && (
-                            <button
-                                onClick={onSave}
-                                disabled={isMinigameActive}
-                                className={`flex items-center gap-1.5 font-mono text-sm transition-colors ${isMinigameActive ? 'text-neutral-600 cursor-not-allowed' : 'text-bardo-muted hover:text-bardo-accent'}`}
-                            >
-                                <Save size={14} />
-                                {!isMobile && 'GUARDAR/CARGAR'}
-                            </button>
-                        )}
-                        {/* Mobile: relationships toggle in header */}
-                        {isMobile && relationshipsEnabled && onToggleRelationships && (
-                            <button
-                                onClick={onToggleRelationships}
-                                className="text-bardo-muted hover:text-bardo-accent transition-colors"
-                                title="Relaciones"
-                            >
-                                <Heart size={16} />
-                            </button>
-                        )}
-                        {/* Mobile: inventory toggle in header */}
-                        {isMobile && inventoryEnabled && onToggleInventory && (
-                            <button
-                                onClick={onToggleInventory}
-                                className="relative text-bardo-muted hover:text-bardo-accent transition-colors"
-                                title="Inventario"
-                            >
-                                <Backpack size={16} />
-                                {inventoryItemCount > 0 && (
-                                    <span className="absolute -top-1 -right-2 bg-bardo-accent text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                                        {inventoryItemCount}
-                                    </span>
+                            {/* Row 2: stats (left) + inventory/action icons (right) */}
+                            <div className="flex justify-between items-center">
+                                <div className="min-w-0">
+                                    {headerStatsProps && (
+                                        <HeaderStats {...headerStatsProps} />
+                                    )}
+                                </div>
+                                <div className="flex items-center gap-2 shrink-0">
+                                    {onOptions && (
+                                        <>
+                                            <button
+                                                onClick={onToggleHistory}
+                                                className="text-bardo-muted hover:text-bardo-accent transition-colors"
+                                                title="Bitácora (L)"
+                                            >
+                                                <BookOpen size={14} />
+                                            </button>
+                                            <button
+                                                onClick={onOptions}
+                                                className="text-bardo-muted hover:text-bardo-accent transition-colors"
+                                                title="Opciones"
+                                            >
+                                                <Settings size={14} />
+                                            </button>
+                                        </>
+                                    )}
+                                    {onSave && (
+                                        <button
+                                            onClick={onSave}
+                                            disabled={isMinigameActive}
+                                            className={`transition-colors ${isMinigameActive ? 'text-neutral-600 cursor-not-allowed' : 'text-bardo-muted hover:text-bardo-accent'}`}
+                                        >
+                                            <Save size={14} />
+                                        </button>
+                                    )}
+                                    {relationshipsEnabled && onToggleRelationships && (
+                                        <button
+                                            onClick={onToggleRelationships}
+                                            className="text-bardo-muted hover:text-bardo-accent transition-colors"
+                                            title="Relaciones"
+                                        >
+                                            <Heart size={16} />
+                                        </button>
+                                    )}
+                                    {inventoryEnabled && onToggleInventory && (
+                                        <button
+                                            onClick={onToggleInventory}
+                                            className="relative text-bardo-muted hover:text-bardo-accent transition-colors"
+                                            title="Inventario"
+                                        >
+                                            <Backpack size={16} />
+                                            {inventoryItemCount > 0 && (
+                                                <span className="absolute -top-1 -right-2 bg-bardo-accent text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                                                    {inventoryItemCount}
+                                                </span>
+                                            )}
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        /* Desktop / landscape: original single-row layout */
+                        <div className="flex justify-between items-center">
+                            {/* Left side: title + header stats */}
+                            <div className="flex items-center gap-3 min-w-0">
+                                <h1
+                                    className={`text-bardo-accent text-sm tracking-wider shrink-0 ${isMobile ? 'max-w-[8rem] truncate' : ''}`}
+                                    style={{ fontFamily: 'var(--bardo-font-mono)' }}
+                                >
+                                    {gameTitle
+                                        ? gameTitle
+                                        : (isMobile ? 'BARDO' : `BARDO ENGINE v${engineVersion}`)
+                                    }
+                                </h1>
+                                {headerStatsProps && (
+                                    <HeaderStats {...headerStatsProps} />
                                 )}
-                            </button>
-                        )}
-                        <button
-                            onClick={onBack}
-                            className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
-                        >
-                            {isMobile ? '←' : '← MENÚ'}
-                        </button>
-                    </div>
+                            </div>
+
+                            {/* Right side: buttons */}
+                            <div className="flex items-center gap-2 sm:gap-4">
+                                {onOptions && (
+                                    <div className="flex items-center gap-1 sm:gap-2">
+                                        <button
+                                            onClick={onToggleHistory}
+                                            className="flex items-center gap-1.5 font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
+                                            title="Bitácora (L)"
+                                        >
+                                            <BookOpen size={14} />
+                                            {!isMobile && 'BITÁCORA'}
+                                        </button>
+                                        <button
+                                            onClick={onOptions}
+                                            className="flex items-center gap-1.5 font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
+                                            title="Opciones"
+                                        >
+                                            <Settings size={14} />
+                                            {!isMobile && 'OPCIONES'}
+                                        </button>
+                                    </div>
+                                )}
+                                {onSave && (
+                                    <button
+                                        onClick={onSave}
+                                        disabled={isMinigameActive}
+                                        className={`flex items-center gap-1.5 font-mono text-sm transition-colors ${isMinigameActive ? 'text-neutral-600 cursor-not-allowed' : 'text-bardo-muted hover:text-bardo-accent'}`}
+                                    >
+                                        <Save size={14} />
+                                        {!isMobile && 'GUARDAR/CARGAR'}
+                                    </button>
+                                )}
+                                {isMobile && relationshipsEnabled && onToggleRelationships && (
+                                    <button
+                                        onClick={onToggleRelationships}
+                                        className="text-bardo-muted hover:text-bardo-accent transition-colors"
+                                        title="Relaciones"
+                                    >
+                                        <Heart size={16} />
+                                    </button>
+                                )}
+                                {isMobile && inventoryEnabled && onToggleInventory && (
+                                    <button
+                                        onClick={onToggleInventory}
+                                        className="relative text-bardo-muted hover:text-bardo-accent transition-colors"
+                                        title="Inventario"
+                                    >
+                                        <Backpack size={16} />
+                                        {inventoryItemCount > 0 && (
+                                            <span className="absolute -top-1 -right-2 bg-bardo-accent text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                                                {inventoryItemCount}
+                                            </span>
+                                        )}
+                                    </button>
+                                )}
+                                <button
+                                    onClick={onBack}
+                                    className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
+                                >
+                                    {isMobile ? '←' : '← MENÚ'}
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </header>
 
