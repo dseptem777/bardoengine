@@ -525,11 +525,14 @@ async function main() {
                     return results;
                 };
 
-                const apks = findApk(apkOutputDir).filter(p => p.includes('release') || p.includes('debug'));
+                // Only sign the APK matching the chosen build variant (debug/release).
+                // Without this filter we could grab a stale APK from the other variant.
+                const variantTag = isDebugBuild ? 'debug' : 'release';
+                const apks = findApk(apkOutputDir).filter(p => p.includes(variantTag) && !p.includes('-aligned'));
                 if (apks.length > 0) {
                     const unsignedApk = apks[0];
                     const alignedApk = unsignedApk.replace('.apk', '-aligned.apk');
-                    const signedApk = unsignedApk.replace('-unsigned', '-signed').replace('-release', '-release');
+                    const signedApk = unsignedApk.replace('.apk', '-signed.apk');
 
                     // Step 1: zipalign
                     console.log('  → zipalign...');
@@ -616,23 +619,29 @@ async function main() {
 
         console.log(`\n📱 Output Android:`);
 
-        // Copy APKs with game name - prefer signed version
+        // Copy APK matching the chosen build variant only.
+        // Previously this would copy BOTH debug AND release APKs to the same
+        // filename, with the last-iterated overwriting the first — typically
+        // leaving the stale-cached variant in android-builds/.
+        const variantTag = isDebugBuild ? 'debug' : 'release';
+        const variantLabel = isDebugBuild ? 'debug' : 'release';
         const signedApkPath = process.env._SIGNED_APK;
         if (signedApkPath && fs.existsSync(signedApkPath)) {
-            // Use the signed APK
-            const newName = `${safeTitle}_${version}.apk`;
+            const newName = `${safeTitle}_${version}_${variantLabel}.apk`;
             const newPath = path.join(outputDir, newName);
             fs.copyFileSync(signedApkPath, newPath);
             const sizeMB = (fs.statSync(newPath).size / 1024 / 1024).toFixed(1);
-            console.log(`   ✓ APK (firmado): ${newName} (${sizeMB} MB)`);
+            console.log(`   ✓ APK (firmado, ${variantLabel}): ${newName} (${sizeMB} MB)`);
         } else if (fs.existsSync(apkDir)) {
-            const apks = findFiles(apkDir, '.apk').filter(p => (p.includes('release') || p.includes('debug')) && !p.includes('-aligned'));
+            const apks = findFiles(apkDir, '.apk').filter(p =>
+                p.includes(variantTag) && !p.includes('-aligned') && !p.includes('-signed')
+            );
             apks.forEach(apkPath => {
-                const newName = `${safeTitle}_${version}.apk`;
+                const newName = `${safeTitle}_${version}_${variantLabel}.apk`;
                 const newPath = path.join(outputDir, newName);
                 fs.copyFileSync(apkPath, newPath);
                 const sizeMB = (fs.statSync(newPath).size / 1024 / 1024).toFixed(1);
-                console.log(`   ✓ APK: ${newName} (${sizeMB} MB)`);
+                console.log(`   ✓ APK (${variantLabel}): ${newName} (${sizeMB} MB)`);
             });
         }
 
