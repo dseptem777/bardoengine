@@ -327,6 +327,7 @@ async function main() {
     let bundleFlag = '';
 
     let isAndroid = false;
+    let isDebugBuild = false;
     switch (platformSelection) {
         case '1':
             targetPlatform = 'Windows';
@@ -458,7 +459,7 @@ async function main() {
             'Elegí (1/2, default=1): '
         );
 
-        const isDebugBuild = buildSpeed !== '2';
+        isDebugBuild = buildSpeed !== '2';
 
         const archChoice = await prompt(
             '\n¿Para qué arquitectura?\n' +
