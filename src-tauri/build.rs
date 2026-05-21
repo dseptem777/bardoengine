@@ -9,6 +9,12 @@ fn main() {
     println!("cargo:rerun-if-env-changed=BARDO_SECRET_B");
     println!("cargo:rerun-if-env-changed=BARDO_OBFUSCATION_SEED");
 
+    // Re-embed the frontend whenever dist/ changes. Without this, Cargo caches
+    // the previous binary and ships stale web assets in the Android .so even
+    // though `npm run build` regenerated dist/.
+    println!("cargo:rerun-if-changed=../dist");
+    println!("cargo:rerun-if-changed=../dist/index.html");
+
     // Forward the secrets as compile-time env vars for the env!() macros in crypto.rs.
     for var in &["BARDO_SECRET_A", "BARDO_SECRET_B", "BARDO_OBFUSCATION_SEED"] {
         if let Ok(val) = std::env::var(var) {
