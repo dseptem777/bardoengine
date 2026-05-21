@@ -118,21 +118,21 @@ describe('TextDisplay', () => {
             render(<TextDisplay text="Test" isTyping={false} />)
 
             const paragraph = screen.getByText('Test')
-            expect(paragraph).toHaveClass('text-xl')
+            expect(paragraph).toHaveClass('text-lg')
         })
 
         it('should apply small font size class', () => {
             render(<TextDisplay text="Small text" isTyping={false} fontSize="small" />)
 
             const paragraph = screen.getByText('Small text')
-            expect(paragraph).toHaveClass('text-lg')
+            expect(paragraph).toHaveClass('text-base')
         })
 
         it('should apply large font size class', () => {
             render(<TextDisplay text="Large text" isTyping={false} fontSize="large" />)
 
             const paragraph = screen.getByText('Large text')
-            expect(paragraph).toHaveClass('text-2xl')
+            expect(paragraph).toHaveClass('text-xl')
         })
     })
 })
