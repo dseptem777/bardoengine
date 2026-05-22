@@ -63,6 +63,20 @@ describe('StatsPanel', () => {
 
             expect(screen.queryByText('HP')).not.toBeInTheDocument()
         })
+
+        it('should render classified placeholder when requiresName and no playerName', () => {
+            render(
+                <StatsPanel
+                    stats={mockStats}
+                    statsConfig={{ ...mockStatsConfig, playerNameVariable: 'nombre_personaje' }}
+                    getAllStatsInfo={mockGetAllStatsInfo}
+                    playerName=""
+                />
+            )
+
+            expect(screen.getByTestId('id-placeholder')).toBeInTheDocument()
+            expect(screen.getByText('[CLASIFICADO]')).toBeInTheDocument()
+        })
     })
 
     describe('bar stats', () => {

@@ -15,9 +15,9 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
     // Don't show if stats not enabled
     if (!statsConfig?.enabled) return null
 
-    // Don't show if player name variable is configured but empty
+    // Don't show if player name variable is configured but empty — but still render placeholder
     const requiresName = !!statsConfig.playerNameVariable
-    if (requiresName && !playerName) return null
+    const redacted = requiresName && !playerName
 
     const allStats = getAllStatsInfo().filter(s => s && s.displayType !== 'relationship')
     const barStats = allStats.filter(s => s.displayType === 'bar')
@@ -30,7 +30,7 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
         return (
             <div className="fixed top-0 left-0 right-0 z-[820] pointer-events-none mobile-slim-bars">
                 <div className="flex w-full">
-                    {barStats.map(stat => {
+                    {barStats.map((stat, index) => {
                         const percentage = stat.max ? Math.max(0, Math.min(100, (stats[stat.id] / stat.max) * 100)) : 0
                         const isCritical = percentage <= 10
                         return (
@@ -82,33 +82,76 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
                     }}
                 >
                     {/* ID Card Header with Name */}
-                    {playerName && (
-                        <motion.div
-                            className="bg-bardo-accent/20 border-b border-bardo-accent/30 px-4 py-3"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.2 }}
-                        >
-                            {statsConfig?.roleLabel && (
-                                <div className="text-[10px] uppercase tracking-widest text-bardo-accent/70 mb-1">
-                                    {statsConfig.roleLabel}
+                    <AnimatePresence mode="wait">
+                        {playerName ? (
+                            <motion.div
+                                key="id-header-real"
+                                className="bg-bardo-accent/20 border-b border-bardo-accent/30 px-4 py-3"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.2 }}
+                            >
+                                {statsConfig?.roleLabel && (
+                                    <div className="text-[10px] uppercase tracking-widest text-bardo-accent/70 mb-1">
+                                        {statsConfig.roleLabel}
+                                    </div>
+                                )}
+                                <div className="text-lg font-bold text-bardo-accent tracking-wide">
+                                    {playerName}
                                 </div>
-                            )}
-                            <div className="text-lg font-bold text-bardo-accent tracking-wide">
-                                {playerName}
-                            </div>
-                            {nickname && (
-                                <div className="text-xs text-bardo-accent/60 italic mt-0.5">
-                                    "{nickname}"
+                                {nickname && (
+                                    <div className="text-xs text-bardo-accent/60 italic mt-0.5">
+                                        "{nickname}"
+                                    </div>
+                                )}
+                            </motion.div>
+                        ) : requiresName ? (
+                            <motion.div
+                                key="id-header-placeholder"
+                                data-testid="id-placeholder"
+                                className="bg-gray-800/40 border-b border-gray-700/50 px-4 py-3"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                <div className="text-[10px] uppercase tracking-widest text-red-400/70 font-mono mb-1">
+                                    [CLASIFICADO]
                                 </div>
-                            )}
-                        </motion.div>
-                    )}
+                                <motion.div
+                                    className="h-5 w-32 bg-black/80 rounded-sm"
+                                    animate={{ opacity: [0.6, 1, 0.6] }}
+                                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                                    exit={{ scaleX: 0, originX: 0, transition: { duration: 0.4 } }}
+                                />
+                            </motion.div>
+                        ) : null}
+                    </AnimatePresence>
 
                     {/* Chapter indicator */}
                     {chapterName && (
                         <div className="px-4 py-1.5 border-b border-gray-800 text-[10px] text-gray-500 tracking-wide font-mono">
-                            {chapterName}
+                            <AnimatePresence mode="wait">
+                                {redacted ? (
+                                    <div key="chapter-redacted" className="flex flex-col gap-0.5">
+                                        <div className="text-[10px] uppercase tracking-widest font-mono text-red-400/70">[LOCACION DESCONOCIDA]</div>
+                                        <motion.div
+                                            className="h-1.5 w-full bg-black/70 rounded-sm"
+                                            animate={{ opacity: [0.6, 1, 0.6] }}
+                                            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: 0.2 }}
+                                        />
+                                    </div>
+                                ) : (
+                                    <motion.span
+                                        key="chapter-real"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        {chapterName}
+                                    </motion.span>
+                                )}
+                            </AnimatePresence>
                         </div>
                     )}
 
@@ -137,18 +180,29 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
 
                         {/* Value Stats (Attributes) */}
                         {valueStats.length > 0 && (
-                            <div className="flex flex-wrap gap-3">
-                                {valueStats.map((stat, index) => (
+                            redacted ? (
+                                <div className="flex flex-col gap-0.5">
+                                    <div className="text-[10px] uppercase tracking-widest font-mono text-red-400/70">[BAJO EVALUACION]</div>
                                     <motion.div
-                                        key={stat.id}
-                                        initial={{ opacity: 0, scale: 0.8 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        transition={{ delay: 0.4 + index * 0.1 }}
-                                    >
-                                        <StatValue stat={stat} value={stats[stat.id]} />
-                                    </motion.div>
-                                ))}
-                            </div>
+                                        className="h-3 w-full bg-black/70 rounded-sm"
+                                        animate={{ opacity: [0.6, 1, 0.6] }}
+                                        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                                    />
+                                </div>
+                            ) : (
+                                <div className="flex flex-wrap gap-3">
+                                    {valueStats.map((stat, index) => (
+                                        <motion.div
+                                            key={stat.id}
+                                            initial={{ opacity: 0, scale: 0.8 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            transition={{ delay: 0.4 + index * 0.1 }}
+                                        >
+                                            <StatValue stat={stat} value={stats[stat.id]} redacted={false} redactDelay={0} />
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            )
                         )}
                     </div>
                 </div>
@@ -160,7 +214,7 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
 /**
  * HeaderStats - Compact value stats for embedding in the mobile header
  */
-export function HeaderStats({ stats, statsConfig, getAllStatsInfo }) {
+export function HeaderStats({ stats, statsConfig, getAllStatsInfo, redacted = false }) {
     if (!statsConfig?.enabled) return null
     const { settings } = useSettings()
 
@@ -168,6 +222,19 @@ export function HeaderStats({ stats, statsConfig, getAllStatsInfo }) {
     const valueStats = allStats.filter(s => s.displayType === 'value')
 
     if (valueStats.length === 0) return null
+
+    if (redacted) {
+        return (
+            <div className="flex items-center gap-1.5">
+                <span className="text-[10px] uppercase tracking-widest font-mono text-red-400/70">[BAJO EVALUACION]</span>
+                <motion.div
+                    className="h-3 w-10 bg-black/70 rounded-sm"
+                    animate={{ opacity: [0.6, 1, 0.6] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                />
+            </div>
+        )
+    }
 
     return (
         <div className="flex items-center gap-2 text-xs font-mono">
@@ -253,12 +320,26 @@ function StatBar({ stat, value }) {
 /**
  * StatValue - Simple value display for attribute stats
  */
-function StatValue({ stat, value }) {
+function StatValue({ stat, value, redacted = false, redactDelay = 0 }) {
     const displayValue = value >= 0 ? `+${value}` : value
     const isKarmaStyle = stat.id === 'karma'
     const { settings } = useSettings()
     const karmaPos = settings.colorblindMode ? '#3b82f6' : '#22c55e'
     const karmaNeg = settings.colorblindMode ? '#f97316' : '#ef4444'
+
+    if (redacted) {
+        return (
+            <motion.div
+                className="flex items-center gap-1 text-sm"
+            >
+                <motion.div
+                    className="h-4 w-16 bg-black/70 rounded-sm"
+                    animate={{ opacity: [0.6, 1, 0.6] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: redactDelay }}
+                />
+            </motion.div>
+        )
+    }
 
     return (
         <motion.div
