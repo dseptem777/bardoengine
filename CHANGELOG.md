@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## [0.29.0] - 2026-05-21
+
+### Features
+- **Header portrait rediseñado**: layout de dos columnas — nombre del personaje y capítulo apilados a la izquierda (sin truncar), grilla 2×3 de botones compactos a la derecha. Elimina el solapamiento de stats con los botones de acción y aprovecha el espacio negativo del header.
+
+---
+
 ## [0.28.0] - 2026-05-21
 
 ### Features

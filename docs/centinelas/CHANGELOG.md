@@ -1,5 +1,12 @@
 # Changelog — Centinelas del Sur
 
+## [0.23.8] — 2026-05-21
+
+### Fixed
+- **título**: corregido el casing del título de "CENTINELAS DEL SUR" a "Centinelas del Sur" en la configuración de build.
+
+---
+
 ## [0.23.7] — 2026-05-19
 
 ### Fixed

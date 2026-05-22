@@ -289,33 +289,31 @@ export default function Player({
                     style={{ maxWidth: 'var(--player-max-width, 48rem)' }}
                 >
                     {isPortraitDevice ? (
-                        /* Portrait mobile: two-row layout to prevent clipping */
+                        /* Portrait mobile: three-row layout */
                         (() => {
                             const PORTRAIT_ICON_BTN = 'min-w-[44px] min-h-[44px] flex items-center justify-center text-bardo-muted hover:text-bardo-accent transition-colors'
                             return (
                             <>
-                            {/* Row 1: title (left) + back arrow (right) */}
-                            <div className="flex justify-between items-center mb-1.5">
-                                <h1 className="text-bardo-accent text-sm tracking-wider truncate min-w-0" style={{ fontFamily: 'var(--bardo-font-mono)' }}>
-                                    {playerName
-                                        ? <>{playerName}{nickname && <> &ldquo;<span className="italic">{nickname}</span>&rdquo;</>}{chapterName && <> · {chapterName}</>}</>
-                                        : (gameTitle || 'BARDO')}
-                                </h1>
-                                <button
-                                    onClick={onBack}
-                                    className={`${PORTRAIT_ICON_BTN} font-mono text-sm shrink-0 ml-2`}
-                                >
-                                    ←
-                                </button>
-                            </div>
-                            {/* Row 2: stats (left) + inventory/action icons (right) */}
-                            <div className="flex justify-between items-center w-full">
-                                <div className="min-w-0 flex-shrink overflow-hidden">
+                            {/* Two-column layout: info stack (left) + button grid (right) */}
+                            <div className="flex items-start gap-1">
+                                {/* Left: player name / chapter / stats stacked */}
+                                <div className="flex-1 min-w-0 flex flex-col justify-around self-stretch">
+                                    <h1 className="text-bardo-accent text-sm tracking-wider truncate" style={{ fontFamily: 'var(--bardo-font-mono)' }}>
+                                        {playerName
+                                            ? <>{playerName}{nickname && <> &ldquo;<span className="italic">{nickname}</span>&rdquo;</>}</>
+                                            : (gameTitle || 'BARDO')}
+                                    </h1>
+                                    {playerName && chapterName && (
+                                        <div className="text-xs text-bardo-muted truncate" style={{ fontFamily: 'var(--bardo-font-mono)' }}>
+                                            {chapterName}
+                                        </div>
+                                    )}
                                     {headerStatsProps && (
                                         <HeaderStats {...headerStatsProps} />
                                     )}
                                 </div>
-                                <div className="flex items-center gap-1 flex-shrink-0 ml-2">
+                                {/* Right: 2×3 button grid */}
+                                <div className="flex flex-wrap w-[132px] flex-shrink-0">
                                     {onOptions && (
                                         <>
                                             <button
@@ -366,6 +364,12 @@ export default function Player({
                                             )}
                                         </button>
                                     )}
+                                    <button
+                                        onClick={onBack}
+                                        className={`${PORTRAIT_ICON_BTN} font-mono text-sm`}
+                                    >
+                                        ←
+                                    </button>
                                 </div>
                             </div>
                             </>

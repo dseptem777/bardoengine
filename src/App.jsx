@@ -555,6 +555,21 @@ function AppContent({ onStorySelect }) {
                     onOptions={() => setOptionsOpen(true)}
                     onToggleHistory={() => setHistoryOpen(prev => !prev)}
                     gameTitle={getGameTitle()}
+                    playerName={
+                        gameSystems.statsConfig?.playerNameVariable
+                            ? story?.variablesState?.[gameSystems.statsConfig.playerNameVariable] || ''
+                            : null
+                    }
+                    nickname={
+                        gameSystems.statsConfig?.nicknameVariable
+                            ? story?.variablesState?.[gameSystems.statsConfig.nicknameVariable] || ''
+                            : null
+                    }
+                    chapterName={
+                        gameSystems.statsConfig?.chapterVariable
+                            ? story?.variablesState?.[gameSystems.statsConfig.chapterVariable] || ''
+                            : null
+                    }
                     // Settings
                     typewriterDelay={getTypewriterDelay()}
                     fontSize={settings.fontSize}
