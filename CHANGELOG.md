@@ -1,5 +1,19 @@
 # Changelog — BardoEngine
 
+## [0.28.0] - 2026-05-21
+
+### Features
+- **Portrait reflow + zoom viewer**: full mobile portrait layout with two-column stat bars, responsive widths for panels/overlays, and a pinch-to-zoom image viewer (`react-zoom-pan-pinch`) for chapter break images.
+- **Header HUD redesign**: slim two-row portrait HUD with permanent pinned header, character ID strip below stat bars, minimum 44×44px tap targets on all header controls, and responsive typography with compact achievement toasts.
+- **Bulletproof portrait detection**: reliable two-row HUD activation based on viewport geometry; removed scroll-hide behavior to keep controls always accessible.
+- **Android build pipeline fixes**: frontend is now re-embedded when `dist/` changes on Android builds; build script never ships stale frontend or wrong-variant APK; `isDebugBuild` hoisted so the output-copy step resolves correctly.
+
+### Fixes
+- **Parser**: CHAPTER_BREAK regex relaxed to allow spaces after commas.
+- **TextDisplay tests**: font-size assertions updated to match mobile-first Tailwind classes.
+
+---
+
 ## [0.27.2] - 2026-05-20
 
 ### Fixes
