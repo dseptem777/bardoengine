@@ -35,7 +35,7 @@ const HistoryLog = ({ isOpen, history, onClose }) => {
                 role="dialog"
                 aria-modal="true"
                 aria-label="Bitácora"
-                className="w-full max-w-4xl max-h-[80vh] bg-bardo-bg border-[var(--ui-border-width)] border-bardo-accent flex flex-col shadow-[0_0_30px_rgba(0,0,0,0.5)] animate-in zoom-in-95 duration-300"
+                className="w-full max-w-full sm:max-w-4xl max-h-[80vh] bg-bardo-bg border-[var(--ui-border-width)] border-bardo-accent flex flex-col shadow-[0_0_30px_rgba(0,0,0,0.5)] animate-in zoom-in-95 duration-300"
                 style={{ borderRadius: 'var(--ui-border-radius)' }}
                 onClick={(e) => e.stopPropagation()}
             >

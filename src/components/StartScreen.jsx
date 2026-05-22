@@ -89,7 +89,7 @@ export default function StartScreen({
                 </h1>
 
                 {/* Menu Buttons */}
-                <div className="flex flex-col gap-4 w-72">
+                <div className="flex flex-col gap-4 w-full max-w-xs">
                     {/* New Game */}
                     <MenuButton onClick={onNewGame}>
                         NUEVA PARTIDA

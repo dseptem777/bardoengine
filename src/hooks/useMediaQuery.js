@@ -21,3 +21,11 @@ export function useIsMobile() {
 export function useIsNarrowViewport() {
     return useMediaQuery('(max-width: 1023px)')
 }
+
+export function useIsPortrait() {
+    return useMediaQuery('(orientation: portrait)')
+}
+
+export function useIsPortraitDevice() {
+    return useMediaQuery('(orientation: portrait) and (max-width: 1023px)')
+}

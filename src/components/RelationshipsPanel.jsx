@@ -119,7 +119,7 @@ export default function RelationshipsPanel({
                 {isOpen && (
                     <motion.div
                         className="fixed z-40 bg-black/90 border border-bardo-accent/30
-                                   backdrop-blur-sm w-72 max-h-[60vh] overflow-hidden pointer-events-auto"
+                                   backdrop-blur-sm w-full max-w-xs sm:w-72 max-h-[60vh] overflow-hidden pointer-events-auto"
                         style={{
                             top: 'calc(var(--inventory-top) + 4rem)',
                             right: 'calc(var(--inventory-right) + 4.5rem)',

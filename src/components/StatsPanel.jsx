@@ -23,7 +23,7 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
     const barStats = allStats.filter(s => s.displayType === 'bar')
     const valueStats = allStats.filter(s => s.displayType === 'value')
 
-    // Mobile: only render slim bar stats (value stats go in header via HeaderStats)
+    // Mobile: slim bar stats only (no ID strip — player name + chapter shown in header)
     if (isMobile) {
         if (barStats.length === 0) return null
 

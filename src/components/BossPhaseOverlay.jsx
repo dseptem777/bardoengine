@@ -338,7 +338,7 @@ export default function BossPhaseOverlay({
                 {/* Scrollable corridor text — infinite */}
                 <div
                     ref={scrollRef}
-                    className="flex-1 overflow-y-auto px-6 md:px-12 py-8 max-w-2xl mx-auto w-full"
+                    className="flex-1 overflow-y-auto px-6 md:px-12 py-8 max-w-full sm:max-w-2xl mx-auto w-full"
                     onScroll={handleCorridorScroll}
                 >
                     {corridorLines.map((line, i) => {

@@ -144,7 +144,7 @@ export default function MinigameOverlay({
                     <div className="absolute inset-0 border-[16px] border-bardo-accent/5 pointer-events-none" />
 
                     <motion.div
-                        className="relative max-w-4xl w-full mx-4"
+                        className="relative max-w-full sm:max-w-4xl w-full mx-4"
                         initial={{ scale: 0.9, y: 30 }}
                         animate={{ scale: 1, y: 0 }}
                         exit={{ scale: 0.9, y: 30 }}
