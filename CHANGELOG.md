@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## [0.30.0] - 2026-05-22
+
+### Features
+- **ID card "expediente censurado"**: antes de que el jugador ingrese su nombre, el ID card (desktop) y el header (mobile portrait) muestran un placeholder estilo documento clasificado en lugar de aparecer de la nada. Slot del nombre con `[CLASIFICADO]`, capítulo con `[LOCACION DESCONOCIDA]`, atributos colapsados en una sola línea `[BAJO EVALUACION]`, cada uno con barra de redacción negra pulsante. Las barras de recursos (HP/WP) siempre se ven. Cuando llega el nombre, el placeholder se desvanece y el ID card real entra con el spring habitual.
+
+---
+
 ## [0.29.0] - 2026-05-21
 
 ### Features

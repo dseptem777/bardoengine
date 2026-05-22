@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { motion } from 'framer-motion'
 import { scrollToBottomSmooth } from '../utils/readingScroll.js'
 import { BookOpen, Settings, Save, Heart, Backpack, FastForward } from 'lucide-react'
 import TextDisplay from './TextDisplay'
@@ -298,18 +299,39 @@ export default function Player({
                             <div className="flex items-start gap-1">
                                 {/* Left: player name / chapter / stats stacked */}
                                 <div className="flex-1 min-w-0 flex flex-col justify-around self-stretch">
-                                    <h1 className="text-bardo-accent text-sm tracking-wider truncate" style={{ fontFamily: 'var(--bardo-font-mono)' }}>
-                                        {playerName
-                                            ? <>{playerName}{nickname && <> &ldquo;<span className="italic">{nickname}</span>&rdquo;</>}</>
-                                            : (gameTitle || 'BARDO')}
-                                    </h1>
-                                    {playerName && chapterName && (
-                                        <div className="text-xs text-bardo-muted truncate" style={{ fontFamily: 'var(--bardo-font-mono)' }}>
-                                            {chapterName}
+                                    {playerName ? (
+                                        <>
+                                        <h1 className="text-bardo-accent text-sm tracking-wider truncate" style={{ fontFamily: 'var(--bardo-font-mono)' }}>
+                                            {playerName}{nickname && <> &ldquo;<span className="italic">{nickname}</span>&rdquo;</>}
+                                        </h1>
+                                        {chapterName && (
+                                            <div className="text-xs text-bardo-muted truncate" style={{ fontFamily: 'var(--bardo-font-mono)' }}>
+                                                {chapterName}
+                                            </div>
+                                        )}
+                                        </>
+                                    ) : (
+                                        <>
+                                        <div className="flex items-center gap-1.5">
+                                            <span className="text-[10px] uppercase tracking-widest text-red-400/70 font-mono">[CLASIFICADO]</span>
+                                            <motion.div
+                                                className="h-3.5 w-28 bg-black/80 rounded-sm"
+                                                animate={{ opacity: [0.6, 1, 0.6] }}
+                                                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                                            />
                                         </div>
+                                        <div className="flex items-center gap-1.5 mt-0.5">
+                                            <span className="text-[9px] uppercase tracking-widest font-mono text-red-400/70">[LOCACION DESCONOCIDA]</span>
+                                            <motion.div
+                                                className="h-1.5 w-24 bg-black/70 rounded-sm"
+                                                animate={{ opacity: [0.6, 1, 0.6] }}
+                                                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+                                            />
+                                        </div>
+                                        </>
                                     )}
                                     {headerStatsProps && (
-                                        <HeaderStats {...headerStatsProps} />
+                                        <HeaderStats {...headerStatsProps} redacted={!playerName && !!headerStatsProps?.statsConfig?.playerNameVariable} />
                                     )}
                                 </div>
                                 {/* Right: 2×3 button grid */}
@@ -390,7 +412,7 @@ export default function Player({
                                     }
                                 </h1>
                                 {headerStatsProps && (
-                                    <HeaderStats {...headerStatsProps} />
+                                    <HeaderStats {...headerStatsProps} redacted={!playerName && !!headerStatsProps?.statsConfig?.playerNameVariable} />
                                 )}
                             </div>
 
