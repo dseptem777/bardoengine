@@ -301,7 +301,7 @@ export default function Player({
                                 <div className="flex-1 min-w-0 flex flex-col justify-around self-stretch">
                                     {playerName ? (
                                         <>
-                                        <h1 className="text-bardo-accent text-sm tracking-wider truncate" style={{ fontFamily: 'var(--bardo-font-mono)' }}>
+                                        <h1 data-tutorial="playercard" className="text-bardo-accent text-sm tracking-wider truncate" style={{ fontFamily: 'var(--bardo-font-mono)' }}>
                                             {playerName}{nickname && <> &ldquo;<span className="italic">{nickname}</span>&rdquo;</>}
                                         </h1>
                                         {chapterName && (
@@ -312,7 +312,7 @@ export default function Player({
                                         </>
                                     ) : (
                                         <>
-                                        <div className="flex items-center gap-1.5">
+                                        <div data-tutorial="playercard" className="flex items-center gap-1.5">
                                             <span className="text-[10px] uppercase tracking-widest text-red-400/70 font-mono">[CLASIFICADO]</span>
                                             <motion.div
                                                 className="h-3.5 w-28 bg-black/80 rounded-sm"
@@ -331,7 +331,9 @@ export default function Player({
                                         </>
                                     )}
                                     {headerStatsProps && (
-                                        <HeaderStats {...headerStatsProps} redacted={!playerName && !!headerStatsProps?.statsConfig?.playerNameVariable} />
+                                        <div data-tutorial="stats">
+                                            <HeaderStats {...headerStatsProps} redacted={!playerName && !!headerStatsProps?.statsConfig?.playerNameVariable} />
+                                        </div>
                                     )}
                                 </div>
                                 {/* Right: 2×3 button grid */}
@@ -339,6 +341,7 @@ export default function Player({
                                     {onOptions && (
                                         <>
                                             <button
+                                                data-tutorial="history"
                                                 onClick={onToggleHistory}
                                                 className={PORTRAIT_ICON_BTN}
                                                 title="Bitácora (L)"
@@ -346,6 +349,7 @@ export default function Player({
                                                 <BookOpen size={14} />
                                             </button>
                                             <button
+                                                data-tutorial="options"
                                                 onClick={onOptions}
                                                 className={PORTRAIT_ICON_BTN}
                                                 title="Opciones"
@@ -356,6 +360,7 @@ export default function Player({
                                     )}
                                     {onSave && (
                                         <button
+                                            data-tutorial="save"
                                             onClick={onSave}
                                             disabled={isMinigameActive}
                                             className={`${PORTRAIT_ICON_BTN} ${isMinigameActive ? 'text-neutral-600 cursor-not-allowed hover:text-neutral-600' : ''}`}
@@ -365,6 +370,7 @@ export default function Player({
                                     )}
                                     {relationshipsEnabled && onToggleRelationships && (
                                         <button
+                                            data-tutorial="relationships"
                                             onClick={onToggleRelationships}
                                             className={PORTRAIT_ICON_BTN}
                                             title="Relaciones"
@@ -374,6 +380,7 @@ export default function Player({
                                     )}
                                     {inventoryEnabled && onToggleInventory && (
                                         <button
+                                            data-tutorial="inventory"
                                             onClick={onToggleInventory}
                                             className={`relative ${PORTRAIT_ICON_BTN}`}
                                             title="Inventario"
@@ -412,7 +419,9 @@ export default function Player({
                                     }
                                 </h1>
                                 {headerStatsProps && (
-                                    <HeaderStats {...headerStatsProps} redacted={!playerName && !!headerStatsProps?.statsConfig?.playerNameVariable} />
+                                    <div data-tutorial="stats">
+                                        <HeaderStats {...headerStatsProps} redacted={!playerName && !!headerStatsProps?.statsConfig?.playerNameVariable} />
+                                    </div>
                                 )}
                             </div>
 
@@ -421,6 +430,7 @@ export default function Player({
                                 {onOptions && (
                                     <div className="flex items-center gap-1 sm:gap-2">
                                         <button
+                                            data-tutorial="history"
                                             onClick={onToggleHistory}
                                             className="flex items-center gap-1.5 font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
                                             title="Bitácora (L)"
@@ -429,6 +439,7 @@ export default function Player({
                                             {!isMobile && 'BITÁCORA'}
                                         </button>
                                         <button
+                                            data-tutorial="options"
                                             onClick={onOptions}
                                             className="flex items-center gap-1.5 font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
                                             title="Opciones"
@@ -440,6 +451,7 @@ export default function Player({
                                 )}
                                 {onSave && (
                                     <button
+                                        data-tutorial="save"
                                         onClick={onSave}
                                         disabled={isMinigameActive}
                                         className={`flex items-center gap-1.5 font-mono text-sm transition-colors ${isMinigameActive ? 'text-neutral-600 cursor-not-allowed' : 'text-bardo-muted hover:text-bardo-accent'}`}
@@ -450,6 +462,7 @@ export default function Player({
                                 )}
                                 {isMobile && relationshipsEnabled && onToggleRelationships && (
                                     <button
+                                        data-tutorial="relationships"
                                         onClick={onToggleRelationships}
                                         className="text-bardo-muted hover:text-bardo-accent transition-colors"
                                         title="Relaciones"
@@ -459,6 +472,7 @@ export default function Player({
                                 )}
                                 {isMobile && inventoryEnabled && onToggleInventory && (
                                     <button
+                                        data-tutorial="inventory"
                                         onClick={onToggleInventory}
                                         className="relative text-bardo-muted hover:text-bardo-accent transition-colors"
                                         title="Inventario"
@@ -506,6 +520,7 @@ export default function Player({
                 >
                     {/* Text area - Fixed position from top, grows downward only */}
                     <div
+                        data-tutorial="text"
                         className="mb-12 cursor-pointer"
                         onClick={handleSkip}
                     >
@@ -534,7 +549,7 @@ export default function Player({
                         {/* Choices - Appear below text, no layout impact on text above */}
                         {/* Hide gate choices [→] during boss — they're auto-selected by phase mechanics */}
                         {!isTyping && !hasPendingMinigame && choices.length > 0 && !isBossGateChoice && (
-                            <div className="space-y-4">
+                            <div data-tutorial="choices" className="space-y-4">
                                 {choices.map((choice, index) => {
                                     const lockResult = checkLocked ? checkLocked(choice) : null
                                     const isLocked = lockResult?.locked ?? false

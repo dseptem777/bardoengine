@@ -1,5 +1,14 @@
 # Changelog — BardoEngine
 
+## [0.31.0] - 2026-05-24
+
+### Features
+- **Tutorial spotlight para nuevos jugadores**: overlay que oscurece la pantalla e ilumina cada elemento real de la UI con tooltips narrados en personaje. Segmento inicial (HP, texto, bitácora, guardar, opciones, vínculos, inventario y las opciones de decisión) narrado por Enríquez; un segundo segmento, al revelar el nombre, narrado por El Profesor, que ilumina la ficha (nombre/locación) y los atributos. Es one-shot: se ve una vez y no vuelve a aparecer.
+- **Re-ver y reiniciar tutoriales desde Opciones**: botón "Ver tutorial" (en juego) para repetir el recorrido, y "Reset tutoriales" (en juego y en el menú principal) para que los tutoriales vuelvan a mostrarse.
+- **HP siempre legible en mobile**: la barra de vida del header en mobile ahora muestra el valor numérico adentro, incluso con la ficha aún censurada.
+
+---
+
 ## [0.30.0] - 2026-05-22
 
 ### Features

@@ -8,7 +8,7 @@ import { useModalA11y } from '../hooks/useModalA11y'
  * OptionsModal - Settings modal with retro-futuristic styling
  * Accessible from Start Screen and during gameplay
  */
-export default function OptionsModal({ isOpen, onClose }) {
+export default function OptionsModal({ isOpen, onClose, onReplayTutorial, onResetTutorials }) {
     const {
         settings,
         updateSetting,
@@ -166,6 +166,30 @@ export default function OptionsModal({ isOpen, onClose }) {
                                 CERRAR
                             </button>
                         </div>
+
+                        {/* Tutorial replay */}
+                        {onReplayTutorial && (
+                            <div className="mt-3">
+                                <button
+                                    onClick={() => { onReplayTutorial(); onClose() }}
+                                    className="w-full py-2.5 px-4 border border-bardo-accent/40 text-bardo-accent/70 hover:border-bardo-accent hover:text-bardo-accent transition-colors font-mono text-sm tracking-wider"
+                                >
+                                    Ver tutorial
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Tutorial reset (only when outside game) */}
+                        {onResetTutorials && (
+                            <div className="mt-3">
+                                <button
+                                    onClick={() => { onResetTutorials(); onClose() }}
+                                    className="w-full py-2.5 px-4 border border-gray-700 text-gray-500 hover:border-gray-500 hover:text-gray-300 transition-colors font-mono text-sm tracking-wider"
+                                >
+                                    Reset tutoriales
+                                </button>
+                            </div>
+                        )}
                     </motion.div>
                 </motion.div>
             )}

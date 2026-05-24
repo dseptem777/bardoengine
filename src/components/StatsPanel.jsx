@@ -27,31 +27,46 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
     if (isMobile) {
         if (barStats.length === 0) return null
 
+        // Find the HP stat (first bar stat, or stat with id 'hp'/'vida')
+        const hpStat = barStats.find(s => s.id === 'hp' || s.id === 'vida') || barStats[0]
+
         return (
             <div className="fixed top-0 left-0 right-0 z-[820] pointer-events-none mobile-slim-bars">
                 <div className="flex w-full">
-                    {barStats.map((stat, index) => {
+                    {barStats.map((stat) => {
                         const percentage = stat.max ? Math.max(0, Math.min(100, (stats[stat.id] / stat.max) * 100)) : 0
                         const isCritical = percentage <= 10
+                        const isHp = stat === hpStat
                         return (
                             <div
                                 key={stat.id}
-                                className="flex-1 h-1.5 bg-gray-900/80"
+                                data-tutorial={isHp ? 'hp' : undefined}
+                                className="flex-1 relative bg-gray-900/80"
+                                style={{ height: isHp ? '1.25rem' : '6px' }}
                                 title={`${stat.label}: ${stats[stat.id]}/${stat.max}`}
                             >
                                 <motion.div
-                                    className="h-full"
-                                    style={{ backgroundColor: stat.color || '#facc15' }}
-                                    initial={{ width: 0 }}
+                                    className="absolute inset-0"
+                                    style={{ backgroundColor: stat.color || '#facc15', transformOrigin: 'left' }}
+                                    initial={{ scaleX: 0 }}
                                     animate={{
-                                        width: `${percentage}%`,
+                                        scaleX: percentage / 100,
                                         opacity: isCritical ? [1, 0.5, 1] : 1
                                     }}
                                     transition={{
-                                        width: { duration: 0.3, ease: 'easeOut' },
+                                        scaleX: { duration: 0.3, ease: 'easeOut' },
                                         opacity: isCritical ? { duration: 0.5, repeat: Infinity } : {}
                                     }}
                                 />
+                                {/* HP numeric value — always visible on the HP bar */}
+                                {isHp && (
+                                    <span
+                                        className="absolute inset-0 flex items-center px-1.5 text-[10px] font-bold font-mono z-10"
+                                        style={{ color: isCritical ? '#ef4444' : '#000', textShadow: '0 0 4px rgba(0,0,0,0.8)' }}
+                                    >
+                                        {stats[stat.id]}/{stat.max}
+                                    </span>
+                                )}
                             </div>
                         )
                     })}
@@ -81,7 +96,8 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
                         maxWidth: '280px'
                     }}
                 >
-                    {/* ID Card Header with Name */}
+                    {/* ID Card Header with Name + Chapter indicator — spotlight anchor for desktop */}
+                    <div data-tutorial="playercard">
                     <AnimatePresence mode="wait">
                         {playerName ? (
                             <motion.div
@@ -154,22 +170,27 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
                             </AnimatePresence>
                         </div>
                     )}
+                    </div>
 
                     {/* Stats Content */}
                     <div className="p-3 space-y-3">
                         {/* Bar Stats (Resources) */}
                         {barStats.length > 0 && (
                             <div className="space-y-2">
-                                {barStats.map((stat, index) => (
-                                    <motion.div
-                                        key={stat.id}
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.3 + index * 0.1 }}
-                                    >
-                                        <StatBar stat={stat} value={stats[stat.id]} />
-                                    </motion.div>
-                                ))}
+                                {barStats.map((stat, index) => {
+                                    const isHpStat = stat.id === 'hp' || stat.id === 'vida' || index === 0
+                                    return (
+                                        <motion.div
+                                            key={stat.id}
+                                            data-tutorial={isHpStat ? 'hp' : undefined}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: 0.3 + index * 0.1 }}
+                                        >
+                                            <StatBar stat={stat} value={stats[stat.id]} />
+                                        </motion.div>
+                                    )
+                                })}
                             </div>
                         )}
 
@@ -181,7 +202,7 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
                         {/* Value Stats (Attributes) */}
                         {valueStats.length > 0 && (
                             redacted ? (
-                                <div className="flex flex-col gap-0.5">
+                                <div data-tutorial="stats" className="flex flex-col gap-0.5">
                                     <div className="text-[10px] uppercase tracking-widest font-mono text-red-400/70">[BAJO EVALUACION]</div>
                                     <motion.div
                                         className="h-3 w-full bg-black/70 rounded-sm"
@@ -190,7 +211,7 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
                                     />
                                 </div>
                             ) : (
-                                <div className="flex flex-wrap gap-3">
+                                <div data-tutorial="stats" className="flex flex-wrap gap-3">
                                     {valueStats.map((stat, index) => (
                                         <motion.div
                                             key={stat.id}
