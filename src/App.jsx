@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 import Player from './components/Player'
 import StorySelector from './components/StorySelector'
 import StartScreen from './components/StartScreen'
@@ -20,11 +20,19 @@ import WillpowerMeter from './components/WillpowerMeter'
 import SpiderOverlay from './components/SpiderOverlay'
 import ChapterBreakOverlay from './components/ChapterBreakOverlay'
 import GameOverMenu from './components/GameOverMenu'
+import TutorialSpotlight from './components/TutorialSpotlight'
 import { useHeavyCursor } from './hooks/useHeavyCursor'
 import { useStoryLoader } from './hooks/useStoryLoader'
 import { useBardoEngine } from './hooks/useBardoEngine'
 import { processChoiceRequirements } from './utils/choiceRequirements'
 import { getDominantStat } from './utils/getDominantStat'
+import {
+    shouldFireIntro,
+    shouldFireChoicesBackup,
+    replayQueue,
+    markIntroDone,
+    resetSeen,
+} from './utils/tutorialLogic'
 import { SettingsProvider, useSettings } from './hooks/useSettings'
 import { useIsMobile, useIsNarrowViewport } from './hooks/useMediaQuery'
 
@@ -73,6 +81,14 @@ function AppContent({ onStorySelect }) {
     const [meterRevealed, setMeterRevealed] = useState(false)    // True once bar has been shown for first time
     const [debugUnlocked, setDebugUnlocked] = useState(false)
     const [showDebugSpawn, setShowDebugSpawn] = useState(false)
+
+    // Tutorial spotlight state
+    // activeTutorial: 'intro' | 'choices' | 'stats' | null
+    const [activeTutorial, setActiveTutorial] = useState(null)
+    // Queue of segments to show after the current one finishes
+    const tutorialQueueRef = useRef([])
+    // Manual replay: show tutorial without touching tutorialSeen flags
+    const [manualTutorial, setManualTutorial] = useState(false)
 
     // Dev story list (persisted in localStorage, all imported via .ink)
     const [devStoryList, setDevStoryList] = useState(() => {
@@ -351,6 +367,243 @@ function AppContent({ onStorySelect }) {
     const showPlayer = isReady && story !== null
 
     // ==================
+    // Tutorial Spotlight — triggers + helpers
+    // ==================
+    const { settings: tutorialSettings, updateSetting: updateTutorialSetting } = useSettings()
+    const tutorialSeen = tutorialSettings.tutorialSeen || { intro: false, choices: false, stats: false }
+
+    // Enqueue a tutorial segment. If one is active, push to queue; otherwise show immediately.
+    const enqueueTutorial = useCallback((segment) => {
+        if (activeTutorial !== null) {
+            if (!tutorialQueueRef.current.includes(segment)) {
+                tutorialQueueRef.current.push(segment)
+            }
+        } else {
+            setActiveTutorial(segment)
+        }
+    }, [activeTutorial])
+
+    // Segmento A: fires the first time choicesVisible becomes true after Player mounts.
+    // This guarantees the choices anchor exists in the DOM when the spotlight starts.
+    // Fallback timeout fires if the opening beat has no choices.
+    const prevShowPlayer = useRef(false)
+    const introFired = useRef(false)
+    const introFallbackRef = useRef(null)
+
+    // Reset on unmount / story change
+    useEffect(() => {
+        if (!showPlayer) {
+            prevShowPlayer.current = false
+            introFired.current = false
+            if (introFallbackRef.current) {
+                clearTimeout(introFallbackRef.current)
+                introFallbackRef.current = null
+            }
+        }
+    }, [showPlayer])
+
+    // Arm fallback when Player first mounts
+    useEffect(() => {
+        if (!showPlayer) return
+        if (prevShowPlayer.current) return // already armed
+        prevShowPlayer.current = true
+        if (!shouldFireIntro({ tutorialSeen, introFired: introFired.current })) return
+        // Fallback: fire intro after 1 s if choicesVisible never became true
+        introFallbackRef.current = setTimeout(() => {
+            if (!introFired.current) {
+                introFired.current = true
+                enqueueTutorial('intro')
+            }
+        }, 1000)
+        return () => {
+            if (introFallbackRef.current) clearTimeout(introFallbackRef.current)
+        }
+    }, [showPlayer]) // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Primary trigger: fire intro the first time choices are visible
+    useEffect(() => {
+        if (!showPlayer) return
+        if (!shouldFireIntro({ tutorialSeen, introFired: introFired.current })) return
+        if (choicesVisible && choices.length > 1) {
+            // Cancel fallback — primary trigger wins
+            if (introFallbackRef.current) {
+                clearTimeout(introFallbackRef.current)
+                introFallbackRef.current = null
+            }
+            introFired.current = true
+            enqueueTutorial('intro')
+        }
+    }, [choicesVisible, showPlayer]) // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Choices trigger (backup): fires only after intro is done, for subsequent beats
+    const choicesTutorialFired = useRef(false)
+    useEffect(() => {
+        if (!showPlayer) return
+        if (choicesTutorialFired.current) return
+        if (tutorialSeen.choices) { choicesTutorialFired.current = true; return }
+        if (shouldFireChoicesBackup({ tutorialSeen, choicesVisible, choicesLength: choices.length })) {
+            choicesTutorialFired.current = true
+            enqueueTutorial('choices')
+        }
+    }, [choicesVisible, showPlayer]) // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Segmento B: playerName falsy → truthy
+    // Espera a que el ancla 'stats' esté en el DOM antes de encolar,
+    // porque Player renderiza el header de stats un tick después del cambio de nombre.
+    const prevPlayerName = useRef(null)
+    const statsTutorialPendingRef = useRef(false)
+    const statsAnchorWaitRef = useRef(null)
+
+    useEffect(() => {
+        if (!showPlayer) return
+        const playerName = gameSystems.statsConfig?.playerNameVariable
+            ? story?.variablesState?.[gameSystems.statsConfig.playerNameVariable] || ''
+            : null
+        const wasEmpty = !prevPlayerName.current
+        const isNowFilled = !!playerName
+        if (wasEmpty && isNowFilled && !tutorialSeen.stats && !statsTutorialPendingRef.current) {
+            statsTutorialPendingRef.current = true
+            // Esperar hasta ~1 s a que el ancla 'stats' exista en el DOM
+            let attempts = 0
+            const MAX_ATTEMPTS = 8
+            const INTERVAL = 120
+            statsAnchorWaitRef.current = setInterval(() => {
+                attempts++
+                const anchor = document.querySelector('[data-tutorial="stats"]')
+                if (anchor || attempts >= MAX_ATTEMPTS) {
+                    clearInterval(statsAnchorWaitRef.current)
+                    statsAnchorWaitRef.current = null
+                    enqueueTutorial('stats')
+                }
+            }, INTERVAL)
+        }
+        prevPlayerName.current = playerName
+    }) // runs every render intentionally to track variable changes
+
+    // Cleanup anchor-wait interval on unmount / story change
+    useEffect(() => {
+        if (!showPlayer) {
+            statsTutorialPendingRef.current = false
+            if (statsAnchorWaitRef.current) {
+                clearInterval(statsAnchorWaitRef.current)
+                statsAnchorWaitRef.current = null
+            }
+        }
+    }, [showPlayer])
+
+    // Called when a tutorial segment finishes (onDone)
+    const handleTutorialDone = useCallback((segment) => {
+        if (!manualTutorial) {
+            // Mark this segment as seen
+            let updated = { ...tutorialSeen, [segment]: true }
+            // Completing intro also marks choices (choices was shown as its last step)
+            if (segment === 'intro') updated = markIntroDone(tutorialSeen)
+            updateTutorialSetting('tutorialSeen', updated)
+        }
+        // Pop next from queue or clear
+        const next = tutorialQueueRef.current.shift()
+        setActiveTutorial(next || null)
+        if (!next) setManualTutorial(false)
+    }, [manualTutorial, tutorialSeen, updateTutorialSetting])
+
+    const handleResetTutorials = useCallback(() => {
+        if (!window.confirm('¿Resetear los tutoriales? Volverán a aparecer en la próxima partida.')) return
+        updateTutorialSetting('tutorialSeen', resetSeen())
+    }, [updateTutorialSetting])
+
+    // Build steps for each segment
+    const playerName = gameSystems.statsConfig?.playerNameVariable
+        ? story?.variablesState?.[gameSystems.statsConfig.playerNameVariable] || ''
+        : null
+
+    // Manual replay from Opciones
+    const handleReplayTutorial = useCallback(() => {
+        tutorialQueueRef.current = []
+        setManualTutorial(true)
+        setActiveTutorial('intro')
+        // Enqueue Segmento B (El Profesor/stats) only if name is already revealed
+        tutorialQueueRef.current = replayQueue({ playerName })
+    }, [playerName])
+    const inventoryEnabled = !!gameSystems.inventoryConfig?.enabled
+    const relEnabled = gameSystems.statsConfig?.definitions?.some(d => d.displayType === 'relationship')
+
+    const TUTORIAL_SEGMENTS = {
+        intro: {
+            speaker: { name: 'ENRÍQUEZ' },
+            steps: [
+                {
+                    anchor: 'hp',
+                    title: 'Signo vital',
+                    body: 'Su signo vital. Baja con los golpes y las malas decisiones; si llega a cero, se terminó. No lo pierda de vista.',
+                },
+                {
+                    anchor: 'text',
+                    title: 'Transmisión',
+                    body: 'Toque el informe para acelerar la transmisión; tóquelo de nuevo para completarlo de golpe. La velocidad se regula en Opciones.',
+                },
+                {
+                    anchor: 'history',
+                    title: 'Bitácora',
+                    body: 'La bitácora guarda todo lo que leyó. Si pierde el hilo, consúltela antes de decidir; no pienso repetírselo.',
+                },
+                {
+                    anchor: 'save',
+                    title: 'Guardado',
+                    body: 'Guarde cuando quiera; hay varias ranuras. El sistema también guarda solo, pero no le confíe su vida a eso.',
+                },
+                {
+                    anchor: 'options',
+                    title: 'Opciones',
+                    body: 'Velocidad de texto, volumen, tamaño de letra y accesibilidad. Configúrelo a su gusto ahora y no me consulte después.',
+                },
+                ...(relEnabled ? [{
+                    anchor: 'relationships',
+                    title: 'Vínculos',
+                    body: 'Acá se registran sus vínculos. Por ahora está vacío, pero a medida que se gane la confianza de la gente —cuesta más de lo que cree— quedará anotado a quién tiene de su lado.',
+                }] : []),
+                ...(inventoryEnabled ? [{
+                    anchor: 'inventory',
+                    title: 'Inventario',
+                    body: 'Acá guarda lo que recoja. Ciertos objetos habilitan opciones que, sin ellos, le quedarán cerradas.',
+                }] : []),
+                // choices is last — only included when choices are visible at trigger time
+                ...(choicesVisible && choices.length > 1 ? [{
+                    anchor: 'choices',
+                    title: 'Decisiones',
+                    body: 'Cada opción abre un camino distinto, y algunas exigen cierta aptitud u objeto. Lea bien antes de comprometerse: no todas se pueden deshacer.',
+                }] : []),
+            ],
+        },
+        choices: {
+            speaker: { name: 'ENRÍQUEZ' },
+            steps: [
+                {
+                    anchor: 'choices',
+                    title: 'Decisiones',
+                    body: 'Cada opción abre un camino distinto, y algunas exigen cierta aptitud u objeto. Lea bien antes de comprometerse: no todas se pueden deshacer.',
+                },
+            ],
+        },
+        stats: {
+            speaker: { name: 'EL PROFESOR', color: '#a78bfa' },
+            steps: [
+                {
+                    anchor: 'playercard',
+                    title: 'Su identidad',
+                    body: `Bienvenido${playerName ? `, ${playerName}` : ''}. Ese es su nombre en clave y su locación actual; cuando se desoriente, mírelos para saber quién es y dónde está.`,
+                },
+                {
+                    anchor: 'stats',
+                    title: 'Su ficha',
+                    body: 'Su ficha, ya desclasificada: magia, fuerza y conocimiento. Cada desafío admite más de una salida; cuál se le abra dependerá de cuál de ellas cultive. Elija con cuidado en quién se convierte.',
+                },
+            ],
+        },
+    }
+
+    const activeTutorialConfig = activeTutorial ? TUTORIAL_SEGMENTS[activeTutorial] : null
+
+    // ==================
     // Render
     // ==================
 
@@ -400,6 +653,8 @@ function AppContent({ onStorySelect }) {
             <OptionsModal
                 isOpen={optionsOpen}
                 onClose={() => setOptionsOpen(false)}
+                onReplayTutorial={showPlayer ? handleReplayTutorial : undefined}
+                onResetTutorials={handleResetTutorials}
             />
 
             {/* History Log */}
@@ -721,6 +976,15 @@ function AppContent({ onStorySelect }) {
                 }}
             />
 
+            {/* Tutorial Spotlight */}
+            {activeTutorialConfig && (
+                <TutorialSpotlight
+                    key={activeTutorial}
+                    steps={activeTutorialConfig.steps}
+                    speaker={activeTutorialConfig.speaker}
+                    onDone={() => handleTutorialDone(activeTutorial)}
+                />
+            )}
 
         </div>
     )

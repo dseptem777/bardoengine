@@ -18,6 +18,10 @@ const DEFAULT_SETTINGS = {
     fontSize: 'normal', // 'small' | 'normal' | 'large'
     colorblindMode: false,
     dyslexicMode: false,
+
+    // Tutorial flags — one per trigger segment
+    // intro: Segmento A (UI principal), choices: primer multi-opción, stats: Segmento B (ficha desclasificada)
+    tutorialSeen: { intro: false, choices: false, stats: false },
 }
 
 // Speed mapping: setting value -> milliseconds delay
