@@ -1,7 +1,7 @@
 ﻿{
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Centinelas del Sur",
-  "version": "0.24.0",
+  "version": "0.24.1",
   "identifier": "com.bardoengine.centinelas",
   "build": {
     "frontendDist": "../dist",

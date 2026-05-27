@@ -1,5 +1,12 @@
 # Changelog — Centinelas del Sur
 
+## [0.24.1] — 2026-05-27
+
+### Fixed
+- **Cap3 — feria/banda**: corregido typo "show imperativo" → "show interpretativo" en el diálogo con el guardia.
+
+---
+
 ## [0.24.0] — 2026-05-27
 
 ### Changed
