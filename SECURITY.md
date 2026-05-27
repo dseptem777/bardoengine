@@ -85,21 +85,42 @@ automatically via the `dotenvy` crate, so `cargo build`, `npm run tauri:build`,
 `npm run tauri:dev`, and `npm run build-game` all work without any shell exports.
 CI environments can still inject them as real env vars — `.env` loading is silent/optional.
 
-### Generating secrets
+### Secret origin: HKDF-from-master model
+
+Since the DRM v3 pipeline, the three env vars are **not stored directly**. Instead they are
+derived deterministically via HKDF-SHA256 from a single master secret stored in `.env.master`:
+
+```
+BARDO_MASTER_SECRET=<64 hex chars>   # 32 random bytes, kept in your secrets vault
+```
+
+Derivation sketch (executed by `scripts/build-game.cjs`):
+- `BARDO_SECRET_A`         = HKDF(master, salt="bardo/secret-a",    info=minorTag, len=32)
+- `BARDO_SECRET_B`         = HKDF(master, salt="bardo/secret-b",    info=minorTag, len=32)
+- `BARDO_OBFUSCATION_SEED` = HKDF(master, salt="bardo/obfuscation", info=minorTag, len=32)
+
+where `minorTag` = `"X.Y.0"` (e.g. `"0.27.0"` for any `0.27.x` release).
+
+**Key properties:**
+- Any machine with `.env.master` can rebuild any version — no per-minor files to lose.
+- Bumping the minor version changes `minorTag` → all three secrets rotate automatically.
+- `.env.master` is gitignored. Back it up in a personal secrets vault.
+
+### Bootstrapping
 
 ```bash
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-# or
-openssl rand -hex 32
+npm run drm:init        # writes .env.master (fails if already exists)
 ```
 
 ### Rotating secrets
 
-1. Generate three new values.
-2. Update your `.env` (not committed) and any CI secrets.
-3. Run `npm run encrypt-story <story-id>` to produce a new `.enc`.
-4. Run `cargo build --release` (or `npm run tauri:build`) to embed the new secrets.
-5. Distribute the new binary. Old binaries with old secrets will not decrypt the new `.enc`.
+To rotate to a new master (e.g. after vault compromise):
+1. `rm .env.master` then `npm run drm:init` to generate a new master.
+2. Bump the minor version (`0.27.x` → `0.28.0`) so the new master + new minorTag together
+   produce fresh secrets that differ from any prior binary.
+3. Re-encrypt: `npm run encrypt-story <story-id>`.
+4. Rebuild: `npm run tauri:build`.
+5. Distribute new binary. Old binaries will not decrypt the new `.enc`.
 
 ### Legacy `BARDO_ENCRYPTION_KEY`
 

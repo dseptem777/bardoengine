@@ -65,7 +65,7 @@ export default function ExtrasMenu({
                     role="dialog"
                     aria-modal="true"
                     aria-label="Extras"
-                    className="w-full max-w-2xl h-[80vh] mx-4 p-6 border-[var(--ui-border-width)] border-bardo-accent/40 bg-bardo-bg overflow-hidden"
+                    className="w-full max-w-full sm:max-w-2xl h-[80vh] mx-4 p-6 border-[var(--ui-border-width)] border-bardo-accent/40 bg-bardo-bg overflow-hidden"
                     style={{ borderRadius: 'var(--ui-border-radius)' }}
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}

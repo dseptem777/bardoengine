@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { motion } from 'framer-motion'
 import { scrollToBottomSmooth } from '../utils/readingScroll.js'
 import { BookOpen, Settings, Save, Heart, Backpack, FastForward } from 'lucide-react'
 import TextDisplay from './TextDisplay'
 import ChoiceButton from './ChoiceButton'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation'
+import { useIsPortraitDevice } from '../hooks/useMediaQuery'
 import { HeaderStats } from './StatsPanel'
 import BossHPIndicator from './BossHPIndicator'
 import ScrollGrabOverlay from './ScrollGrabOverlay'
@@ -29,6 +31,9 @@ export default function Player({
     onToggleHistory,
     // Branding
     gameTitle = null,
+    playerName = null,
+    nickname = null,
+    chapterName = null,
     // Settings props
     typewriterDelay = 30,
     fontSize = 'normal',
@@ -88,12 +93,7 @@ export default function Player({
     const contentRef = useRef(null)
     const isStickyRef = useRef(true)
 
-    // Auto-hide header state (mobile only)
-    const [headerVisible, setHeaderVisible] = useState(true)
-    const lastScrollTopRef = useRef(0)
-    const scrollDeltaRef = useRef(0)
-
-    // Handle user scroll to detect if they want to stick to bottom + auto-hide header
+    // Handle user scroll to detect if they want to stick to bottom
     const handleScroll = useCallback(() => {
         if (!scrollContainerRef.current) return
 
@@ -101,35 +101,7 @@ export default function Player({
         // If user is within 50px of bottom, sticky is ON
         const isAtBottom = scrollHeight - scrollTop - clientHeight < 50
         isStickyRef.current = isAtBottom
-
-        // Auto-hide header on mobile
-        if (isMobile) {
-            const delta = scrollTop - lastScrollTopRef.current
-            lastScrollTopRef.current = scrollTop
-
-            // Accumulate scroll delta for threshold
-            if (delta > 0) {
-                // Scrolling down
-                scrollDeltaRef.current = Math.max(0, scrollDeltaRef.current + delta)
-                if (scrollDeltaRef.current > 30) {
-                    setHeaderVisible(false)
-                    scrollDeltaRef.current = 0
-                }
-            } else if (delta < 0) {
-                // Scrolling up
-                scrollDeltaRef.current = Math.min(0, scrollDeltaRef.current + delta)
-                if (scrollDeltaRef.current < -10) {
-                    setHeaderVisible(true)
-                    scrollDeltaRef.current = 0
-                }
-            }
-
-            // Always show header at top of page
-            if (scrollTop < 10) {
-                setHeaderVisible(true)
-            }
-        }
-    }, [isMobile])
+    }, [])
 
     // Setup resize observer for auto-scrolling
     // Disabled during scroll friction — player must scroll manually
@@ -304,103 +276,224 @@ export default function Player({
         onChoice(index)
     }, [onChoice, cancelAutoAdvance])
 
-    // Header transition classes
-    const headerTransformClass = isMobile
-        ? `transition-transform duration-300 ease-in-out ${headerVisible ? 'translate-y-0' : '-translate-y-full'}`
-        : ''
+    const isPortraitDevice = useIsPortraitDevice()
 
     return (
         <div className="h-screen flex flex-col bg-bardo-bg overflow-hidden transition-colors duration-500">
             {/* Header */}
             <header
-                className={`flex-none border-b border-bardo-accent/20 bg-black/40 backdrop-blur-md z-30 ${headerTransformClass}`}
+                className="flex-none border-b border-bardo-accent/20 bg-black/40 backdrop-blur-md z-30"
                 style={{ padding: isMobile ? '0.625rem' : '1rem', paddingTop: isMobile ? 'calc(0.625rem + var(--safe-area-top, 0px))' : 'calc(1rem + var(--safe-area-top, 0px))' }}
             >
                 <div
-                    className="mx-auto flex justify-between items-center w-full"
+                    className="mx-auto w-full"
                     style={{ maxWidth: 'var(--player-max-width, 48rem)' }}
                 >
-                    {/* Left side: title + mobile header stats */}
-                    <div className="flex items-center gap-3 min-w-0">
-                        <h1
-                            className={`text-bardo-accent text-sm tracking-wider shrink-0 ${isMobile ? 'max-w-[8rem] truncate' : ''}`}
-                            style={{ fontFamily: 'var(--bardo-font-mono)' }}
-                        >
-                            {gameTitle
-                                ? gameTitle
-                                : (isMobile ? 'BARDO' : `BARDO ENGINE v${engineVersion}`)
-                            }
-                        </h1>
-                        {/* Compact viewports: value stats inline in header */}
-                        {headerStatsProps && (
-                            <HeaderStats {...headerStatsProps} />
-                        )}
-                    </div>
+                    {isPortraitDevice ? (
+                        /* Portrait mobile: three-row layout */
+                        (() => {
+                            const PORTRAIT_ICON_BTN = 'min-w-[44px] min-h-[44px] flex items-center justify-center text-bardo-muted hover:text-bardo-accent transition-colors'
+                            return (
+                            <>
+                            {/* Two-column layout: info stack (left) + button grid (right) */}
+                            <div className="flex items-start gap-1">
+                                {/* Left: player name / chapter / stats stacked */}
+                                <div className="flex-1 min-w-0 flex flex-col justify-around self-stretch">
+                                    {playerName ? (
+                                        <>
+                                        <h1 data-tutorial="playercard" className="text-bardo-accent text-sm tracking-wider truncate" style={{ fontFamily: 'var(--bardo-font-mono)' }}>
+                                            {playerName}{nickname && <> &ldquo;<span className="italic">{nickname}</span>&rdquo;</>}
+                                        </h1>
+                                        {chapterName && (
+                                            <div className="text-xs text-bardo-muted truncate" style={{ fontFamily: 'var(--bardo-font-mono)' }}>
+                                                {chapterName}
+                                            </div>
+                                        )}
+                                        </>
+                                    ) : (
+                                        <>
+                                        <div data-tutorial="playercard" className="flex items-center gap-1.5">
+                                            <span className="text-[10px] uppercase tracking-widest text-red-400/70 font-mono">[CLASIFICADO]</span>
+                                            <motion.div
+                                                className="h-3.5 w-28 bg-black/80 rounded-sm"
+                                                animate={{ opacity: [0.6, 1, 0.6] }}
+                                                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                                            />
+                                        </div>
+                                        <div className="flex items-center gap-1.5 mt-0.5">
+                                            <span className="text-[9px] uppercase tracking-widest font-mono text-red-400/70">[LOCACION DESCONOCIDA]</span>
+                                            <motion.div
+                                                className="h-1.5 w-24 bg-black/70 rounded-sm"
+                                                animate={{ opacity: [0.6, 1, 0.6] }}
+                                                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+                                            />
+                                        </div>
+                                        </>
+                                    )}
+                                    {headerStatsProps && (
+                                        <div data-tutorial="stats">
+                                            <HeaderStats {...headerStatsProps} redacted={!playerName && !!headerStatsProps?.statsConfig?.playerNameVariable} />
+                                        </div>
+                                    )}
+                                </div>
+                                {/* Right: 2×3 button grid */}
+                                <div className="flex flex-wrap w-[132px] flex-shrink-0">
+                                    {onOptions && (
+                                        <>
+                                            <button
+                                                data-tutorial="history"
+                                                onClick={onToggleHistory}
+                                                className={PORTRAIT_ICON_BTN}
+                                                title="Bitácora (L)"
+                                            >
+                                                <BookOpen size={14} />
+                                            </button>
+                                            <button
+                                                data-tutorial="options"
+                                                onClick={onOptions}
+                                                className={PORTRAIT_ICON_BTN}
+                                                title="Opciones"
+                                            >
+                                                <Settings size={14} />
+                                            </button>
+                                        </>
+                                    )}
+                                    {onSave && (
+                                        <button
+                                            data-tutorial="save"
+                                            onClick={onSave}
+                                            disabled={isMinigameActive}
+                                            className={`${PORTRAIT_ICON_BTN} ${isMinigameActive ? 'text-neutral-600 cursor-not-allowed hover:text-neutral-600' : ''}`}
+                                        >
+                                            <Save size={14} />
+                                        </button>
+                                    )}
+                                    {relationshipsEnabled && onToggleRelationships && (
+                                        <button
+                                            data-tutorial="relationships"
+                                            onClick={onToggleRelationships}
+                                            className={PORTRAIT_ICON_BTN}
+                                            title="Relaciones"
+                                        >
+                                            <Heart size={16} />
+                                        </button>
+                                    )}
+                                    {inventoryEnabled && onToggleInventory && (
+                                        <button
+                                            data-tutorial="inventory"
+                                            onClick={onToggleInventory}
+                                            className={`relative ${PORTRAIT_ICON_BTN}`}
+                                            title="Inventario"
+                                        >
+                                            <Backpack size={16} />
+                                            {inventoryItemCount > 0 && (
+                                                <span className="absolute -top-1 -right-2 bg-bardo-accent text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                                                    {inventoryItemCount}
+                                                </span>
+                                            )}
+                                        </button>
+                                    )}
+                                    <button
+                                        onClick={onBack}
+                                        className={`${PORTRAIT_ICON_BTN} font-mono text-sm`}
+                                    >
+                                        ←
+                                    </button>
+                                </div>
+                            </div>
+                            </>
+                            )
+                        })()
+                    ) : (
+                        /* Desktop / landscape: original single-row layout */
+                        <div className="flex justify-between items-center">
+                            {/* Left side: title + header stats */}
+                            <div className="flex items-center gap-3 min-w-0">
+                                <h1
+                                    className={`text-bardo-accent text-sm tracking-wider shrink-0 ${isMobile ? 'max-w-[8rem] truncate' : ''}`}
+                                    style={{ fontFamily: 'var(--bardo-font-mono)' }}
+                                >
+                                    {gameTitle
+                                        ? gameTitle
+                                        : (isMobile ? 'BARDO' : `BARDO ENGINE v${engineVersion}`)
+                                    }
+                                </h1>
+                                {headerStatsProps && (
+                                    <div data-tutorial="stats">
+                                        <HeaderStats {...headerStatsProps} redacted={!playerName && !!headerStatsProps?.statsConfig?.playerNameVariable} />
+                                    </div>
+                                )}
+                            </div>
 
-                    {/* Right side: buttons */}
-                    <div className="flex items-center gap-2 sm:gap-4">
-                        {onOptions && (
-                            <div className="flex items-center gap-1 sm:gap-2">
+                            {/* Right side: buttons */}
+                            <div className="flex items-center gap-2 sm:gap-4">
+                                {onOptions && (
+                                    <div className="flex items-center gap-1 sm:gap-2">
+                                        <button
+                                            data-tutorial="history"
+                                            onClick={onToggleHistory}
+                                            className="flex items-center gap-1.5 font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
+                                            title="Bitácora (L)"
+                                        >
+                                            <BookOpen size={14} />
+                                            {!isMobile && 'BITÁCORA'}
+                                        </button>
+                                        <button
+                                            data-tutorial="options"
+                                            onClick={onOptions}
+                                            className="flex items-center gap-1.5 font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
+                                            title="Opciones"
+                                        >
+                                            <Settings size={14} />
+                                            {!isMobile && 'OPCIONES'}
+                                        </button>
+                                    </div>
+                                )}
+                                {onSave && (
+                                    <button
+                                        data-tutorial="save"
+                                        onClick={onSave}
+                                        disabled={isMinigameActive}
+                                        className={`flex items-center gap-1.5 font-mono text-sm transition-colors ${isMinigameActive ? 'text-neutral-600 cursor-not-allowed' : 'text-bardo-muted hover:text-bardo-accent'}`}
+                                    >
+                                        <Save size={14} />
+                                        {!isMobile && 'GUARDAR/CARGAR'}
+                                    </button>
+                                )}
+                                {isMobile && relationshipsEnabled && onToggleRelationships && (
+                                    <button
+                                        data-tutorial="relationships"
+                                        onClick={onToggleRelationships}
+                                        className="text-bardo-muted hover:text-bardo-accent transition-colors"
+                                        title="Relaciones"
+                                    >
+                                        <Heart size={16} />
+                                    </button>
+                                )}
+                                {isMobile && inventoryEnabled && onToggleInventory && (
+                                    <button
+                                        data-tutorial="inventory"
+                                        onClick={onToggleInventory}
+                                        className="relative text-bardo-muted hover:text-bardo-accent transition-colors"
+                                        title="Inventario"
+                                    >
+                                        <Backpack size={16} />
+                                        {inventoryItemCount > 0 && (
+                                            <span className="absolute -top-1 -right-2 bg-bardo-accent text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                                                {inventoryItemCount}
+                                            </span>
+                                        )}
+                                    </button>
+                                )}
                                 <button
-                                    onClick={onToggleHistory}
-                                    className="flex items-center gap-1.5 font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
-                                    title="Bitácora (L)"
+                                    onClick={onBack}
+                                    className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
                                 >
-                                    <BookOpen size={14} />
-                                    {!isMobile && 'BITÁCORA'}
-                                </button>
-                                <button
-                                    onClick={onOptions}
-                                    className="flex items-center gap-1.5 font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
-                                    title="Opciones"
-                                >
-                                    <Settings size={14} />
-                                    {!isMobile && 'OPCIONES'}
+                                    {isMobile ? '←' : '← MENÚ'}
                                 </button>
                             </div>
-                        )}
-                        {onSave && (
-                            <button
-                                onClick={onSave}
-                                disabled={isMinigameActive}
-                                className={`flex items-center gap-1.5 font-mono text-sm transition-colors ${isMinigameActive ? 'text-neutral-600 cursor-not-allowed' : 'text-bardo-muted hover:text-bardo-accent'}`}
-                            >
-                                <Save size={14} />
-                                {!isMobile && 'GUARDAR/CARGAR'}
-                            </button>
-                        )}
-                        {/* Mobile: relationships toggle in header */}
-                        {isMobile && relationshipsEnabled && onToggleRelationships && (
-                            <button
-                                onClick={onToggleRelationships}
-                                className="text-bardo-muted hover:text-bardo-accent transition-colors"
-                                title="Relaciones"
-                            >
-                                <Heart size={16} />
-                            </button>
-                        )}
-                        {/* Mobile: inventory toggle in header */}
-                        {isMobile && inventoryEnabled && onToggleInventory && (
-                            <button
-                                onClick={onToggleInventory}
-                                className="relative text-bardo-muted hover:text-bardo-accent transition-colors"
-                                title="Inventario"
-                            >
-                                <Backpack size={16} />
-                                {inventoryItemCount > 0 && (
-                                    <span className="absolute -top-1 -right-2 bg-bardo-accent text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                                        {inventoryItemCount}
-                                    </span>
-                                )}
-                            </button>
-                        )}
-                        <button
-                            onClick={onBack}
-                            className="font-mono text-bardo-muted hover:text-bardo-accent text-sm transition-colors"
-                        >
-                            {isMobile ? '←' : '← MENÚ'}
-                        </button>
-                    </div>
+                        </div>
+                    )}
                 </div>
             </header>
 
@@ -418,7 +511,7 @@ export default function Player({
                 */}
                 <div
                     ref={contentRef}
-                    className={`w-full px-4 sm:px-6 md:px-12 pt-[10vh] sm:pt-[15vh] pb-[35vh] ${hasDesktopStatsPanel ? '' : 'mx-auto'}`}
+                    className={`w-full px-4 sm:px-6 md:px-12 pt-4 sm:pt-[15vh] pb-[35vh] ${hasDesktopStatsPanel ? '' : 'mx-auto'}`}
                     style={hasDesktopStatsPanel ? {
                         maxWidth: 'var(--player-max-width, 48rem)',
                         marginLeft: 'max(calc((100% - var(--player-max-width, 48rem)) / 2), var(--stats-panel-inset, 260px))',
@@ -427,6 +520,7 @@ export default function Player({
                 >
                     {/* Text area - Fixed position from top, grows downward only */}
                     <div
+                        data-tutorial="text"
                         className="mb-12 cursor-pointer"
                         onClick={handleSkip}
                     >
@@ -455,7 +549,7 @@ export default function Player({
                         {/* Choices - Appear below text, no layout impact on text above */}
                         {/* Hide gate choices [→] during boss — they're auto-selected by phase mechanics */}
                         {!isTyping && !hasPendingMinigame && choices.length > 0 && !isBossGateChoice && (
-                            <div className="space-y-4">
+                            <div data-tutorial="choices" className="space-y-4">
                                 {choices.map((choice, index) => {
                                     const lockResult = checkLocked ? checkLocked(choice) : null
                                     const isLocked = lockResult?.locked ?? false

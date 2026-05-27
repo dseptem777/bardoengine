@@ -15,43 +15,58 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
     // Don't show if stats not enabled
     if (!statsConfig?.enabled) return null
 
-    // Don't show if player name variable is configured but empty
+    // Don't show if player name variable is configured but empty — but still render placeholder
     const requiresName = !!statsConfig.playerNameVariable
-    if (requiresName && !playerName) return null
+    const redacted = requiresName && !playerName
 
     const allStats = getAllStatsInfo().filter(s => s && s.displayType !== 'relationship')
     const barStats = allStats.filter(s => s.displayType === 'bar')
     const valueStats = allStats.filter(s => s.displayType === 'value')
 
-    // Mobile: only render slim bar stats (value stats go in header via HeaderStats)
+    // Mobile: slim bar stats only (no ID strip — player name + chapter shown in header)
     if (isMobile) {
         if (barStats.length === 0) return null
+
+        // Find the HP stat (first bar stat, or stat with id 'hp'/'vida')
+        const hpStat = barStats.find(s => s.id === 'hp' || s.id === 'vida') || barStats[0]
 
         return (
             <div className="fixed top-0 left-0 right-0 z-[820] pointer-events-none mobile-slim-bars">
                 <div className="flex w-full">
-                    {barStats.map(stat => {
+                    {barStats.map((stat) => {
                         const percentage = stat.max ? Math.max(0, Math.min(100, (stats[stat.id] / stat.max) * 100)) : 0
                         const isCritical = percentage <= 10
+                        const isHp = stat === hpStat
                         return (
                             <div
                                 key={stat.id}
-                                className="flex-1 h-1.5 bg-gray-900/80"
+                                data-tutorial={isHp ? 'hp' : undefined}
+                                className="flex-1 relative bg-gray-900/80"
+                                style={{ height: isHp ? '1.25rem' : '6px' }}
                                 title={`${stat.label}: ${stats[stat.id]}/${stat.max}`}
                             >
                                 <motion.div
-                                    className="h-full"
-                                    style={{ backgroundColor: stat.color || '#facc15' }}
-                                    initial={{ width: 0 }}
+                                    className="absolute inset-0"
+                                    style={{ backgroundColor: stat.color || '#facc15', transformOrigin: 'left' }}
+                                    initial={{ scaleX: 0 }}
                                     animate={{
-                                        width: `${percentage}%`,
+                                        scaleX: percentage / 100,
                                         opacity: isCritical ? [1, 0.5, 1] : 1
                                     }}
                                     transition={{
-                                        width: { duration: 0.3, ease: 'easeOut' },
+                                        scaleX: { duration: 0.3, ease: 'easeOut' },
                                         opacity: isCritical ? { duration: 0.5, repeat: Infinity } : {}
                                     }}
                                 />
+                                {/* HP numeric value — always visible on the HP bar */}
+                                {isHp && (
+                                    <span
+                                        className="absolute inset-0 flex items-center px-1.5 text-[10px] font-bold font-mono z-10"
+                                        style={{ color: isCritical ? '#ef4444' : '#000', textShadow: '0 0 4px rgba(0,0,0,0.8)' }}
+                                    >
+                                        {stats[stat.id]}/{stat.max}
+                                    </span>
+                                )}
                             </div>
                         )
                     })}
@@ -81,52 +96,101 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
                         maxWidth: '280px'
                     }}
                 >
-                    {/* ID Card Header with Name */}
-                    {playerName && (
-                        <motion.div
-                            className="bg-bardo-accent/20 border-b border-bardo-accent/30 px-4 py-3"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.2 }}
-                        >
-                            {statsConfig?.roleLabel && (
-                                <div className="text-[10px] uppercase tracking-widest text-bardo-accent/70 mb-1">
-                                    {statsConfig.roleLabel}
+                    {/* ID Card Header with Name + Chapter indicator — spotlight anchor for desktop */}
+                    <div data-tutorial="playercard">
+                    <AnimatePresence mode="wait">
+                        {playerName ? (
+                            <motion.div
+                                key="id-header-real"
+                                className="bg-bardo-accent/20 border-b border-bardo-accent/30 px-4 py-3"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.2 }}
+                            >
+                                {statsConfig?.roleLabel && (
+                                    <div className="text-[10px] uppercase tracking-widest text-bardo-accent/70 mb-1">
+                                        {statsConfig.roleLabel}
+                                    </div>
+                                )}
+                                <div className="text-lg font-bold text-bardo-accent tracking-wide">
+                                    {playerName}
                                 </div>
-                            )}
-                            <div className="text-lg font-bold text-bardo-accent tracking-wide">
-                                {playerName}
-                            </div>
-                            {nickname && (
-                                <div className="text-xs text-bardo-accent/60 italic mt-0.5">
-                                    "{nickname}"
+                                {nickname && (
+                                    <div className="text-xs text-bardo-accent/60 italic mt-0.5">
+                                        "{nickname}"
+                                    </div>
+                                )}
+                            </motion.div>
+                        ) : requiresName ? (
+                            <motion.div
+                                key="id-header-placeholder"
+                                data-testid="id-placeholder"
+                                className="bg-gray-800/40 border-b border-gray-700/50 px-4 py-3"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                <div className="text-[10px] uppercase tracking-widest text-red-400/70 font-mono mb-1">
+                                    [CLASIFICADO]
                                 </div>
-                            )}
-                        </motion.div>
-                    )}
+                                <motion.div
+                                    className="h-5 w-32 bg-black/80 rounded-sm"
+                                    animate={{ opacity: [0.6, 1, 0.6] }}
+                                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                                    exit={{ scaleX: 0, originX: 0, transition: { duration: 0.4 } }}
+                                />
+                            </motion.div>
+                        ) : null}
+                    </AnimatePresence>
 
                     {/* Chapter indicator */}
                     {chapterName && (
                         <div className="px-4 py-1.5 border-b border-gray-800 text-[10px] text-gray-500 tracking-wide font-mono">
-                            {chapterName}
+                            <AnimatePresence mode="wait">
+                                {redacted ? (
+                                    <div key="chapter-redacted" className="flex flex-col gap-0.5">
+                                        <div className="text-[10px] uppercase tracking-widest font-mono text-red-400/70">[LOCACION DESCONOCIDA]</div>
+                                        <motion.div
+                                            className="h-1.5 w-full bg-black/70 rounded-sm"
+                                            animate={{ opacity: [0.6, 1, 0.6] }}
+                                            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: 0.2 }}
+                                        />
+                                    </div>
+                                ) : (
+                                    <motion.span
+                                        key="chapter-real"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        {chapterName}
+                                    </motion.span>
+                                )}
+                            </AnimatePresence>
                         </div>
                     )}
+                    </div>
 
                     {/* Stats Content */}
                     <div className="p-3 space-y-3">
                         {/* Bar Stats (Resources) */}
                         {barStats.length > 0 && (
                             <div className="space-y-2">
-                                {barStats.map((stat, index) => (
-                                    <motion.div
-                                        key={stat.id}
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.3 + index * 0.1 }}
-                                    >
-                                        <StatBar stat={stat} value={stats[stat.id]} />
-                                    </motion.div>
-                                ))}
+                                {barStats.map((stat, index) => {
+                                    const isHpStat = stat.id === 'hp' || stat.id === 'vida' || index === 0
+                                    return (
+                                        <motion.div
+                                            key={stat.id}
+                                            data-tutorial={isHpStat ? 'hp' : undefined}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: 0.3 + index * 0.1 }}
+                                        >
+                                            <StatBar stat={stat} value={stats[stat.id]} />
+                                        </motion.div>
+                                    )
+                                })}
                             </div>
                         )}
 
@@ -137,18 +201,29 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
 
                         {/* Value Stats (Attributes) */}
                         {valueStats.length > 0 && (
-                            <div className="flex flex-wrap gap-3">
-                                {valueStats.map((stat, index) => (
+                            redacted ? (
+                                <div data-tutorial="stats" className="flex flex-col gap-0.5">
+                                    <div className="text-[10px] uppercase tracking-widest font-mono text-red-400/70">[BAJO EVALUACION]</div>
                                     <motion.div
-                                        key={stat.id}
-                                        initial={{ opacity: 0, scale: 0.8 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        transition={{ delay: 0.4 + index * 0.1 }}
-                                    >
-                                        <StatValue stat={stat} value={stats[stat.id]} />
-                                    </motion.div>
-                                ))}
-                            </div>
+                                        className="h-3 w-full bg-black/70 rounded-sm"
+                                        animate={{ opacity: [0.6, 1, 0.6] }}
+                                        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                                    />
+                                </div>
+                            ) : (
+                                <div data-tutorial="stats" className="flex flex-wrap gap-3">
+                                    {valueStats.map((stat, index) => (
+                                        <motion.div
+                                            key={stat.id}
+                                            initial={{ opacity: 0, scale: 0.8 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            transition={{ delay: 0.4 + index * 0.1 }}
+                                        >
+                                            <StatValue stat={stat} value={stats[stat.id]} redacted={false} redactDelay={0} />
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            )
                         )}
                     </div>
                 </div>
@@ -160,7 +235,7 @@ export default function StatsPanel({ stats, statsConfig, getAllStatsInfo, player
 /**
  * HeaderStats - Compact value stats for embedding in the mobile header
  */
-export function HeaderStats({ stats, statsConfig, getAllStatsInfo }) {
+export function HeaderStats({ stats, statsConfig, getAllStatsInfo, redacted = false }) {
     if (!statsConfig?.enabled) return null
     const { settings } = useSettings()
 
@@ -168,6 +243,19 @@ export function HeaderStats({ stats, statsConfig, getAllStatsInfo }) {
     const valueStats = allStats.filter(s => s.displayType === 'value')
 
     if (valueStats.length === 0) return null
+
+    if (redacted) {
+        return (
+            <div className="flex items-center gap-1.5">
+                <span className="text-[10px] uppercase tracking-widest font-mono text-red-400/70">[BAJO EVALUACION]</span>
+                <motion.div
+                    className="h-3 w-10 bg-black/70 rounded-sm"
+                    animate={{ opacity: [0.6, 1, 0.6] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                />
+            </div>
+        )
+    }
 
     return (
         <div className="flex items-center gap-2 text-xs font-mono">
@@ -253,12 +341,26 @@ function StatBar({ stat, value }) {
 /**
  * StatValue - Simple value display for attribute stats
  */
-function StatValue({ stat, value }) {
+function StatValue({ stat, value, redacted = false, redactDelay = 0 }) {
     const displayValue = value >= 0 ? `+${value}` : value
     const isKarmaStyle = stat.id === 'karma'
     const { settings } = useSettings()
     const karmaPos = settings.colorblindMode ? '#3b82f6' : '#22c55e'
     const karmaNeg = settings.colorblindMode ? '#f97316' : '#ef4444'
+
+    if (redacted) {
+        return (
+            <motion.div
+                className="flex items-center gap-1 text-sm"
+            >
+                <motion.div
+                    className="h-4 w-16 bg-black/70 rounded-sm"
+                    animate={{ opacity: [0.6, 1, 0.6] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: redactDelay }}
+                />
+            </motion.div>
+        )
+    }
 
     return (
         <motion.div

@@ -216,61 +216,51 @@ function readPackageVersion() {
 }
 
 /**
- * Load an existing .env.release.{X.Y.0} for the current minor series, or
- * generate fresh secrets for a new minor release.
- * Sets BARDO_SECRET_A, BARDO_SECRET_B, BARDO_OBFUSCATION_SEED in process.env.
- * Returns { isNewMinor: boolean, envFile: string }.
+ * Derive BARDO_SECRET_A, BARDO_SECRET_B, BARDO_OBFUSCATION_SEED deterministically
+ * from a single .env.master file via HKDF-SHA256.
+ * The info field is the minor-version tag so secrets rotate per minor automatically.
+ * Sets the three env vars in process.env.
+ * Returns { minorTag }.
  */
 function resolveSecrets(version) {
     const sv = parseSemver(version);
     if (!sv) throw new Error(`Cannot parse semver from version: ${version}`);
-
     const minorTag = `${sv.major}.${sv.minor}.0`;
-    const envFile = path.join(__dirname, '..', `.env.release.${minorTag}`);
 
-    const isMinorRelease = sv.patch === 0;
-
-    if (isMinorRelease) {
-        // Generate fresh secrets for new minor
-        console.log(`\n[DRM] Minor release detected (${version}) — generating fresh secrets`);
-        const secretA = crypto.randomBytes(32).toString('hex');
-        const secretB = crypto.randomBytes(32).toString('hex');
-        const obfSeed = crypto.randomBytes(32).toString('hex');
-
-        const envContent = [
-            `BARDO_SECRET_A=${secretA}`,
-            `BARDO_SECRET_B=${secretB}`,
-            `BARDO_OBFUSCATION_SEED=${obfSeed}`,
-            `# Generated for ${version} on ${new Date().toISOString()}`,
-            `# BACKUP THIS FILE. Without it you cannot rebuild this version.`,
-        ].join('\n') + '\n';
-
-        fs.writeFileSync(envFile, envContent, 'utf8');
-        console.log(`[DRM] Secrets written to ${envFile}`);
-        console.log(`[DRM] IMPORTANT: Back up this file — it cannot be recovered if lost.`);
-
-        process.env.BARDO_SECRET_A = secretA;
-        process.env.BARDO_SECRET_B = secretB;
-        process.env.BARDO_OBFUSCATION_SEED = obfSeed;
-
-        return { isNewMinor: true, envFile };
-    } else {
-        // Patch: reuse the minor's secrets
-        console.log(`\n[DRM] Patch release detected (${version}) — loading secrets from ${envFile}`);
-        if (!fs.existsSync(envFile)) {
-            console.error(`[DRM] ERROR: .env.release.${minorTag} not found.`);
-            console.error(`       Cannot build patch without the minor's secrets.`);
-            console.error(`       Check your secrets vault and restore the file.`);
-            process.exit(1);
-        }
-        const lines = fs.readFileSync(envFile, 'utf8').split('\n');
-        for (const line of lines) {
-            const m = line.match(/^([A-Z0-9_]+)=(.+)$/);
-            if (m) process.env[m[1]] = m[2].trim();
-        }
-        console.log(`[DRM] Secrets loaded from ${envFile}`);
-        return { isNewMinor: false, envFile };
+    // Master secret — único archivo a versionar en el vault.
+    const masterFile = path.join(__dirname, '..', '.env.master');
+    if (!fs.existsSync(masterFile)) {
+        console.error('\n[DRM] ERROR: .env.master not found.');
+        console.error('       This file holds BARDO_MASTER_SECRET (64 hex chars).');
+        console.error('       Restore it from your secrets vault, or bootstrap a new');
+        console.error('       project with: npm run drm:init');
+        process.exit(1);
     }
+
+    const masterLine = fs.readFileSync(masterFile, 'utf8')
+        .split('\n').find(l => l.startsWith('BARDO_MASTER_SECRET='));
+    if (!masterLine) {
+        console.error('[DRM] ERROR: .env.master missing BARDO_MASTER_SECRET=…');
+        process.exit(1);
+    }
+    const masterHex = masterLine.split('=')[1].trim();
+    if (!/^[0-9a-f]{64}$/i.test(masterHex)) {
+        console.error('[DRM] ERROR: BARDO_MASTER_SECRET must be 64 hex chars.');
+        process.exit(1);
+    }
+    const master = Buffer.from(masterHex, 'hex');
+
+    const derive = (label) => {
+        // HKDF-SHA256: salt=label, info=minorTag, length=32 bytes
+        return crypto.hkdfSync('sha256', master, Buffer.from(label), Buffer.from(minorTag), 32);
+    };
+
+    process.env.BARDO_SECRET_A         = Buffer.from(derive('bardo/secret-a')).toString('hex');
+    process.env.BARDO_SECRET_B         = Buffer.from(derive('bardo/secret-b')).toString('hex');
+    process.env.BARDO_OBFUSCATION_SEED = Buffer.from(derive('bardo/obfuscation')).toString('hex');
+
+    console.log(`\n[DRM] Secrets derived for ${version} (minor=${minorTag}) from .env.master`);
+    return { minorTag };
 }
 
 function detectCurrentPlatform() {
@@ -337,6 +327,7 @@ async function main() {
     let bundleFlag = '';
 
     let isAndroid = false;
+    let isDebugBuild = false;
     switch (platformSelection) {
         case '1':
             targetPlatform = 'Windows';
@@ -468,7 +459,7 @@ async function main() {
             'Elegí (1/2, default=1): '
         );
 
-        const isDebugBuild = buildSpeed !== '2';
+        isDebugBuild = buildSpeed !== '2';
 
         const archChoice = await prompt(
             '\n¿Para qué arquitectura?\n' +
@@ -535,11 +526,14 @@ async function main() {
                     return results;
                 };
 
-                const apks = findApk(apkOutputDir).filter(p => p.includes('release') || p.includes('debug'));
+                // Only sign the APK matching the chosen build variant (debug/release).
+                // Without this filter we could grab a stale APK from the other variant.
+                const variantTag = isDebugBuild ? 'debug' : 'release';
+                const apks = findApk(apkOutputDir).filter(p => p.includes(variantTag) && !p.includes('-aligned'));
                 if (apks.length > 0) {
                     const unsignedApk = apks[0];
                     const alignedApk = unsignedApk.replace('.apk', '-aligned.apk');
-                    const signedApk = unsignedApk.replace('-unsigned', '-signed').replace('-release', '-release');
+                    const signedApk = unsignedApk.replace('.apk', '-signed.apk');
 
                     // Step 1: zipalign
                     console.log('  → zipalign...');
@@ -626,23 +620,29 @@ async function main() {
 
         console.log(`\n📱 Output Android:`);
 
-        // Copy APKs with game name - prefer signed version
+        // Copy APK matching the chosen build variant only.
+        // Previously this would copy BOTH debug AND release APKs to the same
+        // filename, with the last-iterated overwriting the first — typically
+        // leaving the stale-cached variant in android-builds/.
+        const variantTag = isDebugBuild ? 'debug' : 'release';
+        const variantLabel = isDebugBuild ? 'debug' : 'release';
         const signedApkPath = process.env._SIGNED_APK;
         if (signedApkPath && fs.existsSync(signedApkPath)) {
-            // Use the signed APK
-            const newName = `${safeTitle}_${version}.apk`;
+            const newName = `${safeTitle}_${version}_${variantLabel}.apk`;
             const newPath = path.join(outputDir, newName);
             fs.copyFileSync(signedApkPath, newPath);
             const sizeMB = (fs.statSync(newPath).size / 1024 / 1024).toFixed(1);
-            console.log(`   ✓ APK (firmado): ${newName} (${sizeMB} MB)`);
+            console.log(`   ✓ APK (firmado, ${variantLabel}): ${newName} (${sizeMB} MB)`);
         } else if (fs.existsSync(apkDir)) {
-            const apks = findFiles(apkDir, '.apk').filter(p => (p.includes('release') || p.includes('debug')) && !p.includes('-aligned'));
+            const apks = findFiles(apkDir, '.apk').filter(p =>
+                p.includes(variantTag) && !p.includes('-aligned') && !p.includes('-signed')
+            );
             apks.forEach(apkPath => {
-                const newName = `${safeTitle}_${version}.apk`;
+                const newName = `${safeTitle}_${version}_${variantLabel}.apk`;
                 const newPath = path.join(outputDir, newName);
                 fs.copyFileSync(apkPath, newPath);
                 const sizeMB = (fs.statSync(newPath).size / 1024 / 1024).toFixed(1);
-                console.log(`   ✓ APK: ${newName} (${sizeMB} MB)`);
+                console.log(`   ✓ APK (${variantLabel}): ${newName} (${sizeMB} MB)`);
             });
         }
 
@@ -687,6 +687,22 @@ async function main() {
     }
 
 }
+
+function bootstrapMaster() {
+    const masterFile = path.join(__dirname, '..', '.env.master');
+    if (fs.existsSync(masterFile)) {
+        console.error('[DRM] .env.master already exists — refusing to overwrite.');
+        process.exit(1);
+    }
+    const master = crypto.randomBytes(32).toString('hex');
+    fs.writeFileSync(masterFile,
+        `BARDO_MASTER_SECRET=${master}\n` +
+        `# Generated ${new Date().toISOString()}\n` +
+        `# BACK THIS UP. Losing it strands every shipped build forever.\n`,
+        'utf8');
+    console.log(`[DRM] Wrote .env.master. BACK IT UP NOW.`);
+}
+if (process.argv[2] === '--init-master') { bootstrapMaster(); process.exit(0); }
 
 main().catch(console.error);
 

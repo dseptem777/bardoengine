@@ -105,7 +105,7 @@ export default function GalleryPage({
                         onClick={() => setSelectedImage(null)}
                     >
                         <motion.div
-                            className="relative max-w-4xl max-h-[80vh] flex flex-col items-center"
+                            className="relative max-w-full sm:max-w-4xl max-h-[80vh] flex flex-col items-center"
                             initial={{ scale: 0.8, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.8, opacity: 0 }}

@@ -382,7 +382,7 @@ export function useTagProcessor({
             if (tag.toUpperCase().startsWith('CHAPTER_BREAK:')) {
                 const raw = tag.substring('CHAPTER_BREAK:'.length).trim()
                 // Split on comma+space only when followed by a known key
-                const segments = raw.split(/, (?=(?:title|subtitle|image|music)=)/i)
+                const segments = raw.split(/,\s*(?=(?:title|subtitle|image|music)=)/i)
                 const config: any = {}
                 for (const seg of segments) {
                     const eqIdx = seg.indexOf('=')

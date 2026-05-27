@@ -1,6 +1,6 @@
-{
-    "title": "CENTINELAS DEL SUR",
-    "version": "0.23.3",
+﻿{
+    "title": "Centinelas del Sur",
+    "version": "0.24.1",
     "theme": {
         "primaryColor": "#8b5cf6",
         "bgColor": "#030712",
@@ -31,7 +31,7 @@
     },
     "intro": {
         "titleMusic": "misterio_ambient",
-        "titleSubtitle": "Ficción Interactiva Sobrenatural",
+        "titleSubtitle": "FicciÃ³n Interactiva Sobrenatural",
         "titleBackground": "/games/centinelas/title.jpg"
     },
     "stats": {
@@ -44,7 +44,7 @@
             {
                 "id": "hp",
                 "label": "Vida",
-                "icon": "❤️",
+                "icon": "â¤ï¸",
                 "displayType": "bar",
                 "min": 0,
                 "max": 100,
@@ -54,7 +54,7 @@
             {
                 "id": "magia",
                 "label": "Magia",
-                "icon": "✨",
+                "icon": "âœ¨",
                 "displayType": "value",
                 "min": 0,
                 "max": 60,
@@ -63,7 +63,7 @@
             {
                 "id": "fuerza",
                 "label": "Fuerza",
-                "icon": "💪",
+                "icon": "ðŸ’ª",
                 "displayType": "value",
                 "min": 0,
                 "max": 60,
@@ -72,7 +72,7 @@
             {
                 "id": "conocimiento",
                 "label": "Conocimiento",
-                "icon": "📚",
+                "icon": "ðŸ“š",
                 "displayType": "value",
                 "min": 0,
                 "max": 60,
@@ -88,8 +88,8 @@
             },
             {
                 "id": "amistad_jesus",
-                "label": "Jesús",
-                "icon": "🐆",
+                "label": "JesÃºs",
+                "icon": "ðŸ†",
                 "displayType": "relationship",
                 "min": 0,
                 "max": 6,
@@ -99,7 +99,7 @@
             {
                 "id": "amistad_abuela",
                 "label": "Abuelita",
-                "icon": "👵",
+                "icon": "ðŸ‘µ",
                 "displayType": "relationship",
                 "min": 0,
                 "max": 6,
@@ -111,7 +111,7 @@
             "hp": {
                 "action": "end",
                 "knotName": "muerte",
-                "message": "La enfermería quedaba a dos cuadras."
+                "message": "La enfermerÃ­a quedaba a dos cuadras."
             }
         }
     },
@@ -128,91 +128,91 @@
         "fotos_profundo": {
             "name": "Fotos del Profundo",
             "description": "Evidencia visual de la entidad en la morgue.",
-            "icon": "📸",
+            "icon": "ðŸ“¸",
             "category": "documentos"
         },
         "mano_nn": {
             "name": "Mano del NN",
             "description": "Una mano cercenada con marcas rituales. Horrorosa.",
-            "icon": "🤚",
+            "icon": "ðŸ¤š",
             "category": "items"
         },
         "descripcion_profundo": {
             "name": "Datos: El Profundo",
-            "description": "Información táctica sobre los híbridos marinos.",
-            "icon": "📝",
+            "description": "InformaciÃ³n tÃ¡ctica sobre los hÃ­bridos marinos.",
+            "icon": "ðŸ“",
             "category": "documentos"
         },
         "machete_bosque": {
             "name": "Machete de Juan",
             "description": "Un mapa dibujado por Juan con el recorrido hasta la guarida del monstruo.",
-            "icon": "🗺️",
+            "icon": "ðŸ—ºï¸",
             "category": "documentos"
         },
         "info_invocacion_demoniaca": {
-            "name": "Info: Invocación Demoníaca",
-            "description": "Las estatuas del sótano representan los cuatro obispos del 7mo círculo del infierno.",
-            "icon": "👹",
+            "name": "Info: InvocaciÃ³n DemonÃ­aca",
+            "description": "Las estatuas del sÃ³tano representan los cuatro obispos del 7mo cÃ­rculo del infierno.",
+            "icon": "ðŸ‘¹",
             "category": "documentos"
         },
         "teoria_vampiros": {
-            "name": "Teoría: Vampiros Superiores",
-            "description": "Análisis de los casos anteriores. Las víctimas muestran marcas de colmillos y sonrisas de placer. Clásico ataque de Vampiro Superior.",
-            "icon": "🧛",
+            "name": "TeorÃ­a: Vampiros Superiores",
+            "description": "AnÃ¡lisis de los casos anteriores. Las vÃ­ctimas muestran marcas de colmillos y sonrisas de placer. ClÃ¡sico ataque de Vampiro Superior.",
+            "icon": "ðŸ§›",
             "category": "documentos"
         },
         "favor_tuco": {
             "name": "Favor del Sgto. Tuco",
-            "description": "El Sargento Tuco te debe un favor. Uno solo. Remarcó la unicidad del favor con todos los objetivos posibles.",
-            "icon": "📞",
+            "description": "El Sargento Tuco te debe un favor. Uno solo. RemarcÃ³ la unicidad del favor con todos los objetivos posibles.",
+            "icon": "ðŸ“ž",
             "category": "claves"
         },
         "cementerio_correcto": {
             "name": "Pista: Lomas de Paz",
-            "description": "Un familiar de las víctimas fue enterrado recientemente en el cementerio Lomas de Paz. Podría ser el caballo de Troya vampírico.",
-            "icon": "🗺️",
+            "description": "Un familiar de las vÃ­ctimas fue enterrado recientemente en el cementerio Lomas de Paz. PodrÃ­a ser el caballo de Troya vampÃ­rico.",
+            "icon": "ðŸ—ºï¸",
             "category": "documentos"
         },
         "teoria_sacrificio": {
-            "name": "Teoría: Sacrificio de Bebés",
-            "description": "Un hechizo vampírico requiere sacrificar siete bebés para caminar bajo la luz del sol. Los bebés desaparecidos encajan en el patrón.",
-            "icon": "📜",
+            "name": "TeorÃ­a: Sacrificio de BebÃ©s",
+            "description": "Un hechizo vampÃ­rico requiere sacrificar siete bebÃ©s para caminar bajo la luz del sol. Los bebÃ©s desaparecidos encajan en el patrÃ³n.",
+            "icon": "ðŸ“œ",
             "category": "documentos"
         },
         "cruz_plata": {
             "name": "Cruz de Plata",
-            "description": "Una cruz de plata inmaculada encontrada entre los montículos de objetos religiosos. Pesada y resplandeciente.",
-            "icon": "✝️",
+            "description": "Una cruz de plata inmaculada encontrada entre los montÃ­culos de objetos religiosos. Pesada y resplandeciente.",
+            "icon": "âœï¸",
             "category": "items"
         },
         "placa_amor": {
             "name": "Placa de Amor",
-            "description": "\"Mientras mi corazón siga latiendo, lo hará al ritmo de tu nombre\". Una placa funeraria con una dedicatoria de amor puro.",
-            "icon": "💌",
+            "description": "\"Mientras mi corazÃ³n siga latiendo, lo harÃ¡ al ritmo de tu nombre\". Una placa funeraria con una dedicatoria de amor puro.",
+            "icon": "ðŸ’Œ",
             "category": "items"
         },
         "buda_oro": {
             "name": "Buda de Oro",
-            "description": "Una estatua de Buda de oro macizo. Excentricidad de algún oligarca con demasiado tiempo libre.",
-            "icon": "🪷",
+            "description": "Una estatua de Buda de oro macizo. Excentricidad de algÃºn oligarca con demasiado tiempo libre.",
+            "icon": "ðŸª·",
             "category": "items"
         },
         "enojo_enriquez": {
-            "name": "Enojo de Enríquez",
-            "description": "Encontraste el tapper escondido en la cocina de Enríquez.",
-            "icon": "🔍",
+            "name": "Enojo de EnrÃ­quez",
+            "description": "Encontraste el tapper escondido en la cocina de EnrÃ­quez.",
+            "icon": "ðŸ”",
             "category": "claves"
         },
         "llegaste_con_ventaja": {
             "name": "Ventaja Nocturna",
             "description": "Llegaste al Museo antes del anochecer y pudiste explorar sin restricciones.",
-            "icon": "⏱",
+            "icon": "â±",
             "category": "claves"
         },
         "entidades_poseidas": {
-            "name": "Entidades Poseídas",
-            "description": "Sabés que los maniquíes son vehículos para entidades de otro plano —pueden ser contenidas con rituales.",
-            "icon": "👁",
+            "name": "Entidades PoseÃ­das",
+            "description": "SabÃ©s que los maniquÃ­es son vehÃ­culos para entidades de otro plano â€”pueden ser contenidas con rituales.",
+            "icon": "ðŸ‘",
             "category": "documentos"
         }
     },
@@ -221,238 +221,238 @@
             "id": "centinela_magica",
             "title": "La Chispa",
             "description": "Elegiste despertar con el poder de la magia.",
-            "icon": "✨",
+            "icon": "âœ¨",
             "image": "/games/centinelas/achievements/chispa badge.jpg"
         },
         {
             "id": "centinela_combate",
             "title": "Pura Adrenalina",
             "description": "Elegiste despertar en medio del combate.",
-            "icon": "⚡",
+            "icon": "âš¡",
             "image": "/games/centinelas/achievements/madrugador badge.jpg"
         },
         {
             "id": "centinela_conocimiento",
-            "title": "La Obsesión",
+            "title": "La ObsesiÃ³n",
             "description": "Elegiste despertar buscando conocimiento prohibido.",
-            "icon": "📚",
+            "icon": "ðŸ“š",
             "image": "/games/centinelas/achievements/ratoncito badge.jpg"
         },
         {
             "id": "primer_caso",
-            "title": "Un Cadáver Sin Nombre",
-            "description": "Completaste el Capítulo 0 y comenzaste tu primera investigación.",
-            "icon": "🔍",
+            "title": "Un CadÃ¡ver Sin Nombre",
+            "description": "Completaste el CapÃ­tulo 0 y comenzaste tu primera investigaciÃ³n.",
+            "icon": "ðŸ”",
             "image": "/games/centinelas/achievements/cadaver sin badge.jpg"
         },
         {
             "id": "nuevo_amanecer",
             "title": "El Nuevo Amanecer",
-            "description": "Alcanzaste el Capítulo 2B — El Nuevo Amanecer.",
-            "icon": "🌅",
+            "description": "Alcanzaste el CapÃ­tulo 2B â€” El Nuevo Amanecer.",
+            "icon": "ðŸŒ…",
             "image": "/games/centinelas/achievements/nuevo amanecer badge.jpg"
         },
         {
             "id": "elegir_orfanato",
             "title": "El Hogar de los Olvidados",
             "description": "Elegiste investigar en el orfanato.",
-            "icon": "🏚️",
+            "icon": "ðŸšï¸",
             "image": "/games/centinelas/achievements/orfanato badge.jpg"
         },
         {
             "id": "juan_salvado",
-            "title": "Nadie Se Queda Atrás",
+            "title": "Nadie Se Queda AtrÃ¡s",
             "description": "Salvaste a Juan.",
-            "icon": "🤝",
+            "icon": "ðŸ¤",
             "image": "/games/centinelas/achievements/salvar juan badge.jpg"
         },
         {
             "id": "juan_muerto",
             "title": "Solo Se Va Solo",
-            "description": "Juan no lo logró.",
-            "icon": "💀",
+            "description": "Juan no lo logrÃ³.",
+            "icon": "ðŸ’€",
             "image": "/games/centinelas/achievements/muere juan badge.jpg"
         },
         {
             "id": "alegria_vive",
-            "title": "¡Qué Alegría...!",
-            "description": "La Hermana Alegría sobrevivió.",
-            "icon": "🕊️",
+            "title": "Â¡QuÃ© AlegrÃ­a...!",
+            "description": "La Hermana AlegrÃ­a sobreviviÃ³.",
+            "icon": "ðŸ•Šï¸",
             "image": "/games/centinelas/achievements/alegria vive badge.jpg"
         },
         {
             "id": "alegria_muere",
-            "title": "¿Qué Alegría?",
-            "description": "La Hermana Alegría no sobrevivió.",
-            "icon": "🕯️",
+            "title": "Â¿QuÃ© AlegrÃ­a?",
+            "description": "La Hermana AlegrÃ­a no sobreviviÃ³.",
+            "icon": "ðŸ•¯ï¸",
             "image": "/games/centinelas/achievements/alegria muere badge.jpg"
         },
         {
             "id": "ninos_todos_mueren",
-            "title": "Orfanato Vacío",
-            "description": "Todos los niños murieron.",
-            "icon": "🔥",
+            "title": "Orfanato VacÃ­o",
+            "description": "Todos los niÃ±os murieron.",
+            "icon": "ðŸ”¥",
             "image": "/games/centinelas/achievements/orfanato mueren badge.jpg"
         },
         {
             "id": "ninos_casi_todos",
-            "title": "Pequeños Caídos",
-            "description": "Casi todos los niños murieron.",
-            "icon": "😔",
+            "title": "PequeÃ±os CaÃ­dos",
+            "description": "Casi todos los niÃ±os murieron.",
+            "icon": "ðŸ˜”",
             "image": "/games/centinelas/achievements/casi todos badge.jpg"
         },
         {
             "id": "ninos_mitad",
             "title": "Miti y Miti",
-            "description": "La mitad de los niños sobrevivió.",
-            "icon": "⚖️",
+            "description": "La mitad de los niÃ±os sobreviviÃ³.",
+            "icon": "âš–ï¸",
             "image": "/games/centinelas/achievements/miti y miti badge.jpg"
         },
         {
             "id": "ninos_ninguno",
             "title": "Milagro en el Orfanato",
-            "description": "Ningún niño murió esta noche.",
-            "icon": "✨",
+            "description": "NingÃºn niÃ±o muriÃ³ esta noche.",
+            "icon": "âœ¨",
             "image": "/games/centinelas/achievements/santo centinela badge.jpg"
         },
         {
             "id": "belen_muere",
-            "title": "La Última Vela",
-            "description": "Belén no sobrevivió.",
-            "icon": "🕯️",
+            "title": "La Ãšltima Vela",
+            "description": "BelÃ©n no sobreviviÃ³.",
+            "icon": "ðŸ•¯ï¸",
             "image": "/games/centinelas/achievements/belen muere badge.jpg"
         },
         {
             "id": "morgue_sin_mordisco",
             "title": "Repelente de Tiburones",
             "description": "Saliste de la morgue sin un mordisco.",
-            "icon": "🦈",
+            "icon": "ðŸ¦ˆ",
             "image": "/games/centinelas/achievements/intacto badge.jpg"
         },
         {
             "id": "mordio_profundo",
             "title": "Bocado de Centinela",
-            "description": "El Profundo te eligió de menú.",
-            "icon": "🩸",
+            "description": "El Profundo te eligiÃ³ de menÃº.",
+            "icon": "ðŸ©¸",
             "image": "/games/centinelas/achievements/mordido badge.jpg"
         },
         {
             "id": "conociste_enriquez",
             "title": "La Secretaria",
-            "description": "Conociste a Enríquez.",
-            "icon": "🚔",
+            "description": "Conociste a EnrÃ­quez.",
+            "icon": "ðŸš”",
             "image": "/games/centinelas/achievements/enriquez badge.jpg"
         },
         {
             "id": "conociste_shelley",
-            "title": "Bruja con Título",
+            "title": "Bruja con TÃ­tulo",
             "description": "Conociste a Mary Shelly.",
-            "icon": "🧪",
+            "icon": "ðŸ§ª",
             "image": "/games/centinelas/achievements/shelley badge.jpg"
         },
         {
             "id": "conociste_cabral",
             "title": "Mano a Mano",
             "description": "Conociste al Sargento Cabral.",
-            "icon": "🤜",
+            "icon": "ðŸ¤œ",
             "image": "/games/centinelas/achievements/cabral badge.jpg"
         },
         {
             "id": "fuiste_tarotista",
             "title": "Los Arcanos Hablan",
             "description": "Consultaste a la tarotista.",
-            "icon": "🔮",
+            "icon": "ðŸ”®",
             "image": "/games/centinelas/achievements/taroteado badge.jpg"
         },
         {
             "id": "cambio_de_bando",
             "title": "Cambiacapas Fraca",
             "description": "Moriste queriendo ser vampiro.",
-            "icon": "🧛",
+            "icon": "ðŸ§›",
             "image": "/games/centinelas/achievements/cambiacapas fraca badge.jpg"
         },
         {
             "id": "cruz_contra_vampiros",
             "title": "Pare de Sufrir",
             "description": "Usaste la cruz contra los vampiros.",
-            "icon": "✝️",
+            "icon": "âœï¸",
             "image": "/games/centinelas/achievements/pare de sufrir badge.jpg"
         },
         {
             "id": "favor_tuco",
             "title": "Una Mano Lava la Otra...",
             "description": "Cobraste el favor de Tuco.",
-            "icon": "🤙",
+            "icon": "ðŸ¤™",
             "image": "/games/centinelas/achievements/favor tuco badge.jpg"
         },
         {
             "id": "caer_en_cana",
-            "title": "En el Buzón",
+            "title": "En el BuzÃ³n",
             "description": "Terminaste entre rejas.",
-            "icon": "🔒",
+            "icon": "ðŸ”’",
             "image": "/games/centinelas/achievements/buzon badge.jpg"
         },
         {
             "id": "gano_willpower",
-            "title": "Más Duro que Rocky",
+            "title": "MÃ¡s Duro que Rocky",
             "description": "Nunca cediste ante el miedo.",
-            "icon": "🧠",
+            "icon": "ðŸ§ ",
             "image": "/games/centinelas/achievements/duro rocky badge.jpg"
         },
         {
             "id": "espia_elfaro",
             "title": "Oreja indiscreta",
-            "description": "Escuchaste la conversación prohibida en el laboratorio de El Faro.",
-            "icon": "👂",
+            "description": "Escuchaste la conversaciÃ³n prohibida en el laboratorio de El Faro.",
+            "icon": "ðŸ‘‚",
             "image": null
         },
         {
             "id": "enojo_enriquez",
             "title": "Cazador de tappers",
-            "description": "Descubriste el tapper misterioso que Enríquez esconde en la cocina.",
-            "icon": "🔍",
+            "description": "Descubriste el tapper misterioso que EnrÃ­quez esconde en la cocina.",
+            "icon": "ðŸ”",
             "image": null
         },
         {
             "id": "colaborador_museo",
             "title": "Donante silencioso",
-            "description": "Dejaste unos billetes en la caja de colaboración del Museo.",
-            "icon": "🤝",
+            "description": "Dejaste unos billetes en la caja de colaboraciÃ³n del Museo.",
+            "icon": "ðŸ¤",
             "image": null
         },
         {
             "id": "no_colaborador_museo",
             "title": "Gorra estatal",
-            "description": "Decidiste que no te correspondía financiar al Museo con tu plata.",
-            "icon": "🐺",
+            "description": "Decidiste que no te correspondÃ­a financiar al Museo con tu plata.",
+            "icon": "ðŸº",
             "image": null
         },
         {
             "id": "llegaste_con_ventaja",
             "title": "Con ventaja",
             "description": "Llegaste al Museo antes que cayera la noche.",
-            "icon": "⏱",
+            "icon": "â±",
             "image": null
         },
         {
             "id": "incineracion_museo",
-            "title": "Pirotecnia arqueológica",
-            "description": "Incineraste a los maniquíes con magia cruda.",
-            "icon": "🔥",
+            "title": "Pirotecnia arqueolÃ³gica",
+            "description": "Incineraste a los maniquÃ­es con magia cruda.",
+            "icon": "ðŸ”¥",
             "image": null
         },
         {
             "id": "ratoncito_sabiduria",
-            "title": "Oído fino",
+            "title": "OÃ­do fino",
             "description": "Reconociste la voz de la ladrona del portal.",
-            "icon": "🐭",
+            "icon": "ðŸ­",
             "image": null
         },
         {
             "id": "acta_fundacional",
-            "title": "Guardián del Patrimonio",
+            "title": "GuardiÃ¡n del Patrimonio",
             "description": "Rescataste el acta fundacional de Costa Alegre en medio del caos.",
-            "icon": "📜",
+            "icon": "ðŸ“œ",
             "image": null
         }
     ],
@@ -464,13 +464,13 @@
             { "id": "escuela_ambient", "title": "Escuela", "unlockedBy": null },
             { "id": "escuela_ambient_b", "title": "Escuela II", "unlockedBy": null },
             { "id": "escuela_ambient_c", "title": "Escuela III", "unlockedBy": null },
-            { "id": "horror_ambient", "title": "Tensión", "unlockedBy": null },
-            { "id": "horror_ambient_b", "title": "Tensión II", "unlockedBy": null },
+            { "id": "horror_ambient", "title": "TensiÃ³n", "unlockedBy": null },
+            { "id": "horror_ambient_b", "title": "TensiÃ³n II", "unlockedBy": null },
             { "id": "playa_ambient", "title": "Playa", "unlockedBy": null },
             { "id": "playa_ambient_b", "title": "Playa II", "unlockedBy": null },
             { "id": "supermarket_muzak", "title": "Supermercado", "unlockedBy": null },
-            { "id": "rave_electronic", "title": "Rave Electrónico", "unlockedBy": null },
-            { "id": "tension_drone", "title": "Tensión Profunda", "unlockedBy": null },
+            { "id": "rave_electronic", "title": "Rave ElectrÃ³nico", "unlockedBy": null },
+            { "id": "tension_drone", "title": "TensiÃ³n Profunda", "unlockedBy": null },
             { "id": "morning_hangover", "title": "La Resaca", "unlockedBy": null },
             { "id": "crank_up", "title": "Crank Up", "unlockedBy": null },
             { "id": "crank_up_b", "title": "Crank Up II", "unlockedBy": null },

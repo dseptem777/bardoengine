@@ -1,5 +1,86 @@
 # Changelog — BardoEngine
 
+## [0.32.1] - 2026-05-27
+
+### Fixed
+- **Script de ship**: `scripts/ship.ps1` ya no intenta bumpear la versión de `src-tauri/resources/story-config.json`, un artefacto generado por `build-game` que por diseño no tiene campo `version`. Eso hacía abortar el ship a mitad del bump en cada release que tocara Centinelas (y dejaba las versiones desincronizadas). La versión de Centinelas vive en `centinelas.config.json` y `tauri.conf.json`.
+
+---
+
+## [0.32.0] - 2026-05-27
+
+### Features
+- **Minijuego de RCP (reanimación rítmica)**: nuevo minijuego inmersivo a pantalla completa donde se hace RCP al ritmo del pulso (tap en mobile, Espacio o click en desktop). Cada atributo aporta un efecto propio: **fuerza** hace que cada compresión cure más, **conocimiento** amplía la ventana de timing, y **magia** otorga un "segundo aliento" que revive una vez al paciente.
+- **Fast Start en el panel de debug**: arranque rápido directo al inicio del juego real (justo después de presentarte ante el Profesor), eligiendo un atributo. Pensado para testear sin rejugar todo el intro cuando los saves quedan obsoletos entre iteraciones.
+
+### Fixed
+- **Victoria del RCP imposible de alcanzar**: el chequeo de victoria corría recién después del decaimiento pasivo, mientras que cada compresión topeaba la vida del paciente en el máximo — el minijuego nunca se ganaba aunque se completara. Ahora la victoria se dispara en el instante en que se alcanza el objetivo.
+
+---
+
+## [0.31.0] - 2026-05-24
+
+### Features
+- **Tutorial spotlight para nuevos jugadores**: overlay que oscurece la pantalla e ilumina cada elemento real de la UI con tooltips narrados en personaje. Segmento inicial (HP, texto, bitácora, guardar, opciones, vínculos, inventario y las opciones de decisión) narrado por Enríquez; un segundo segmento, al revelar el nombre, narrado por El Profesor, que ilumina la ficha (nombre/locación) y los atributos. Es one-shot: se ve una vez y no vuelve a aparecer.
+- **Re-ver y reiniciar tutoriales desde Opciones**: botón "Ver tutorial" (en juego) para repetir el recorrido, y "Reset tutoriales" (en juego y en el menú principal) para que los tutoriales vuelvan a mostrarse.
+- **HP siempre legible en mobile**: la barra de vida del header en mobile ahora muestra el valor numérico adentro, incluso con la ficha aún censurada.
+
+---
+
+## [0.30.0] - 2026-05-22
+
+### Features
+- **ID card "expediente censurado"**: antes de que el jugador ingrese su nombre, el ID card (desktop) y el header (mobile portrait) muestran un placeholder estilo documento clasificado en lugar de aparecer de la nada. Slot del nombre con `[CLASIFICADO]`, capítulo con `[LOCACION DESCONOCIDA]`, atributos colapsados en una sola línea `[BAJO EVALUACION]`, cada uno con barra de redacción negra pulsante. Las barras de recursos (HP/WP) siempre se ven. Cuando llega el nombre, el placeholder se desvanece y el ID card real entra con el spring habitual.
+
+---
+
+## [0.29.0] - 2026-05-21
+
+### Features
+- **Header portrait rediseñado**: layout de dos columnas — nombre del personaje y capítulo apilados a la izquierda (sin truncar), grilla 2×3 de botones compactos a la derecha. Elimina el solapamiento de stats con los botones de acción y aprovecha el espacio negativo del header.
+
+---
+
+## [0.28.0] - 2026-05-21
+
+### Features
+- **Portrait reflow + zoom viewer**: full mobile portrait layout with two-column stat bars, responsive widths for panels/overlays, and a pinch-to-zoom image viewer (`react-zoom-pan-pinch`) for chapter break images.
+- **Header HUD redesign**: slim two-row portrait HUD with permanent pinned header, character ID strip below stat bars, minimum 44×44px tap targets on all header controls, and responsive typography with compact achievement toasts.
+- **Bulletproof portrait detection**: reliable two-row HUD activation based on viewport geometry; removed scroll-hide behavior to keep controls always accessible.
+- **Android build pipeline fixes**: frontend is now re-embedded when `dist/` changes on Android builds; build script never ships stale frontend or wrong-variant APK; `isDebugBuild` hoisted so the output-copy step resolves correctly.
+
+### Fixes
+- **Parser**: CHAPTER_BREAK regex relaxed to allow spaces after commas.
+- **TextDisplay tests**: font-size assertions updated to match mobile-first Tailwind classes.
+
+---
+
+## [0.27.2] - 2026-05-20
+
+### Fixes
+- **ship workflow**: `.claude/commands/ship.md` ahora aclara que el script atómico se invoca BARE (sin `2>&1 | Select-Object`, sin pipes). Sufijos rompen el match de la allowlist en `.claude/settings.local.json` y causan permission prompts innecesarios.
+
+## [0.27.1] - 2026-05-20
+
+### Fixes
+- **ship workflow versionado**: `.claude/commands/ship.md` ahora se versiona en el repo. La instrucción que define el flujo de ship (escribir bullet del changelog → correr `scripts/ship.ps1`) queda como parte del proyecto, no solo local. `.claude/settings.json`, `.claude/settings.local.json` y `.claude/skills/` siguen gitignored.
+
+## [0.27.0] - 2026-05-20
+
+### Features
+- **scripts/ship.ps1**: nuevo script atómico de release que reemplaza el flujo manual de ship.md por un solo comando. Valida tests y entradas de CHANGELOG, bumpea versiones en `package.json` y `tauri.conf.json`, commitea, mergea a dev con `--no-ff`, y pushea. Soporta `-DryRun` para preview sin efecto y `-Bump` para elegir `patch`/`minor`/`major`.
+
+## [0.26.2] - 2026-05-19
+
+### Fixes
+- **GameOverMenu**: nuevo componente que se muestra cuando el jugador llega a un final letal (`-> muerte`), con opciones para cargar partida guardada o volver al menú principal. Integrado en `App.jsx` via flag `isGameOver` expuesto por `useBardoEngine`.
+- **autosave guard**: `useBardoEngine.ts` ya no dispara autosave cuando `isGameOver` es `true`, previniendo loops de save/load en deadends fatales.
+
+## [0.26.1] - 2026-05-18
+
+### Fixes
+- **InventoryPanel tooltip**: el tooltip de descripción de items ahora usa un React portal + `position: fixed` con coordenadas de viewport calculadas via `getBoundingClientRect()`. Escapa el clipping causado por el `backdrop-filter` del panel y el `overflow-y: auto` del scroll container. Elige automáticamente arriba/abajo según espacio disponible en viewport. Agrega listener de scroll/resize para cerrar el tooltip si el panel scrollea.
+
 ## [0.26.0] - 2026-05-18
 
 ### Features

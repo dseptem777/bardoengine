@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Backpack } from 'lucide-react'
 
@@ -143,7 +144,7 @@ export default function InventoryPanel({
                 {isOpen && (
                     <motion.div
                         className="fixed z-40 bg-black/90 border border-bardo-accent/30
-                                   backdrop-blur-sm w-72 max-h-[60vh] overflow-hidden pointer-events-auto"
+                                   backdrop-blur-sm w-full max-w-xs sm:w-72 max-h-[60vh] overflow-hidden pointer-events-auto"
                         style={{
                             top: 'calc(var(--inventory-top) + 4rem)',
                             right: 'var(--inventory-right)',
@@ -198,16 +199,39 @@ export default function InventoryPanel({
  * InventoryItem - Single item in the inventory
  */
 function InventoryItem({ item }) {
-    const [showTooltip, setShowTooltip] = useState(false)
+    const [tooltipPos, setTooltipPos] = useState(null)
+    const itemRef = useRef(null)
+
+    const handleMouseEnter = () => {
+        if (!item.description || !itemRef.current) return
+        const rect = itemRef.current.getBoundingClientRect()
+        const spaceBelow = window.innerHeight - rect.bottom
+        const placement = spaceBelow >= rect.top ? 'bottom' : 'top'
+        setTooltipPos({ left: rect.left, width: rect.width, top: rect.top, bottom: rect.bottom, placement })
+    }
+
+    const handleMouseLeave = () => setTooltipPos(null)
+
+    useEffect(() => {
+        if (!tooltipPos) return
+        const dismiss = () => setTooltipPos(null)
+        window.addEventListener('scroll', dismiss, true)
+        window.addEventListener('resize', dismiss)
+        return () => {
+            window.removeEventListener('scroll', dismiss, true)
+            window.removeEventListener('resize', dismiss)
+        }
+    }, [tooltipPos])
 
     return (
         <motion.div
+            ref={itemRef}
             className="relative flex items-center gap-3 p-2 rounded bg-gray-900/50 hover:bg-gray-800/50
                        border border-transparent hover:border-bardo-accent/20 transition-colors cursor-pointer"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
         >
             {/* Icon - supports emoji or image */}
             <ItemIcon icon={item.icon} iconType={item.iconType} name={item.name} />
@@ -223,20 +247,22 @@ function InventoryItem({ item }) {
                 <span className="text-xs text-gray-500 capitalize">{item.category}</span>
             </div>
 
-            {/* Tooltip */}
-            <AnimatePresence>
-                {showTooltip && item.description && (
-                    <motion.div
-                        className="absolute left-0 bottom-full mb-2 p-2 bg-gray-900 border border-bardo-accent/30
-                                   rounded text-xs text-gray-300 w-full z-10"
-                        initial={{ opacity: 0, y: 5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 5 }}
-                    >
-                        {item.description}
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {/* Tooltip — portal to body to escape backdrop-filter/overflow clipping */}
+            {tooltipPos && item.description && createPortal(
+                <div
+                    className="fixed p-2 bg-gray-900 border border-bardo-accent/30 rounded text-xs text-gray-300 z-[9999] pointer-events-none shadow-lg"
+                    style={{
+                        left: tooltipPos.left,
+                        width: tooltipPos.width,
+                        ...(tooltipPos.placement === 'bottom'
+                            ? { top: tooltipPos.bottom + 6 }
+                            : { bottom: window.innerHeight - tooltipPos.top + 6 })
+                    }}
+                >
+                    {item.description}
+                </div>,
+                document.body
+            )}
         </motion.div>
     )
 }

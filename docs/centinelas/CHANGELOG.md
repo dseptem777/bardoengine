@@ -1,5 +1,53 @@
 # Changelog — Centinelas del Sur
 
+## [0.24.1] — 2026-05-27
+
+### Fixed
+- **Cap3 — feria/banda**: corregido typo "show imperativo" → "show interpretativo" en el diálogo con el guardia.
+
+---
+
+## [0.24.0] — 2026-05-27
+
+### Changed
+- **Orfanato — rescate de Juan**: se reemplazó el sistema de arañas/antorcha (que los testers encontraban molesto) por el nuevo minijuego de **RCP rítmico**. Llegar a tiempo —según la ruta elegida y tus atributos— determina si el RCP es ganable; si llegás tarde, se juega igual pero no se puede salvar a Juan.
+
+### Fixed
+- **Ruta mágica al sótano**: ahora se puede abrir la trampilla y leer las estatuas con **magia ≥ 20**, desbloqueando la ruta que antes quedaba encerrada detrás de conocimiento 25 (inalcanzable para un personaje mágico).
+- **Destino de Juan inconsistente**: corregido el cableado del resultado del RCP — antes podía mostrarse a Juan vivo y luego muerto (o al revés) en pasajes posteriores.
+- **Beat de duda**: el pasaje "¿Tal vez deberías rendirte?" ahora solo aparece cuando Juan muere, no al salvarlo.
+
+---
+
+## [0.23.8] — 2026-05-21
+
+### Fixed
+- **título**: corregido el casing del título de "CENTINELAS DEL SUR" a "Centinelas del Sur" en la configuración de build.
+
+---
+
+## [0.23.7] — 2026-05-19
+
+### Fixed
+- **deadends fatales**: 9 ocurrencias de `-> END` en finales letales reemplazadas por `-> muerte` en `centinelas.ink`. Ahora todos los caminos fatales pasan por el knot `muerte` y activan el `GameOverMenu`.
+
+---
+
+## [0.23.6] — 2026-05-19
+
+### Fixed
+- **cap1/intermisión**: agregados `# music:misterio_ambient` en `intermision`, `entrada_faro` y `volver_faro` para cortar la `escuela_ambient` del Cap 0 que seguía sonando incorrectamente al entrar al Faro.
+
+---
+
+## [0.23.5] — 2026-05-19
+
+### Fixed
+- **cap3/museo**: reemplazadas 4 páginas-cartel en mayúsculas ("ENTRAS A LA PRIMERA/SEGUNDA/TERCERA/CUARTA SALA") por etiquetas `# next: <label>` en el botón SIGUIENTE, usando la sintaxis ya soportada por la engine. También se agregó `# next:` en las choices "Colaborás"/"No colaborás" del knot anterior para una transición limpia.
+- **branding**: corregida capitalización del título "Centinelas del Sur" en `centinelas.ink`, `centinelas.config.json`, `story-config.json` y `tauri.conf.json` (estaba como `CENTINELAS DEL SUR` o `centinelas del Sur`).
+
+---
+
 ## [0.23.4] — 2026-05-18
 
 ### Fixed
