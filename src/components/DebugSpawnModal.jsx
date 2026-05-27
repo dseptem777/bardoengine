@@ -1,6 +1,26 @@
 import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
+// --- Fast Start (Centinelas) ---
+// One-click jump to the start of the real game (right after naming the professor),
+// with a "real" baseline so saves breaking between iterations doesn't force replaying
+// the whole intro. Only shown when the Centinelas knot 'tema_cadaveres' exists.
+const FAST_START_KNOT = 'tema_cadaveres'
+const FAST_START_STATS = ['magia', 'fuerza', 'conocimiento']
+const FAST_START_APODO = { magia: 'Chispa', fuerza: 'Madrugador', conocimiento: 'Ratoncito' }
+
+function buildFastStartVars(stat) {
+    return {
+        nombre_personaje: 'Partuza',
+        apodo_personaje: FAST_START_APODO[stat],
+        magia: stat === 'magia' ? 30 : 10,
+        fuerza: stat === 'fuerza' ? 30 : 10,
+        conocimiento: stat === 'conocimiento' ? 30 : 10,
+        hp: 100,
+        traumado: false,
+    }
+}
+
 /**
  * DebugSpawnModal - Debug panel for jumping to any knot with custom variables
  */
@@ -15,6 +35,14 @@ export default function DebugSpawnModal({
     const [search, setSearch] = useState('')
     const [selectedKnot, setSelectedKnot] = useState('')
     const [editedVars, setEditedVars] = useState({})
+    const [fastStat, setFastStat] = useState('magia')
+
+    const canFastStart = knots.includes(FAST_START_KNOT)
+
+    const handleFastStart = () => {
+        onSpawn(FAST_START_KNOT, buildFastStartVars(fastStat))
+        onClose()
+    }
 
     // Sync variables when modal opens
     useEffect(() => {
@@ -119,6 +147,41 @@ export default function DebugSpawnModal({
                                 &times;
                             </button>
                         </div>
+
+                        {/* Fast Start (Centinelas) */}
+                        {canFastStart && (
+                            <div className="p-3 border-b border-gray-800 bg-bardo-accent/5">
+                                <div className="flex items-center flex-wrap gap-2">
+                                    <span className="text-bardo-accent font-mono text-xs uppercase tracking-wider mr-1">
+                                        Fast Start
+                                    </span>
+                                    <span className="text-gray-600 font-mono text-[10px] mr-2">
+                                        (Partuza · stat 30 · post-profesor)
+                                    </span>
+                                    {FAST_START_STATS.map(stat => (
+                                        <button
+                                            key={stat}
+                                            onClick={() => setFastStat(stat)}
+                                            className={`
+                                                px-2.5 py-1 text-xs font-mono rounded border transition-colors capitalize
+                                                ${fastStat === stat
+                                                    ? 'bg-bardo-accent/20 border-bardo-accent text-bardo-accent'
+                                                    : 'bg-gray-900 border-gray-700 text-gray-400 hover:text-white'
+                                                }
+                                            `}
+                                        >
+                                            {stat}
+                                        </button>
+                                    ))}
+                                    <button
+                                        onClick={handleFastStart}
+                                        className="ml-auto px-4 py-1 text-xs font-mono font-bold tracking-wider border-2 border-emerald-500 text-emerald-400 rounded hover:bg-emerald-500 hover:text-black transition-all"
+                                    >
+                                        FAST START →
+                                    </button>
+                                </div>
+                            </div>
+                        )}
 
                         <div className="flex-1 overflow-hidden flex flex-col md:flex-row">
                             {/* Left: Knot selector */}

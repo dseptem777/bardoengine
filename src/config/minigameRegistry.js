@@ -4,6 +4,7 @@ import ArkanoidGame from '../components/minigames/ArkanoidGame'
 import ApneaGame from '../components/minigames/ApneaGame'
 import KeyMashGame from '../components/minigames/KeyMashGame'
 import CrawlGame from '../components/minigames/CrawlGame'
+import RcpGame from '../components/minigames/RcpGame'
 
 /**
  * Minigame Registry
@@ -19,7 +20,8 @@ export const MINIGAME_REGISTRY = {
     'arkanoid': ArkanoidGame,
     'apnea': ApneaGame,
     'keymash': KeyMashGame,
-    'crawl': CrawlGame
+    'crawl': CrawlGame,
+    'rcp': RcpGame
 }
 
 /**
