@@ -1,4 +1,4 @@
-﻿{
+{
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Centinelas del Sur",
   "version": "0.24.1",

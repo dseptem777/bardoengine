@@ -75,7 +75,10 @@ function UpdateJsonVersion([string]$path, [string]$oldVersion, [string]$newVersi
     if ($updated -eq $content) {
         Fail "Could not replace version '$oldVersion' in $path"
     }
-    Set-Content $path -Value $updated -NoNewline -Encoding utf8
+    # IMPORTANT: write UTF-8 WITHOUT BOM. PS 5.1's `Set-Content -Encoding utf8`
+    # prepends a BOM, which breaks JSON.parse on these config files (build-game,
+    # runtime story load). Use .NET WriteAllText with a BOM-less UTF8Encoding.
+    [System.IO.File]::WriteAllText($path, $updated, (New-Object System.Text.UTF8Encoding($false)))
 }
 
 # ─── Banner ───────────────────────────────────────────────────────────────────
@@ -285,7 +288,7 @@ if ($bumpEngine) {
             # package-lock.json has version in multiple places; update the top-level one
             $lockContent = Get-Content $pkgLock -Raw
             $lockUpdated = $lockContent -replace [regex]::Escape("""version"": ""$engineOldVersion"""), """version"": ""$engineNewVersion"""
-            Set-Content $pkgLock -Value $lockUpdated -NoNewline -Encoding utf8
+            [System.IO.File]::WriteAllText($pkgLock, $lockUpdated, (New-Object System.Text.UTF8Encoding($false)))
             Write-Step "package-lock.json bumped"
             $filesToStage += 'package-lock.json'
         }

@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## [0.32.2] - 2026-05-27
+
+### Fixed
+- **El script de ship escribía BOM en los JSON**: `ship.ps1` usaba `Set-Content -Encoding utf8`, que en PowerShell 5.1 antepone un BOM. Eso corrompía `centinelas.config.json` y demás configs, haciendo fallar `build-game` con "Unexpected token … is not valid JSON". Ahora escribe UTF-8 **sin** BOM y se limpió el BOM de los configs ya afectados (package.json, tauri.conf.json, story-config.json, package-lock.json).
+
+---
+
 ## [0.32.1] - 2026-05-27
 
 ### Fixed
