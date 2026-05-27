@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { getMinigameComponent } from '../config/minigameRegistry'
 
 // Minigame types that render immersively (no backdrop, no frame, no result screen)
-const IMMERSIVE_TYPES = new Set(['apnea'])
+const IMMERSIVE_TYPES = new Set(['apnea', 'crawl', 'rcp'])
 
 /**
  * MinigameOverlay - Renders the active minigame

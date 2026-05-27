@@ -1,5 +1,16 @@
 # Changelog — BardoEngine
 
+## [0.32.0] - 2026-05-27
+
+### Features
+- **Minijuego de RCP (reanimación rítmica)**: nuevo minijuego inmersivo a pantalla completa donde se hace RCP al ritmo del pulso (tap en mobile, Espacio o click en desktop). Cada atributo aporta un efecto propio: **fuerza** hace que cada compresión cure más, **conocimiento** amplía la ventana de timing, y **magia** otorga un "segundo aliento" que revive una vez al paciente.
+- **Fast Start en el panel de debug**: arranque rápido directo al inicio del juego real (justo después de presentarte ante el Profesor), eligiendo un atributo. Pensado para testear sin rejugar todo el intro cuando los saves quedan obsoletos entre iteraciones.
+
+### Fixed
+- **Victoria del RCP imposible de alcanzar**: el chequeo de victoria corría recién después del decaimiento pasivo, mientras que cada compresión topeaba la vida del paciente en el máximo — el minijuego nunca se ganaba aunque se completara. Ahora la victoria se dispara en el instante en que se alcanza el objetivo.
+
+---
+
 ## [0.31.0] - 2026-05-24
 
 ### Features
