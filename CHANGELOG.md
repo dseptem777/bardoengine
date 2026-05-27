@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## [0.32.1] - 2026-05-27
+
+### Fixed
+- **Script de ship**: `scripts/ship.ps1` ya no intenta bumpear la versión de `src-tauri/resources/story-config.json`, un artefacto generado por `build-game` que por diseño no tiene campo `version`. Eso hacía abortar el ship a mitad del bump en cada release que tocara Centinelas (y dejaba las versiones desincronizadas). La versión de Centinelas vive en `centinelas.config.json` y `tauri.conf.json`.
+
+---
+
 ## [0.32.0] - 2026-05-27
 
 ### Features

@@ -296,14 +296,10 @@ if ($bumpEngine) {
 if ($bumpCentinelas) {
     $tauriConf         = "$repoRoot\src-tauri\tauri.conf.json"
     $centinelasConfig  = "$repoRoot\src\stories\centinelas.config.json"
-    $storyConfig       = "$repoRoot\src-tauri\resources\story-config.json"
 
     if ($DryRun) {
         Write-DryRun "Update src-tauri/tauri.conf.json: $centinelasOldVersion → $centinelasNewVersion"
         Write-DryRun "Update src/stories/centinelas.config.json: $centinelasOldVersion → $centinelasNewVersion"
-        if (Test-Path $storyConfig) {
-            Write-DryRun "Update src-tauri/resources/story-config.json: $centinelasOldVersion → $centinelasNewVersion"
-        }
     } else {
         UpdateJsonVersion $tauriConf $centinelasOldVersion $centinelasNewVersion
         Write-Step "tauri.conf.json bumped"
@@ -312,12 +308,6 @@ if ($bumpCentinelas) {
         UpdateJsonVersion $centinelasConfig $centinelasOldVersion $centinelasNewVersion
         Write-Step "centinelas.config.json bumped"
         $filesToStage += 'src/stories/centinelas.config.json'
-
-        if (Test-Path $storyConfig) {
-            UpdateJsonVersion $storyConfig $centinelasOldVersion $centinelasNewVersion
-            Write-Step "story-config.json bumped"
-            $filesToStage += 'src-tauri/resources/story-config.json'
-        }
     }
 }
 
