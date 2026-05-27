@@ -4302,7 +4302,7 @@ Un policía baja de la patrulla y se acerca hacia ustedes. Tu compañera dice po
 
 — ¿De la banda? ¿Ustedes? — el guardia tiene un tono de voz chillón que contrasta con las horas de gimnasio con las que castiga su físico.
 
-— Claro, Vieja Loca. Con una sola S — y al terminar tu frase señalás a la abuelita, que procede a sacar la lengua mientras guiña un ojo — Es todo un show imperativo en el cual se mezcla música con otras artes — y esperás seriamente que el guardia no te pregunte cuáles porque todavía no llegaste a armar esa mentira.
+— Claro, Vieja Loca. Con una sola S — y al terminar tu frase señalás a la abuelita, que procede a sacar la lengua mientras guiña un ojo — Es todo un show interpretativo en el cual se mezcla música con otras artes — y esperás seriamente que el guardia no te pregunte cuáles porque todavía no llegaste a armar esa mentira.
 
 — Sí, había escuchado que hoy era un día medio "freak" — el guardia logra pronunciar todas las letras convirtiendo la palabra en inglés en algo más parecido al chino — pasen, que las bandas ya están arrancando a tocar.
 # next
