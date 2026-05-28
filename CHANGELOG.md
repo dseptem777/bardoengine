@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## [0.32.3] - 2026-05-28
+
+### Fixed
+- **Tutorial de Vínculos no aparecía en desktop**: el botón ❤️ del panel de Relaciones se ocultaba hasta tener al menos un vínculo con valor > 0, por lo que el paso del tutorial nunca encontraba su ancla y se salteaba en silencio (en mobile sí aparecía porque el botón vive en otro lado). Ahora el botón se ve siempre que la historia declare vínculos en su config, el panel solo lista los NPCs ya conocidos (no spoilea el resto), y el tutorial puede engancharse desde el primer beat.
+
+---
+
 ## [0.32.2] - 2026-05-27
 
 ### Fixed
