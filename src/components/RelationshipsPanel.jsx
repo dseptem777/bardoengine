@@ -36,8 +36,6 @@ export default function RelationshipsPanel({
     const visibleDefs = relationshipDefs.filter(r => (stats[r.id] ?? 0) > 0)
     const activeCount = visibleDefs.length
 
-    if (visibleDefs.length === 0) return null
-
     // Mobile bottom sheet
     if (isMobile) {
         return (
@@ -77,7 +75,11 @@ export default function RelationshipsPanel({
                             </div>
 
                             <div className="p-3 max-h-[calc(50vh-80px)] overflow-y-auto space-y-3">
-                                {visibleDefs.map(def => (
+                                {visibleDefs.length === 0 ? (
+                                    <p className="text-sm text-gray-500 italic text-center py-4">
+                                        Aún no has formado vínculos. Aparecerán aquí a medida que ganes la confianza de quienes te rodean.
+                                    </p>
+                                ) : visibleDefs.map(def => (
                                     <RelationshipRow key={def.id} def={def} value={stats[def.id] ?? 0} />
                                 ))}
                             </div>
@@ -93,6 +95,7 @@ export default function RelationshipsPanel({
         <>
             {!hideToggle && (
                 <motion.button
+                    data-tutorial="relationships"
                     className="fixed z-50 bg-black/80 border border-bardo-accent/30 p-3
                                hover:border-bardo-accent/60 transition-colors backdrop-blur-sm pointer-events-auto"
                     style={{
@@ -144,7 +147,11 @@ export default function RelationshipsPanel({
                         </div>
 
                         <div className="p-3 max-h-[calc(60vh-60px)] overflow-y-auto space-y-3">
-                            {relationshipDefs.map(def => (
+                            {visibleDefs.length === 0 ? (
+                                <p className="text-sm text-gray-500 italic text-center py-4">
+                                    Aún no has formado vínculos. Aparecerán aquí a medida que ganes la confianza de quienes te rodean.
+                                </p>
+                            ) : visibleDefs.map(def => (
                                 <RelationshipRow key={def.id} def={def} value={stats[def.id] ?? 0} />
                             ))}
                         </div>
