@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { parseMinigameTag } from './useMinigameController'
+import { validateTag } from '../engine/tagSchema'
 
 interface TagProcessorOptions {
     storyRef: any;
@@ -72,6 +73,19 @@ export function useTagProcessor({
         tags.forEach(rawTag => {
             const tag = rawTag.trim()
             if (!tag) return
+
+            // Dev-only contract check against the tag schema. OBSERVE-ONLY: this
+            // never alters routing — it just warns loudly when a tag looks like a
+            // known structured family but is malformed in a way the handler below
+            // would silently ignore (e.g. CHAPTER_BREAK with no title=).
+            if (import.meta.env?.DEV) {
+                try {
+                    const check = validateTag(tag)
+                    if (!check.valid) {
+                        console.warn(`[TagSchema] Malformed "${check.family}" tag: "${tag}" — ${check.issues.join('; ')}`)
+                    }
+                } catch { /* validation must never break tag processing */ }
+            }
 
             // ============================================
             // HORROR SYSTEM TAGS
