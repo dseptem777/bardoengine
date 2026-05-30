@@ -1,5 +1,12 @@
 # Changelog — Centinelas del Sur
 
+## [0.24.2] — 2026-05-30
+
+### Changed
+- **Icono del juego**: los ejecutables de escritorio (Windows, macOS, Linux) y la app de Android ahora usan el faro de *Centinelas del Sur* como icono, reemplazando el placeholder por defecto. Generado desde `public/games/centinelas/faro_ico.png`.
+
+---
+
 ## [0.24.1] — 2026-05-27
 
 ### Fixed
