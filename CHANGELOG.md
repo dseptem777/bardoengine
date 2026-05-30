@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## [0.32.4] - 2026-05-29
+
+### Added
+- **Contrato de schema para los tags Ink→engine**: nuevo `src/engine/tagSchema.js` que centraliza las 20+ familias de tags estructurados que parsea el engine (KEY_MASH, WILLPOWER_*, SPIDER_*, BOSS_*, GENJUTSU_BREAK, CHAPTER_BREAK, MINIGAME, achievement, input). En modo dev, `useTagProcessor` ahora avisa fuerte cuando un tag parece de una familia conocida pero está mal formado de un modo que el handler ignoraría en silencio (ej: `CHAPTER_BREAK` sin `title=`, `WILLPOWER_CHECK` con umbral no numérico, `achievement:unlock:` sin id). El ruteo no cambia y la validación nunca rompe el procesamiento. Incluye 60 tests nuevos.
+
+---
+
 ## [0.32.3] - 2026-05-28
 
 ### Fixed
