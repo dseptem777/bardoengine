@@ -1,5 +1,17 @@
 # Changelog — BardoEngine
 
+## [0.32.5] - 2026-05-31
+
+### Fixed
+- **Texto corrupto (mojibake) en Android**: los nombres de logros y el subtítulo del juego se veían con caracteres rotos ("BuzÃ³n", "arqueolÃ³gica", emojis ilegibles) sólo en la app Android, porque el WebView del celular decodificaba los textos del config como Windows-1252 en lugar de UTF-8 (el texto de la historia ya se veía bien porque se decodifica aparte). Se agregó una reparación en runtime (`src/utils/fixMojibake.js`) que se aplica al cargar el config; no toca los textos que ya están correctos, así que desktop sigue igual.
+- **La barra de HP tapaba el nombre en mobile**: la tira de vida fija arriba de todo se montaba sobre la fila del nombre/`[CLASIFICADO]` del header. Ahora el header reserva el alto de la tira y ya no se solapan.
+- **Prompt pensado para teclado en el celular**: varias pantallas decían "PRESIONÁ UNA TECLA PARA CONTINUAR" incluso en touch. En dispositivos táctiles ahora dicen "TOCÁ PARA CONTINUAR" (pantalla de título, cortes de capítulo e indicador in-game).
+
+### Changed
+- **Tipografías self-hosteadas (funcionan offline)**: el juego cargaba todas las fuentes desde el CDN de Google Fonts en runtime, por lo que un celular sin conexión caía a la fuente del sistema —incluida la de dislexia (Atkinson Hyperlegible)—. Ahora se empaquetan localmente vía Fontsource (Inter, JetBrains Mono, Atkinson Hyperlegible y Playfair Display, con sus itálicas) y funcionan sin internet; se quitaron los `<link>` al CDN y se ajustó la CSP.
+
+---
+
 ## [0.32.4] - 2026-05-29
 
 ### Added

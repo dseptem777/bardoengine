@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useIsPortraitDevice } from '../hooks/useMediaQuery'
+import { useIsPortraitDevice, useIsTouchDevice } from '../hooks/useMediaQuery'
 import ImageZoomViewer from './ImageZoomViewer'
 
 /**
@@ -23,6 +23,7 @@ export default function ChapterBreakOverlay({
     const [zoomOpen, setZoomOpen] = useState(false)
 
     const usePortraitLayout = useIsPortraitDevice() && !!image
+    const isTouch = useIsTouchDevice()
 
     // 1200ms delay before accepting input (prevent accidental skip)
     useEffect(() => {
@@ -160,7 +161,7 @@ export default function ChapterBreakOverlay({
                                                 animate={{ opacity: [0.5, 1, 0.5] }}
                                                 transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
                                             >
-                                                PRESIONA UNA TECLA PARA CONTINUAR
+                                                {isTouch ? 'TOCÁ PARA CONTINUAR' : 'PRESIONA UNA TECLA PARA CONTINUAR'}
                                             </motion.p>
                                         )}
                                     </div>
@@ -240,7 +241,7 @@ export default function ChapterBreakOverlay({
                                             animate={{ opacity: [0.5, 1, 0.5] }}
                                             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
                                         >
-                                            PRESIONA UNA TECLA PARA CONTINUAR
+                                            {isTouch ? 'TOCÁ PARA CONTINUAR' : 'PRESIONA UNA TECLA PARA CONTINUAR'}
                                         </motion.p>
                                     )}
 
