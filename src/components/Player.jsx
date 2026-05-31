@@ -503,7 +503,7 @@ export default function Player({
             <main
                 ref={scrollContainerRef}
                 onScroll={handleScroll}
-                className={`flex-1 overflow-y-auto custom-scrollbar bg-bardo-bg ${isMinigameActive ? 'invisible' : ''}`}
+                className={`flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar bg-bardo-bg ${isMinigameActive ? 'invisible' : ''}`}
             >
                 {/*
                     Simple block container with fixed top padding.
@@ -512,7 +512,7 @@ export default function Player({
                 */}
                 <div
                     ref={contentRef}
-                    className={`w-full px-4 sm:px-6 md:px-12 pt-4 sm:pt-[15vh] pb-[35vh] ${hasDesktopStatsPanel ? '' : 'mx-auto'}`}
+                    className={`w-full min-w-0 max-w-full px-4 sm:px-6 md:px-12 pt-4 sm:pt-[15vh] pb-[35vh] ${hasDesktopStatsPanel ? '' : 'mx-auto'}`}
                     style={hasDesktopStatsPanel ? {
                         maxWidth: 'var(--player-max-width, 48rem)',
                         marginLeft: 'max(calc((100% - var(--player-max-width, 48rem)) / 2), var(--stats-panel-inset, 260px))',
