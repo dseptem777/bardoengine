@@ -2,6 +2,7 @@
  * Game Config Loader
  * Loads per-game configuration from {storyId}.config.json files
  */
+import { fixMojibakeDeep } from '../utils/fixMojibake'
 
 // Default config for games without a config file
 export const DEFAULT_CONFIG = {
@@ -54,7 +55,7 @@ export async function loadGameConfig(storyId) {
     try {
         // Dynamic import of JSON config file
         const configModule = await import(`../stories/${storyId}.config.json`)
-        const gameConfig = configModule.default
+        const gameConfig = fixMojibakeDeep(configModule.default)
         const config = {
             ...DEFAULT_CONFIG,
             ...gameConfig,

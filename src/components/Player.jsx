@@ -5,7 +5,7 @@ import { BookOpen, Settings, Save, Heart, Backpack, FastForward } from 'lucide-r
 import TextDisplay from './TextDisplay'
 import ChoiceButton from './ChoiceButton'
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation'
-import { useIsPortraitDevice } from '../hooks/useMediaQuery'
+import { useIsPortraitDevice, useIsTouchDevice } from '../hooks/useMediaQuery'
 import { HeaderStats } from './StatsPanel'
 import BossHPIndicator from './BossHPIndicator'
 import ScrollGrabOverlay from './ScrollGrabOverlay'
@@ -277,13 +277,14 @@ export default function Player({
     }, [onChoice, cancelAutoAdvance])
 
     const isPortraitDevice = useIsPortraitDevice()
+    const isTouch = useIsTouchDevice()
 
     return (
         <div className="h-screen flex flex-col bg-bardo-bg overflow-hidden transition-colors duration-500">
             {/* Header */}
             <header
                 className="flex-none border-b border-bardo-accent/20 bg-black/40 backdrop-blur-md z-30"
-                style={{ padding: isMobile ? '0.625rem' : '1rem', paddingTop: isMobile ? 'calc(0.625rem + var(--safe-area-top, 0px))' : 'calc(1rem + var(--safe-area-top, 0px))' }}
+                style={{ padding: isMobile ? '0.625rem' : '1rem', paddingTop: isMobile ? 'calc(0.625rem + 1.5rem + var(--safe-area-top, 0px))' : 'calc(1rem + var(--safe-area-top, 0px))' }}
             >
                 <div
                     className="mx-auto w-full"
@@ -698,8 +699,8 @@ export default function Player({
                     <div className="px-5 py-2.5 bg-black/80 backdrop-blur-md border border-white/20 rounded-full shadow-2xl">
                         <p className="text-bardo-muted font-mono text-[10px] md:text-xs animate-pulse tracking-widest uppercase text-center font-bold">
                             {fastForward
-                                ? 'Presioná de nuevo para saltar'
-                                : 'Presioná una tecla para continuar'}
+                                ? (isTouch ? 'Tocá de nuevo para saltar' : 'Presioná de nuevo para saltar')
+                                : (isTouch ? 'Tocá para continuar' : 'Presioná una tecla para continuar')}
                         </p>
                     </div>
                 </div>

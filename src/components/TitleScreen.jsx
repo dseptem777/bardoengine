@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useIsPortraitDevice } from '../hooks/useMediaQuery'
+import { useIsPortraitDevice, useIsTouchDevice } from '../hooks/useMediaQuery'
 import ImageZoomViewer from './ImageZoomViewer'
 
 /**
@@ -26,6 +26,7 @@ export default function TitleScreen({
     const [zoomOpen, setZoomOpen] = useState(false)
 
     const usePortraitLayout = useIsPortraitDevice() && !!backgroundImage
+    const isTouch = useIsTouchDevice()
 
     // Delay before showing "press to start"
     useEffect(() => {
@@ -159,7 +160,7 @@ export default function TitleScreen({
                                     animate={{ opacity: [0.5, 1, 0.5] }}
                                     transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
                                 >
-                                    PRESIONA UNA TECLA PARA CONTINUAR
+                                    {isTouch ? 'TOCÁ PARA CONTINUAR' : 'PRESIONA UNA TECLA PARA CONTINUAR'}
                                 </motion.p>
                             )}
                         </div>
@@ -272,7 +273,7 @@ export default function TitleScreen({
                             animate={{ opacity: [0.5, 1, 0.5] }}
                             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
                         >
-                            PRESIONA UNA TECLA PARA CONTINUAR
+                            {isTouch ? 'TOCÁ PARA CONTINUAR' : 'PRESIONA UNA TECLA PARA CONTINUAR'}
                         </motion.p>
                     )}
 

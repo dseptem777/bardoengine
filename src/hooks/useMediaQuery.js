@@ -29,3 +29,7 @@ export function useIsPortrait() {
 export function useIsPortraitDevice() {
     return useMediaQuery('(orientation: portrait) and (max-width: 1023px)')
 }
+
+export function useIsTouchDevice() {
+    return useMediaQuery('(pointer: coarse)')
+}
