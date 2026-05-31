@@ -182,7 +182,7 @@ const ChoiceButton = forwardRef(function ChoiceButton({
                     }`}>
                     [{index + 1}]
                 </span>
-                <span className={`font-narrative text-base sm:text-lg flex-1 ${isLocked
+                <span className={`font-narrative text-base sm:text-lg flex-1 min-w-0 break-words ${isLocked
                     ? 'text-gray-400 line-through decoration-gray-500/60'
                     : disabled
                     ? 'text-gray-500 line-through decoration-gray-600'

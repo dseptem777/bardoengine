@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## [0.32.6] - 2026-05-31
+
+### Fixed
+- **Scroll horizontal fantasma en mobile**: el área de juego podía desplazarse hacia los costados en pantallas angostas, cortando el texto y las opciones. Se bloqueó el overflow horizontal en el contenedor raíz, el panel principal y los párrafos de texto (`break-words`, `overflow-x-hidden`, `max-width: 100%`); los botones de elección también recibieron `min-w-0 break-words` para que el texto largo nunca empuje el layout fuera de la pantalla.
+
+---
+
 ## [0.32.5] - 2026-05-31
 
 ### Fixed
