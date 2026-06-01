@@ -18,13 +18,20 @@ export default function OptionsModal({ isOpen, onClose, onReplayTutorial, onRese
     } = useSettings()
     const modalRef = useModalA11y(isOpen, onClose)
     const [resetConfirm, setResetConfirm] = useState(false)
+    const [tutorialsConfirm, setTutorialsConfirm] = useState(false)
 
-    // Auto-revert confirmation after 3 seconds
+    // Auto-revert confirmations after 3 seconds
     useEffect(() => {
         if (!resetConfirm) return
         const tid = setTimeout(() => setResetConfirm(false), 3000)
         return () => clearTimeout(tid)
     }, [resetConfirm])
+
+    useEffect(() => {
+        if (!tutorialsConfirm) return
+        const tid = setTimeout(() => setTutorialsConfirm(false), 3000)
+        return () => clearTimeout(tid)
+    }, [tutorialsConfirm])
 
     const handleReset = useCallback(() => {
         if (resetConfirm) {
@@ -179,14 +186,21 @@ export default function OptionsModal({ isOpen, onClose, onReplayTutorial, onRese
                             </div>
                         )}
 
-                        {/* Tutorial reset (only when outside game) */}
+                        {/* Tutorial reset */}
                         {onResetTutorials && (
                             <div className="mt-3">
                                 <button
-                                    onClick={() => { onResetTutorials(); onClose() }}
-                                    className="w-full py-2.5 px-4 border border-gray-700 text-gray-500 hover:border-gray-500 hover:text-gray-300 transition-colors font-mono text-sm tracking-wider"
+                                    onClick={() => {
+                                        if (tutorialsConfirm) { onResetTutorials(); if (onReplayTutorial) onReplayTutorial(); onClose(); setTutorialsConfirm(false) }
+                                        else setTutorialsConfirm(true)
+                                    }}
+                                    className={`w-full py-2.5 px-4 border font-mono text-sm tracking-wider transition-colors ${
+                                        tutorialsConfirm
+                                            ? 'border-red-500 text-red-500 hover:bg-red-500 hover:text-black'
+                                            : 'border-gray-700 text-gray-500 hover:border-gray-500 hover:text-gray-300'
+                                    }`}
                                 >
-                                    Reset tutoriales
+                                    {tutorialsConfirm ? 'CONFIRMAR?' : 'Reset tutoriales'}
                                 </button>
                             </div>
                         )}

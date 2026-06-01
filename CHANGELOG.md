@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## [0.32.7] - 2026-06-01
+
+### Fixed
+- **Botón "Reset tutoriales" no funcionaba en mobile**: el diálogo nativo `window.confirm()` no se muestra en el WebView de Tauri Android, por lo que el reset nunca se ejecutaba. Ahora la confirmación es inline (primer click → "CONFIRMAR?", segundo click → ejecuta), igual al patrón del botón RESET de ajustes. Al confirmar durante el juego, el tutorial arranca de inmediato sin necesidad de avanzar en la historia.
+
+---
+
 ## [0.32.6] - 2026-05-31
 
 ### Fixed
