@@ -488,7 +488,7 @@ export default function TextDisplay({
                         <p
                             key={i}
                             data-paragraph-index={i}
-                            className={`font-narrative ${fontSizeClass} leading-relaxed text-bardo-text break-words`}
+                            className={`font-narrative ${fontSizeClass} leading-relaxed text-bardo-text break-normal`}
                         >
                             {hasFisura ? (
                                 <>
@@ -510,7 +510,7 @@ export default function TextDisplay({
                 })
             ) : (
                 // Fallback for empty/initial state to maintain layout
-                <p className={`font-narrative ${fontSizeClass} leading-relaxed opacity-0 break-words`}>&nbsp;</p>
+                <p className={`font-narrative ${fontSizeClass} leading-relaxed opacity-0 break-normal`}>&nbsp;</p>
             )}
 
             {/* Scroll anchor: invisible element that moves with the text */}
