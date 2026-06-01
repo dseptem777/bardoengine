@@ -507,7 +507,6 @@ function AppContent({ onStorySelect }) {
     }, [manualTutorial, tutorialSeen, updateTutorialSetting])
 
     const handleResetTutorials = useCallback(() => {
-        if (!window.confirm('¿Resetear los tutoriales? Volverán a aparecer en la próxima partida.')) return
         updateTutorialSetting('tutorialSeen', resetSeen())
     }, [updateTutorialSetting])
 
