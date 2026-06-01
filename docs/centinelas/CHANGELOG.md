@@ -1,5 +1,12 @@
 # Changelog — Centinelas del Sur
 
+## [0.24.3] — 2026-06-01
+
+### Fixed
+- **Debug mode en mobile**: ahora se puede activar el modo debug en dispositivos táctiles tocando el título del juego 7 veces seguidas en la pantalla de inicio.
+
+---
+
 ## [0.24.2] — 2026-05-30
 
 ### Changed

@@ -24,6 +24,8 @@ export default function StartScreen({
     // Cheat code listener: typing "fanzine" unlocks debug mode
     const [cheatActivated, setCheatActivated] = useState(false)
     const timerRef = useRef(null)
+    const tapCountRef = useRef(0)
+    const tapTimerRef = useRef(null)
 
     useEffect(() => {
         if (!onCheatCode) return
@@ -50,8 +52,23 @@ export default function StartScreen({
         return () => {
             window.removeEventListener('keydown', handleKey)
             clearTimeout(timerRef.current)
+            clearTimeout(tapTimerRef.current)
         }
     }, [onCheatCode])
+
+    const handleTitleTap = () => {
+        if (!onCheatCode) return
+        tapCountRef.current += 1
+        clearTimeout(tapTimerRef.current)
+        if (tapCountRef.current >= 7) {
+            tapCountRef.current = 0
+            setCheatActivated(true)
+            onCheatCode()
+            setTimeout(() => setCheatActivated(false), 1500)
+        } else {
+            tapTimerRef.current = setTimeout(() => { tapCountRef.current = 0 }, 3000)
+        }
+    }
 
     return (
         <div className="min-h-screen bg-bardo-bg flex flex-col items-center justify-center relative overflow-hidden">
@@ -79,11 +96,12 @@ export default function StartScreen({
             <div className="relative z-10 flex flex-col items-center gap-12">
                 {/* Game Title */}
                 <h1
-                    className={`text-5xl md:text-7xl font-bold text-bardo-accent tracking-wider text-center transition-all duration-500 ${cheatActivated ? 'scale-105' : ''}`}
+                    className={`text-5xl md:text-7xl font-bold text-bardo-accent tracking-wider text-center transition-all duration-500 select-none ${cheatActivated ? 'scale-105' : ''}`}
                     style={{ textShadow: cheatActivated
                         ? '0 0 60px var(--bardo-accent), 0 0 120px var(--bardo-accent)'
                         : '0 0 30px rgba(250, 204, 21, 0.5)'
                     }}
+                    onTouchStart={handleTitleTap}
                 >
                     {gameTitle}
                 </h1>
