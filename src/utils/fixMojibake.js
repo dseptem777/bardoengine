@@ -35,7 +35,7 @@ const CP1252_REVERSE = {
     0x0178: 0x9F, // Ÿ
 }
 
-const MOJIBAKE_GATE = /[ÃÂ]|ðŸ|â‚¬|â€/
+const MOJIBAKE_GATE = /[^\x00-\x7F][^\x00-\x7F]/
 
 /**
  * Attempt to repair a single string that was decoded as cp1252 instead of UTF-8.

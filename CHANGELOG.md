@@ -1,5 +1,13 @@
 # Changelog — BardoEngine
 
+## [0.32.9] - 2026-06-01
+
+### Fixed
+- **Ícono de Magia roto en Android** (`✨` se mostraba como `âœ¨`): la reparación de mojibake introducida en v0.32.5 tenía un gate demasiado estrecho que no detectaba secuencias UTF-8 de 3 bytes (como ✨). El gate ahora captura cualquier par de caracteres no-ASCII consecutivos, cubriendo todos los casos sin riesgo de afectar texto ya correcto.
+- **Palabras cortadas en mobile** (`mientr-` / `as`): el texto narrativo podía partirse en medio de una palabra en pantallas angostas. Se reemplazó `break-words` por `break-normal` para respetar los límites de palabra al hacer wrap.
+
+---
+
 ## [0.32.8] - 2026-06-01
 
 ### Fixed
