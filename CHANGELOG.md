@@ -1,5 +1,12 @@
 # Changelog — BardoEngine
 
+## [0.32.8] - 2026-06-01
+
+### Fixed
+- **Debug mode en mobile**: 7 taps rápidos en el título de la pantalla de inicio activan el modo debug en dispositivos táctiles. El cheat de teclado ("fanzine") sigue funcionando en desktop.
+
+---
+
 ## [0.32.7] - 2026-06-01
 
 ### Fixed
